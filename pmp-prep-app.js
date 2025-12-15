@@ -4829,30 +4829,7 @@ const ModernPMPPrep = () => {
               )}
             </div>
           )}
-            // Overview, Formulas, Agile, Traps sections
-            <div className="bg-white rounded-2xl shadow-xl p-8">
-              {studyGuideContent[studyGuideSection] ? (
-                <div>
-                  <h2 className="text-3xl font-bold text-gray-900 mb-6 flex items-center gap-3">
-                    {studyGuideSection === 'overview' && <Award className="w-8 h-8 text-indigo-600" />}
-                    {studyGuideSection === 'formulas' && <BarChart3 className="w-8 h-8 text-purple-600" />}
-                    {studyGuideSection === 'agile' && <Zap className="w-8 h-8 text-pink-600" />}
-                    {studyGuideSection === 'traps' && <AlertCircle className="w-8 h-8 text-orange-600" />}
-                    {studyGuideContent[studyGuideSection].title}
-                  </h2>
-                  <div className="prose max-w-none">
-                    {studyGuideContent[studyGuideSection].content}
-                  </div>
-                </div>
-              ) : (
-                <p className="text-gray-600 text-lg">Select a section to begin studying.</p>
-              )}
-            </div>
-          )}          )}
-        </div>
-      </div>
-    );
-  }
+      
 
   // PRACTICE/TIMED QUESTIONS VIEW  
   if (currentMode === 'practice' || currentMode === 'timed') {
