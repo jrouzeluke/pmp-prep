@@ -93,7 +93,41 @@ const Zap = ({ className }) => (
     <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
   </svg>
 );
+const Users = ({ className }) => (
+  <svg className={className} width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+  </svg>
+);
 
+const Settings = ({ className }) => (
+  <svg className={className} width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0 .73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.38a2 2 0 0 0-.73-2.73l-.15-.1a2 2 0 0 1-1-1.72v-.51a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/>
+  </svg>
+);
+
+const Briefcase = ({ className }) => (
+  <svg className={className} width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <rect width="20" height="14" x="2" y="7" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+  </svg>
+);
+
+const ArrowRight = ({ className }) => (
+  <svg className={className} width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
+  </svg>
+);
+
+const ArrowLeft = ({ className }) => (
+  <svg className={className} width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <path d="m12 19-7-7 7-7"/><path d="M19 12H5"/>
+  </svg>
+);
+
+const Repeat = ({ className }) => (
+  <svg className={className} width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <path d="m17 2 4 4-4 4"/><path d="M3 11v-1a4 4 0 0 1 4-4h14"/><path d="m7 22-4-4 4-4"/><path d="M21 13v1a4 4 0 0 1-4 4H3"/>
+  </svg>
+);
 const Play = ({ className }) => (
   <svg className={className} width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
     <polygon points="5 3 19 12 5 21 5 3"/>
@@ -4778,8 +4812,172 @@ const ModernPMPPrep = () => {
         </div>
       </div>
     );
-  }
 
+  }
+// MAIN MENU VIEW
+  if (currentMode === 'menu') {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 flex items-center justify-center p-6">
+        <div className="max-w-5xl w-full">
+          {/* Header Section */}
+          <div className="text-center mb-12">
+            <div className="inline-block p-4 rounded-full bg-white shadow-xl mb-6">
+              <Award className="w-16 h-16 text-indigo-600" />
+            </div>
+            <h1 className="text-6xl font-black text-slate-900 mb-4 tracking-tight">
+              PMP<span className="text-indigo-600">Master</span>
+            </h1>
+            <p className="text-xl text-slate-600 font-medium max-w-2xl mx-auto">
+              The ultimate interactive preparation tool for your Project Management Professional certification.
+            </p>
+          </div>
+
+          {/* Stats Bar */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12 max-w-4xl mx-auto">
+            <div className="bg-white p-4 rounded-2xl shadow-sm border border-indigo-100 flex items-center gap-4">
+              <div className="p-3 bg-indigo-100 text-indigo-600 rounded-xl">
+                <Target className="w-6 h-6" />
+              </div>
+              <div>
+                <div className="text-2xl font-bold text-slate-900">{progress.questionsAttempted}</div>
+                <div className="text-xs text-slate-500 font-bold uppercase">Answered</div>
+              </div>
+            </div>
+            <div className="bg-white p-4 rounded-2xl shadow-sm border border-emerald-100 flex items-center gap-4">
+              <div className="p-3 bg-emerald-100 text-emerald-600 rounded-xl">
+                <CheckCircle className="w-6 h-6" />
+              </div>
+              <div>
+                <div className="text-2xl font-bold text-slate-900">
+                  {progress.questionsAttempted > 0 
+                    ? Math.round((progress.questionsCorrect / progress.questionsAttempted) * 100) 
+                    : 0}%
+                </div>
+                <div className="text-xs text-slate-500 font-bold uppercase">Accuracy</div>
+              </div>
+            </div>
+            <div className="bg-white p-4 rounded-2xl shadow-sm border border-amber-100 flex items-center gap-4">
+              <div className="p-3 bg-amber-100 text-amber-600 rounded-xl">
+                <Flame className="w-6 h-6" />
+              </div>
+              <div>
+                <div className="text-2xl font-bold text-slate-900">{progress.streak}</div>
+                <div className="text-xs text-slate-500 font-bold uppercase">Day Streak</div>
+              </div>
+            </div>
+            <div className="bg-white p-4 rounded-2xl shadow-sm border border-purple-100 flex items-center gap-4">
+              <div className="p-3 bg-purple-100 text-purple-600 rounded-xl">
+                <Trophy className="w-6 h-6" />
+              </div>
+              <div>
+                <div className="text-2xl font-bold text-slate-900">{progress.badges.length}</div>
+                <div className="text-xs text-slate-500 font-bold uppercase">Badges</div>
+              </div>
+            </div>
+          </div>
+
+          {/* Main Actions */}
+          <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+            {/* Quick Practice */}
+            <button 
+              onClick={() => startMode('practice', 'all', 'all', 10)}
+              className="group bg-white hover:bg-indigo-50 border-2 border-white hover:border-indigo-200 p-8 rounded-3xl shadow-lg hover:shadow-xl transition-all text-left relative overflow-hidden"
+            >
+              <div className="absolute top-0 right-0 p-6 opacity-10 group-hover:opacity-20 transition-opacity">
+                <Zap className="w-32 h-32 text-indigo-600 transform rotate-12" />
+              </div>
+              <div className="w-14 h-14 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl flex items-center justify-center text-white mb-6 shadow-md group-hover:scale-110 transition-transform">
+                <Zap className="w-8 h-8" />
+              </div>
+              <h3 className="text-2xl font-bold text-slate-900 mb-2">Quick Practice</h3>
+              <p className="text-slate-500 font-medium mb-6">10 rapid-fire questions to test your knowledge.</p>
+              <span className="inline-flex items-center gap-2 text-indigo-600 font-bold">
+                Start Quiz <ArrowRight className="w-5 h-5" />
+              </span>
+            </button>
+
+            {/* Study Dashboard */}
+            <button 
+              onClick={() => setCurrentMode('dashboard')}
+              className="group bg-white hover:bg-emerald-50 border-2 border-white hover:border-emerald-200 p-8 rounded-3xl shadow-lg hover:shadow-xl transition-all text-left relative overflow-hidden"
+            >
+              <div className="absolute top-0 right-0 p-6 opacity-10 group-hover:opacity-20 transition-opacity">
+                <BarChart3 className="w-32 h-32 text-emerald-600 transform rotate-12" />
+              </div>
+              <div className="w-14 h-14 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl flex items-center justify-center text-white mb-6 shadow-md group-hover:scale-110 transition-transform">
+                <BarChart3 className="w-8 h-8" />
+              </div>
+              <h3 className="text-2xl font-bold text-slate-900 mb-2">Dashboard</h3>
+              <p className="text-slate-500 font-medium mb-6">Track progress, view stats, and identify weak areas.</p>
+              <span className="inline-flex items-center gap-2 text-emerald-600 font-bold">
+                View Stats <ArrowRight className="w-5 h-5" />
+              </span>
+            </button>
+
+            {/* Deep Study */}
+            <button 
+              onClick={() => setCurrentMode('studyguide')}
+              className="group bg-white hover:bg-amber-50 border-2 border-white hover:border-amber-200 p-8 rounded-3xl shadow-lg hover:shadow-xl transition-all text-left relative overflow-hidden"
+            >
+              <div className="absolute top-0 right-0 p-6 opacity-10 group-hover:opacity-20 transition-opacity">
+                <BookOpen className="w-32 h-32 text-amber-600 transform rotate-12" />
+              </div>
+              <div className="w-14 h-14 bg-gradient-to-br from-amber-500 to-orange-600 rounded-2xl flex items-center justify-center text-white mb-6 shadow-md group-hover:scale-110 transition-transform">
+                <BookOpen className="w-8 h-8" />
+              </div>
+              <h3 className="text-2xl font-bold text-slate-900 mb-2">Study Guide</h3>
+              <p className="text-slate-500 font-medium mb-6">Deep dives into all 35 ECO tasks and concepts.</p>
+              <span className="inline-flex items-center gap-2 text-amber-600 font-bold">
+                Open Guide <ArrowRight className="w-5 h-5" />
+              </span>
+            </button>
+          </div>
+
+          {/* Domain Selectors */}
+          <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-4 max-w-4xl mx-auto">
+            <button 
+              onClick={() => startMode('practice', 'people', 'all', 20)}
+              className="bg-white p-4 rounded-xl shadow-sm border-2 border-transparent hover:border-indigo-200 hover:bg-indigo-50 transition-all flex items-center gap-3 group"
+            >
+              <div className="w-10 h-10 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center group-hover:bg-indigo-600 group-hover:text-white transition-colors">
+                <Users className="w-5 h-5" />
+              </div>
+              <div className="text-left">
+                <div className="font-bold text-slate-900">People Domain</div>
+                <div className="text-xs text-slate-500">Practice this area</div>
+              </div>
+            </button>
+
+            <button 
+              onClick={() => startMode('practice', 'process', 'all', 20)}
+              className="bg-white p-4 rounded-xl shadow-sm border-2 border-transparent hover:border-emerald-200 hover:bg-emerald-50 transition-all flex items-center gap-3 group"
+            >
+              <div className="w-10 h-10 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center group-hover:bg-emerald-600 group-hover:text-white transition-colors">
+                <Settings className="w-5 h-5" />
+              </div>
+              <div className="text-left">
+                <div className="font-bold text-slate-900">Process Domain</div>
+                <div className="text-xs text-slate-500">Practice this area</div>
+              </div>
+            </button>
+
+            <button 
+              onClick={() => startMode('practice', 'business', 'all', 20)}
+              className="bg-white p-4 rounded-xl shadow-sm border-2 border-transparent hover:border-amber-200 hover:bg-amber-50 transition-all flex items-center gap-3 group"
+            >
+              <div className="w-10 h-10 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center group-hover:bg-amber-600 group-hover:text-white transition-colors">
+                <Briefcase className="w-5 h-5" />
+              </div>
+              <div className="text-left">
+                <div className="font-bold text-slate-900">Business Domain</div>
+                <div className="text-xs text-slate-500">Practice this area</div>
+              </div>
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 p-6">
       <div className="max-w-5xl mx-auto">
