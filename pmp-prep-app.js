@@ -136,7 +136,7 @@ const Play = ({ className }) => (
 
 const Brain = ({ className }) => (
   <svg className={className} width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-    <path d="M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18Z"/>
+    <path d="M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 4 0 1 0 12 18Z"/>
     <path d="M12 5a3 3 0 1 1 5.997.125 4 4 0 0 1 2.526 5.77 4 4 0 0 1-.556 6.588A4 4 0 1 1 12 18Z"/>
     <path d="M15 13a4.5 4.5 0 0 1-3-4 4.5 4.5 0 0 1-3 4"/><path d="M17.599 6.5a3 3 0 0 0 .399-1.375"/>
     <path d="M6.003 5.125A3 3 0 0 0 6.401 6.5"/><path d="M3.477 10.896a4 4 0 0 1 .585-.396"/>
@@ -1610,7 +1610,7 @@ const ModernPMPPrep = () => {
       approach: 'predictive',
       question: "A new environmental regulation is passed that affects your construction project. The project is 90% complete. Complying will cost $50k and delay the finish by 2 weeks. What should you do FIRST?",
       options: [
-        "Ignore the regulation since the project is almost done",
+        "Ignore the regulation since the project was planned under old regulations",
         "Implement the change immediately to avoid fines",
         "Analyze the impact and submit a formal change request",
         "Ask the sponsor for the extra money"
@@ -4177,27 +4177,27 @@ const ModernPMPPrep = () => {
       content: (
         <div className="space-y-6">
           <div className="bg-rose-50 p-6 rounded-xl border border-rose-100">
-             <h4 className="font-bold text-rose-900 text-lg mb-4 flex items-center gap-2">
-               <AlertCircle className="w-5 h-5" /> Beware of these Distractors
-             </h4>
-             <ul className="space-y-4">
-               <li className="flex gap-3">
-                 <div className="font-bold text-rose-600 whitespace-nowrap">Gold Plating:</div>
-                 <div className="text-gray-700">Giving the customer extra features they didn't ask for. <br/><span className="text-xs font-bold uppercase text-rose-500">Verdict: Always Bad (Waste/Risk)</span></div>
-               </li>
-               <li className="flex gap-3">
-                 <div className="font-bold text-rose-600 whitespace-nowrap">Student Syndrome:</div>
-                 <div className="text-gray-700">Leaving work until the very last minute possible.</div>
-               </li>
-               <li className="flex gap-3">
-                 <div className="font-bold text-rose-600 whitespace-nowrap">Parkinson's Law:</div>
-                 <div className="text-gray-700">"Work expands to fill the time available." If you give someone 5 days for a 2-day task, it will take 5 days.</div>
-               </li>
-               <li className="flex gap-3">
-                 <div className="font-bold text-rose-600 whitespace-nowrap">Sunk Cost Fallacy:</div>
-                 <div className="text-gray-700">Continuing a failing project just because you already spent money on it. <br/><span className="text-xs font-bold uppercase text-emerald-600">Verdict: Ignore sunk costs. Decide based on future value.</span></div>
-               </li>
-             </ul>
+              <h4 className="font-bold text-rose-900 text-lg mb-4 flex items-center gap-2">
+                <AlertCircle className="w-5 h-5" /> Beware of these Distractors
+              </h4>
+              <ul className="space-y-4">
+                <li className="flex gap-3">
+                  <div className="font-bold text-rose-600 whitespace-nowrap">Gold Plating:</div>
+                  <div className="text-gray-700">Giving the customer extra features they didn't ask for. <br/><span className="text-xs font-bold uppercase text-rose-500">Verdict: Always Bad (Waste/Risk)</span></div>
+                </li>
+                <li className="flex gap-3">
+                  <div className="font-bold text-rose-600 whitespace-nowrap">Student Syndrome:</div>
+                  <div className="text-gray-700">Leaving work until the very last minute possible.</div>
+                </li>
+                <li className="flex gap-3">
+                  <div className="font-bold text-rose-600 whitespace-nowrap">Parkinson's Law:</div>
+                  <div className="text-gray-700">"Work expands to fill the time available." If you give someone 5 days for a 2-day task, it will take 5 days.</div>
+                </li>
+                <li className="flex gap-3">
+                  <div className="font-bold text-rose-600 whitespace-nowrap">Sunk Cost Fallacy:</div>
+                  <div className="text-gray-700">Continuing a failing project just because you already spent money on it. <br/><span className="text-xs font-bold uppercase text-emerald-600">Verdict: Ignore sunk costs. Decide based on future value.</span></div>
+                </li>
+              </ul>
           </div>
 
           <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
@@ -4309,7 +4309,7 @@ const ModernPMPPrep = () => {
   };
 
   // DASHBOARD VIEW
-// DASHBOARD VIEW
+  // DASHBOARD VIEW
   if (currentMode === 'dashboard') {
     return (
       <div className="min-h-screen bg-slate-50 font-sans">
@@ -4345,22 +4345,22 @@ const ModernPMPPrep = () => {
             <div className="bg-white p-4 rounded-xl shadow-sm border-l-4 border-indigo-500">
               <div className="text-slate-500 text-xs font-bold uppercase mb-1">Accuracy</div>
               <div className="text-2xl font-black text-indigo-900">
-                 {progress.questionsAttempted > 0 
-                    ? Math.round((progress.questionsCorrect / progress.questionsAttempted) * 100) 
-                    : 0}%
+                {progress.questionsAttempted > 0 
+                  ? Math.round((progress.questionsCorrect / progress.questionsAttempted) * 100) 
+                  : 0}%
               </div>
             </div>
             <div className="bg-white p-4 rounded-xl shadow-sm border-l-4 border-amber-500">
               <div className="text-slate-500 text-xs font-bold uppercase mb-1">Time Spent</div>
               <div className="text-2xl font-black text-amber-900">
-                {Math.round(progress.timeSpent / 60)}m
+                {Math.round(progress.studyTime / 60)}m
               </div>
             </div>
             <div className="bg-white p-4 rounded-xl shadow-sm border-l-4 border-emerald-500">
               <div className="text-slate-500 text-xs font-bold uppercase mb-1">Correct</div>
               <div className="text-2xl font-black text-emerald-900">{progress.questionsCorrect}</div>
             </div>
-             <div className="bg-white p-4 rounded-xl shadow-sm border-l-4 border-rose-500">
+              <div className="bg-white p-4 rounded-xl shadow-sm border-l-4 border-rose-500">
               <div className="text-slate-500 text-xs font-bold uppercase mb-1">Weakest</div>
               <div className="text-lg font-bold text-rose-900 truncate">Procurement</div>
             </div>
@@ -4370,7 +4370,7 @@ const ModernPMPPrep = () => {
           <h3 className="text-xl font-bold text-slate-800 mb-4">Quick Reference</h3>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4 mb-12">
             <div 
-              onClick={() => setCurrentMode('overview')}
+              onClick={() => setCurrentMode('studyguide', 'overview')}
               className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md cursor-pointer transition-all border border-slate-100 group"
             >
               <div className="w-10 h-10 bg-indigo-100 text-indigo-600 rounded-lg flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
@@ -4381,7 +4381,7 @@ const ModernPMPPrep = () => {
             </div>
 
             <div 
-              onClick={() => setCurrentMode('formulas')}
+              onClick={() => setCurrentMode('studyguide', 'formulas')}
               className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md cursor-pointer transition-all border border-slate-100 group"
             >
               <div className="w-10 h-10 bg-emerald-100 text-emerald-600 rounded-lg flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
@@ -4392,7 +4392,7 @@ const ModernPMPPrep = () => {
             </div>
 
             <div 
-              onClick={() => setCurrentMode('agile')}
+              onClick={() => setCurrentMode('studyguide', 'agile')}
               className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md cursor-pointer transition-all border border-slate-100 group"
             >
               <div className="w-10 h-10 bg-rose-100 text-rose-600 rounded-lg flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
@@ -4403,7 +4403,7 @@ const ModernPMPPrep = () => {
             </div>
 
             <div 
-              onClick={() => setCurrentMode('traps')}
+              onClick={() => setCurrentMode('studyguide', 'traps')}
               className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md cursor-pointer transition-all border border-slate-100 group"
             >
               <div className="w-10 h-10 bg-amber-100 text-amber-600 rounded-lg flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
@@ -4802,12 +4802,6 @@ const ModernPMPPrep = () => {
                   Click any task to see detailed explanations, scenarios, and exam tips!
                 </p>
               </div>
-            <div className="bg-gradient-to-r from-purple-100 to-pink-100 rounded-xl p-6 border border-purple-200">
-                <p className="text-gray-700">
-                  <strong className="text-purple-900">📚 Note:</strong> Currently showing {taskDatabase.people.length + taskDatabase.process.length + taskDatabase.business.length} tasks with deep content. 
-                  Click any task to see detailed explanations, scenarios, and exam tips!
-                </p>
-              </div>
             </div>
           ) : (
             <div className="bg-white rounded-2xl shadow-xl p-8">
@@ -4829,16 +4823,21 @@ const ModernPMPPrep = () => {
               )}
             </div>
           )}
-      
+        </div>
+      </div>
+    );
+  }
 
-  // PRACTICE/TIMED QUESTIONS VIEW  
+  // PRACTICE/TIMED QUESTIONS VIEW
   if (currentMode === 'practice' || currentMode === 'timed') {
+
+    // Safety Check: If no questions loaded, show loading instead of crashing
     if (!questionsPool || questionsPool.length === 0) {
-      return <div>Loading...</div>;
+      return <div className="p-10 text-center">Loading questions...</div>;
     }
-    
+
     const question = questionsPool[currentQuestion];
-    
+
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
         <div className="max-w-5xl mx-auto px-6 py-8">
@@ -5031,7 +5030,8 @@ const ModernPMPPrep = () => {
     );
 
   }
-// MAIN MENU VIEW
+
+  // MAIN MENU VIEW
   if (currentMode === 'menu') {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 flex items-center justify-center p-6">
@@ -5195,6 +5195,9 @@ const ModernPMPPrep = () => {
       </div>
     );
   }
+
+  // DEFAULT RETURN (Should only be reached if currentMode is something unknown or initial load,
+  // but acts as a final safety catch)
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 p-6">
       <div className="max-w-5xl mx-auto">
