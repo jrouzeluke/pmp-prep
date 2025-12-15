@@ -1,5 +1,9 @@
 {
-  "dependencies": {
-    "@netlify/neon": "^0.1.0"
-  }
+  "name": "pmp-prep",
+  "version": "1.0.0",
+  "description": "PMP Exam Prep Static Site",
+  "scripts": {
+    "build": "echo 'No build step required'"
+  },
+  "dependencies": {}
 }
