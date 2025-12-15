@@ -4802,8 +4802,14 @@ const ModernPMPPrep = () => {
                   Click any task to see detailed explanations, scenarios, and exam tips!
                 </p>
               </div>
+            <div className="bg-gradient-to-r from-purple-100 to-pink-100 rounded-xl p-6 border border-purple-200">
+                <p className="text-gray-700">
+                  <strong className="text-purple-900">📚 Note:</strong> Currently showing {taskDatabase.people.length + taskDatabase.process.length + taskDatabase.business.length} tasks with deep content. 
+                  Click any task to see detailed explanations, scenarios, and exam tips!
+                </p>
+              </div>
             </div>
-         ) : (
+          ) : (
             // Overview, Formulas, Agile, Traps sections
             <div className="bg-white rounded-2xl shadow-xl p-8">
               {studyGuideContent[studyGuideSection] ? (
