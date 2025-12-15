@@ -4010,10 +4010,212 @@ const ModernPMPPrep = () => {
 
 
   // Study guide content
-  const studyGuide = {
+  const studyGuideContent = {
     overview: {
       title: 'Exam Overview & Strategy',
-      icon: Award
+      content: (
+        <div className="space-y-6">
+          <div className="bg-indigo-50 p-6 rounded-xl border border-indigo-100">
+            <h4 className="font-bold text-indigo-900 text-lg mb-2">The PMP Exam Structure</h4>
+            <ul className="space-y-2 text-gray-700">
+              <li>• <strong>180 Questions</strong> total</li>
+              <li>• <strong>230 Minutes</strong> (3 hours 50 mins)</li>
+              <li>• <strong>2 Breaks</strong> (10 mins each) after question 60 and 120</li>
+              <li>• Questions are a mix of multiple choice, multiple responses, matching, hotspot, and fill-in-the-blank.</li>
+            </ul>
+          </div>
+          
+          <div className="grid md:grid-cols-3 gap-4">
+            <div className="bg-white p-4 rounded-xl shadow-sm border-t-4 border-indigo-500">
+              <div className="text-3xl font-black text-indigo-600 mb-1">42%</div>
+              <div className="font-bold text-gray-900">People</div>
+              <p className="text-xs text-gray-500 mt-1">Leading, conflict, teams, negotiation, support.</p>
+            </div>
+            <div className="bg-white p-4 rounded-xl shadow-sm border-t-4 border-emerald-500">
+              <div className="text-3xl font-black text-emerald-600 mb-1">50%</div>
+              <div className="font-bold text-gray-900">Process</div>
+              <p className="text-xs text-gray-500 mt-1">Methodology, budget, schedule, scope, quality, closing.</p>
+            </div>
+            <div className="bg-white p-4 rounded-xl shadow-sm border-t-4 border-amber-500">
+              <div className="text-3xl font-black text-amber-600 mb-1">8%</div>
+              <div className="font-bold text-gray-900">Business</div>
+              <p className="text-xs text-gray-500 mt-1">Compliance, value delivery, organizational change.</p>
+            </div>
+          </div>
+
+          <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+            <h4 className="font-bold text-gray-900 text-lg mb-4">Critical Mindset for Success</h4>
+            <div className="space-y-4">
+              <div className="flex gap-3">
+                <div className="w-8 h-8 rounded-full bg-green-100 text-green-600 flex items-center justify-center font-bold flex-shrink-0">1</div>
+                <div><strong className="text-gray-900">Be a Servant Leader:</strong> Always support the team, remove blockers, and shield them from distractions. Never dictate or punish.</div>
+              </div>
+              <div className="flex gap-3">
+                <div className="w-8 h-8 rounded-full bg-green-100 text-green-600 flex items-center justify-center font-bold flex-shrink-0">2</div>
+                <div><strong className="text-gray-900">Analyze First:</strong> Never act before understanding the root cause. If a choice says "Assess," "Analyze," or "Review," it's often correct.</div>
+              </div>
+              <div className="flex gap-3">
+                <div className="w-8 h-8 rounded-full bg-green-100 text-green-600 flex items-center justify-center font-bold flex-shrink-0">3</div>
+                <div><strong className="text-gray-900">Changes are Formal:</strong> In predictive projects, you can't just say "yes" to changes. You must analyze impact -> submit CR -> get CCB approval.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )
+    },
+    formulas: {
+      title: 'Mastering the Formulas',
+      content: (
+        <div className="space-y-6">
+          <div className="bg-yellow-50 p-4 rounded-xl border-l-4 border-yellow-400 text-yellow-800">
+            <strong>Pro Tip:</strong> You don't need to be a math genius. Focus on understanding what the numbers <em>mean</em> (Good vs. Bad) rather than just memorizing calculation steps.
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-6">
+            {/* CPI & SPI */}
+            <div className="bg-white p-5 rounded-xl shadow-sm border border-gray-200">
+              <h4 className="font-bold text-indigo-600 mb-3 border-b pb-2">Cost & Schedule Performance</h4>
+              <div className="space-y-4">
+                <div>
+                  <div className="flex justify-between mb-1"><span className="font-bold">CPI (Cost Performance Index)</span> <code className="bg-gray-100 px-2 rounded">EV / AC</code></div>
+                  <p className="text-sm text-gray-600">greater than 1 = Under Budget (Good) 🟢<br/>less than 1 = Over Budget (Bad) 🔴</p>
+                </div>
+                <div>
+                  <div className="flex justify-between mb-1"><span className="font-bold">SPI (Schedule Performance Index)</span> <code className="bg-gray-100 px-2 rounded">EV / PV</code></div>
+                  <p className="text-sm text-gray-600">greater than 1 = Ahead of Schedule (Good) 🟢<br/>less than 1 = Behind Schedule (Bad) 🔴</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Variances */}
+            <div className="bg-white p-5 rounded-xl shadow-sm border border-gray-200">
+              <h4 className="font-bold text-emerald-600 mb-3 border-b pb-2">Variances</h4>
+              <div className="space-y-4">
+                <div>
+                  <div className="flex justify-between mb-1"><span className="font-bold">CV (Cost Variance)</span> <code className="bg-gray-100 px-2 rounded">EV - AC</code></div>
+                  <p className="text-sm text-gray-600">Positive = Under Budget 🟢<br/>Negative = Over Budget 🔴</p>
+                </div>
+                <div>
+                  <div className="flex justify-between mb-1"><span className="font-bold">SV (Schedule Variance)</span> <code className="bg-gray-100 px-2 rounded">EV - PV</code></div>
+                  <p className="text-sm text-gray-600">Positive = Ahead of Schedule 🟢<br/>Negative = Behind Schedule 🔴</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Estimation */}
+            <div className="bg-white p-5 rounded-xl shadow-sm border border-gray-200">
+              <h4 className="font-bold text-purple-600 mb-3 border-b pb-2">PERT Estimation (Beta)</h4>
+              <div className="text-center py-2">
+                <code className="bg-gray-100 text-lg px-4 py-2 rounded-lg font-bold">(O + 4M + P) / 6</code>
+              </div>
+              <p className="text-sm text-gray-600 mt-2 text-center">
+                O = Optimistic, M = Most Likely, P = Pessimistic.<br/>
+                <em>Used for weighted average duration estimates.</em>
+              </p>
+            </div>
+
+            {/* Comms */}
+            <div className="bg-white p-5 rounded-xl shadow-sm border border-gray-200">
+              <h4 className="font-bold text-rose-600 mb-3 border-b pb-2">Communication Channels</h4>
+              <div className="text-center py-2">
+                <code className="bg-gray-100 text-lg px-4 py-2 rounded-lg font-bold">N(N - 1) / 2</code>
+              </div>
+              <p className="text-sm text-gray-600 mt-2 text-center">
+                N = Number of stakeholders.<br/>
+                <em>Example: 5 people = 5(4)/2 = 10 channels.</em>
+              </p>
+            </div>
+          </div>
+        </div>
+      )
+    },
+    agile: {
+      title: 'Agile & Scrum Framework',
+      content: (
+        <div className="space-y-6">
+          <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+            <h4 className="font-bold text-gray-900 text-lg mb-4">The Agile Manifesto Values</h4>
+            <div className="grid md:grid-cols-2 gap-4">
+              <div className="bg-green-50 p-3 rounded border border-green-100 text-green-800 font-medium">Individuals and interactions</div>
+              <div className="bg-gray-50 p-3 rounded border border-gray-100 text-gray-500 line-through decoration-gray-400">over processes and tools</div>
+              
+              <div className="bg-green-50 p-3 rounded border border-green-100 text-green-800 font-medium">Working software</div>
+              <div className="bg-gray-50 p-3 rounded border border-gray-100 text-gray-500 line-through decoration-gray-400">over comprehensive documentation</div>
+              
+              <div className="bg-green-50 p-3 rounded border border-green-100 text-green-800 font-medium">Customer collaboration</div>
+              <div className="bg-gray-50 p-3 rounded border border-gray-100 text-gray-500 line-through decoration-gray-400">over contract negotiation</div>
+              
+              <div className="bg-green-50 p-3 rounded border border-green-100 text-green-800 font-medium">Responding to change</div>
+              <div className="bg-gray-50 p-3 rounded border border-gray-100 text-gray-500 line-through decoration-gray-400">over following a plan</div>
+            </div>
+          </div>
+
+          <h4 className="font-bold text-gray-900 text-lg">Scrum Roles & Events</h4>
+          <div className="grid md:grid-cols-2 gap-4">
+            <div className="border rounded-xl p-4 hover:shadow-md transition-shadow">
+              <div className="font-bold text-indigo-600 mb-2">Product Owner (PO)</div>
+              <p className="text-sm text-gray-600">Maximizes value. Owns the Product Backlog. Prioritizes work. Accepts/Rejects stories. The "Voice of the Customer".</p>
+            </div>
+            <div className="border rounded-xl p-4 hover:shadow-md transition-shadow">
+              <div className="font-bold text-indigo-600 mb-2">Scrum Master (SM)</div>
+              <p className="text-sm text-gray-600">Servant Leader. Removes impediments. Coaches the team. Facilitates events. Shields team from distractions.</p>
+            </div>
+            <div className="border rounded-xl p-4 hover:shadow-md transition-shadow">
+              <div className="font-bold text-indigo-600 mb-2">The Team</div>
+              <p className="text-sm text-gray-600">Cross-functional, self-organizing. They decide "How" and "How much" work to do. Accountable for quality.</p>
+            </div>
+            <div className="border rounded-xl p-4 hover:shadow-md transition-shadow">
+              <div className="font-bold text-purple-600 mb-2">Sprint Retrospective</div>
+              <p className="text-sm text-gray-600">Most important event for improvement. Inspects the *process* and *team* (not the product). Result: Improvement plan.</p>
+            </div>
+          </div>
+        </div>
+      )
+    },
+    traps: {
+      title: 'Common PMP Exam Traps',
+      content: (
+        <div className="space-y-6">
+          <div className="bg-rose-50 p-6 rounded-xl border border-rose-100">
+             <h4 className="font-bold text-rose-900 text-lg mb-4 flex items-center gap-2">
+               <AlertCircle className="w-5 h-5" /> Beware of these Distractors
+             </h4>
+             <ul className="space-y-4">
+               <li className="flex gap-3">
+                 <div className="font-bold text-rose-600 whitespace-nowrap">Gold Plating:</div>
+                 <div className="text-gray-700">Giving the customer extra features they didn't ask for. <br/><span className="text-xs font-bold uppercase text-rose-500">Verdict: Always Bad (Waste/Risk)</span></div>
+               </li>
+               <li className="flex gap-3">
+                 <div className="font-bold text-rose-600 whitespace-nowrap">Student Syndrome:</div>
+                 <div className="text-gray-700">Leaving work until the very last minute possible.</div>
+               </li>
+               <li className="flex gap-3">
+                 <div className="font-bold text-rose-600 whitespace-nowrap">Parkinson's Law:</div>
+                 <div className="text-gray-700">"Work expands to fill the time available." If you give someone 5 days for a 2-day task, it will take 5 days.</div>
+               </li>
+               <li className="flex gap-3">
+                 <div className="font-bold text-rose-600 whitespace-nowrap">Sunk Cost Fallacy:</div>
+                 <div className="text-gray-700">Continuing a failing project just because you already spent money on it. <br/><span className="text-xs font-bold uppercase text-emerald-600">Verdict: Ignore sunk costs. Decide based on future value.</span></div>
+               </li>
+             </ul>
+          </div>
+
+          <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+            <h4 className="font-bold text-gray-900 text-lg mb-4">Words that indicate WRONG answers</h4>
+            <div className="flex flex-wrap gap-2">
+              <span className="px-3 py-1 bg-gray-100 rounded text-gray-600 font-mono text-sm">Always</span>
+              <span className="px-3 py-1 bg-gray-100 rounded text-gray-600 font-mono text-sm">Never</span>
+              <span className="px-3 py-1 bg-gray-100 rounded text-gray-600 font-mono text-sm">Must</span>
+              <span className="px-3 py-1 bg-gray-100 rounded text-gray-600 font-mono text-sm">Force</span>
+              <span className="px-3 py-1 bg-gray-100 rounded text-gray-600 font-mono text-sm">Demand</span>
+              <span className="px-3 py-1 bg-gray-100 rounded text-gray-600 font-mono text-sm">Immediately Report</span>
+              <span className="px-3 py-1 bg-gray-100 rounded text-gray-600 font-mono text-sm">Fire</span>
+              <span className="px-3 py-1 bg-gray-100 rounded text-gray-600 font-mono text-sm">Suspend</span>
+            </div>
+            <p className="text-sm text-gray-500 mt-3">PMI prefers "Analyze," "Collaborate," "Facilitate," and "Review" over extreme actions.</p>
+          </div>
+        </div>
+      )
     }
   };
 
@@ -4607,8 +4809,27 @@ const ModernPMPPrep = () => {
               <div className="prose max-w-none">
                 <p className="text-gray-600 text-lg">Content for {studyGuideSection} section coming soon! 📖</p>
               </div>
+            </div>) : (
+            // Overview, Formulas, Agile, Traps sections
+            <div className="bg-white rounded-2xl shadow-xl p-8">
+              {studyGuideContent[studyGuideSection] ? (
+                <div>
+                  <h2 className="text-3xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+                    {studyGuideSection === 'overview' && <Award className="w-8 h-8 text-indigo-600" />}
+                    {studyGuideSection === 'formulas' && <BarChart3 className="w-8 h-8 text-purple-600" />}
+                    {studyGuideSection === 'agile' && <Zap className="w-8 h-8 text-pink-600" />}
+                    {studyGuideSection === 'traps' && <AlertCircle className="w-8 h-8 text-orange-600" />}
+                    {studyGuideContent[studyGuideSection].title}
+                  </h2>
+                  <div className="prose max-w-none">
+                    {studyGuideContent[studyGuideSection].content}
+                  </div>
+                </div>
+              ) : (
+                <p className="text-gray-600 text-lg">Select a section to begin studying.</p>
+              )}
             </div>
-          )}
+          )}          )}
         </div>
       </div>
     );
