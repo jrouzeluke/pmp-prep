@@ -4810,7 +4810,6 @@ const ModernPMPPrep = () => {
               </div>
             </div>
           ) : (
-            // Overview, Formulas, Agile, Traps sections
             <div className="bg-white rounded-2xl shadow-xl p-8">
               {studyGuideContent[studyGuideSection] ? (
                 <div>
