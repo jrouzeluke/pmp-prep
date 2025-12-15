@@ -1,52 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PMP Exam Prep Tool - Master Your Certification</title>
-  
-  <!-- Tailwind CSS CDN - This makes all the styles work! -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  
-  <!-- React CDN -->
-  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-  
-  <!-- Babel Standalone to transform JSX -->
-  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-  
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-    }
-    
-    #root {
-      min-height: 100vh;
-    }
-    
-    /* Loading screen */
-    .loading {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
-      font-size: 24px;
-      font-weight: bold;
-    }
-  </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PMP Exam Prep Tool - Master Your Certification</title>
+  
+    <script src="https://cdn.tailwindcss.com"></script>
+  
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    
+    #root {
+      min-height: 100vh;
+    }
+    
+    /* Loading screen */
+    .loading {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      font-size: 24px;
+      font-weight: bold;
+    }
+  </style>git add <div class=""></div>
 </head>
 <body>
-  <div id="root">
-    <div class="loading">🚀 Loading PMP Prep Tool...</div>
-  </div>
+  <div id="root">
+    <div class="loading">🚀 Loading PMP Prep Tool...</div>
+  </div>
 
-  <!-- Load the component -->
-  <script type="text/babel" src="pmp-prep-app.js"></script>
+    <script type="text/babel" src="pmp-prep-app.js"></script>
+  
+  <script type="text/babel">
+    // This line injects the PMPPrepApp component into the 'root' div, replacing the loading message.
+    ReactDOM.render(<PMPPrepApp />, document.getElementById('root'));
+  </script>
+
 </body>
 </html>
