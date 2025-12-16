@@ -5,7 +5,7 @@
         "id": "P1",
         "title": "Manage Conflict",
         "deepDive": "Conflict is a team performance opportunity. Resolve using situational techniques to reach a win-win consensus.",
-        "enablers": ["Interpret source and stage of conflict", "Analyze the context for the conflict", "Evaluate/recommend the appropriate resolution"],
+        "enablers": ["Interpret source and stage of conflict", "Analyze the context for the conflict", "Evaluate/recommend resolution"],
         "deliverables": ["Updated Issue Log", "Lessons Learned Register", "Conflict Management Plan"],
         "tools": ["Collaborating/Problem Solving", "Negotiation", "Conflict Management Styles"],
         "veteranTip": "PMI wants a win-win. 'Forcing' is only for emergencies. Check the RACI first—most technical conflict is just role confusion."
@@ -18,62 +18,130 @@
         "deliverables": ["Team Charter", "Resource Management Plan", "Recognition Plan"],
         "tools": ["Servant Leadership", "Emotional Intelligence", "Situational Leadership"],
         "veteranTip": "Leadership isn't about having the answers; it's about removing the blockers so your experts can work."
+      },
+      {
+        "id": "P3",
+        "title": "Support Team Performance",
+        "deepDive": "Monitor progress and mentor for continuous improvement.",
+        "enablers": ["Appraise performance", "Verify improvement", "Identify growth"],
+        "deliverables": ["Performance Reviews", "Training Logs"],
+        "tools": ["KPIs", "Feedback Loops", "Mentoring"],
+        "veteranTip": "Measure results, not hours. Performance is about value."
+      },
+      {
+        "id": "P4",
+        "title": "Empower Team Members",
+        "deepDive": "Delegate authority and provide resources for decision-making.",
+        "enablers": ["Organize strengths", "Delegate decision-making", "Verify accountability"],
+        "deliverables": ["RACI Matrix", "Delegation Register"],
+        "tools": ["Vroom-Yetton", "Empowerment Matrix"],
+        "veteranTip": "Trust but verify. Empowerment fails without clear boundaries."
+      },
+      {
+        "id": "P5",
+        "title": "Ensure Team is Trained",
+        "deepDive": "Identify skill gaps and provide the necessary learning paths.",
+        "enablers": ["Determine competencies", "Allocate budget", "Measure outcomes"],
+        "deliverables": ["Training Plan", "Skills Matrix"],
+        "tools": ["Gap Analysis", "Skill Assessments"],
+        "veteranTip": "Training is an investment, not an expense. Budget it early."
+      },
+      {
+        "id": "P11",
+        "title": "Engage Virtual Teams",
+        "deepDive": "Manage distributed teams across time zones.",
+        "enablers": ["Examine needs", "Investigate options", "Implement tech"],
+        "deliverables": ["Comms Plan", "Virtual Team Charter"],
+        "tools": ["Video Conferencing", "Shared Boards"],
+        "veteranTip": "Over-communicate. Silence is a risk in virtual environments."
       }
     ],
     "process": [
       {
         "id": "PR1",
         "title": "Execute with Urgency",
-        "deepDive": "Deliver business value faster by identifying opportunities to fast-track or crash the schedule without compromising quality.",
-        "enablers": ["Assess opportunities to deliver value early", "Recommend MVP", "Analyze fast-tracking vs crashing"],
-        "deliverables": ["Project Schedule", "MVP Backlog", "Release Plan"],
-        "tools": ["Fast-tracking", "Crashing", "Prioritization Matrices (MoSCoW)"],
-        "veteranTip": "Urgency is not haste. It's about knowing your Critical Path so well you know exactly where you can afford to push."
+        "deepDive": "Deliver business value faster by identifying opportunities to fast-track or crash the schedule.",
+        "enablers": ["Prioritize MVP", "Analyze fast-tracking", "Deliver value"],
+        "deliverables": ["MVP Backlog", "Project Schedule"],
+        "tools": ["Crashing", "Fast-tracking", "MoSCoW"],
+        "veteranTip": "Speed requires focus. Don't rush the wrong things."
+      },
+      {
+        "id": "PR5",
+        "title": "Plan and Manage Budget",
+        "deepDive": "Determine and monitor costs to stay within authorized funds.",
+        "enablers": ["Estimate costs", "Baseline budget", "Monitor variances"],
+        "deliverables": ["Cost Baseline", "EVM Reports"],
+        "tools": ["Analogous/Parametric Estimating", "Earned Value Management"],
+        "veteranTip": "Transparency is key. Variance happens; hiding it is the failure."
+      },
+      {
+        "id": "PR10",
+        "title": "Manage Project Changes",
+        "deepDive": "Assess impact before taking action on change requests.",
+        "enablers": ["Anticipate change", "Follow CCB process", "Adjust plans"],
+        "deliverables": ["Change Request Log", "Approved Changes"],
+        "tools": ["Impact Analysis", "Configuration Management"],
+        "veteranTip": "Never say 'yes' in a meeting. Say, 'Let me assess impact.'"
       }
     ],
     "business": [
       {
         "id": "B1",
         "title": "Manage Compliance",
-        "deepDive": "Ensure the project adheres to legal, regulatory, and safety standards to protect the organization and stakeholders.",
-        "enablers": ["Confirm project compliance requirements", "Classify compliance categories", "Determine threats to compliance"],
-        "deliverables": ["Compliance Management Plan", "Quality Audit Reports", "Risk Register Updates"],
-        "tools": ["Quality Audits", "Regulation Mapping", "Escalation Procedures"],
-        "veteranTip": "Compliance is a non-negotiable constraint. If you miss a regulatory gate, the project is a failure regardless of the budget."
+        "deepDive": "Ensure project adheres to legal and regulatory standards.",
+        "enablers": ["Assess needs", "Determine threats"],
+        "deliverables": ["Compliance Plan"],
+        "tools": ["Risk Register", "Audits"],
+        "veteranTip": "Compliance is a non-negotiable constraint."
       },
       {
         "id": "B2",
         "title": "Evaluate and Deliver Benefits",
-        "deepDive": "Verify that the project is delivering the intended business value and benefits defined in the business case.",
-        "enablers": ["Examine value to the organization", "Verify measurement system for benefits", "Evaluate delivery options"],
-        "deliverables": ["Benefits Realization Plan", "Value Performance Reports"],
-        "tools": ["Net Present Value (NPV)", "ROI Analysis", "Internal Rate of Return (IRR)"],
-        "veteranTip": "Deliver value, not just features. If the business case changes mid-project, you must re-evaluate the entire project."
+        "deepDive": "Confirm project delivers intended business value.",
+        "enablers": ["Examine value", "Verify benefits"],
+        "deliverables": ["Benefits Realization Plan"],
+        "tools": ["ROI Analysis", "NPV"],
+        "veteranTip": "Deliver value, not just features."
       },
       {
         "id": "B3",
         "title": "Support Org Change",
-        "deepDive": "Manage the human side of transitions to ensure the organization is ready to adopt the project's results.",
-        "enablers": ["Assess impact of project on the organization", "Evaluate readiness for change", "Support the change process"],
-        "deliverables": ["Change Management Plan", "Communications Plan"],
-        "tools": ["Kotter’s 8-Step Model", "Lewin’s Force Field Analysis", "ADKAR"],
-        "veteranTip": "People hate change. You have to spend 50% of your time explaining the 'Why' before they will care about the 'What'."
+        "deepDive": "Manage the human side of organizational transitions.",
+        "enablers": ["Assess impact", "Evaluate readiness"],
+        "deliverables": ["Change Mgmt Plan"],
+        "tools": ["Kotter 8-Steps", "Lewin Model"],
+        "veteranTip": "Change is hard. Communicate the 'Why' early."
       },
       {
         "id": "B4",
         "title": "Continuous Improvement",
-        "deepDive": "Consistently refine project processes and methodologies based on retrospectives and lessons learned.",
-        "enablers": ["Examine project methodology", "Recommend process improvements", "Foster a continuous learning culture"],
-        "deliverables": ["Updated OPA/EEF", "Lessons Learned Register"],
-        "tools": ["Retrospectives", "Kaizen", "Six Sigma/Lean"],
-        "veteranTip": "Never stop asking 'How can we do this better?' Every sprint should be more efficient than the last."
+        "deepDive": "Refine processes throughout the project lifecycle.",
+        "enablers": ["Examine methodology", "Recommend changes"],
+        "deliverables": ["Updated OPA"],
+        "tools": ["Retrospectives", "Kaizen"],
+        "veteranTip": "Always ask: 'How can we do this better?'"
       }
     ]
   },
   "formulas": [
-    { "id": "F1", "name": "CPI", "equation": "EV / AC", "scenario": "Spending $250k for $200k value.", "correctAnswer": 0.8, "veteranInsight": "You are over budget.", "stepByStep": ["200/250=0.8"] }
+    {
+      "id": "F1",
+      "name": "CPI (Cost Performance Index)",
+      "equation": "EV / AC",
+      "scenario": "EV $200k, AC $250k. Status?",
+      "correctAnswer": 0.8,
+      "veteranInsight": "Spending $1 to get $0.80 value. Over budget.",
+      "stepByStep": ["200/250=0.8"]
+    }
   ],
   "mockExam": [
-    { "id": 1, "question": "Change request first step?", "options": ["Assess impact", "Submit CR", "Talk CCB", "Update baseline"], "correct": 0 }
+    {
+      "id": 1,
+      "question": "A stakeholder refuses sign-off due to a missing feature. First action?",
+      "options": ["Include it", "Review scope", "Escalate", "Close anyway"],
+      "correct": 1,
+      "explanation": "Acceptance criteria are the legal boundary."
+    }
   ]
 }
