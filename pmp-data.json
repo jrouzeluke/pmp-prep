@@ -4,80 +4,205 @@
       {
         "id": "P1",
         "title": "Manage Conflict",
-        "primeDirective": "Facilitate, don’t dictate. Resolve at the source.",
-        "deepDive": "PMI views conflict as an opportunity for growth. Distinguish between 'Functional' and 'Dysfunctional' conflict.",
-        "veteranTip": "In my 16 years, I've found that technical 'disagreements' are often just lack of role clarity. Check the RACI first.",
-        "learnMore": {
-          "logic": "IF technical, THEN use 'Collaborating'. IF personal, THEN refer to 'Team Charter'.",
-          "blueprint": ["Team Charter", "Issue Log", "Conflict Management Plan"],
-          "mindsetTip": "Always 'Assess' first."
-        }
+        "deepDive": "Conflict is a team performance opportunity. Resolve using situational techniques.",
+        "enablers": ["Interpret source/stage", "Analyze context", "Evaluate resolution"],
+        "deliverables": ["Conflict Mgmt Plan", "Issue Log"],
+        "tools": ["Collaborating", "Compromising", "Smoothing"],
+        "veteranTip": "PMI wants a win-win. 'Forcing' is only for emergencies."
+      },
+      {
+        "id": "P2",
+        "title": "Lead a Team",
+        "deepDive": "Adopt servant leadership to empower and remove blockers.",
+        "enablers": ["Set vision", "Support diversity", "Empower members"],
+        "deliverables": ["Team Charter", "Resource Plan"],
+        "tools": ["Servant Leadership", "EI", "Situational Leadership"],
+        "veteranTip": "Lead by supporting. If you're bossing, you're losing."
+      },
+      {
+        "id": "P3",
+        "title": "Support Team Performance",
+        "deepDive": "Monitor progress and mentor for continuous improvement.",
+        "enablers": ["Appraise performance", "Verify improvement", "Identify growth"],
+        "deliverables": ["Performance Reviews", "Training Logs"],
+        "tools": ["KPIs", "Feedback Loops", "Mentoring"],
+        "veteranTip": "Measure results, not hours. Performance is about value."
+      },
+      {
+        "id": "P4",
+        "title": "Empower Team Members",
+        "deepDive": "Delegate authority and provide resources for decision-making.",
+        "enablers": ["Organize strengths", "Delegate decision-making", "Verify accountability"],
+        "deliverables": ["RACI Matrix", "Delegation Register"],
+        "tools": ["Vroom-Yetton", "Empowerment Matrix"],
+        "veteranTip": "Trust but verify. Empowerment fails without clear boundaries."
+      },
+      {
+        "id": "P5",
+        "title": "Ensure Team is Trained",
+        "deepDive": "Identify skill gaps and provide the necessary learning paths.",
+        "enablers": ["Determine competencies", "Allocate budget", "Measure outcomes"],
+        "deliverables": ["Training Plan", "Skills Matrix"],
+        "tools": ["Gap Analysis", "Skill Assessments"],
+        "veteranTip": "Training is an investment, not an expense. Budget it early."
+      },
+      {
+        "id": "P6",
+        "title": "Build a Team",
+        "deepDive": "Focus on the right mix of skills and the transition to a cohesive unit.",
+        "enablers": ["Appraise skills", "Deduce requirements", "Continuously assess"],
+        "deliverables": ["Project Staffing Assignments", "Resource Calendars"],
+        "tools": ["Pre-assignment", "Virtual Teams", "Multi-criteria Decision Analysis"],
+        "veteranTip": "A group of experts isn't a team. Focus on the 'Storming' phase."
+      },
+      {
+        "id": "P7",
+        "title": "Address Team Impediments",
+        "deepDive": "Proactively identify and remove obstacles hindering velocity.",
+        "enablers": ["Prioritize impediments", "Identify blockers", "Implement solutions"],
+        "deliverables": ["Impediment Log", "Sprint Backlog updates"],
+        "tools": ["Daily Standups", "Root Cause Analysis", "Fishbone Diagrams"],
+        "veteranTip": "Your success is measured by how fast you clear the path for others."
+      },
+      {
+        "id": "P8",
+        "title": "Negotiate Project Agreements",
+        "deepDive": "Establish boundaries and expectations with stakeholders.",
+        "enablers": ["Analyze bounds", "Assess strategy", "Negotiate for team"],
+        "deliverables": ["Contracts/SOW", "MOU"],
+        "tools": ["Win-Win Negotiation", "Active Listening"],
+        "veteranTip": "Negotiation is about building a sustainable partnership."
+      },
+      {
+        "id": "P9",
+        "title": "Collaborate with Stakeholders",
+        "deepDive": "Align project goals with business needs through relationships.",
+        "enablers": ["Evaluate interests", "Align expectations", "Determine engagement"],
+        "deliverables": ["Stakeholder Assessment", "Change Log"],
+        "tools": ["Co-creation Workshops", "Feedback Loops"],
+        "veteranTip": "Stakeholders define your 'Success'. Don't wait for them to come to you."
+      },
+      {
+        "id": "P10",
+        "title": "Build Shared Understanding",
+        "deepDive": "Ensure everyone is moving toward the same 'Definition of Done'.",
+        "enablers": ["Break down tasks", "Reach consensus", "Support diversity"],
+        "deliverables": ["Definition of Done (DoD)", "Scope Statement"],
+        "tools": ["Planning Poker", "Dot Voting"],
+        "veteranTip": "Assumed understanding is a silent killer. Verify assumptions constantly."
       }
     ],
     "process": [
       {
-        "id": "PR15",
-        "title": "Manage Budget",
-        "primeDirective": "Baseline early, track often with EVM.",
-        "deepDive": "Control costs using Earned Value Management (EVM) metrics like CPI and SPI.",
-        "veteranTip": "Budgeting is about transparency. If you're 20% over, tell the sponsor why and show the recovery plan.",
-        "learnMore": {
-          "logic": "IF CPI < 1.0, THEN analyze root cause and update Risk Register.",
-          "blueprint": ["Cost Baseline", "Work Performance Reports"],
-          "mindsetTip": "Protect the baseline, manage the variance."
-        }
+        "id": "PR1",
+        "title": "Execute with Urgency",
+        "deepDive": "Assess opportunities to deliver business value faster.",
+        "enablers": ["Prioritize MVP", "Analyze fast-tracking", "Deliver value"],
+        "deliverables": ["MVP Backlog", "Project Schedule"],
+        "tools": ["Crashing", "Fast-tracking", "MoSCoW"],
+        "veteranTip": "Speed requires focus. Don't rush the wrong things."
+      },
+      {
+        "id": "PR2",
+        "title": "Manage Communications",
+        "deepDive": "Right info, right person, right time.",
+        "enablers": ["Analyze needs", "Determine method", "Monitor feedback"],
+        "deliverables": ["Communications Plan", "Status Reports"],
+        "tools": ["Push/Pull/Interactive", "Stakeholder Matrix"],
+        "veteranTip": "90% of your job is communication. Surprises are failures."
+      },
+      {
+        "id": "PR3",
+        "title": "Assess and Manage Risks",
+        "deepDive": "Identify threats and opportunities throughout the lifecycle.",
+        "enablers": ["Identify risks", "Qualify/Quantify", "Monitor triggers"],
+        "deliverables": ["Risk Register", "Risk Report"],
+        "tools": ["Probability/Impact Matrix", "Tornado Diagram"],
+        "veteranTip": "A risk log isn't a diary. If there's no owner, it's just a list."
+      },
+      {
+        "id": "PR4",
+        "title": "Engage Stakeholders",
+        "deepDive": "Maintain relationships to ensure project success.",
+        "enablers": ["Analyze engagement", "Categorize", "Monitor interaction"],
+        "deliverables": ["Stakeholder Plan", "Power/Interest Grid"],
+        "tools": ["Engagement Assessment", "Negotiation"],
+        "veteranTip": "Engagement is active. Be proactive with your outreach."
+      },
+      {
+        "id": "PR5",
+        "title": "Plan and Manage Budget",
+        "deepDive": "Determine and monitor costs to stay within authorized funds.",
+        "enablers": ["Estimate costs", "Baseline budget", "Monitor variances"],
+        "deliverables": ["Cost Baseline", "EVM Reports"],
+        "tools": ["Analogous/Parametric", "Bottom-up", "TCPI"],
+        "veteranTip": "Transparency is key. Variance happens; hiding it is the failure."
+      },
+      {
+        "id": "PR6",
+        "title": "Plan and Manage Schedule",
+        "deepDive": "Establish the timeline and ensure milestones are met.",
+        "enablers": ["Estimate activities", "Verify milestones", "Monitor progress"],
+        "deliverables": ["Project Schedule", "Schedule Baseline"],
+        "tools": ["Critical Path Method", "Gantt Charts"],
+        "veteranTip": "The schedule is a steering tool, not a static record."
+      },
+      {
+        "id": "PR7",
+        "title": "Plan and Manage Quality",
+        "deepDive": "Ensure products meet the required standards.",
+        "enablers": ["Determine standards", "Recommend metrics", "Perform audits"],
+        "deliverables": ["Quality Management Plan", "Quality Metrics"],
+        "tools": ["Control Charts", "Statistical Sampling"],
+        "veteranTip": "Quality is planned in, not inspected in. Rework is expensive."
+      },
+      {
+        "id": "PR8",
+        "title": "Plan and Manage Scope",
+        "deepDive": "Define exactly what is (and isn't) included.",
+        "enablers": ["Collect requirements", "Break down WBS", "Monitor creep"],
+        "deliverables": ["Scope Management Plan", "WBS Dictionary"],
+        "tools": ["Decomposition", "Prototype"],
+        "veteranTip": "Scope creep is a symptom of poor requirements gathering."
+      },
+      {
+        "id": "PR9",
+        "title": "Integrate Project Activities",
+        "deepDive": "Coordinate all moving parts of the project management plan.",
+        "enablers": ["Coordinate phases", "Consolidate plans", "Manage transitions"],
+        "deliverables": ["Project Management Plan", "Change Plan"],
+        "tools": ["PMIS", "Expert Judgment"],
+        "veteranTip": "Integration is the PM’s unique value. You are the glue."
+      },
+      {
+        "id": "PR10",
+        "title": "Manage Project Changes",
+        "deepDive": "Assess impact before taking action on change requests.",
+        "enablers": ["Anticipate change", "Follow CCB process", "Adjust plans"],
+        "deliverables": ["Change Request Log", "Approved Changes"],
+        "tools": ["Impact Analysis", "Configuration Management"],
+        "veteranTip": "Never say 'yes' in a meeting. Say, 'Let me assess the impact.'"
       }
     ],
-    "business": [
-      {
-        "id": "B1",
-        "title": "Manage Compliance",
-        "primeDirective": "Compliance is a non-negotiable constraint.",
-        "deepDive": "Integrate audits and quality checks into the schedule.",
-        "veteranTip": "I treat compliance as a 'Gate.' If it doesn't pass, we don't move. It saves millions later.",
-        "learnMore": {
-          "logic": "IF regulations change, THEN submit a Change Request.",
-          "blueprint": ["Compliance Plan", "Quality Audit Reports"],
-          "mindsetTip": "Compliance is a risk you cannot 'Accept'."
-        }
-      }
-    ]
+    "business": []
   },
   "formulas": [
     {
       "id": "F1",
       "name": "CPI (Cost Performance Index)",
       "equation": "EV / AC",
-      "scenario": "Your Earned Value (EV) is $200,000, but your Actual Cost (AC) is $250,000. What is your status?",
+      "scenario": "EV is $200k, AC is $250k. What is your status?",
       "correctAnswer": 0.8,
-      "veteranInsight": "Spending $1 to get $0.80 of value is a systemic failure. Check for scope creep immediately.",
-      "stepByStep": ["EV (200,000) / AC (250,000) = 0.8", "Status: Over Budget"]
-    }
-  ],
-  "quizPool": [
-    {
-      "id": "Q1",
-      "domain": "People",
-      "question": "A team member's performance has dropped. In a private meeting, they cite personal issues. What is your first action?",
-      "options": [
-        { "text": "Report to HR for performance management.", "correct": false, "feedback": "Premature escalation." },
-        { "text": "Collaborate on a temporary flexible schedule.", "correct": true, "feedback": "Surgical: Emotional intelligence and servant leadership win." }
-      ],
-      "veteranLogic": "Retaining talent is cheaper than hiring new talent. Support the human, solve the task."
+      "veteranInsight": "You are spending $1 to get $0.80 of value. Over budget.",
+      "stepByStep": ["EV (200,000) / AC (250,000) = 0.8"]
     }
   ],
   "mockExam": [
     {
       "id": 1,
-      "question": "The project is in closing, but a stakeholder refuses to sign off because of a minor missing feature. What do you do?",
-      "options": [
-        "Include the feature immediately.",
-        "Review the project scope and acceptance criteria.",
-        "Escalate to the sponsor.",
-        "Close the project anyway."
-      ],
-      "correct": 1,
-      "explanation": "Acceptance criteria in the scope statement are the legal boundary for project completion."
+      "question": "A stakeholder demands a change. What is the very first thing you do?",
+      "options": ["Submit a Change Request", "Assess the impact", "Talk to the CCB", "Update the baseline"],
+      "correct": 1
     }
   ]
 }
