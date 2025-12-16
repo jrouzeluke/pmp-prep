@@ -1,208 +1,54 @@
 {
   "tasks": {
     "people": [
-      {
-        "id": "P1",
-        "title": "Manage Conflict",
-        "deepDive": "Conflict is a team performance opportunity. Resolve using situational techniques.",
-        "enablers": ["Interpret source/stage", "Analyze context", "Evaluate resolution"],
-        "deliverables": ["Conflict Mgmt Plan", "Issue Log"],
-        "tools": ["Collaborating", "Compromising", "Smoothing"],
-        "veteranTip": "PMI wants a win-win. 'Forcing' is only for emergencies."
-      },
-      {
-        "id": "P2",
-        "title": "Lead a Team",
-        "deepDive": "Adopt servant leadership to empower and remove blockers.",
-        "enablers": ["Set vision", "Support diversity", "Empower members"],
-        "deliverables": ["Team Charter", "Resource Plan"],
-        "tools": ["Servant Leadership", "EI", "Situational Leadership"],
-        "veteranTip": "Lead by supporting. If you're bossing, you're losing."
-      },
-      {
-        "id": "P3",
-        "title": "Support Team Performance",
-        "deepDive": "Monitor progress and mentor for continuous improvement.",
-        "enablers": ["Appraise performance", "Verify improvement", "Identify growth"],
-        "deliverables": ["Performance Reviews", "Training Logs"],
-        "tools": ["KPIs", "Feedback Loops", "Mentoring"],
-        "veteranTip": "Measure results, not hours. Performance is about value."
-      },
-      {
-        "id": "P4",
-        "title": "Empower Team Members",
-        "deepDive": "Delegate authority and provide resources for decision-making.",
-        "enablers": ["Organize strengths", "Delegate decision-making", "Verify accountability"],
-        "deliverables": ["RACI Matrix", "Delegation Register"],
-        "tools": ["Vroom-Yetton", "Empowerment Matrix"],
-        "veteranTip": "Trust but verify. Empowerment fails without clear boundaries."
-      },
-      {
-        "id": "P5",
-        "title": "Ensure Team is Trained",
-        "deepDive": "Identify skill gaps and provide the necessary learning paths.",
-        "enablers": ["Determine competencies", "Allocate budget", "Measure outcomes"],
-        "deliverables": ["Training Plan", "Skills Matrix"],
-        "tools": ["Gap Analysis", "Skill Assessments"],
-        "veteranTip": "Training is an investment, not an expense. Budget it early."
-      },
-      {
-        "id": "P6",
-        "title": "Build a Team",
-        "deepDive": "Focus on the right mix of skills and the transition to a cohesive unit.",
-        "enablers": ["Appraise skills", "Deduce requirements", "Continuously assess"],
-        "deliverables": ["Project Staffing Assignments", "Resource Calendars"],
-        "tools": ["Pre-assignment", "Virtual Teams", "Multi-criteria Decision Analysis"],
-        "veteranTip": "A group of experts isn't a team. Focus on the 'Storming' phase."
-      },
-      {
-        "id": "P7",
-        "title": "Address Team Impediments",
-        "deepDive": "Proactively identify and remove obstacles hindering velocity.",
-        "enablers": ["Prioritize impediments", "Identify blockers", "Implement solutions"],
-        "deliverables": ["Impediment Log", "Sprint Backlog updates"],
-        "tools": ["Daily Standups", "Root Cause Analysis", "Fishbone Diagrams"],
-        "veteranTip": "Your success is measured by how fast you clear the path for others."
-      },
-      {
-        "id": "P8",
-        "title": "Negotiate Project Agreements",
-        "deepDive": "Establish boundaries and expectations with stakeholders.",
-        "enablers": ["Analyze bounds", "Assess strategy", "Negotiate for team"],
-        "deliverables": ["Contracts/SOW", "MOU"],
-        "tools": ["Win-Win Negotiation", "Active Listening"],
-        "veteranTip": "Negotiation is about building a sustainable partnership."
-      },
-      {
-        "id": "P9",
-        "title": "Collaborate with Stakeholders",
-        "deepDive": "Align project goals with business needs through relationships.",
-        "enablers": ["Evaluate interests", "Align expectations", "Determine engagement"],
-        "deliverables": ["Stakeholder Assessment", "Change Log"],
-        "tools": ["Co-creation Workshops", "Feedback Loops"],
-        "veteranTip": "Stakeholders define your 'Success'. Don't wait for them to come to you."
-      },
-      {
-        "id": "P10",
-        "title": "Build Shared Understanding",
-        "deepDive": "Ensure everyone is moving toward the same 'Definition of Done'.",
-        "enablers": ["Break down tasks", "Reach consensus", "Support diversity"],
-        "deliverables": ["Definition of Done (DoD)", "Scope Statement"],
-        "tools": ["Planning Poker", "Dot Voting"],
-        "veteranTip": "Assumed understanding is a silent killer. Verify assumptions constantly."
-      }
+      { "id": "P1", "title": "Manage Conflict", "deepDive": "Resolve using situational techniques.", "enablers": ["Interpret source", "Analyze context", "Evaluate resolution"], "deliverables": ["Issue Log"], "tools": ["Collaborating"], "veteranTip": "Win-win is the goal." },
+      { "id": "P2", "title": "Lead a Team", "deepDive": "Adopt servant leadership.", "enablers": ["Set vision", "Empower members"], "deliverables": ["Team Charter"], "tools": ["Servant Leadership"], "veteranTip": "Remove blockers." },
+      { "id": "P3", "title": "Support Team Performance", "deepDive": "Mentor for continuous improvement.", "enablers": ["Appraise performance", "Verify improvement"], "deliverables": ["Performance Reviews"], "tools": ["KPIs", "Feedback Loops"], "veteranTip": "Performance is about value, not hours." },
+      { "id": "P4", "title": "Empower Team Members", "deepDive": "Delegate authority and resources.", "enablers": ["Organize strengths", "Delegate decision-making"], "deliverables": ["RACI Matrix"], "tools": ["Empowerment Matrix"], "veteranTip": "Trust but verify." },
+      { "id": "P5", "title": "Ensure Training", "deepDive": "Identify and bridge skill gaps.", "enablers": ["Determine competencies", "Allocate budget"], "deliverables": ["Training Plan", "Skills Matrix"], "tools": ["Gap Analysis"], "veteranTip": "Training is an investment." },
+      { "id": "P6", "title": "Build a Team", "deepDive": "Create a cohesive unit.", "enablers": ["Appraise skills", "Deduce requirements"], "deliverables": ["Resource Calendars"], "tools": ["Pre-assignment"], "veteranTip": "Focus on the Storming phase." },
+      { "id": "P7", "title": "Address Impediments", "deepDive": "Remove blockers to velocity.", "enablers": ["Prioritize impediments", "Implement solutions"], "deliverables": ["Impediment Log"], "tools": ["Root Cause Analysis"], "veteranTip": "Clear the path for others." },
+      { "id": "P8", "title": "Negotiate Agreements", "deepDive": "Establish boundaries with stakeholders.", "enablers": ["Analyze bounds", "Assess strategy"], "deliverables": ["Contracts/SOW"], "tools": ["Win-Win Negotiation"], "veteranTip": "Build a partnership." },
+      { "id": "P9", "title": "Collaborate Stakeholders", "deepDive": "Align goals with business needs.", "enablers": ["Evaluate interests", "Align expectations"], "deliverables": ["Stakeholder Assessment"], "tools": ["Feedback Loops"], "veteranTip": "Stakeholders define success." },
+      { "id": "P10", "title": "Shared Understanding", "deepDive": "Align on the Definition of Done.", "enablers": ["Break down tasks", "Reach consensus"], "deliverables": ["Definition of Done"], "tools": ["Planning Poker"], "veteranTip": "Verify assumptions constantly." },
+      { "id": "P11", "title": "Engage Virtual Teams", "deepDive": "Manage distributed teams.", "enablers": ["Examine needs", "Implement tech"], "deliverables": ["Virtual Team Charter"], "tools": ["Shared Boards"], "veteranTip": "Over-communicate." },
+      { "id": "P12", "title": "Define Ground Rules", "deepDive": "Set behavior expectations.", "enablers": ["Communicate rules", "Enforce expectations"], "deliverables": ["Team Charter"], "tools": ["Facilitation"], "veteranTip": "The team must write the rules." },
+      { "id": "P13", "title": "Mentor Stakeholders", "deepDive": "Educate on project processes.", "enablers": ["Allocate time", "Mentor/Coach"], "deliverables": ["Stakeholder Plan"], "tools": ["Active Listening"], "veteranTip": "A savvy stakeholder is an ally." },
+      { "id": "P14", "title": "Promote EI", "deepDive": "Improve dynamics with EQ.", "enablers": ["Assess behavior", "Adjust style"], "deliverables": ["Resource Plan"], "tools": ["EI Assessments"], "veteranTip": "Read the room." }
     ],
     "process": [
-      {
-        "id": "PR1",
-        "title": "Execute with Urgency",
-        "deepDive": "Assess opportunities to deliver business value faster.",
-        "enablers": ["Prioritize MVP", "Analyze fast-tracking", "Deliver value"],
-        "deliverables": ["MVP Backlog", "Project Schedule"],
-        "tools": ["Crashing", "Fast-tracking", "MoSCoW"],
-        "veteranTip": "Speed requires focus. Don't rush the wrong things."
-      },
-      {
-        "id": "PR2",
-        "title": "Manage Communications",
-        "deepDive": "Right info, right person, right time.",
-        "enablers": ["Analyze needs", "Determine method", "Monitor feedback"],
-        "deliverables": ["Communications Plan", "Status Reports"],
-        "tools": ["Push/Pull/Interactive", "Stakeholder Matrix"],
-        "veteranTip": "90% of your job is communication. Surprises are failures."
-      },
-      {
-        "id": "PR3",
-        "title": "Assess and Manage Risks",
-        "deepDive": "Identify threats and opportunities throughout the lifecycle.",
-        "enablers": ["Identify risks", "Qualify/Quantify", "Monitor triggers"],
-        "deliverables": ["Risk Register", "Risk Report"],
-        "tools": ["Probability/Impact Matrix", "Tornado Diagram"],
-        "veteranTip": "A risk log isn't a diary. If there's no owner, it's just a list."
-      },
-      {
-        "id": "PR4",
-        "title": "Engage Stakeholders",
-        "deepDive": "Maintain relationships to ensure project success.",
-        "enablers": ["Analyze engagement", "Categorize", "Monitor interaction"],
-        "deliverables": ["Stakeholder Plan", "Power/Interest Grid"],
-        "tools": ["Engagement Assessment", "Negotiation"],
-        "veteranTip": "Engagement is active. Be proactive with your outreach."
-      },
-      {
-        "id": "PR5",
-        "title": "Plan and Manage Budget",
-        "deepDive": "Determine and monitor costs to stay within authorized funds.",
-        "enablers": ["Estimate costs", "Baseline budget", "Monitor variances"],
-        "deliverables": ["Cost Baseline", "EVM Reports"],
-        "tools": ["Analogous/Parametric", "Bottom-up", "TCPI"],
-        "veteranTip": "Transparency is key. Variance happens; hiding it is the failure."
-      },
-      {
-        "id": "PR6",
-        "title": "Plan and Manage Schedule",
-        "deepDive": "Establish the timeline and ensure milestones are met.",
-        "enablers": ["Estimate activities", "Verify milestones", "Monitor progress"],
-        "deliverables": ["Project Schedule", "Schedule Baseline"],
-        "tools": ["Critical Path Method", "Gantt Charts"],
-        "veteranTip": "The schedule is a steering tool, not a static record."
-      },
-      {
-        "id": "PR7",
-        "title": "Plan and Manage Quality",
-        "deepDive": "Ensure products meet the required standards.",
-        "enablers": ["Determine standards", "Recommend metrics", "Perform audits"],
-        "deliverables": ["Quality Management Plan", "Quality Metrics"],
-        "tools": ["Control Charts", "Statistical Sampling"],
-        "veteranTip": "Quality is planned in, not inspected in. Rework is expensive."
-      },
-      {
-        "id": "PR8",
-        "title": "Plan and Manage Scope",
-        "deepDive": "Define exactly what is (and isn't) included.",
-        "enablers": ["Collect requirements", "Break down WBS", "Monitor creep"],
-        "deliverables": ["Scope Management Plan", "WBS Dictionary"],
-        "tools": ["Decomposition", "Prototype"],
-        "veteranTip": "Scope creep is a symptom of poor requirements gathering."
-      },
-      {
-        "id": "PR9",
-        "title": "Integrate Project Activities",
-        "deepDive": "Coordinate all moving parts of the project management plan.",
-        "enablers": ["Coordinate phases", "Consolidate plans", "Manage transitions"],
-        "deliverables": ["Project Management Plan", "Change Plan"],
-        "tools": ["PMIS", "Expert Judgment"],
-        "veteranTip": "Integration is the PM’s unique value. You are the glue."
-      },
-      {
-        "id": "PR10",
-        "title": "Manage Project Changes",
-        "deepDive": "Assess impact before taking action on change requests.",
-        "enablers": ["Anticipate change", "Follow CCB process", "Adjust plans"],
-        "deliverables": ["Change Request Log", "Approved Changes"],
-        "tools": ["Impact Analysis", "Configuration Management"],
-        "veteranTip": "Never say 'yes' in a meeting. Say, 'Let me assess the impact.'"
-      }
+      { "id": "PR1", "title": "Execute with Urgency", "deepDive": "Deliver value fast.", "enablers": ["Prioritize MVP", "Fast-track"], "deliverables": ["MVP Backlog"], "tools": ["Critical Path"], "veteranTip": "Focus on the right things." },
+      { "id": "PR2", "title": "Manage Comms", "deepDive": "Right info, right person.", "enablers": ["Analyze needs", "Monitor feedback"], "deliverables": ["Comms Plan"], "tools": ["Push/Pull Comms"], "veteranTip": "90% of your job is here." },
+      { "id": "PR3", "title": "Manage Risk", "deepDive": "Identify and mitigate threats.", "enablers": ["Identify risks", "Monitor triggers"], "deliverables": ["Risk Register"], "tools": ["Tornado Diagram"], "veteranTip": "Every risk needs an owner." },
+      { "id": "PR4", "title": "Engage Stakeholders", "deepDive": "Maintain success relationships.", "enablers": ["Analyze engagement", "Monitor interaction"], "deliverables": ["Stakeholder Plan"], "tools": ["Power/Interest Grid"], "veteranTip": "Engagement is active." },
+      { "id": "PR5", "title": "Manage Budget", "deepDive": "Stay within authorized funds.", "enablers": ["Estimate costs", "Monitor variances"], "deliverables": ["Cost Baseline"], "tools": ["EVM Metrics"], "veteranTip": "Transparency prevents failure." },
+      { "id": "PR6", "title": "Manage Schedule", "deepDive": "Ensure milestones are met.", "enablers": ["Estimate activities", "Monitor progress"], "deliverables": ["Project Schedule"], "tools": ["Gantt Charts"], "veteranTip": "The schedule is a steering tool." },
+      { "id": "PR7", "title": "Manage Quality", "deepDive": "Meet required standards.", "enablers": ["Determine standards", "Perform audits"], "deliverables": ["Quality Plan"], "tools": ["Control Charts"], "veteranTip": "Quality is planned, not inspected." },
+      { "id": "PR8", "title": "Manage Scope", "deepDive": "Define what is included.", "enablers": ["Break down WBS", "Monitor creep"], "deliverables": ["Scope Baseline"], "tools": ["Decomposition"], "veteranTip": "Be a WBS gatekeeper." },
+      { "id": "PR9", "title": "Integrate Activities", "deepDive": "Sync moving parts.", "enablers": ["Coordinate phases", "Consolidate plans"], "deliverables": ["Project Plan"], "tools": ["PMIS"], "veteranTip": "You are the glue." },
+      { "id": "PR10", "title": "Manage Changes", "deepDive": "Assess impact before action.", "enablers": ["Anticipate change", "Follow CCB"], "deliverables": ["Change Log"], "tools": ["Impact Analysis"], "veteranTip": "Assess first, then act." },
+      { "id": "PR11", "title": "Manage Procurement", "deepDive": "Acquire necessary resources.", "enablers": ["Examine requirements", "Contract strategy"], "deliverables": ["SOW", "Contracts"], "tools": ["Bidder Conferences"], "veteranTip": "Vendors are partners." },
+      { "id": "PR12", "title": "Manage Artifacts", "deepDive": "Maintain project documentation.", "enablers": ["Determine requirements", "Version control"], "deliverables": ["Project Archives"], "tools": ["Configuration Mgmt"], "veteranTip": "Documentation is the audit trail." },
+      { "id": "PR13", "title": "Determine Methodology", "deepDive": "Agile, Waterfall, or Hybrid.", "enablers": ["Assess complexity", "Recommend life cycle"], "deliverables": ["Life Cycle Description"], "tools": ["Stacey Matrix"], "veteranTip": "Hybrid usually wins." },
+      { "id": "PR14", "title": "Governance", "deepDive": "Define decision frameworks.", "enablers": ["Determine structure", "Plan audits"], "deliverables": ["Governance Plan"], "tools": ["Audits"], "veteranTip": "Governance is a safety net." },
+      { "id": "PR15", "title": "Manage Issues", "deepDive": "Resolve problems immediately.", "enablers": ["Identify issues", "Determine action"], "deliverables": ["Issue Log"], "tools": ["Root Cause"], "veteranTip": "Don't let issues sit." },
+      { "id": "PR16", "title": "Knowledge Transfer", "deepDive": "Ensure project continuity.", "enablers": ["Discuss lessons", "Transfer knowledge"], "deliverables": ["Lessons Learned"], "tools": ["Knowledge Mgmt"], "veteranTip": "Capture it as it happens." },
+      { "id": "PR17", "title": "Project Closing", "deepDive": "Formalize completion.", "enablers": ["Obtain sign-off", "Archive records"], "deliverables": ["Final Report"], "tools": ["Closing Ceremony"], "veteranTip": "Don't skip the sign-off." }
     ],
-    "business": []
+    "business": [
+      { "id": "B1", "title": "Manage Compliance", "deepDive": "Ensure legal adherence.", "enablers": ["Assess needs", "Determine threats"], "deliverables": ["Compliance Plan"], "tools": ["Risk Register"], "veteranTip": "Compliance is non-negotiable." },
+      { "id": "B2", "title": "Evaluate Value", "deepDive": "Verify project benefits.", "enablers": ["Examine value", "Verify benefits"], "deliverables": ["Benefits Plan"], "tools": ["ROI Analysis"], "veteranTip": "Deliver value, not just features." },
+      { "id": "B3", "title": "Support Org Change", "deepDive": "Manage the human side of change.", "enablers": ["Assess impact", "Evaluate readiness"], "deliverables": ["Change Plan"], "tools": ["Kotter Model"], "veteranTip": "Communicate the 'Why'." },
+      { "id": "B4", "title": "Improve Process", "deepDive": "Refine methodology.", "enablers": ["Examine methodology", "Recommend changes"], "deliverables": ["Updated OPA"], "tools": ["Retrospectives"], "veteranTip": "Always improve." }
+    ]
   },
   "formulas": [
-    {
-      "id": "F1",
-      "name": "CPI (Cost Performance Index)",
-      "equation": "EV / AC",
-      "scenario": "EV is $200k, AC is $250k. What is your status?",
-      "correctAnswer": 0.8,
-      "veteranInsight": "You are spending $1 to get $0.80 of value. Over budget.",
-      "stepByStep": ["EV (200,000) / AC (250,000) = 0.8"]
-    }
+    { "id": "F1", "name": "CPI", "equation": "EV / AC", "scenario": "EV $200k, AC $250k.", "correctAnswer": 0.8, "veteranInsight": "You are over budget.", "stepByStep": ["200/250=0.8"] }
+  ],
+  "quizPool": [
+    { "id": "Q1", "domain": "People", "question": "A team member is late. First action?", "options": [{ "text": "Talk in private", "correct": true }, { "text": "HR", "correct": false }], "veteranLogic": "Assess before acting." }
   ],
   "mockExam": [
-    {
-      "id": 1,
-      "question": "A stakeholder demands a change. What is the very first thing you do?",
-      "options": ["Submit a Change Request", "Assess the impact", "Talk to the CCB", "Update the baseline"],
-      "correct": 1
-    }
+    { "id": 1, "question": "Change request first step?", "options": ["Assess impact", "Submit CR", "Talk CCB", "Update baseline"], "correct": 0 }
   ]
 }
