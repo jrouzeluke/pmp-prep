@@ -1,0 +1,13 @@
+[33m8c7afd3[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m Restore Study Guide Content
+[33md1ed23a[m fix: html reference
+[33m9a36d10[m fix: html reference
+[33m6f168fe[m fix: stray code
+[33m131545c[m fix: syntax errors
+[33md024056[m fix: stray code
+[33m8fffa6c[m fix: remove random code
+[33m23c0f2e[m fix: remove duplicate else block
+[33mbd5ac4c[m fix error
+[33m6bb0641[m feat: add study guide content
+[33mfa09bf5[m fix: add missing main menu and icons
+[33md9956ef[m fix: rename Netlify folder to lowercase
+[33m13db1d3[m first commit
