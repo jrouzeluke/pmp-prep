@@ -1,54 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PMP Exam Prep Tool - Master Your Certification</title>
-  
-    <script src="https://cdn.tailwindcss.com"></script>
-  
-    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-  
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-  
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-    }
-    
-    #root {
-      min-height: 100vh;
-    }
-    
-    /* Loading screen */
-    .loading {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
-      font-size: 24px;
-      font-weight: bold;
-    }
-  </style>git add <div class=""></div>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PMP Mastery 2026</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <style>
+    body { background-color: #f8fafc; }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+  </style>
 </head>
 <body>
-  <div id="root">
-    <div class="loading">🚀 Loading PMP Prep Tool...</div>
-  </div>
+  <div id="root">
+    <div style="display:flex; justify-content:center; align-items:center; height:100vh; font-family:sans-serif; color:#6366f1; font-weight:bold;">
+      🚀 Loading PMP Tool...
+    </div>
+  </div>
 
-    <script type="text/babel" src="pmp-prep-app.js"></script>
-  
-  <script type="text/babel">
-    // This line injects the PMPPrepApp component into the 'root' div, replacing the loading message.
-    ReactDOM.render(<PMPPrepApp />, document.getElementById('root'));
-  </script>
-
+  <script type="text/babel" src="pmp-prep-app.js"></script>
 </body>
 </html>
