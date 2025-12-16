@@ -1,9 +1,8 @@
 [build]
-  # This command tells Netlify we don't need to compile anything
-  command = "echo 'No build step required'"
-  # This tells Netlify your index.html is in the main folder
   publish = "."
+  command = ""
 
-[functions]
-  # This points Netlify to your functions folder (note the lowercase 'n')
-  directory = "netlify/functions"
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
