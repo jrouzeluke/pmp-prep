@@ -17,20 +17,19 @@ const Settings = ({ className }) => (<svg className={className} width="24" heigh
 // --- 2. QUIZ DATA ---
 const QUIZ_QUESTIONS = [
   {
-    question: "A project is behind schedule because a functional manager reassigned a key resource. What should the PM do first?",
-    options: ["Escalate to the sponsor", "Meet with the functional manager to discuss the impact", "Hire a contractor", "Update the schedule"],
+    question: "A project manager is lead a hybrid project. A key stakeholder is worried that the agile team's lack of a detailed project schedule will cause delays. How should the project manager respond?",
+    options: ["Ask the team to create a detailed Gantt chart for 6 months", "Invite the stakeholder to the next Sprint Review to see progress", "Escalate to the sponsor", "Ignore the concern"],
     answer: 1,
-    explanation: "PMI Mindset: Always analyze and communicate before escalating. Negotiation with functional managers is a key People domain task."
+    explanation: "Transparency via Sprint Reviews is the best way to address concerns about progress in agile/hybrid environments."
   },
   {
-    question: "A project team is struggling with a technical impediment in a Sprint. What is the Scrum Master's role?",
-    options: ["Solve the technical problem", "Assign the task to a senior developer", "Facilitate the removal of the impediment", "Log a risk in the register"],
+    question: "If EV = $2,000, AC = $2,500, and PV = $1,800, what is the status of the project?",
+    options: ["Under budget/Ahead of schedule", "Over budget/Behind schedule", "Over budget/Ahead of schedule", "Under budget/Behind schedule"],
     answer: 2,
-    explanation: "Scrum Masters are servant leaders who facilitate impediment removal rather than solving technical issues themselves."
+    explanation: "CPI = 0.8 (Over Budget). SPI = 1.11 (Ahead of Schedule)."
   }
 ];
 
-// --- 3. MAIN COMPONENT ---
 const PMPPrepApp = () => {
   const [currentMode, setCurrentMode] = useState('dashboard');
   const [studyGuideSection, setStudyGuideSection] = useState('overview');
@@ -41,18 +40,13 @@ const PMPPrepApp = () => {
     return saved ? JSON.parse(saved) : { correct: 0, total: 0 };
   });
 
-  useEffect(() => {
-    localStorage.setItem('pmp_stats', JSON.stringify(stats));
-  }, [stats]);
+  useEffect(() => { localStorage.setItem('pmp_stats', JSON.stringify(stats)); }, [stats]);
 
   const handleQuizAnswer = (idx) => {
     if (selectedAns !== null) return;
     setSelectedAns(idx);
     const isCorrect = idx === QUIZ_QUESTIONS[quizIdx].answer;
-    setStats(prev => ({
-      total: prev.total + 1,
-      correct: isCorrect ? prev.correct + 1 : prev.correct
-    }));
+    setStats(prev => ({ total: prev.total + 1, correct: isCorrect ? prev.correct + 1 : prev.correct }));
   };
 
   const nextQuestion = () => {
@@ -65,10 +59,10 @@ const PMPPrepApp = () => {
   if (currentMode === 'quiz') {
     const q = QUIZ_QUESTIONS[quizIdx];
     return (
-      <div className="min-h-screen bg-slate-50 p-6">
+      <div className="min-h-screen bg-slate-50 p-6 font-sans">
         <div className="max-w-2xl mx-auto bg-white rounded-3xl shadow-xl p-8">
           <div className="flex justify-between items-center mb-6">
-            <span className="text-sm font-bold text-indigo-600 uppercase">Question {quizIdx + 1}/{QUIZ_QUESTIONS.length}</span>
+            <span className="text-sm font-bold text-indigo-600">Question {quizIdx + 1}/{QUIZ_QUESTIONS.length}</span>
             <button onClick={() => setCurrentMode('dashboard')}><XCircle className="text-slate-400" /></button>
           </div>
           <h2 className="text-xl font-bold text-slate-800 mb-8">{q.question}</h2>
@@ -93,53 +87,116 @@ const PMPPrepApp = () => {
     );
   }
 
-  if (currentMode === 'studyguide') {
-    return (
-      <div className="min-h-screen bg-slate-50 p-6">
-        <div className="max-w-4xl mx-auto">
-          <div className="flex items-center gap-4 mb-8">
-            <button onClick={() => setCurrentMode('dashboard')} className="p-2 bg-white rounded-full shadow"><ArrowLeft /></button>
-            <h1 className="text-2xl font-black">Study Guide</h1>
-          </div>
-          <div className="flex gap-2 overflow-x-auto mb-6 pb-2">
-            {['overview', 'tasks', 'agile', 'formulas'].map(s => (
-              <button key={s} onClick={() => setStudyGuideSection(s)} className={`px-4 py-2 rounded-full font-bold whitespace-nowrap transition-all ${studyGuideSection === s ? 'bg-indigo-600 text-white' : 'bg-white text-slate-500'}`}>
-                {s.toUpperCase()}
-              </button>
-            ))}
-          </div>
-          <div className="space-y-4">
-            {studyGuideSection === 'tasks' ? (
-              <div className="grid gap-4">
-                <div className="bg-white p-6 rounded-2xl shadow-sm border-l-4 border-indigo-500">
-                  <h3 className="font-bold mb-2">Domain I: People (42%)</h3>
-                  <p className="text-sm text-slate-600">Task 1: Manage Conflict. Task 2: Lead a Team. Task 3: Support Team Performance.</p>
-                </div>
-                <div className="bg-white p-6 rounded-2xl shadow-sm border-l-4 border-emerald-500">
-                  <h3 className="font-bold mb-2">Domain II: Process (50%)</h3>
-                  <p className="text-sm text-slate-600">Task 1: Execute with Urgency. Task 2: Manage Communications. Task 3: Manage Risks.</p>
-                </div>
+  if (currentMode === 'overview' || currentMode === 'formulas' || currentMode === 'studyguide') {
+      return (
+          <div className="min-h-screen bg-slate-50 p-6 font-sans">
+              <div className="max-w-4xl mx-auto">
+                  <div className="flex items-center gap-4 mb-8">
+                      <button onClick={() => setCurrentMode('dashboard')} className="p-2 bg-white rounded-full shadow hover:shadow-md"><ArrowLeft /></button>
+                      <h1 className="text-2xl font-black">{currentMode === 'formulas' ? 'Key Formulas' : currentMode === 'overview' ? 'Exam Overview' : 'Study Guide'}</h1>
+                  </div>
+
+                  {currentMode === 'formulas' && (
+                      <div className="grid md:grid-cols-2 gap-6">
+                          <div className="bg-white p-6 rounded-2xl shadow-sm border-l-4 border-indigo-500">
+                              <h3 className="font-bold flex items-center gap-2 mb-4"><BarChart3 className="w-5 h-5 text-indigo-500" /> EVM</h3>
+                              <div className="space-y-3">
+                                  <div className="p-3 bg-indigo-50 rounded-lg flex justify-between">
+                                      <span className="font-bold">CPI (Cost)</span><span>EV / AC</span>
+                                  </div>
+                                  <div className="p-3 bg-indigo-50 rounded-lg flex justify-between">
+                                      <span className="font-bold">SPI (Schedule)</span><span>EV / PV</span>
+                                  </div>
+                              </div>
+                          </div>
+                          <div className="bg-white p-6 rounded-2xl shadow-sm border-l-4 border-emerald-500">
+                              <h3 className="font-bold flex items-center gap-2 mb-4"><Timer className="w-5 h-5 text-emerald-500" /> Estimation</h3>
+                              <div className="p-3 bg-emerald-50 rounded-lg">
+                                  <div className="font-bold mb-1">PERT (Beta)</div>
+                                  <div className="text-sm font-mono">(O + 4M + P) / 6</div>
+                              </div>
+                          </div>
+                      </div>
+                  )}
+
+                  {currentMode === 'overview' && (
+                      <div>
+                          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8 text-center">
+                              <div className="bg-white p-4 rounded-xl shadow-sm"><div className="text-2xl font-bold text-indigo-600">180</div><div className="text-xs uppercase text-slate-500">Questions</div></div>
+                              <div className="bg-white p-4 rounded-xl shadow-sm"><div className="text-2xl font-bold text-indigo-600">230</div><div className="text-xs uppercase text-slate-500">Minutes</div></div>
+                              <div className="bg-white p-4 rounded-xl shadow-sm"><div className="text-2xl font-bold text-indigo-600">2</div><div className="text-xs uppercase text-slate-500">Breaks</div></div>
+                              <div className="bg-white p-4 rounded-xl shadow-sm"><div className="text-2xl font-bold text-indigo-600">3</div><div className="text-xs uppercase text-slate-500">Domains</div></div>
+                          </div>
+                          <div className="bg-white p-8 rounded-3xl shadow-sm">
+                              <h2 className="text-xl font-bold mb-6">Exam Day Strategy</h2>
+                              <ul className="space-y-4 text-slate-600">
+                                  <li className="flex gap-4">
+                                      <span className="w-6 h-6 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center shrink-0 text-sm font-bold">1</span>
+                                      <p>Manage your time (approx. 75 sec per question).</p>
+                                  </li>
+                                  <li className="flex gap-4">
+                                      <span className="w-6 h-6 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center shrink-0 text-sm font-bold">2</span>
+                                      <p>Take your two 10-minute breaks after Q60 and Q120.</p>
+                                  </li>
+                              </ul>
+                          </div>
+                      </div>
+                  )}
+
+                  {currentMode === 'studyguide' && (
+                      <div>
+                          <div className="flex gap-2 overflow-x-auto mb-6 pb-2 no-scrollbar">
+                              {['overview', 'tasks', 'agile', 'traps'].map(s => (
+                                  <button key={s} onClick={() => setStudyGuideSection(s)} className={`px-4 py-2 rounded-full font-bold whitespace-nowrap transition-all ${studyGuideSection === s ? 'bg-indigo-600 text-white' : 'bg-white text-slate-500 shadow-sm'}`}>
+                                      {s.toUpperCase()}
+                                  </button>
+                              ))}
+                          </div>
+                          <div className="space-y-4">
+                              {studyGuideSection === 'tasks' ? (
+                                  <div className="grid gap-4">
+                                      <div className="bg-white p-6 rounded-2xl shadow-sm border-l-4 border-indigo-500">
+                                          <h3 className="font-bold mb-2 text-indigo-900">Domain I: People (42%)</h3>
+                                          <p className="text-sm text-slate-600">Manage conflict, lead team, mentor others, support performance.</p>
+                                      </div>
+                                      <div className="bg-white p-6 rounded-2xl shadow-sm border-l-4 border-emerald-500">
+                                          <h3 className="font-bold mb-2 text-emerald-900">Domain II: Process (50%)</h3>
+                                          <p className="text-sm text-slate-600">Scope, schedule, budget, risk, communications, quality, procurement.</p>
+                                      </div>
+                                  </div>
+                              ) : studyGuideSection === 'traps' ? (
+                                <div className="grid md:grid-cols-2 gap-4">
+                                    <div className="bg-white p-6 rounded-2xl shadow-sm border-l-4 border-red-500">
+                                        <h3 className="font-bold mb-1">The "DIY" Trap</h3>
+                                        <p className="text-sm text-slate-600">The PM doesn't do technical work; they facilitate the team.</p>
+                                    </div>
+                                    <div className="bg-white p-6 rounded-2xl shadow-sm border-l-4 border-red-500">
+                                        <h3 className="font-bold mb-1">Immediate Escalation</h3>
+                                        <p className="text-sm text-slate-600">Analyze and try to solve with the team before telling the sponsor.</p>
+                                    </div>
+                                </div>
+                              ) : (
+                                  <div className="bg-white p-12 rounded-3xl text-center shadow-sm">
+                                      <Award className="w-12 h-12 text-indigo-500 mx-auto mb-4" />
+                                      <h2 className="text-xl font-bold">Welcome to the Study Guide</h2>
+                                      <p className="text-slate-500">Select a section above to begin.</p>
+                                  </div>
+                              )}
+                          </div>
+                      </div>
+                  )}
               </div>
-            ) : (
-              <div className="bg-white p-12 rounded-3xl text-center shadow-sm">
-                <Award className="w-12 h-12 text-indigo-500 mx-auto mb-4" />
-                <h2 className="text-xl font-bold">Deep Dive into {studyGuideSection}</h2>
-                <p className="text-slate-500">Full detailed content curated for the 2026 PMP Exam.</p>
-              </div>
-            )}
           </div>
-        </div>
-      </div>
-    );
+      );
   }
 
-  // Dashboard Fallback
+  // --- DASHBOARD (HOME) ---
   const score = stats.total > 0 ? Math.round((stats.correct / stats.total) * 100) : 0;
   return (
     <div className="min-h-screen bg-slate-50 p-6 font-sans">
       <div className="max-w-4xl mx-auto">
         <div className="bg-gradient-to-br from-indigo-600 to-purple-700 rounded-3xl p-8 text-white mb-8 shadow-xl">
-          <h1 className="text-3xl font-black italic mb-2">PMP MASTERY 2026</h1>
+          <h1 className="text-3xl font-black italic mb-2 tracking-tight">PMP MASTERY 2026</h1>
           <p className="opacity-80 text-sm">Your roadmap to Above Target performance.</p>
           <div className="grid grid-cols-2 gap-4 mt-8">
             <div className="bg-white/10 rounded-2xl p-4 backdrop-blur-md">
@@ -152,14 +209,35 @@ const PMPPrepApp = () => {
             </div>
           </div>
         </div>
-        <div className="grid md:grid-cols-2 gap-6">
-          <button onClick={() => setCurrentMode('quiz')} className="bg-white p-8 rounded-3xl shadow-sm hover:shadow-md transition-all text-center border border-slate-100">
-            <Zap className="w-10 h-10 text-amber-500 mx-auto mb-4" />
+
+        <div className="grid md:grid-cols-3 gap-6 mb-8">
+          <button onClick={() => setCurrentMode('quiz')} className="bg-white p-8 rounded-3xl shadow-sm hover:shadow-md transition-all text-center border border-slate-100 group">
+            <Zap className="w-10 h-10 text-amber-500 mx-auto mb-4 group-hover:scale-110 transition-transform" />
             <span className="text-xl font-black block">START QUIZ</span>
           </button>
-          <button onClick={() => setCurrentMode('studyguide')} className="bg-white p-8 rounded-3xl shadow-sm hover:shadow-md transition-all text-center border border-slate-100">
-            <Target className="w-10 h-10 text-indigo-500 mx-auto mb-4" />
+          <button onClick={() => setCurrentMode('studyguide')} className="bg-white p-8 rounded-3xl shadow-sm hover:shadow-md transition-all text-center border border-slate-100 group">
+            <Target className="w-10 h-10 text-indigo-500 mx-auto mb-4 group-hover:scale-110 transition-transform" />
             <span className="text-xl font-black block">STUDY GUIDE</span>
+          </button>
+          <button onClick={() => setCurrentMode('overview')} className="bg-white p-8 rounded-3xl shadow-sm hover:shadow-md transition-all text-center border border-slate-100 group">
+            <Award className="w-10 h-10 text-emerald-500 mx-auto mb-4 group-hover:scale-110 transition-transform" />
+            <span className="text-xl font-black block">EXAM OVERVIEW</span>
+          </button>
+        </div>
+
+        <h2 className="text-xl font-black text-slate-800 mb-4 px-2">QUICK STUDY LINKS</h2>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <button onClick={() => setCurrentMode('formulas')} className="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex items-center gap-3 hover:bg-slate-50 transition-colors">
+            <BarChart3 className="text-blue-500 w-5 h-5"/> <span className="font-bold text-sm text-slate-700">Formulas</span>
+          </button>
+          <button onClick={() => {setCurrentMode('studyguide'); setStudyGuideSection('agile');}} className="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex items-center gap-3 hover:bg-slate-50 transition-colors">
+            <Zap className="text-pink-500 w-5 h-5"/> <span className="font-bold text-sm text-slate-700">Agile</span>
+          </button>
+          <button onClick={() => {setCurrentMode('studyguide'); setStudyGuideSection('traps');}} className="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex items-center gap-3 hover:bg-slate-50 transition-colors">
+            <AlertCircle className="text-amber-500 w-5 h-5"/> <span className="font-bold text-sm text-slate-700">Traps</span>
+          </button>
+          <button onClick={() => {setCurrentMode('studyguide'); setStudyGuideSection('tasks');}} className="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex items-center gap-3 hover:bg-slate-50 transition-colors">
+            <Settings className="text-indigo-500 w-5 h-5"/> <span className="font-bold text-sm text-slate-700">ECO Tasks</span>
           </button>
         </div>
       </div>

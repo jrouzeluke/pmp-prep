@@ -4,22 +4,40 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>PMP Mastery 2026</title>
+  
   <script src="https://cdn.tailwindcss.com"></script>
+  
   <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
   <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  
   <style>
-    body { background-color: #f8fafc; }
-    .no-scrollbar::-webkit-scrollbar { display: none; }
+    body { 
+      background-color: #f8fafc; 
+      margin: 0;
+      padding: 0;
+    }
+    /* Simple utility to hide scrollbars for the category menu */
+    .no-scrollbar::-webkit-scrollbar { 
+      display: none; 
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
   </style>
 </head>
 <body>
+
   <div id="root">
-    <div style="display:flex; justify-content:center; align-items:center; height:100vh; font-family:sans-serif; color:#6366f1; font-weight:bold;">
-      🚀 Loading PMP Tool...
+    <div style="display:flex; flex-direction:column; justify-content:center; align-items:center; height:100vh; font-family:sans-serif; background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%); color:white;">
+      <div style="font-size: 2rem; font-weight: 900; margin-bottom: 1rem; letter-spacing: -0.025em;">PMP MASTERY 2026</div>
+      <div style="font-weight: 600; opacity: 0.9;">🚀 Preparing your dashboard...</div>
     </div>
   </div>
 
   <script type="text/babel" src="pmp-prep-app.js"></script>
+
 </body>
 </html>
