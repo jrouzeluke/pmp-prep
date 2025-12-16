@@ -14,13 +14,13 @@ const PMPMasteryApp = () => {
   const [studyTab, setStudyTab] = useState('people');
   const [expandedTask, setExpandedTask] = useState(null);
   const [simResult, setSimResult] = useState(null);
-  const [examTime, setExamTime] = useState(13800);
+  const [examTime, setExamTime] = useState(13800); // 230 Minutes
 
-  // --- DATA FETCH ---
+  // --- DATA FETCH ENGINE ---
   useEffect(() => {
     fetch('./pmp-data.json')
       .then(res => {
-        if (!res.ok) throw new Error(`HTTP ${res.status}: Data file not found.`);
+        if (!res.ok) throw new Error(`HTTP ${res.status}: Check if pmp-data.json is in the root.`);
         return res.json();
       })
       .then(data => {
@@ -33,7 +33,7 @@ const PMPMasteryApp = () => {
       });
   }, []);
 
-  // --- MOCK EXAM TIMER ---
+  // --- EXAM TIMER LOGIC ---
   useEffect(() => {
     let timer;
     if (currentMode === 'mock') {
@@ -49,19 +49,20 @@ const PMPMasteryApp = () => {
     return `${h}:${m < 10 ? '0' : ''}${m}:${sec < 10 ? '0' : ''}${sec}`;
   };
 
-  if (loading) return <div className="h-screen bg-[#05070a] flex items-center justify-center text-indigo-400 font-black animate-pulse">SYNCING COMMAND CENTER...</div>;
+  // --- RENDER: STATES ---
+  if (loading) return <div className="h-screen bg-[#05070a] flex items-center justify-center text-indigo-400 font-black animate-pulse uppercase tracking-widest">Syncing Command Center...</div>;
 
   if (error) return (
     <div className="h-screen bg-[#05070a] flex flex-col items-center justify-center p-10">
       <div className="glass p-10 border-rose-500/30 text-center">
-        <h2 className="text-rose-500 font-black mb-4 uppercase">Data Connection Failed</h2>
-        <p className="text-slate-400 font-mono text-xs mb-6">{error}</p>
-        <button onClick={() => window.location.reload()} className="text-indigo-400 underline uppercase font-black text-[10px]">Retry Sync</button>
+        <h2 className="text-rose-500 font-black mb-4 uppercase italic">Data Sync Failure</h2>
+        <p className="text-slate-400 font-mono text-xs mb-8">{error}</p>
+        <button onClick={() => window.location.reload()} className="text-indigo-400 underline font-black uppercase text-[10px]">Restart Sync</button>
       </div>
     </div>
   );
 
-  // --- VIEW: DASHBOARD ---
+  // --- VIEW: DASHBOARD (COCKPIT) ---
   if (currentMode === 'dashboard') {
     return (
       <div className="max-w-7xl mx-auto p-6 md:p-12 space-y-10 animate-fadeIn">
@@ -71,14 +72,14 @@ const PMPMasteryApp = () => {
             <p className="text-indigo-500 font-bold uppercase tracking-[0.4em] text-[10px] mt-2">Professional Veteran Edition</p>
           </div>
           <div className="glass px-6 py-3 rounded-full border-emerald-500/20 text-emerald-400 text-[10px] font-black uppercase flex items-center gap-3">
-            <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div> System Online
+            <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div> Cockpit Live
           </div>
         </header>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {[
             { id: 'studyhub', icon: 'book-open', label: 'Study Hub', color: 'indigo' },
-            { id: 'quiz', icon: 'zap', label: 'Mindset Quizzes', color: 'purple' },
+            { id: 'quiz', icon: 'zap', label: 'Quizzes', color: 'purple' },
             { id: 'formulas', icon: 'calculator', label: 'Formula Lab', color: 'emerald' },
             { id: 'mock', icon: 'award', label: 'Mock Exam', color: 'rose' }
           ].map(m => (
@@ -97,8 +98,8 @@ const PMPMasteryApp = () => {
     return (
       <div className="min-h-screen p-6 md:p-12 bg-[#05070a] flex flex-col items-center">
         <div className="max-w-4xl w-full">
-          <button onClick={() => setCurrentMode('dashboard')} className="text-slate-500 mb-10 flex items-center gap-2 font-black uppercase text-[10px] tracking-widest hover:text-white transition-colors">
-            <LucideIcon name="arrow-left" className="w-4 h-4"/> Dashboard
+          <button onClick={() => setCurrentMode('dashboard')} className="text-slate-500 mb-10 flex items-center gap-2 font-black uppercase text-[10px] tracking-widest hover:text-white">
+            <LucideIcon name="arrow-left" className="w-4 h-4"/> Return to Cockpit
           </button>
           
           <div className="flex glass p-1 mb-10 gap-1 rounded-2xl">
@@ -111,7 +112,7 @@ const PMPMasteryApp = () => {
           </div>
 
           <div className="space-y-4">
-            {pmpData.tasks[studyTab].map(t => (
+            {(pmpData.tasks[studyTab] || []).map(t => (
               <div key={t.id} className="glass p-8 border-white/5 rounded-[2.5rem]">
                 <div onClick={() => setExpandedTask(expandedTask === t.id ? null : t.id)} className="flex justify-between items-center cursor-pointer group">
                   <div className="flex items-center gap-6">
@@ -159,7 +160,7 @@ const PMPMasteryApp = () => {
                     </div>
 
                     <div className="bg-emerald-500/5 p-6 rounded-3xl border border-emerald-500/10 text-emerald-400 text-xs font-bold leading-relaxed italic">
-                        <span className="block text-[8px] uppercase tracking-widest text-emerald-600 mb-2">Veteran Diagnostic Insight</span>
+                        <span className="block text-[8px] uppercase tracking-widest text-emerald-600 mb-2">Veteran Insight (Diagnostic)</span>
                         {t.veteranTip}
                     </div>
                   </div>
@@ -172,12 +173,36 @@ const PMPMasteryApp = () => {
     );
   }
 
-  // --- VIEWS: MOCK & FORMULA (SKELETONS) ---
-  if (currentMode === 'mock' || currentMode === 'formulas' || currentMode === 'quiz') {
+  // --- VIEW: MOCK EXAM ---
+  if (currentMode === 'mock') {
     return (
-      <div className="h-screen flex items-center justify-center flex-col gap-6">
-        <h2 className="text-white uppercase font-black tracking-widest">{currentMode} Section Connected</h2>
-        <button onClick={() => setCurrentMode('dashboard')} className="glass px-10 py-4 text-indigo-400 uppercase font-black text-xs">Return to Cockpit</button>
+      <div className="min-h-screen bg-[#05070a] p-4 md:p-8">
+        <div className="max-w-6xl mx-auto space-y-6">
+          <header className="glass p-6 flex justify-between items-center border-rose-500/20">
+            <button onClick={() => setCurrentMode('dashboard')} className="text-slate-500 hover:text-white"><LucideIcon name="x" className="w-6 h-6"/></button>
+            <div className="text-2xl font-black font-mono text-white tracking-widest">{formatTime(examTime)}</div>
+            <button className="bg-rose-600 px-8 py-2 rounded-lg font-black text-[10px] uppercase">Submit Exam</button>
+          </header>
+          <div className="grid md:grid-cols-4 gap-6">
+            <div className="md:col-span-3 glass p-12 min-h-[500px]">
+              <span className="text-indigo-400 font-black text-xs uppercase tracking-widest">Question 1 of 180</span>
+              <p className="text-2xl font-bold italic text-slate-200 mt-10 mb-10 leading-tight">"{pmpData.mockExam[0].question}"</p>
+              <div className="space-y-3">
+                {pmpData.mockExam[0].options.map((opt, i) => (
+                  <button key={i} className="w-full text-left p-6 rounded-xl border border-white/5 hover:border-indigo-500/50 hover:bg-white/5 transition-all text-sm">{opt}</button>
+                ))}
+              </div>
+            </div>
+            <div className="glass p-8 h-fit">
+              <h4 className="text-[10px] font-black uppercase text-slate-500 mb-6 tracking-widest text-center italic">Navigator</h4>
+              <div className="grid grid-cols-5 gap-2 text-center italic">
+                {[...Array(20)].map((_, i) => (
+                  <div key={i} className="h-8 flex items-center justify-center rounded text-[10px] font-bold border border-white/10 text-slate-600">{i + 1}</div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     );
   }
