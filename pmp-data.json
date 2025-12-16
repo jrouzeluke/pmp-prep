@@ -14,7 +14,20 @@
         }
       }
     ],
-    "process": [],
+    "process": [
+      {
+        "id": "PR15",
+        "title": "Manage Budget",
+        "primeDirective": "Baseline early, track often.",
+        "veteranTip": "Budgeting is about transparency. If you're 20% over, tell the sponsor why and show the recovery plan.",
+        "deepDive": "Control costs using Earned Value Management (EVM) metrics.",
+        "learnMore": {
+          "logic": "IF CPI < 1.0, THEN analyze root cause and update Risk Register.",
+          "blueprint": ["Cost Baseline", "Work Performance Reports"],
+          "mindsetTip": "Protect the baseline, manage the variance."
+        }
+      }
+    ],
     "business": []
   },
   "formulas": [
@@ -22,22 +35,25 @@
       "id": "F1",
       "name": "CPI (Cost Performance Index)",
       "equation": "EV / AC",
-      "scenario": "EV is $200k, AC is $250k. Status?",
+      "scenario": "EV is $200,000, but the team has already spent (AC) $250,000.",
+      "variables": { "EV": 200000, "AC": 250000 },
       "correctAnswer": 0.8,
-      "veteranInsight": "Spending $1 to get $0.80 of value is a red alert for scope creep.",
-      "stepByStep": ["EV (200,000) / AC (250,000) = 0.8"]
+      "veteranInsight": "Spending $1 to get $0.80 of value is a systemic failure. Check for scope creep.",
+      "stepByStep": ["200,000 / 250,000 = 0.8", "Status: Over Budget"]
     }
   ],
-  "quizPool": [
+  "mockExam": [
     {
-      "id": "Q1",
-      "domain": "People",
-      "question": "A team member is consistently late. What is your first move?",
+      "id": 1,
+      "question": "A project is experiencing significant delays due to a vendor dispute. The contract is Fixed-Price. What should the Project Manager do first?",
       "options": [
-        {"text": "Consult HR", "correct": false},
-        {"text": "1-on-1 private meeting to assess root cause", "correct": true}
+        "Review the procurement management plan.",
+        "Terminate the vendor immediately.",
+        "Issue a formal notice of default.",
+        "Negotiate a contract amendment."
       ],
-      "veteranLogic": "Never discipline in public or escalate before assessing the individual's situation."
+      "correct": 0,
+      "explanation": "Always review the plan and the contract terms before taking action."
     }
   ]
 }
