@@ -100,4 +100,10 @@
         "Review the procurement management plan.",
         "Terminate the vendor immediately.",
         "Issue a formal notice of default.",
-        "Negotiate a contract amendment
+        "Negotiate a contract amendment."
+      ],
+      "correct": 0,
+      "explanation": "Always review the plan and the contract terms before taking action."
+    }
+  ]
+}
