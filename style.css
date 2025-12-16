@@ -1,114 +1,72 @@
-const { useState, useEffect } = React;
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;700&display=swap');
 
-const Icon = ({ name, className }) => {
-  useEffect(() => { if (window.lucide) window.lucide.createIcons(); }, [name]);
-  return <i data-lucide={name} className={className}></i>;
-};
+:root {
+    --neon-purple: #a855f7;
+    --neon-blue: #3b82f6;
+    --neon-emerald: #10b981;
+    --neon-rose: #f43f5e;
+    --bg-deep: #020617;
+}
 
-const PMPApp = () => {
-  const [view, setView] = useState('dashboard'); 
-  const [branchData, setBranchData] = useState(null);
-  const [activeModule, setActiveModule] = useState(null); 
-  const [isFlipped, setIsFlipped] = useState(false);
+body {
+    background: radial-gradient(circle at 50% 0%, #0f172a 0%, var(--bg-deep) 100%);
+    color: #f1f5f9;
+    font-family: 'Inter', sans-serif;
+    margin: 0;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
 
-  // The Fetch Logic for the /data folder
-  const launchBranch = async (branchName) => {
-    try {
-      const response = await fetch(`./data/${branchName}.json`);
-      if (!response.ok) throw new Error("Check data folder path");
-      const data = await response.json();
-      setBranchData(data);
-      setView('branch-menu');
-    } catch (err) {
-      alert(`System Error: Ensure ./data/${branchName}.json exists.`);
-    }
-  };
+/* --- Tactical Header --- */
+h1 {
+    font-family: 'Orbitron', sans-serif;
+    letter-spacing: 0.15em;
+    background: linear-gradient(to bottom, #fff 0%, #64748b 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 0 15px rgba(255,255,255,0.1));
+}
 
-  // --- VIEW 1: COCKPIT DASHBOARD ---
-  if (view === 'dashboard') {
-    return (
-      <div className="p-12 max-w-5xl mx-auto animate-fadeIn">
-        <h1 className="text-7xl font-black italic text-white uppercase mb-16 tracking-tighter bg-gradient-to-b from-white to-slate-500 bg-clip-text text-transparent">PMP Cockpit</h1>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <button onClick={() => launchBranch('initiating')} className="glass p-12 text-left group">
-            <Icon name="anchor" className="text-purple-500 w-10 h-10 mb-6" />
-            <h3 className="text-3xl font-black italic text-white uppercase">Initiating</h3>
-            <p className="text-slate-400 mt-2">Authority & Stakeholders</p>
-          </button>
-          <div className="glass p-12 opacity-20 border-dashed border-white/10 flex items-center justify-center">
-            <span className="font-black text-slate-700 uppercase italic tracking-widest">Planning (Locked)</span>
-          </div>
-        </div>
-      </div>
-    );
-  }
+/* --- The Tactical Glass Panel --- */
+.glass {
+    background: rgba(15, 23, 42, 0.4);
+    backdrop-filter: blur(25px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 4px; /* Sharper, tactical edges like the tablet view */
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
 
-  // --- VIEW 2: BRANCH MENU ---
-  if (view === 'branch-menu' && !activeModule) {
-    return (
-      <div className="p-12 max-w-4xl mx-auto animate-fadeIn">
-        <button onClick={() => setView('dashboard')} className="text-slate-500 mb-10 uppercase text-[10px] font-black tracking-widest hover:text-white transition-colors">← Back to Cockpit</button>
-        <h2 className="text-4xl font-black text-white italic uppercase mb-2 tracking-tighter">{branchData.title}</h2>
-        <p className="text-slate-400 mb-12 italic text-lg leading-relaxed">"{branchData.description}"</p>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <button onClick={() => setActiveModule('sim')} className="glass p-8 flex justify-between items-center hover:border-purple-500 group">
-             <span className="font-black text-white uppercase tracking-widest text-xs">🕹️ Decision Lab</span>
-             <Icon name="play" className="text-purple-500" />
-          </button>
-          <button onClick={() => {setActiveModule('flash'); setIsFlipped(false);}} className="glass p-8 flex justify-between items-center hover:border-rose-500 group">
-             <span className="font-black text-white uppercase tracking-widest text-xs">🗂️ Reflex Drill</span>
-             <Icon name="layers" className="text-rose-500" />
-          </button>
-        </div>
-      </div>
-    );
-  }
+.glass::before {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%;
+    width: 100%; height: 2px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+    animation: scan 4s linear infinite;
+}
 
-  // --- VIEW 3: DECISION LAB (Simulation with Visual) ---
-  if (activeModule === 'sim') {
-    return (
-      <div className="p-12 max-w-5xl mx-auto animate-slideUp">
-        <button onClick={() => setActiveModule(null)} className="text-slate-500 mb-6 uppercase text-[10px] font-black tracking-widest hover:text-white">← Back to Menu</button>
-        <div className="relative overflow-hidden rounded-[2.5rem] border border-white/10 shadow-2xl min-h-[500px]">
-          <img src="./assets/sim-background.png" className="absolute inset-0 w-full h-full object-cover opacity-30 mix-blend-overlay" />
-          <div className="relative z-10 p-12 bg-gradient-to-b from-transparent to-[#05070a]/90">
-            <h2 className="text-3xl font-black italic text-white uppercase mb-8">{branchData.modules.simulation.title}</h2>
-            <p className="text-slate-200 mb-12 text-2xl italic font-light max-w-3xl leading-relaxed">"{branchData.modules.simulation.scenario}"</p>
-            <button onClick={() => alert("VETERAN LOGIC: " + branchData.modules.simulation.logic)} className="p-8 rounded-2xl glass border-purple-500/30 hover:bg-purple-500/10 transition-all text-left max-w-xl">
-               <span className="text-purple-400 font-black mr-4 text-xs uppercase tracking-widest">Recommended Action</span>
-               <span className="text-sm text-slate-300 block mt-2">Book a 1-on-1 to demonstrate specific project value to them.</span>
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  }
+.glass:hover {
+    background: rgba(30, 41, 59, 0.6);
+    border-color: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 0 40px rgba(0,0,0,0.6);
+}
 
-  // --- VIEW 4: REFLEX DRILL (3D Flashcard) ---
-  if (activeModule === 'flash') {
-    const card = branchData.modules.flashcards[0];
-    return (
-      <div className="p-12 max-w-xl mx-auto animate-fadeIn min-h-[70vh] flex flex-col items-center justify-center">
-        <button onClick={() => setActiveModule(null)} className="text-slate-500 mb-10 uppercase text-[10px] font-black tracking-widest hover:text-white transition-colors">← Back to Menu</button>
-        <div onClick={() => setIsFlipped(!isFlipped)} className="w-full h-96 perspective-1000 cursor-pointer">
-          <div className={`relative w-full h-full text-center transition-transform duration-700 preserve-3d ${isFlipped ? 'rotate-y-180' : ''}`}>
-            <div className="absolute w-full h-full backface-hidden glass flex flex-col items-center justify-center p-12">
-              <span className="text-rose-500 font-black uppercase text-[10px] mb-4 tracking-widest">Reflex Question</span>
-              <p className="text-3xl font-bold text-white italic">"{card.front}"</p>
-              <p className="mt-12 text-slate-600 text-[10px] font-black uppercase animate-pulse">Click to Flip</p>
-            </div>
-            <div className="absolute w-full h-full backface-hidden glass flex flex-col items-center justify-center p-12 rotate-y-180 bg-rose-500/[0.05]">
-              <span className="text-rose-400 font-black uppercase text-[10px] mb-4 tracking-widest">Veteran Answer</span>
-              <p className="text-3xl font-bold text-white italic">"{card.back}"</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
+/* --- Branch Accents --- */
+.accent-initiating { border-left: 3px solid var(--neon-purple); }
+.glow-initiating:hover { box-shadow: inset 0 0 20px rgba(168, 85, 247, 0.1); }
 
-  return null;
-};
+/* --- 3D Flashcard Engine --- */
+.perspective-1000 { perspective: 1000px; }
+.preserve-3d { transform-style: preserve-3d; }
+.backface-hidden { backface-visibility: hidden; }
+.rotate-y-180 { transform: rotateY(180deg); }
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(<PMPApp />);
+@keyframes scan {
+    0% { left: -100%; }
+    100% { left: 100%; }
+}
+
+.animate-fadeIn { animation: fadeIn 0.6s ease-out forwards; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
