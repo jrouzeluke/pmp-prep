@@ -1,0 +1,46 @@
+{
+  "title": "Initiating Branch",
+  "description": "Establish foundational authority and secure the project mandate. This is where the project's right to exist is confirmed.",
+  "modules": {
+    "quiz": {
+      "questions": [
+        {
+          "q": "Which document officially assigns the Project Manager and provides them with authority?",
+          "options": ["Business Case", "Project Charter", "Communications Plan"],
+          "correct": 1
+        },
+        {
+          "q": "What is the primary output of the 'Identify Stakeholders' process?",
+          "options": ["Stakeholder Register", "Issue Log", "Resource Management Plan"],
+          "correct": 0
+        }
+      ]
+    },
+    "simulation": {
+      "title": "The Power/Interest Trap",
+      "scenario": "A high-power stakeholder is ignoring your project and hasn't attended any meetings. What is your first move?",
+      "logic": "In my 16 years, I've seen 'Keep Satisfied' stakeholders become project-killers. You must pull them into 'Manage Closely' early. A 1-on-1 aligns their specific interests with project value."
+    },
+    "audit": {
+      "documentName": "Project Charter",
+      "errorSection": "Objectives",
+      "errorText": "The project will be completed as fast as possible to make the client happy.",
+      "fix": "Objectives must be SMART (Specific, Measurable, Achievable, Relevant, Time-bound). Happiness is subjective; use a metric like 'Reduce latency by 15% by Q4'."
+    },
+    "veteranCase": {
+      "title": "The Invisible Gatekeeper",
+      "story": "During a massive infrastructure project, we identified all the city council members but forgot the local water board. They held the 'permit' trigger and shut us down 2 weeks before launch because we didn't consult them on specs.",
+      "lesson": "Identification isn't a list; it's a hunt. Always ask your identified stakeholders: 'Who else should I be talking to?'"
+    },
+    "flashcards": [
+      {
+        "front": "When is the Project Manager officially assigned?",
+        "back": "Always during the development of the Project Charter, before planning begins."
+      },
+      {
+        "front": "What are the only two processes in Initiating?",
+        "back": "1. Develop Project Charter and 2. Identify Stakeholders."
+      }
+    ]
+  }
+}
