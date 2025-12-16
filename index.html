@@ -13,7 +13,7 @@
   <script src="https://unpkg.com/lucide@latest"></script>
 
   <style>
-    body { background-color: #0f172a; margin: 0; overflow-x: hidden; color: white; }
+    body { background-color: #0f172a; margin: 0; overflow-x: hidden; color: white; font-family: 'Inter', sans-serif; }
     
     @keyframes blob {
       0% { transform: translate(0px, 0px) scale(1); }
@@ -21,14 +21,13 @@
       66% { transform: translate(-20px, 20px) scale(0.9); }
       100% { transform: translate(0px, 0px) scale(1); }
     }
-    .animate-blob { animation: blob 12s infinite cubic-bezier(0.4, 0, 0.2, 1); }
+    .animate-blob { animation: blob 15s infinite ease-in-out; }
     .animation-delay-2000 { animation-delay: 2s; }
     
-    /* Hide scrollbars but allow scrolling */
+    .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.1); }
     .no-scrollbar::-webkit-scrollbar { display: none; }
-    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-
-    .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); }
+    .animate-fadeIn { animation: fadeIn 0.4s ease-out; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
   </style>
 </head>
 <body>

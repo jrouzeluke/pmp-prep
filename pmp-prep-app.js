@@ -1,193 +1,211 @@
 const { useState, useEffect } = React;
 
+// --- DYNAMIC ICON COMPONENT ---
 const LucideIcon = ({ name, className }) => {
   useEffect(() => { if(window.lucide) lucide.createIcons(); }, [name]);
   return <i data-lucide={name} className={className}></i>;
 };
 
-// --- DATA STRUCTURE: THE 35 TASKS ---
+// --- DATA: THE 35 SURGICAL TASK BREAKDOWNS ---
 const ECO_TASKS = {
   people: [
-    { id: 'P1', title: 'Manage Conflict', mindset: 'Analyze source first; collaborate before escalating.', tips: 'Agile teams self-resolve; Waterfall PM facilitates.' },
-    { id: 'P2', title: 'Lead a Team', mindset: 'Practice servant leadership; adapt to team maturity.', tips: 'Shield team from interruptions.' },
-    { id: 'P3', title: 'Support Performance', mindset: 'Track growth, not just tasks.', tips: 'Use retrospectives for improvement.' },
-    { id: 'P4', title: 'Empower Team', mindset: 'Delegate authority, not just tasks.', tips: 'Support self-organizing teams.' },
-    { id: 'P5', title: 'Ensure Training', mindset: 'Identify gaps early; budget for learning.', tips: 'Training is a risk mitigation strategy.' },
-    { id: 'P6', title: 'Build a Team', mindset: 'Move from Storming to Norming quickly.', tips: 'Continuous skill assessment.' },
-    { id: 'P7', title: 'Address Impediments', mindset: 'Clear roadblocks so the team can work.', tips: 'Scrum Master primary duty.' },
-    { id: 'P8', title: 'Negotiate Agreements', mindset: 'Find win-win; document everything.', tips: 'Manage expectations.' },
-    { id: 'P9', title: 'Collaborate Stakeholders', mindset: 'Engagement > Communication.', tips: 'Use Power/Interest grid.' },
-    { id: 'P10', title: 'Shared Understanding', mindset: 'Align on the "Why" to ensure "What".', tips: 'Use Vision statements.' },
-    { id: 'P11', title: 'Virtual Teams', mindset: 'Use tech to bridge distance; sync often.', tips: 'Rotate meeting times.' },
-    { id: 'P12', title: 'Ground Rules', mindset: 'Team creates their own rules.', tips: 'Social Contract / Team Charter.' },
-    { id: 'P13', title: 'Mentor Stakeholders', mindset: 'Coach PO and Sponsor on value.', tips: 'Enable transition to Agile.' },
-    { id: 'P14', title: 'Emotional Intelligence', mindset: 'Self-awareness is the baseline.', tips: 'Use to resolve conflict.' }
+    { 
+      id: 'P1', title: 'Manage Conflict', 
+      deepDive: 'Conflict management focuses on identifying the source (Resources, Priorities, Personalities) and applying the right resolution technique. Functional conflict improves the product; Dysfunctional conflict hurts morale.',
+      surgicalSteps: ['Determine conflict source/stage.', 'Assess impact on timeline.', 'Apply resolution: Collaborate, Compromise, Force, Smooth, or Withdraw.'],
+      methodology: 'Agile: Scrum Master facilitates team self-resolution. Waterfall: PM acts as direct mediator.',
+      simulation: {
+        scenario: "Two senior developers disagree on the sprint priority. Morale is dropping. What is your FIRST move?",
+        options: [
+          { text: "Facilitate a data-backed discussion.", correct: true, feedback: "Correct! Collaborate/Problem-Solve is the PMI preferred method." },
+          { text: "Escalate to the Sponsor.", correct: false, feedback: "Incorrect. Try to resolve at your level first." }
+        ]
+      }
+    },
+    { 
+      id: 'P2', title: 'Lead a Team', 
+      deepDive: 'Focus on Servant Leadership. You serve the team by removing blockers and shielding them from outside interference. Adjust your leadership style based on team maturity (Tuckman’s Model).',
+      surgicalSteps: ['Set clear vision/mission.', 'Practice empathy and Emotional Intelligence.', 'Foster D&I (Diversity & Inclusion).'],
+      methodology: 'Agile: Servant Leader (Facilitator). Predictive: Transactional/Transformational Leader.',
+      simulation: {
+        scenario: "A high-performing team member is suddenly underperforming and quiet. What do you do?",
+        options: [
+          { text: "Schedule a private check-in to offer support.", correct: true, feedback: "Correct! Empathetic leadership identifies root blockers." },
+          { text: "Document performance for HR.", correct: false, feedback: "Incorrect. Seek to understand before punishing." }
+        ]
+      }
+    },
+    { id: 'P3', title: 'Support Performance', deepDive: 'Mentoring and coaching for continuous growth.', surgicalSteps: ['Verify progress.', 'Coach team members.', 'Recognize achievements.'], methodology: 'Agile: Retrospectives. Waterfall: Performance Reviews.', simulation: { scenario: "The team velocity is dipping. How do you respond?", options: [{ text: "Hold a retrospective to find blockers.", correct: true, feedback: "Correct!" }, { text: "Ask team to work overtime.", correct: false, feedback: "Incorrect." }] } },
+    { id: 'P4', title: 'Empower Team', deepDive: 'Delegating authority to foster self-organization.', surgicalSteps: ['Define boundaries.', 'Delegate decisions.', 'Encourage ownership.'], methodology: 'Agile: Self-organizing teams.', simulation: { scenario: "A team member asks you to solve a technical bug they found.", options: [{ text: "Encourage them to propose a solution first.", correct: true, feedback: "Correct!" }, { text: "Solve it yourself to save time.", correct: false, feedback: "Incorrect." }] } },
+    { id: 'P5', title: 'Ensure Training', deepDive: 'Proactive skill building as a risk response.', surgicalSteps: ['Assess skill gaps.', 'Determine budget.', 'Measure outcomes.'], methodology: 'Agile: Peer-pairing.', simulation: { scenario: "The project needs a new coding language the team doesn't know.", options: [{ text: "Build training time into the schedule.", correct: true, feedback: "Correct!" }, { text: "Hire contractors to do the work.", correct: false, feedback: "Not the first choice." }] } },
+    { id: 'P6', title: 'Build a Team', deepDive: 'Using Tuckman’s model (Forming, Storming, Norming, Performing).', surgicalSteps: ['Assess team skills.', 'Define ground rules.', 'Sync distributed members.'], methodology: 'Agile: T-Shaped skills.', simulation: { scenario: "The new team is arguing over every decision.", options: [{ text: "Facilitate a ground-rules workshop.", correct: true, feedback: "Correct!" }, { text: "Replace the team.", correct: false, feedback: "Incorrect." }] } },
+    { id: 'P7', title: 'Address Impediments', deepDive: 'Scrum Master\'s primary duty: Clearing the path.', surgicalSteps: ['Identify blockers.', 'Prioritize fixes.', 'Verify resolution.'], methodology: 'Agile: Daily Standups.', simulation: { scenario: "A developer is waiting 3 days for a server password.", options: [{ text: "Immediately contact the DevOps lead.", correct: true, feedback: "Correct!" }, { text: "Wait for the status report.", correct: false, feedback: "Incorrect." }] } },
+    { id: 'P8', title: 'Negotiate Agreements', deepDive: 'Managing internal/external expectations.', surgicalSteps: ['Define scope.', 'Analyze interests.', 'Document sign-off.'], methodology: 'Predictive: Signed SOWs.', simulation: { scenario: "A stakeholder wants to add scope without more budget.", options: [{ text: "Explain the impact and negotiate priorities.", correct: true, feedback: "Correct!" }, { text: "Just say yes to maintain relationship.", correct: false, feedback: "Incorrect." }] } },
+    { id: 'P9', title: 'Collaborate Stakeholders', deepDive: 'Engagement levels: Unaware, Resistant, Neutral, Supportive, Leading.', surgicalSteps: ['Analyze power/interest.', 'Tailor engagement.', 'Build trust.'], methodology: 'Hybrid: Consistent feedback loops.', simulation: { scenario: "A resistant stakeholder is blocking project sign-off.", options: [{ text: "Involve them in early decision-making.", correct: true, feedback: "Correct!" }, { text: "Ignore them.", correct: false, feedback: "Incorrect." }] } },
+    { id: 'P10', title: 'Shared Understanding', deepDive: 'Aligning on project vision and goals.', surgicalSteps: ['Facilitate consensus.', 'Resolve misalignments.', 'Publish Vision.'], methodology: 'Agile: Product Backlog Refinement.', simulation: { scenario: "The team and client disagree on 'Done'.", options: [{ text: "Collaboratively define 'Definition of Done'.", correct: true, feedback: "Correct!" }, { text: "Use your own definition.", correct: false, feedback: "Incorrect." }] } },
+    { id: 'P11', title: 'Virtual Teams', deepDive: 'Managing distance, time zones, and technology.', surgicalSteps: ['Pick tools.', 'Create sync points.', 'Foster culture.'], methodology: 'Distributed Agile teams.', simulation: { scenario: "Remote team members feel left out of office decisions.", options: [{ text: "Move all decisions to a digital wiki/Slack.", correct: true, feedback: "Correct!" }, { text: "Only hire local.", correct: false, feedback: "Incorrect." }] } },
+    { id: 'P12', title: 'Ground Rules', deepDive: 'Team Charter / Social Contract creation.', surgicalSteps: ['Facilitate creation.', 'Ensure team ownership.', 'Review rules periodically.'], methodology: 'Agile: Daily standup rules.', simulation: { scenario: "A member is consistently late to meetings.", options: [{ text: "Refer to the Team Charter rules.", correct: true, feedback: "Correct!" }, { text: "Report to HR.", correct: false, feedback: "Too soon." }] } },
+    { id: 'P13', title: 'Mentor Stakeholders', deepDive: 'Coaching POs and Sponsors on the PM process.', surgicalSteps: ['Identify coaching needs.', 'Allocate mentoring time.', 'Verify value.'], methodology: 'Agile: Coaching the Product Owner.', simulation: { scenario: "The PO doesn't understand why we have retrospectives.", options: [{ text: "Mentor them on the value of improvement.", correct: true, feedback: "Correct!" }, { text: "Cancel the meeting.", correct: false, feedback: "Incorrect." }] } },
+    { id: 'P14', title: 'Emotional Intelligence', deepDive: 'Self-awareness, self-regulation, empathy.', surgicalSteps: ['Assess own bias.', 'Analyze team moods.', 'Regulate social interactions.'], methodology: 'PMI Leadership Competency.', simulation: { scenario: "The PM feels angry about a client criticism.", options: [{ text: "Pause, self-regulate, and respond calmly.", correct: true, feedback: "Correct!" }, { text: "React immediately.", correct: false, feedback: "Incorrect." }] } }
   ],
-  process: [
-    { id: 'PR1', title: 'Execute with Urgency', mindset: 'Deliver value incrementally (MVP).', tips: 'Fast-tracking vs Crashing.' },
-    { id: 'PR2', title: 'Communications', mindset: 'Right info, right person, right time.', tips: 'Push vs Pull vs Interactive.' },
-    { id: 'PR3', title: 'Risk Management', mindset: 'Risks are uncertain; Issues are current.', tips: 'Identify > Analyze > Respond.' },
-    { id: 'PR4', title: 'Stakeholder Engagement', mindset: 'Analyze power and interest.', tips: 'Engage resistant stakeholders first.' },
-    { id: 'PR5', title: 'Budget & Resources', mindset: 'Cost baseline is the approved budget.', tips: 'EVM: CPI and SPI metrics.' },
-    { id: 'PR6', title: 'Schedule', mindset: 'Critical path has zero float.', tips: 'Lead/Lag vs Compression.' },
-    { id: 'PR7', title: 'Quality', mindset: 'Prevention over inspection.', tips: 'QA is Process; QC is Product.' },
-    { id: 'PR8', title: 'Scope', mindset: 'Prevent scope creep at all costs.', tips: 'WBS is the foundation.' },
-    { id: 'PR9', title: 'Integration', mindset: 'The PM is the integrator.', tips: 'Consolidate all plans.' },
-    { id: 'PR10', title: 'Changes', mindset: 'Follow the Change Management Plan.', tips: 'CCB approves/rejects.' },
-    { id: 'PR11', title: 'Procurement', mindset: 'Partner with legal; select best fit.', tips: 'Fixed Price vs T&M vs Cost Plus.' },
-    { id: 'PR12', title: 'Artifacts', mindset: 'Keep them accessible and current.', tips: 'Configuration management.' },
-    { id: 'PR13', title: 'Methodology', mindset: 'Pick Agile, Waterfall, or Hybrid based on risk.', tips: 'Stacey Matrix logic.' },
-    { id: 'PR14', title: 'Governance', mindset: 'Establish decision frameworks.', tips: 'Phase gates / Kill points.' },
-    { id: 'PR15', title: 'Issue Management', mindset: 'Address active problems fast.', tips: 'Log and assign owners.' },
-    { id: 'PR16', title: 'Knowledge Transfer', mindset: 'Lessons learned start on day one.', tips: 'Ensure project continuity.' },
-    { id: 'PR17', title: 'Closure', mindset: 'Get formal sign-off.', tips: 'Close procurements and archives.' }
-  ],
-  business: [
-    { id: 'B1', title: 'Compliance', mindset: 'Non-negotiable requirements.', tips: 'Legal/Safety/Regulatory.' },
-    { id: 'B2', title: 'Deliver Benefits', mindset: 'Business value > Deliverables.', tips: 'Verify benefits realization.' },
-    { id: 'B3', title: 'External Changes', mindset: 'Monitor the environment (PESTLE).', tips: 'Pivot project if needed.' },
-    { id: 'B4', title: 'Org Change', mindset: 'Support cultural adoption.', tips: 'Change management plan.' }
-  ]
+  process: [],
+  business: []
 };
 
-const PMPPrepApp = () => {
+const PMPMasteryApp = () => {
   const [currentMode, setCurrentMode] = useState('dashboard');
   const [studyTab, setStudyTab] = useState('tasks');
   const [expandedTask, setExpandedTask] = useState(null);
+  const [simResult, setSimResult] = useState(null);
   const [progress, setProgress] = useState(() => {
-    const saved = localStorage.getItem('pmp_m26_v1.5');
+    const saved = localStorage.getItem('pmp_m26_final');
     return saved ? JSON.parse(saved) : { attempted: 0, correct: 0, streak: 1 };
   });
 
-  // --- DASHBOARD ---
+  useEffect(() => { localStorage.setItem('pmp_m26_final', JSON.stringify(progress)); }, [progress]);
+
+  // --- VIEW: DASHBOARD ---
   if (currentMode === 'dashboard') {
     return (
-      <div className="min-h-screen p-6 md:p-12 relative font-sans">
-        <div className="absolute top-[-10%] left-[-5%] w-[400px] h-[400px] bg-indigo-600/10 rounded-full blur-[100px] animate-blob"></div>
-        <div className="absolute bottom-[-10%] right-[-5%] w-[400px] h-[400px] bg-purple-600/10 rounded-full blur-[100px] animate-blob animation-delay-2000"></div>
+      <div className="min-h-screen p-6 md:p-12 relative overflow-hidden">
+        <div className="absolute top-[-10%] left-[-5%] w-[500px] h-[500px] bg-indigo-600/10 rounded-full blur-[120px] animate-blob"></div>
+        <div className="absolute bottom-[-10%] right-[-5%] w-[500px] h-[500px] bg-purple-600/10 rounded-full blur-[120px] animate-blob animation-delay-2000"></div>
 
         <div className="max-w-6xl mx-auto relative z-10">
-          <div className="flex flex-col md:flex-row justify-between items-start mb-12 gap-6">
-            <div>
-              <h1 className="text-6xl font-black tracking-tighter bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent italic leading-none">PMP MASTERY 2026</h1>
-              <div className="flex gap-3 mt-4">
-                <div className="bg-emerald-500/10 border border-emerald-500/20 px-3 py-1 rounded-full flex items-center gap-2">
-                  <LucideIcon name="shield-check" className="text-emerald-400 w-3 h-3" />
-                  <span className="text-[10px] font-bold text-emerald-400 uppercase tracking-widest">Privacy First: Device Storage</span>
-                </div>
+          <header className="mb-12">
+            <h1 className="text-6xl font-black italic bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent tracking-tighter leading-none mb-4">PMP MASTERY 2026</h1>
+            <div className="flex flex-wrap gap-3">
+              <div className="bg-emerald-500/10 border border-emerald-500/20 px-3 py-1 rounded-full flex items-center gap-2 text-emerald-400 text-[10px] font-bold uppercase tracking-widest">
+                <LucideIcon name="shield-check" className="w-3 h-3" /> Progress Saved to this Device
+              </div>
+              <div className="bg-blue-500/10 border border-blue-500/20 px-3 py-1 rounded-full flex items-center gap-2 text-blue-400 text-[10px] font-bold uppercase tracking-widest">
+                <LucideIcon name="database" className="w-3 h-3" /> No Account Required
               </div>
             </div>
-            <div className="glass px-6 py-3 rounded-2xl flex items-center gap-4">
-              <LucideIcon name="flame" className="text-orange-500 w-6 h-6 animate-pulse" />
-              <div className="text-xl font-black">{progress.streak} DAY STREAK</div>
-            </div>
-          </div>
+          </header>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <div className="space-y-6">
+            <aside className="space-y-6">
               <div className="glass p-8 rounded-[2rem]">
-                <h3 className="text-xs font-black text-slate-500 uppercase tracking-widest mb-6">Stats</h3>
-                <div className="text-4xl font-black">{progress.attempted}</div>
-                <div className="text-emerald-400 font-bold text-sm">Questions Completed</div>
+                <h3 className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-6">Local Progress</h3>
+                <div className="text-4xl font-black mb-1">{progress.attempted}</div>
+                <div className="text-xs text-slate-400 font-bold uppercase">Questions Answered</div>
               </div>
-              
-              <button onClick={() => setCurrentMode('quiz_select')} className="w-full bg-indigo-600 hover:bg-indigo-500 p-8 rounded-[2rem] flex items-center justify-between group transition-all">
-                <div className="text-left"><div className="font-black text-xl mb-1">QUIZZES & SIMS</div><div className="text-indigo-200 text-xs uppercase">Topic Focus</div></div>
-                <LucideIcon name="zap" className="w-8 h-8 text-white group-hover:scale-110 transition-transform" />
+              <button onClick={() => setCurrentMode('quiz_select')} className="w-full bg-indigo-600 hover:bg-indigo-500 p-8 rounded-[2.5rem] transition-all flex items-center justify-between group">
+                <div className="text-left font-black text-xl">TOPIC DRILLS</div>
+                <LucideIcon name="zap" className="w-8 h-8 group-hover:scale-110 transition-transform" />
               </button>
-
-              <button onClick={() => setCurrentMode('studyhub')} className="w-full glass hover:bg-white/5 p-8 rounded-[2rem] flex items-center justify-between group transition-all">
-                <div className="text-left"><div className="font-black text-xl mb-1">STUDY HUB</div><div className="text-slate-500 text-xs uppercase">ECO & Tips</div></div>
+              <button onClick={() => setCurrentMode('studyhub')} className="w-full glass hover:bg-white/5 p-8 rounded-[2.5rem] transition-all flex items-center justify-between group">
+                <div className="text-left font-black text-xl">STUDY HUB</div>
                 <LucideIcon name="book-open" className="w-8 h-8 text-purple-400 group-hover:scale-110 transition-transform" />
               </button>
-            </div>
+            </aside>
 
-            <div className="lg:col-span-2">
-              <div className="h-full bg-gradient-to-br from-indigo-600/20 to-purple-600/20 border border-white/10 rounded-[3rem] p-10 flex flex-col justify-between group">
+            <main className="lg:col-span-2">
+              <div className="h-full bg-gradient-to-br from-indigo-600/20 to-purple-600/20 border border-white/10 rounded-[3rem] p-10 md:p-14 flex flex-col justify-between group relative overflow-hidden">
+                <div className="absolute top-0 right-0 p-10 opacity-5 group-hover:opacity-10 transition-opacity"><LucideIcon name="award" className="w-64 h-64 text-white" /></div>
                 <div>
-                  <h2 className="text-5xl font-black mb-6 leading-tight">Full Exam Simulation</h2>
-                  <p className="text-slate-400 text-lg max-w-md">180 Questions • 230 Minutes • The Final Boss.</p>
+                  <div className="bg-indigo-500 text-white px-4 py-1 rounded-full text-[10px] font-black uppercase w-fit mb-6">Hero Mode</div>
+                  <h2 className="text-5xl md:text-6xl font-black mb-6 leading-tight">Full Exam Simulation</h2>
+                  <p className="text-slate-400 text-lg max-w-sm mb-10">Realistic 180-question simulation. Timed for 230 minutes.</p>
                 </div>
-                <button className="bg-white text-[#0f172a] px-12 py-5 rounded-2xl font-black text-xl hover:scale-105 transition-all w-fit">BEGIN SIMULATION</button>
+                <button className="bg-white text-indigo-950 px-12 py-5 rounded-2xl font-black text-xl hover:scale-105 transition-all w-fit shadow-2xl">BEGIN SIMULATION</button>
               </div>
-            </div>
+            </main>
           </div>
         </div>
       </div>
     );
   }
 
-  // --- STUDY HUB ---
+  // --- VIEW: STUDY HUB ---
   if (currentMode === 'studyhub') {
     return (
-      <div className="min-h-screen p-6 md:p-12 max-w-5xl mx-auto">
-        <div className="flex justify-between items-center mb-12">
-          <button onClick={() => setCurrentMode('dashboard')} className="text-slate-400 hover:text-white flex items-center gap-2 font-bold"><LucideIcon name="arrow-left" className="w-5 h-5"/> BACK</button>
-          <h2 className="text-2xl font-black italic text-purple-400">STUDY HUB</h2>
-        </div>
+      <div className="min-h-screen p-6 md:p-12 bg-[#0f172a] text-white">
+        <div className="max-w-5xl mx-auto">
+          <div className="flex justify-between items-center mb-12">
+            <button onClick={() => setCurrentMode('dashboard')} className="text-slate-400 font-bold hover:text-white flex items-center gap-2"><LucideIcon name="arrow-left" className="w-4 h-4"/> BACK</button>
+            <h2 className="text-2xl font-black italic text-purple-400">STUDY HUB</h2>
+          </div>
 
-        <div className="flex bg-white/5 p-1.5 rounded-3xl border border-white/10 mb-8 overflow-x-auto no-scrollbar glass">
-          {['tasks', 'formulas', 'agile', 'traps'].map(t => (
-            <button key={t} onClick={() => {setStudyTab(t); setExpandedTask(null);}} className={`flex-1 min-w-[120px] py-4 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] transition-all ${studyTab === t ? 'bg-indigo-600 text-white shadow-xl' : 'text-slate-500'}`}>{t}</button>
-          ))}
-        </div>
+          <nav className="flex glass p-1 rounded-3xl mb-12 no-scrollbar overflow-x-auto">
+            {['tasks', 'formulas', 'agile'].map(t => (
+              <button key={t} onClick={() => {setStudyTab(t); setExpandedTask(null);}} className={`flex-1 min-w-[120px] py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all ${studyTab === t ? 'bg-indigo-600 shadow-xl' : 'text-slate-500'}`}>{t}</button>
+            ))}
+          </nav>
 
-        <div className="glass p-8 md:p-10 rounded-[2.5rem]">
-          {studyTab === 'tasks' && (
-            <div className="space-y-12">
-              {['People', 'Process', 'Business'].map(domain => (
-                <div key={domain}>
-                  <h4 className="text-xs font-black text-slate-500 uppercase tracking-widest mb-6 border-b border-white/5 pb-2">{domain} Domain</h4>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {ECO_TASKS[domain.toLowerCase()].map(task => (
-                      <div key={task.id} onClick={() => setExpandedTask(expandedTask === task.id ? null : task.id)} 
-                        className={`p-6 rounded-2xl border transition-all cursor-pointer ${expandedTask === task.id ? 'bg-indigo-600/20 border-indigo-500 shadow-lg shadow-indigo-500/10' : 'bg-white/5 border-white/10 hover:bg-white/10'}`}>
-                        <div className="flex justify-between items-center">
-                          <span className="font-bold text-sm">{task.title}</span>
-                          <LucideIcon name={expandedTask === task.id ? "chevron-up" : "chevron-down"} className="w-4 h-4 text-slate-500" />
-                        </div>
-                        {expandedTask === task.id && (
-                          <div className="mt-6 space-y-4 animate-fadeIn">
-                            <div className="bg-white/5 p-4 rounded-xl">
-                              <div className="text-[10px] font-black text-indigo-400 uppercase mb-1">The Mindset</div>
-                              <div className="text-sm text-slate-300">{task.mindset}</div>
-                            </div>
-                            <div className="bg-white/5 p-4 rounded-xl">
-                              <div className="text-[10px] font-black text-purple-400 uppercase mb-1">Pro Tip</div>
-                              <div className="text-sm text-slate-300">{task.tips}</div>
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                    ))}
+          <div className="space-y-6">
+            {studyTab === 'tasks' && ECO_TASKS.people.map(task => (
+              <div key={task.id} className="glass rounded-[2rem] overflow-hidden transition-all border-white/5 border">
+                <div onClick={() => {setExpandedTask(expandedTask === task.id ? null : task.id); setSimResult(null);}} className="p-8 flex justify-between items-center cursor-pointer hover:bg-white/5">
+                  <div className="flex items-center gap-4">
+                    <span className="bg-indigo-600 w-10 h-10 rounded-xl flex items-center justify-center font-black text-xs">{task.id}</span>
+                    <h3 className="text-xl font-bold">{task.title}</h3>
                   </div>
+                  <LucideIcon name={expandedTask === task.id ? "chevron-up" : "chevron-down"} className="text-slate-500" />
                 </div>
-              ))}
-            </div>
-          )}
-          {studyTab === 'formulas' && <div className="text-center py-20 text-slate-500 uppercase tracking-widest text-xs">Formula Content Loading in Step 2...</div>}
-          {studyTab === 'agile' && <div className="text-center py-20 text-slate-500 uppercase tracking-widest text-xs">Agile Content Loading in Step 2...</div>}
-          {studyTab === 'traps' && <div className="text-center py-20 text-slate-500 uppercase tracking-widest text-xs">Trap Detection Content Loading in Step 2...</div>}
+
+                {expandedTask === task.id && (
+                  <div className="px-8 pb-8 animate-fadeIn space-y-8">
+                    <div className="grid md:grid-cols-2 gap-8">
+                      <div className="space-y-4">
+                        <div className="text-indigo-400 font-black text-[10px] uppercase tracking-widest">Surgical Deep Dive</div>
+                        <p className="text-slate-300 text-sm leading-relaxed">{task.deepDive}</p>
+                        <div className="space-y-2">
+                          {task.surgicalSteps.map((step, i) => (
+                            <div key={i} className="flex gap-3 text-xs text-slate-400 italic">
+                               <LucideIcon name="arrow-right" className="w-3 h-3 text-indigo-500 mt-1" /> {step}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                      <div className="bg-white/5 p-6 rounded-2xl border border-white/5 h-fit">
+                        <div className="text-purple-400 font-black text-[10px] uppercase tracking-widest mb-3">Agile vs Waterfall</div>
+                        <p className="text-slate-400 text-xs leading-relaxed italic">{task.methodology}</p>
+                      </div>
+                    </div>
+
+                    <div className="bg-gradient-to-br from-indigo-900/30 to-purple-900/30 border border-indigo-500/20 p-8 rounded-[2rem]">
+                      <h4 className="text-indigo-400 font-black text-[10px] uppercase tracking-widest mb-6 flex items-center gap-2">
+                        <LucideIcon name="zap" className="w-4 h-4 fill-current" /> Interactive Simulation
+                      </h4>
+                      <p className="text-lg font-bold mb-6">{task.simulation.scenario}</p>
+                      <div className="grid gap-3">
+                        {task.simulation.options.map((opt, i) => (
+                          <button key={i} onClick={() => setSimResult(opt)} className={`p-4 rounded-xl text-left text-sm transition-all border ${simResult?.text === opt.text ? (opt.correct ? 'bg-emerald-500/20 border-emerald-500' : 'bg-red-500/20 border-red-500') : 'bg-white/5 border-white/5 hover:bg-white/10'}`}>
+                            {opt.text}
+                          </button>
+                        ))}
+                      </div>
+                      {simResult && <div className={`mt-6 p-4 rounded-xl text-xs font-bold animate-fadeIn ${simResult.correct ? 'text-emerald-400 bg-emerald-400/5' : 'text-red-400 bg-red-400/5'}`}>{simResult.feedback}</div>}
+                    </div>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     );
   }
 
-  // --- QUIZ SELECTOR ---
+  // --- VIEW: QUIZ SELECTION ---
   if (currentMode === 'quiz_select') {
     return (
-      <div className="min-h-screen p-12 max-w-6xl mx-auto">
-        <button onClick={() => setCurrentMode('dashboard')} className="text-slate-400 hover:text-white mb-12 flex items-center gap-2 font-bold"><LucideIcon name="arrow-left" className="w-5 h-5"/> BACK</button>
-        <h2 className="text-5xl font-black mb-12 italic tracking-tighter">SELECT TOPIC</h2>
-        <div className="grid md:grid-cols-3 gap-8">
-          {['People', 'Process', 'Business'].map(domain => (
-            <div key={domain} className="glass p-10 rounded-[3rem] hover:scale-105 transition-all cursor-pointer group border-indigo-500/20 hover:border-indigo-500">
-               <div className="text-4xl mb-6 group-hover:animate-bounce">{domain === 'People' ? '👥' : domain === 'Process' ? '⚙️' : '💼'}</div>
-               <h4 className="text-2xl font-black mb-2">{domain} Domain</h4>
-               <p className="text-slate-500 text-sm mb-8">15 Question focused sprint.</p>
-               <div className="bg-indigo-600 py-3 rounded-xl text-center font-bold text-xs uppercase tracking-widest">Start Quiz</div>
-            </div>
-          ))}
+      <div className="min-h-screen p-12 bg-[#0f172a] text-white">
+        <div className="max-w-6xl mx-auto">
+          <button onClick={() => setCurrentMode('dashboard')} className="text-slate-400 font-bold hover:text-white mb-12 flex items-center gap-2"><LucideIcon name="arrow-left" className="w-4 h-4"/> BACK</button>
+          <h2 className="text-5xl font-black mb-12 italic tracking-tighter">SELECT TOPIC DRILL</h2>
+          <div className="grid md:grid-cols-3 gap-8">
+            {['People', 'Process', 'Business'].map(domain => (
+              <div key={domain} className="glass p-10 rounded-[3rem] hover:scale-105 transition-all cursor-pointer group hover:border-indigo-500">
+                 <div className="text-4xl mb-6">{domain === 'People' ? '👥' : domain === 'Process' ? '⚙️' : '💼'}</div>
+                 <h4 className="text-2xl font-black mb-2">{domain} Domain</h4>
+                 <p className="text-slate-500 text-sm mb-8">15 Questions • 20 Minutes • Focused Sprint</p>
+                 <div className="bg-indigo-600 py-4 rounded-xl text-center font-bold text-xs uppercase tracking-widest shadow-xl">Start Quiz</div>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     );
@@ -196,4 +214,4 @@ const PMPPrepApp = () => {
   return null;
 };
 
-ReactDOM.render(<PMPPrepApp />, document.getElementById('root'));
+ReactDOM.render(<PMPMasteryApp />, document.getElementById('root'));
