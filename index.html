@@ -3,22 +3,79 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PMP Mastery 2026</title>
+  <title>PMP Mastery 2026 | Elite Command Center</title>
+  
   <script src="https://cdn.tailwindcss.com"></script>
+  
   <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
   <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
   <script src="https://unpkg.com/lucide@latest"></script>
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+
   <style>
-    body { background-color: #0b0f1a; margin: 0; color: white; font-family: 'Inter', sans-serif; }
-    .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 28px; transition: all 0.3s ease; }
-    .glass:hover { border-color: rgba(99, 102, 241, 0.4); transform: translateY(-4px); }
-    @keyframes blob { 0% { transform: translate(0,0) scale(1); } 33% { transform: translate(30px,-50px) scale(1.1); } 100% { transform: translate(0,0) scale(1); } }
-    .animate-blob { animation: blob 15s infinite ease-in-out; position: absolute; filter: blur(100px); opacity: 0.15; z-index: 0; }
+    body { 
+      background-color: #0b0f1a; 
+      margin: 0; 
+      color: white; 
+      font-family: 'Inter', sans-serif; 
+      overflow-x: hidden; 
+      min-height: 100vh;
+    }
+
+    /* Premium Animated Background Blobs */
+    @keyframes blob { 
+      0% { transform: translate(0,0) scale(1); } 
+      33% { transform: translate(30px,-50px) scale(1.1); } 
+      66% { transform: translate(-20px,20px) scale(0.9); } 
+      100% { transform: translate(0,0) scale(1); } 
+    }
+    
+    .animate-blob { 
+      animation: blob 15s infinite ease-in-out; 
+      position: absolute; 
+      border-radius: 50%; 
+      filter: blur(100px); 
+      opacity: 0.15; 
+      z-index: 0; 
+      pointer-events: none; 
+    }
+    
+    .animation-delay-2000 { animation-delay: 2s; }
+
+    /* Elite Glassmorphism */
+    .glass { 
+      background: rgba(255, 255, 255, 0.03); 
+      backdrop-filter: blur(20px); 
+      border: 1px solid rgba(255, 255, 255, 0.1); 
+      border-radius: 28px; 
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+    }
+    
+    .glass:hover { 
+      border-color: rgba(99, 102, 241, 0.4); 
+      background: rgba(255, 255, 255, 0.05); 
+      transform: translateY(-4px); 
+    }
+
+    .text-glow { text-shadow: 0 0 20px rgba(139, 92, 246, 0.5); }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    
+    /* Animation for expanding task cards */
+    .animate-fadeIn { 
+      animation: fadeIn 0.3s ease-out; 
+    }
+    @keyframes fadeIn { 
+      from { opacity: 0; transform: translateY(10px); } 
+      to { opacity: 1; transform: translateY(0); } 
+    }
   </style>
 </head>
 <body>
   <div id="root"></div>
+  
   <script type="text/babel" src="pmp-prep-app.js"></script>
 </body>
 </html>
