@@ -4,67 +4,40 @@
       {
         "id": "P1",
         "title": "Manage Conflict",
-        "primeDirective": "Facilitate, don’t dictate. Resolve at the source.",
-        "deepDive": "PMI views conflict as an opportunity for growth. Distinguish between 'Functional' and 'Dysfunctional' conflict.",
-        "veteranTip": "In 16 years, I've found that technical 'disagreements' are often just lack of role clarity. Check the RACI matrix first.",
+        "primeDirective": "Facilitate, don’t dictate.",
+        "veteranTip": "Check the RACI first. 90% of technical conflict is just role confusion.",
+        "deepDive": "PMI focuses on Collaborative resolution. Don't escalate until you've tried to solve it at the source.",
         "learnMore": {
-          "logic": "IF technical, THEN use 'Collaborating'. IF personal, THEN refer to 'Team Charter'.",
-          "blueprint": ["Team Charter", "Issue Log", "Conflict Management Plan"],
-          "mindsetTip": "Never 'Inform' when you can 'Collaborate'."
-        }
-      },
-      {
-        "id": "P2",
-        "title": "Lead a Team",
-        "primeDirective": "Servant Leadership: You are the blocker-remover.",
-        "deepDive": "Adopt situational leadership based on Tuckman's Model (Forming to Performing).",
-        "veteranTip": "Don't fall into the 'Expert Trap.' Your job isn't to be the smartest person in the room; it's to make the room smart enough to solve the problem.",
-        "learnMore": {
-          "logic": "IF 'Storming', THEN re-establish ground rules. IF 'Performing', THEN delegate.",
-          "blueprint": ["Resource Management Plan", "Team Performance Assessments"],
-          "mindsetTip": "The PM is a facilitator, not a commander."
+          "logic": "IF technical, use Collaboration. IF behavior-based, use the Team Charter.",
+          "blueprint": ["Team Charter", "Conflict Plan"],
+          "mindsetTip": "Assess first, then act."
         }
       }
     ],
-    "process": [
-      {
-        "id": "PR15",
-        "title": "Manage Budget",
-        "primeDirective": "Baseline early, track often with EVM.",
-        "deepDive": "Control costs using Earned Value Management (EVM) metrics.",
-        "veteranTip": "Budgeting is about transparency. If you're 20% over, tell the sponsor *why* and show the recovery plan immediately.",
-        "learnMore": {
-          "logic": "IF CPI < 1.0, THEN analyze root cause and update Risk Register.",
-          "blueprint": ["Cost Baseline", "Work Performance Reports"],
-          "mindsetTip": "Protect the baseline, manage the variance."
-        }
-      }
-    ],
-    "business": [
-      {
-        "id": "B32",
-        "title": "Manage Compliance",
-        "primeDirective": "Compliance is a non-negotiable constraint.",
-        "deepDive": "Integrate audits and quality checks into the project schedule.",
-        "veteranTip": "I treat compliance as a 'Gate.' If it doesn't pass, we don't move. It saves millions in rework later.",
-        "learnMore": {
-          "logic": "IF regulations change, THEN assess scope impact immediately.",
-          "blueprint": ["Compliance Plan", "Quality Audit"],
-          "mindsetTip": "Proactive compliance is cheaper than reactive legal fees."
-        }
-      }
-    ]
+    "process": [],
+    "business": []
   },
   "formulas": [
     {
       "id": "F1",
       "name": "CPI (Cost Performance Index)",
       "equation": "EV / AC",
-      "scenario": "EV is $200,000, but the team has already spent (AC) $250,000.",
-      "variables": { "EV": 200000, "AC": 250000 },
+      "scenario": "EV is $200k, AC is $250k. Status?",
       "correctAnswer": 0.8,
-      "veteranInsight": "Spending $1 to get $0.80 of value is a systemic failure. Check for scope creep.",
-      "stepByStep": ["200,000 / 250,000 = 0.8", "Status: Over Budget"]
+      "veteranInsight": "Spending $1 to get $0.80 of value is a red alert for scope creep.",
+      "stepByStep": ["EV (200,000) / AC (250,000) = 0.8"]
+    }
+  ],
+  "quizPool": [
+    {
+      "id": "Q1",
+      "domain": "People",
+      "question": "A team member is consistently late. What is your first move?",
+      "options": [
+        {"text": "Consult HR", "correct": false},
+        {"text": "1-on-1 private meeting to assess root cause", "correct": true}
+      ],
+      "veteranLogic": "Never discipline in public or escalate before assessing the individual's situation."
     }
   ]
 }

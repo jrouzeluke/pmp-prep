@@ -2,16 +2,22 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PMP Mastery | Surgical 5.0</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
   <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
   <style>
-    body { background-color: #0b0f1a; font-family: sans-serif; color: white; }
-    .glass { background: rgba(255,255,255,0.03); backdrop-filter: blur(20px); border-radius: 2rem; border: 1px solid rgba(255,255,255,0.05); }
-    .animate-fadeIn { animation: fadeIn 0.4s ease-out; }
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
+    body { background-color: #05070a; font-family: 'Inter', sans-serif; color: #e2e8f0; overflow-x: hidden; }
+    .glass { background: rgba(255,255,255,0.02); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.08); transition: all 0.3s ease; }
+    .glass:hover { border-color: rgba(99, 102, 241, 0.4); background: rgba(255,255,255,0.04); transform: translateY(-2px); }
+    .quadrant { min-height: 220px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+    .animate-fadeIn { animation: fadeIn 0.5s ease-out forwards; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
   </style>
 </head>
 <body>
