@@ -3,10 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PMP Mastery 2026 | Elite Dashboard</title>
+  <title>PMP Mastery 2026 | Command Center</title>
   
   <script src="https://cdn.tailwindcss.com"></script>
-  
   <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
   <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -14,36 +13,26 @@
   <script src="https://unpkg.com/lucide@latest"></script>
 
   <style>
-    /* Animated Blobs for that "LinkedIn Impressive" look */
+    body { background-color: #0f172a; margin: 0; overflow-x: hidden; color: white; }
+    
     @keyframes blob {
       0% { transform: translate(0px, 0px) scale(1); }
       33% { transform: translate(30px, -50px) scale(1.1); }
       66% { transform: translate(-20px, 20px) scale(0.9); }
       100% { transform: translate(0px, 0px) scale(1); }
     }
-    .animate-blob {
-      animation: blob 7s infinite;
-    }
+    .animate-blob { animation: blob 12s infinite cubic-bezier(0.4, 0, 0.2, 1); }
     .animation-delay-2000 { animation-delay: 2s; }
-    .animation-delay-4000 { animation-delay: 4s; }
+    
+    /* Hide scrollbars but allow scrolling */
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-    /* Custom Shimmer Effect for the Exam Sim button */
-    .shimmer {
-      background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0) 100%);
-      background-size: 200% 100%;
-      animation: shimmer 3s infinite;
-    }
-    @keyframes shimmer {
-      0% { background-position: -200% 0; }
-      100% { background-position: 200% 0; }
-    }
-
-    body { background-color: #0f172a; margin: 0; overflow-x: hidden; }
+    .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); }
   </style>
 </head>
 <body>
   <div id="root"></div>
-
   <script type="text/babel" src="pmp-prep-app.js"></script>
 </body>
 </html>
