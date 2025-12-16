@@ -4,31 +4,68 @@
       {
         "id": "P1",
         "title": "Manage Conflict",
-        "primeDirective": "Facilitate, don’t dictate.",
-        "veteranTip": "Check the RACI first. 90% of technical conflict is just role confusion.",
-        "deepDive": "PMI focuses on Collaborative resolution. Don't escalate until you've tried to solve it at the source.",
+        "primeDirective": "Facilitate, don’t dictate. Resolve at the source.",
+        "deepDive": "PMI views conflict as an opportunity for growth. Distinguish between 'Functional' (task-based) and 'Dysfunctional' (person-based) conflict.",
+        "veteranTip": "In my 16 years, I've found that technical 'disagreements' are often just lack of role clarity. Check the RACI first—half the time, the conflict disappears once everyone knows who actually owns the decision.",
         "learnMore": {
-          "logic": "IF technical, use Collaboration. IF behavior-based, use the Team Charter.",
-          "blueprint": ["Team Charter", "Conflict Plan"],
-          "mindsetTip": "Assess first, then act."
+          "logic": "IF the conflict is about technical approach, THEN use 'Collaborating'. IF it's a personality clash, THEN refer to the 'Team Charter'.",
+          "blueprint": ["Team Charter", "Issue Log", "Conflict Management Plan"],
+          "mindsetTip": "Always 'Assess' first. Never 'Forcing' a decision on the exam."
+        }
+      },
+      {
+        "id": "P2",
+        "title": "Lead a Team",
+        "primeDirective": "Servant Leadership: You are the blocker-remover.",
+        "deepDive": "Adopt a situational leadership style based on the team's maturity level using Tuckman's Model.",
+        "veteranTip": "Don't fall into the 'Expert Trap.' Your job isn't to be the smartest person in the room; it's to make the room smart enough to solve the problem.",
+        "learnMore": {
+          "logic": "IF the team is in 'Storming', focus on ground rules. IF 'Performing', move to a delegating style.",
+          "blueprint": ["Project Charter", "Resource Management Plan"],
+          "mindsetTip": "The PM is a facilitator. Any answer where the PM 'commands' is usually a trap."
         }
       }
     ],
     "process": [
       {
+        "id": "PR1",
+        "title": "Execute with Urgency",
+        "primeDirective": "Value-driven delivery over process-compliance.",
+        "deepDive": "Balance speed with quality. Use Minimum Viable Product (MVP) thinking.",
+        "veteranTip": "Urgency doesn't mean 'hurry.' It means 'prioritization.' Move fast on the right things—the Critical Path.",
+        "learnMore": {
+          "logic": "IF a delay occurs, THEN assess the impact on the Critical Path before crashing the schedule.",
+          "blueprint": ["Project Schedule", "MVP Definition"],
+          "mindsetTip": "Focus on delivering the 'Business Value' first."
+        }
+      },
+      {
         "id": "PR15",
         "title": "Manage Budget",
-        "primeDirective": "Baseline early, track often.",
-        "veteranTip": "Budgeting is about transparency. If you're 20% over, tell the sponsor why and show the recovery plan.",
-        "deepDive": "Control costs using Earned Value Management (EVM) metrics.",
+        "primeDirective": "Baseline early, track often with EVM.",
+        "deepDive": "Control costs using Earned Value Management (EVM) metrics like CPI and SPI.",
+        "veteranTip": "Budgeting is about transparency. If you're 20% over, tell the sponsor why and show the recovery plan immediately.",
         "learnMore": {
-          "logic": "IF CPI < 1.0, THEN analyze root cause and update Risk Register.",
+          "logic": "IF CPI < 1.0, THEN analyze root cause and update the Risk Register.",
           "blueprint": ["Cost Baseline", "Work Performance Reports"],
-          "mindsetTip": "Protect the baseline, manage the variance."
+          "mindsetTip": "Protect the baseline, but manage the reality of the variance."
         }
       }
     ],
-    "business": []
+    "business": [
+      {
+        "id": "B1",
+        "title": "Manage Compliance",
+        "primeDirective": "Compliance is a non-negotiable constraint.",
+        "deepDive": "Integrate audits and quality checks into the project schedule from day one.",
+        "veteranTip": "I treat compliance as a 'Gate.' If it doesn't pass, we don't move. It saves millions in rework and legal fees later.",
+        "learnMore": {
+          "logic": "IF regulations change mid-project, THEN submit a Change Request to assess the impact.",
+          "blueprint": ["Compliance Plan", "Quality Audit Reports"],
+          "mindsetTip": "Compliance is a risk you cannot 'Accept'; you must 'Mitigate' or 'Avoid'."
+        }
+      }
+    ]
   },
   "formulas": [
     {
@@ -42,6 +79,19 @@
       "stepByStep": ["200,000 / 250,000 = 0.8", "Status: Over Budget"]
     }
   ],
+  "quizPool": [
+    {
+      "id": "Q1",
+      "type": "situational",
+      "domain": "People",
+      "question": "A senior developer on your team is consistently missing deadlines. They admit they are overwhelmed by the new architecture. What is your NEXT move?",
+      "options": [
+        { "text": "Reassign their tasks to a faster developer.", "correct": false, "feedback": "Trap! This ignores team development." },
+        { "text": "Schedule a training session for the developer and assess progress.", "correct": true, "feedback": "Surgical: PMP prioritizes Empowerment and Training." }
+      ],
+      "veteranLogic": "Invest in the person, not just the task. Build a self-sustaining team."
+    }
+  ],
   "mockExam": [
     {
       "id": 1,
@@ -50,10 +100,4 @@
         "Review the procurement management plan.",
         "Terminate the vendor immediately.",
         "Issue a formal notice of default.",
-        "Negotiate a contract amendment."
-      ],
-      "correct": 0,
-      "explanation": "Always review the plan and the contract terms before taking action."
-    }
-  ]
-}
+        "Negotiate a contract amendment
