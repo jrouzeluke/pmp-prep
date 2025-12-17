@@ -6,113 +6,60 @@ const Icon = ({ name, className }) => {
 };
 
 const PMPApp = () => {
-  const [view, setView] = useState('dashboard'); 
-  const [branchData, setBranchData] = useState(null);
-  const [activeModule, setActiveModule] = useState(null); 
-  const [isFlipped, setIsFlipped] = useState(false);
+  return (
+    <div className="max-w-4xl mx-auto p-6 md:p-12 animate-fadeIn">
+      {/* Top Header */}
+      <header className="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 gap-6">
+        <div>
+          <h1 className="hud-font chrome-text text-4xl font-black italic">PMP Mastery</h1>
+          <p className="text-[10px] text-slate-500 font-bold tracking-[0.4em] mt-1 uppercase">Surgical Engine V5.3</p>
+        </div>
+        <div className="flex items-center gap-3 bg-slate-900/80 px-4 py-2 rounded-lg border border-white/5">
+          <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse shadow-[0_0_8px_#10b981]"></div>
+          <span className="hud-font text-[10px] text-emerald-500">System Ready</span>
+        </div>
+      </header>
 
-  const launchBranch = async (branchName) => {
-    try {
-      const response = await fetch(`./data/${branchName}.json`);
-      if (!response.ok) throw new Error("Path Fail");
-      const data = await response.json();
-      setBranchData(data);
-      setView('branch-menu');
-    } catch (err) {
-      alert("System Offline: Ensure data/" + branchName + ".json exists.");
-    }
-  };
-
-  // --- DASHBOARD (Tactical Cockpit) ---
-  if (view === 'dashboard') {
-    return (
-      <div className="p-12 max-w-7xl mx-auto animate-fadeIn">
-        <header className="mb-20">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse shadow-[0_0_8px_#10b981]"></div>
-            <span className="text-[10px] font-black tracking-[0.5em] text-emerald-500 uppercase">System Ready // Cockpit v5.2</span>
-          </div>
-          <h1 className="text-6xl font-black italic">PMP Cockpit</h1>
-        </header>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-          <button onClick={() => launchBranch('initiating')} 
-                  className="glass accent-initiating glow-initiating p-12 text-left group">
-            <div className="flex justify-between items-start mb-8">
-              <Icon name="anchor" className="text-purple-500 w-10 h-10 group-hover:scale-110 transition-transform" />
-              <span className="text-[10px] font-mono text-slate-600 tracking-widest uppercase text-right">0% COMPLETED<br/>BRANCH_ID: 001</span>
+      {/* Main Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-16">
+        {[
+          { id: 'study', label: 'Study Hub', icon: 'book-open', color: 'border-purple-500', desc: 'Surgical Tips' },
+          { id: 'quiz', label: 'Quizzes & Sims', icon: 'zap', color: 'border-emerald-500', desc: 'Knowledge Drills' },
+          { id: 'math', label: 'Formula Lab', icon: 'calculator', color: 'border-blue-500', desc: 'Math Logic' },
+          { id: 'mock', label: 'Mock Exam', icon: 'user', color: 'border-rose-500', desc: '180 Question Final' }
+        ].map(card => (
+          <button key={card.id} className={`hud-card scan-line p-10 text-left border-l-4 ${card.color} group`}>
+            <div className="flex justify-between items-start mb-4">
+              <div className="p-3 bg-white/5 rounded-lg group-hover:scale-110 transition-transform"><Icon name={card.icon} className="w-6 h-6" /></div>
+              <span className="text-[9px] text-slate-600 font-mono font-bold tracking-widest uppercase">Operational</span>
             </div>
-            <h3 className="text-4xl font-black italic text-white uppercase tracking-tighter">Initiating</h3>
-            <p className="text-slate-400 mt-2 font-light italic leading-relaxed">Establish foundational authority and secure the project mandate.</p>
-            <div className="mt-10 h-[2px] w-full bg-slate-900 overflow-hidden">
-                <div className="h-full bg-purple-500 w-0 group-hover:w-full transition-all duration-1000"></div>
-            </div>
+            <h3 className="hud-font text-xl font-bold italic text-white mb-1">{card.label}</h3>
+            <p className="text-[9px] text-slate-500 font-bold tracking-widest uppercase">{card.desc}</p>
           </button>
-          
-          <div className="glass p-12 opacity-20 border-dashed border-white/5 flex flex-col items-center justify-center text-slate-700">
-            <Icon name="lock" className="w-12 h-12 mb-4" />
-            <h3 className="text-2xl font-black uppercase italic tracking-widest">Planning</h3>
-          </div>
+        ))}
+      </div>
+
+      {/* Enhanced Performance Dashboard */}
+      <div className="border-t border-white/5 pt-10">
+        <h4 className="hud-font text-xs text-slate-600 mb-8 italic tracking-widest">Diagnostic Analytics</h4>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+           {[
+             { label: 'Progress', val: '120', unit: 'Solved' },
+             { label: 'Accuracy', val: '85%', unit: 'Avg Score' },
+             { label: 'Streak', val: '16', unit: 'Active Days' }
+           ].map(stat => (
+             <div key={stat.label} className="hud-card p-8 bg-white/[0.02] flex flex-col items-center">
+                <p className="text-[8px] uppercase font-black text-slate-500 mb-2 tracking-[0.2em]">{stat.label}</p>
+                <div className="flex items-baseline gap-1">
+                    <span className="text-4xl font-black text-emerald-400">{stat.val}</span>
+                    <span className="text-[9px] text-slate-600 font-bold uppercase">{stat.unit}</span>
+                </div>
+             </div>
+           ))}
         </div>
       </div>
-    );
-  }
-
-  // --- BRANCH MENU (The Interactive Hub) ---
-  if (view === 'branch-menu' && !activeModule) {
-    return (
-      <div className="p-12 max-w-6xl mx-auto animate-fadeIn">
-        <button onClick={() => setView('dashboard')} className="text-slate-600 mb-12 uppercase text-[10px] font-black tracking-[0.3em] hover:text-white transition-colors">
-          // TERMINATE_SESSION
-        </button>
-        
-        <div className="flex flex-col lg:flex-row gap-16 items-start">
-            <div className="lg:w-1/3">
-                <h2 className="text-5xl font-black text-white italic uppercase tracking-tighter mb-4">{branchData.title}</h2>
-                <p className="text-slate-400 italic text-lg leading-relaxed border-l-2 border-purple-500/30 pl-6">"{branchData.description}"</p>
-            </div>
-            
-            <div className="lg:w-2/3 grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
-              {[
-                { id: 'sim', label: 'Decision Lab', icon: 'play', color: 'text-purple-500' },
-                { id: 'audit', label: 'Surgical Lab', icon: 'search', color: 'text-emerald-500' },
-                { id: 'flash', label: 'Reflex Drill', icon: 'layers', color: 'text-rose-500' }
-              ].map((mod) => (
-                <button key={mod.id} onClick={() => setActiveModule(mod.id)} 
-                        className="glass p-8 flex justify-between items-center hover:bg-white/[0.02]">
-                  <span className="font-black text-white uppercase tracking-widest text-xs tracking-[0.2em]">{mod.label}</span>
-                  <Icon name={mod.icon} className={`${mod.color} w-5 h-5`} />
-                </button>
-              ))}
-            </div>
-        </div>
-      </div>
-    );
-  }
-
-  // --- FLASHCARD MODULE ---
-  if (activeModule === 'flash') {
-    const card = branchData.modules.flashcards[0];
-    return (
-      <div className="p-12 flex flex-col items-center justify-center min-h-screen animate-fadeIn">
-        <button onClick={() => setActiveModule(null)} className="text-slate-500 mb-10 text-[10px] font-black tracking-widest hover:text-white transition-colors uppercase">// EXIT_DRILL</button>
-        <div onClick={() => setIsFlipped(!isFlipped)} className="w-full max-w-md h-96 perspective-1000 cursor-pointer">
-          <div className={`relative w-full h-full transition-transform duration-700 preserve-3d ${isFlipped ? 'rotate-y-180' : ''}`}>
-            <div className="absolute w-full h-full backface-hidden glass flex flex-col items-center justify-center p-12 border-white/10">
-              <span className="text-rose-500 font-black uppercase text-[10px] mb-8 tracking-[0.3em]">REFLEX_QUERY</span>
-              <p className="text-3xl font-bold text-white italic text-center">"{card.front}"</p>
-            </div>
-            <div className="absolute w-full h-full backface-hidden glass flex flex-col items-center justify-center p-12 rotate-y-180 bg-rose-500/[0.03] border-rose-500/20">
-              <span className="text-rose-400 font-black uppercase text-[10px] mb-8 tracking-[0.3em]">VETERAN_RESPONSE</span>
-              <p className="text-3xl font-bold text-white italic text-center">"{card.back}"</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  return null;
+    </div>
+  );
 };
 
 const root = ReactDOM.createRoot(document.getElementById('root'));

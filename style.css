@@ -1,72 +1,70 @@
-@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;600;900&display=swap');
 
 :root {
+    --navy-deep: #050b18;
+    --navy-panel: rgba(13, 22, 45, 0.9);
     --neon-purple: #a855f7;
-    --neon-blue: #3b82f6;
     --neon-emerald: #10b981;
+    --neon-blue: #3b82f6;
     --neon-rose: #f43f5e;
-    --bg-deep: #020617;
 }
 
 body {
-    background: radial-gradient(circle at 50% 0%, #0f172a 0%, var(--bg-deep) 100%);
+    background-color: var(--navy-deep);
+    background-image: radial-gradient(circle at 50% 0%, #0f172a 0%, var(--navy-deep) 100%);
     color: #f1f5f9;
     font-family: 'Inter', sans-serif;
     margin: 0;
     min-height: 100vh;
-    overflow-x: hidden;
 }
 
-/* --- Tactical Header --- */
-h1 {
+/* --- Professional Typography --- */
+.hud-font {
     font-family: 'Orbitron', sans-serif;
-    letter-spacing: 0.15em;
-    background: linear-gradient(to bottom, #fff 0%, #64748b 100%);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+.chrome-text {
+    background: linear-gradient(to bottom, #ffffff 0%, #94a3b8 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    filter: drop-shadow(0 0 15px rgba(255,255,255,0.1));
+    filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.1));
 }
 
-/* --- The Tactical Glass Panel --- */
-.glass {
-    background: rgba(15, 23, 42, 0.4);
-    backdrop-filter: blur(25px);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    border-radius: 4px; /* Sharper, tactical edges like the tablet view */
+/* --- High-Density Panels --- */
+.hud-card {
+    background: var(--navy-panel);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.hud-card:hover {
+    border-color: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+}
+
+/* --- Scanning HUD Element --- */
+.scan-line {
     position: relative;
     overflow: hidden;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.glass::before {
+.scan-line::after {
     content: '';
     position: absolute;
     top: 0; left: -100%;
-    width: 100%; height: 2px;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+    width: 100%; height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
     animation: scan 4s linear infinite;
 }
 
-.glass:hover {
-    background: rgba(30, 41, 59, 0.6);
-    border-color: rgba(255, 255, 255, 0.2);
-    box-shadow: 0 0 40px rgba(0,0,0,0.6);
+@keyframes scan { 0% { left: -100%; } 100% { left: 100%; } }
+
+/* Mobile Optimization */
+@media (max-width: 640px) {
+    .hud-card { padding: 1.5rem !important; }
 }
-
-/* --- Branch Accents --- */
-.accent-initiating { border-left: 3px solid var(--neon-purple); }
-.glow-initiating:hover { box-shadow: inset 0 0 20px rgba(168, 85, 247, 0.1); }
-
-/* --- 3D Flashcard Engine --- */
-.perspective-1000 { perspective: 1000px; }
-.preserve-3d { transform-style: preserve-3d; }
-.backface-hidden { backface-visibility: hidden; }
-.rotate-y-180 { transform: rotateY(180deg); }
-
-@keyframes scan {
-    0% { left: -100%; }
-    100% { left: 100%; }
-}
-
-.animate-fadeIn { animation: fadeIn 0.6s ease-out forwards; }
-@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
