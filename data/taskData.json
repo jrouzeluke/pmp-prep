@@ -1,0 +1,130 @@
+{
+  "Manage Conflict": {
+    "learn": {
+      "definition": "Conflict is professional friction over competing project priorities, not personal 'fighting'.",
+      "context": "Highest during 'Storming' phase. PMs must transition the team to 'Norming'.",
+      "path": "Prioritize Collaboration (Win-Win). Move to Compromise only if time is a critical constraint.",
+      "boundary": "Handle disputes internally. Avoid escalating peer-to-peer technical issues to the Sponsor."
+    },
+    "practice": {
+      "mindset": "Collaborate before you escalate. Conflict is a resource.",
+      "enablers": "Analyze Source & Stage // Determine Context // Recommend Resolution",
+      "traps": "NEVER escalate to a sponsor. AVOID 'Smoothing' traps for long-term issues.",
+      "artifacts": "Thomas-Kilmann Model // Team Charter // Active Listening"
+    }
+  },
+  "Lead a Team": {
+    "learn": {
+      "definition": "The art of inspiring a team to meet project objectives through a shared vision.",
+      "context": "Requires shifting styles (Servant, Situational, Transformational) based on team maturity.",
+      "path": "Prioritize Servant Leadership. Your job is to remove obstacles so the team can perform.",
+      "boundary": "Leadership is about people and culture; management is about tasks and control."
+    },
+    "practice": {
+      "mindset": "Empower the team; don't micromanage. Trust is your primary currency.",
+      "enablers": "Set Vision // Support Diversity // Inspire Performance",
+      "traps": "Avoid 'Command and Control' distractors. Never bypass team members for their managers.",
+      "artifacts": "Team Charter // RACI Matrix // Resource Management Plan"
+    }
+  },
+  "Support Performance": {
+    "learn": {
+      "definition": "Evaluating team member performance and providing feedback to optimize outcomes.",
+      "context": "Performance is measured against the Project Management Plan and Team Charter.",
+      "path": "Feedback should be constructive, timely, and focused on growth.",
+      "boundary": "Individual performance issues are handled privately; team successes are celebrated publicly."
+    },
+    "practice": {
+      "mindset": "Performance is a continuous improvement loop, not a once-a-year event.",
+      "enablers": "Appraise Performance // Verify Competencies // Reward Achievement",
+      "traps": "Never delay performance feedback until the end of the project.",
+      "artifacts": "Performance Appraisals // Training Records // Recognition Plan"
+    }
+  },
+  "Empower Team Members": {
+    "learn": {
+      "definition": "Granting teams authority and resources to make decisions and take ownership.",
+      "context": "Critical for Agile environments where self-organizing teams are required.",
+      "path": "Shift from 'Boss' to 'Facilitator.' Delegating authority increases speed and morale.",
+      "boundary": "Empowerment requires clear 'Guardrails' defined in the Team Charter."
+    },
+    "practice": {
+      "mindset": "Ownership drives results. The team should be autonomous within their scope.",
+      "enablers": "Delegate Authority // Support Self-Organization // Foster Accountability",
+      "traps": "Do not take back delegated tasks the moment a mistake is made.",
+      "artifacts": "Delegation Log // Skills Matrix // Agile Manifesto"
+    }
+  },
+  "Ensure Training": {
+    "learn": {
+      "definition": "Identifying skill gaps and providing resources for team development.",
+      "context": "Training needs change as the project moves through its lifecycle.",
+      "path": "Invest in training early to prevent quality issues and delays.",
+      "boundary": "Differentiate between 'Training' (new skills) and 'Mentoring' (career guidance)."
+    },
+    "practice": {
+      "mindset": "A highly trained team reduces the need for heavy project oversight.",
+      "enablers": "Identify Gaps // Allocate Training Budget // Measure Efficacy",
+      "traps": "Do not assume a lack of performance is always a lack of training; check resources.",
+      "artifacts": "Skills Gap Analysis // Resource Management Plan // Training Logs"
+    }
+  },
+  "Build Team": {
+    "learn": {
+      "definition": "Bringing the right people together and fostering a cohesive group dynamic.",
+      "context": "Requires understanding team chemistry and technical requirements.",
+      "path": "Use Tuckman's stages to guide the team from Forming to Performing.",
+      "boundary": "Building a team is a continuous process, not just a kick-off meeting task."
+    },
+    "practice": {
+      "mindset": "The whole is greater than the sum of its parts.",
+      "enablers": "Define Roles // Hire/Acquire Resources // Build Culture",
+      "traps": "Avoid hiring only 'experts' if they cannot collaborate together.",
+      "artifacts": "Project Staffing // Responsibility Assignment Matrix (RAM) // Team Charter"
+    }
+  }
+  {
+  "Remove Impediments": {
+    "learn": {
+      "definition": "Identifying and clearing obstacles that prevent the team from completing their work.",
+      "context": "A core responsibility of the Servant Leader (Scrum Master or PM).",
+      "path": "Maintain an Impediment Log and prioritize obstacles based on their impact on the Critical Path.",
+      "boundary": "PMs remove 'blockers'; teams solve 'technical problems.' Don't do the team's job for them."
+    },
+    "practice": {
+      "mindset": "Your value is measured by how smooth you make the path for your team.",
+      "enablers": "Identify Blockers // Prioritize Resolution // Shield Team from Interruptions",
+      "traps": "Avoid the trap of 'ignoring' small blockers; they aggregate into project delays.",
+      "artifacts": "Impediment Log // Daily Stand-up Notes // Kanban Board"
+    }
+  },
+  "Negotiate Agreements": {
+    "learn": {
+      "definition": "Reaching a formal consensus on project scope, budget, and resources with stakeholders.",
+      "context": "Negotiation is constant—from procuring vendors to assigning internal team members.",
+      "path": "Aim for 'Win-Win' outcomes. Focus on interests, not positions.",
+      "boundary": "A PM negotiates for the project's health, not for personal or departmental victory."
+    },
+    "practice": {
+      "mindset": "Fairness and sustainability are more important than 'winning' a single debate.",
+      "enablers": "Determine Strategy // Facilitate Dialogue // Finalize Contract",
+      "traps": "Never negotiate without a clear 'Best Alternative to a Negotiated Agreement' (BATNA).",
+      "artifacts": "Procurement SOW // Service Level Agreements (SLAs) // Resource Calendar"
+    }
+  },
+  "Collaborate Stakeholders": {
+    "learn": {
+      "definition": "Building strong working relationships to align stakeholder expectations with project goals.",
+      "context": "Stakeholders aren't just 'customers'; they are anyone affected by the project.",
+      "path": "Engagement is proactive. Use a Power/Interest grid to tailor your communication.",
+      "boundary": "Engagement is not just 'reporting'; it is active participation and feedback."
+    },
+    "practice": {
+      "mindset": "A stakeholder ignored is a stakeholder who will eventually block you.",
+      "enablers": "Map Stakeholders // Align Interests // Manage Expectations",
+      "traps": "Avoid the 'Inform only' trap. Proactively seek collaboration from high-power stakeholders.",
+      "artifacts": "Stakeholder Register // Power-Interest Grid // Stakeholder Engagement Plan"
+    }
+  }
+}
+}

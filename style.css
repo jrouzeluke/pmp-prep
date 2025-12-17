@@ -1,70 +1,45 @@
-@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;600;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Inter:wght@300;400;700;900&display=swap');
 
 :root {
-    --navy-deep: #050b18;
-    --navy-panel: rgba(13, 22, 45, 0.9);
-    --neon-purple: #a855f7;
-    --neon-emerald: #10b981;
-    --neon-blue: #3b82f6;
-    --neon-rose: #f43f5e;
+    --bg-navy: #0a0c1a;
+    --glass-fill: rgba(255, 255, 255, 0.03);
+    --glass-border: rgba(255, 255, 255, 0.08);
 }
 
 body {
-    background-color: var(--navy-deep);
-    background-image: radial-gradient(circle at 50% 0%, #0f172a 0%, var(--navy-deep) 100%);
-    color: #f1f5f9;
+    background-color: var(--bg-navy);
+    background-image: 
+        radial-gradient(circle at 10% 10%, rgba(168, 85, 247, 0.12) 0%, transparent 45%),
+        radial-gradient(circle at 90% 90%, rgba(34, 211, 238, 0.08) 0%, transparent 45%);
+    color: #ffffff;
     font-family: 'Inter', sans-serif;
     margin: 0;
     min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-/* --- Professional Typography --- */
-.hud-font {
-    font-family: 'Orbitron', sans-serif;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-}
+.hud-font { font-family: 'Orbitron', sans-serif; letter-spacing: 0.15em; text-transform: uppercase; }
 
-.chrome-text {
-    background: linear-gradient(to bottom, #ffffff 0%, #94a3b8 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.1));
-}
-
-/* --- High-Density Panels --- */
-.hud-card {
-    background: var(--navy-panel);
-    backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 12px;
+.glass-card {
+    background: var(--glass-fill);
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.hud-card:hover {
+.glass-card:hover {
     border-color: rgba(255, 255, 255, 0.2);
-    transform: translateY(-2px);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.4);
 }
 
-/* --- Scanning HUD Element --- */
-.scan-line {
-    position: relative;
-    overflow: hidden;
-}
+.border-purple { border-bottom: 2px solid #a855f7; }
+.border-emerald { border-bottom: 2px solid #10b981; }
+.border-blue { border-bottom: 2px solid #3b82f6; }
 
-.scan-line::after {
-    content: '';
-    position: absolute;
-    top: 0; left: -100%;
-    width: 100%; height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-    animation: scan 4s linear infinite;
-}
-
-@keyframes scan { 0% { left: -100%; } 100% { left: 100%; } }
-
-/* Mobile Optimization */
-@media (max-width: 640px) {
-    .hud-card { padding: 1.5rem !important; }
-}
+.animate-fadeIn { animation: fadeIn 0.5s ease-out forwards; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
