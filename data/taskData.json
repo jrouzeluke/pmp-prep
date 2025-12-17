@@ -1,86 +1,212 @@
 {
   "Manage Conflict": {
     "learn": {
-      "definition": "Conflict is professional friction over competing project priorities (Time, Budget, Quality), not personal 'fighting'.",
-      "context": "Disagreements peak during the 'Storming' stage. PMs must facilitate the transition to 'Norming' to maintain velocity.",
-      "path": "Prioritize Collaboration (Win-Win). Compromise is a fallback. Force is for safety/legal emergencies only.",
-      "boundary": "Resolve peer-to-peer disputes internally. Do not escalate technical team conflicts to the Project Sponsor."
+      "definition": "Professional friction over competing priorities, not personal 'fighting'.",
+      "context": "Peak during 'Storming'; PM facilitates transition to 'Norming'.",
+      "path": "Collaborate (Win-Win) first; Compromise is a fallback.",
+      "boundary": "Resolve peer disputes internally; do not escalate to Sponsor."
     },
     "practice": {
-      "mindset": "Collaborate before you escalate. View conflict as a resource for uncovering hidden risks.",
-      "enablers": "Analyze Source & Stage // Determine Contextual Impact // Execute Resolution Technique.",
-      "traps": "NEVER escalate internal team squabbles. AVOID 'Smoothing' as a permanent fix for recurring issues.",
-      "artifacts": "Team Charter // Thomas-Kilmann Model // Conflict Log."
+      "predictive_mindset": "Address conflict immediately to protect the critical path and schedule.",
+      "agile_mindset": "Empower the team to resolve issues during retrospectives; PM facilitates only.",
+      "checklist": ["Analyze Source", "Determine Context", "Apply Resolution Technique"],
+      "traps": "NEVER escalate internal team squabbles.",
+      "artifacts": "Conflict Log // Team Charter // TK Model."
     }
   },
   "Lead a Team": {
     "learn": {
-      "definition": "Leading is inspiring the team to achieve objectives through a shared vision and cultural alignment.",
-      "context": "Leadership styles must pivot (Servant, Situational, Transformational) based on team maturity levels.",
-      "path": "Adopt a Servant Leadership posture. Focus on removing blockers so the team can execute.",
-      "boundary": "Leadership is about people and motivation; Management is about control and task tracking."
+      "definition": "Inspiring the team through shared vision and cultural alignment.",
+      "context": "Styles pivot based on team maturity (Situational Leadership).",
+      "path": "Prioritize Servant Leadership to remove obstacles.",
+      "boundary": "Leadership is people/culture; Management is tasks/control."
     },
     "practice": {
-      "mindset": "Empowerment over micromanagement. Trust is the primary currency of a high-performing team.",
-      "enablers": "Set Vision // Support Diversity & Inclusion // Inspire High Performance.",
-      "traps": "Avoid 'Command and Control' distractors. Never bypass team members to talk to functional managers.",
-      "artifacts": "Team Charter // RACI Matrix // Resource Management Plan."
+      "predictive_mindset": "Provide clear direction and structure to align with the Project Management Plan.",
+      "agile_mindset": "Focus on empowerment and removing blockers (Servant Leadership).",
+      "checklist": ["Set Vision", "Support Diversity", "Inspire Performance"],
+      "traps": "Avoid 'Command and Control' distractors.",
+      "artifacts": "RACI Matrix // Resource Management Plan."
     }
   },
   "Support Performance": {
     "learn": {
-      "definition": "Evaluating member performance and providing feedback to optimize overall project outcomes.",
-      "context": "Individual and team performance are measured against the Project Management Plan and Charter.",
-      "path": "Provide timely, constructive feedback focused on growth rather than purely on past mistakes.",
-      "boundary": "Handle individual issues privately; celebrate team wins publicly to maintain high morale."
+      "definition": "Evaluating and feedback loop to optimize outcomes.",
+      "context": "Measured against the PMP and Team Charter.",
+      "path": "Feedback must be constructive, timely, and growth-oriented.",
+      "boundary": "Private feedback for individuals; Public celebration for teams."
     },
     "practice": {
-      "mindset": "Performance is a continuous feedback loop, not a static end-of-quarter event.",
-      "enablers": "Appraise Performance // Verify Competencies // Reward Achievement.",
-      "traps": "Do not wait until the project end for feedback. Never ignore underperformance until it impacts the critical path.",
-      "artifacts": "Performance Appraisals // Training Records // Recognition Plan."
+      "predictive_mindset": "Formal appraisals linked to scheduled milestones and work packages.",
+      "agile_mindset": "Continuous feedback during daily standups and retrospectives.",
+      "checklist": ["Appraise Performance", "Verify Competencies", "Reward Achievement"],
+      "traps": "Never delay feedback until the project end.",
+      "artifacts": "Performance Appraisals // Training Records."
     }
   },
   "Empower Team Members": {
     "learn": {
-      "definition": "Granting teams the authority and resources to make decisions and take ownership of their work.",
-      "context": "Vital for Agile/Hybrid environments where self-organizing teams are a requirement for speed.",
-      "path": "Shift from 'Director' to 'Facilitator.' Delegating authority increases team speed and commitment.",
-      "boundary": "Empowerment requires 'Guardrails' (limits of authority) clearly defined in the Team Charter."
+      "definition": "Granting authority/resources for decision-making ownership.",
+      "context": "Essential for speed in Agile/Hybrid environments.",
+      "path": "Shift from 'Director' to 'Facilitator'.",
+      "boundary": "Requires 'Guardrails' defined in the Team Charter."
     },
     "practice": {
-      "mindset": "Ownership drives results. The team should be autonomous within their defined scope.",
-      "enablers": "Delegate Authority // Support Self-Organization // Foster Individual Accountability.",
-      "traps": "Do not 'hover' or take back authority the moment a minor mistake is made.",
+      "predictive_mindset": "Delegating specific work packages based on the WBS and RAM.",
+      "agile_mindset": "Foster self-organizing teams with high degrees of autonomy.",
+      "checklist": ["Delegate Authority", "Support Self-Org", "Foster Accountability"],
+      "traps": "Do not micromanage after delegating.",
       "artifacts": "Delegation Log // Skills Matrix // Agile Manifesto."
     }
   },
   "Ensure Training": {
     "learn": {
-      "definition": "Identifying skill gaps and providing the necessary resources for team development.",
-      "context": "Training needs evolve as the project lifecycle moves from planning to execution.",
-      "path": "Budget for training early. Cross-training reduces the risk of 'Single Points of Failure'.",
-      "boundary": "Distinguish between 'Training' (tactical skills) and 'Mentoring' (long-term career growth)."
+      "definition": "Identifying skill gaps and providing resources.",
+      "context": "Needs evolve as project lifecycle moves to execution.",
+      "path": "Invest early to prevent quality delays.",
+      "boundary": "Training is tactical; Mentoring is long-term."
     },
     "practice": {
-      "mindset": "An upskilled team requires less supervision and produces higher quality output.",
-      "enablers": "Determine Training Needs // Allocate Budget // Verify Efficacy of Learning.",
-      "traps": "Don't assume all performance issues are training issues; check for tool or resource gaps first.",
-      "artifacts": "Skills Gap Analysis // Resource Management Plan // Training Certificates."
+      "predictive_mindset": "Schedule training as a planned project activity with a set budget.",
+      "agile_mindset": "Focus on cross-training and T-shaped skills within the team.",
+      "checklist": ["Identify Gaps", "Allocate Budget", "Verify Efficacy"],
+      "traps": "Check for resource gaps before assuming training is the fix.",
+      "artifacts": "Skills Gap Analysis // Training Logs."
     }
   },
   "Build Team": {
     "learn": {
-      "definition": "Bringing the right individuals together and fostering a cohesive, productive group dynamic.",
-      "context": "Success depends on understanding both technical chemistry and personality dynamics.",
-      "path": "Proactively move the team through Tuckman’s stages from Forming to Performing.",
-      "boundary": "Team building is an ongoing effort throughout the project, not a one-time social event."
+      "definition": "Fostering cohesive, productive group dynamics.",
+      "context": "Success depends on chemistry and technical alignment.",
+      "path": "Move team through Tuckman's stages (Forming-Performing).",
+      "boundary": "Continuous effort, not a one-time social event."
     },
     "practice": {
-      "mindset": "A unified team is your strongest defense against project complexity.",
-      "enablers": "Appraise Team Skills // Hire/Acquire Resources // Build Team Culture.",
-      "traps": "Avoid hiring 'brilliant jerks' who destroy team collaboration and morale.",
-      "artifacts": "Staffing Estimates // RAM/RACI Chart // Virtual Team Tools."
+      "predictive_mindset": "Focus on acquisition of specific resources per the staffing plan.",
+      "agile_mindset": "Build self-organizing units with a dedicated culture.",
+      "checklist": ["Hire Resources", "Build Culture", "Establish Ground Rules"],
+      "traps": "Avoid hiring 'experts' who cannot collaborate.",
+      "artifacts": "Team Charter // Staffing Estimates."
+    }
+  },
+  "Remove Impediments": {
+    "learn": {
+      "definition": "Clearing obstacles preventing team progress.",
+      "context": "Core responsibility of the Servant Leader.",
+      "path": "Maintain log; prioritize based on Critical Path impact.",
+      "boundary": "PMs remove blockers; teams solve technical problems."
+    },
+    "practice": {
+      "predictive_mindset": "Use formal Change Control if impediments impact scope/budget.",
+      "agile_mindset": "Identify and swarm blockers during Daily Standups.",
+      "checklist": ["Identify Blockers", "Prioritize Resolution", "Shield Team"],
+      "traps": "Do not ignore small blockers; they aggregate.",
+      "artifacts": "Impediment Log // Kanban Board."
+    }
+  },
+  "Negotiate Agreements": {
+    "learn": {
+      "definition": "Consensus on scope, budget, and resources.",
+      "context": "Constant across vendors and internal teams.",
+      "path": "Focus on interests, not positions; Win-Win.",
+      "boundary": "Negotiate for project health, not personal victory."
+    },
+    "practice": {
+      "predictive_mindset": "Formal procurement negotiations focused on firm contracts.",
+      "agile_mindset": "Continuous negotiation of priority in the Product Backlog.",
+      "checklist": ["Determine Strategy", "Facilitate Dialogue", "Finalize Agreement"],
+      "traps": "Never negotiate without a BATNA.",
+      "artifacts": "Procurement SOW // Resource Calendar."
+    }
+  },
+  "Collaborate Stakeholders": {
+    "learn": {
+      "definition": "Aligning expectations with project goals.",
+      "context": "Affected parties, not just customers.",
+      "path": "Tailor comms using Power/Interest grid.",
+      "boundary": "Engagement is active participation, not just reporting."
+    },
+    "practice": {
+      "predictive_mindset": "Manage expectations through a formal Communication Plan.",
+      "agile_mindset": "Continuous stakeholder involvement through Sprint Reviews.",
+      "checklist": ["Map Stakeholders", "Align Interests", "Manage Expectations"],
+      "traps": "Avoid the 'Inform-only' trap for high-power allies.",
+      "artifacts": "Stakeholder Register // Power-Interest Grid."
+    }
+  },
+  "Shared Understanding": {
+    "learn": {
+      "definition": "Ensuring all parties interpret goals/scope identically.",
+      "context": "Misalignment causes rework and conflict.",
+      "path": "Use visualization tools and consensus-building.",
+      "boundary": "Understanding is about intent; agreement is about action."
+    },
+    "practice": {
+      "predictive_mindset": "Strict adherence to the Scope Statement and WBS Dictionary.",
+      "agile_mindset": "Iterative refinement of User Stories and the 'Definition of Done'.",
+      "checklist": ["Break Down Goals", "Build Consensus", "Resolve Misalignment"],
+      "traps": "Never assume silence means agreement.",
+      "artifacts": "Project Charter // Kick-off Deck."
+    }
+  },
+  "Virtual Teams": {
+    "learn": {
+      "definition": "Managing geographically dispersed members.",
+      "context": "Increases diversity; complicates communication.",
+      "path": "Leverage collaborative tech and asynchronous workflows.",
+      "boundary": "Distance is physical; isolation is emotional/professional."
+    },
+    "practice": {
+      "predictive_mindset": "Standardize communication windows and reporting tools.",
+      "agile_mindset": "Emphasize 'Fishbowl Windows' and virtual whiteboards.",
+      "checklist": ["Assess Needs", "Identify Tech", "Foster Engagement"],
+      "traps": "Avoid 'headquarters bias'—ignoring remote voices.",
+      "artifacts": "Team Charter // Comms Plan."
+    }
+  },
+  "Ground Rules": {
+    "learn": {
+      "definition": "Clear expectations for team behavior and interaction.",
+      "context": "Prevents conflict; established in Team Charter.",
+      "path": "Team-generated rules ensure higher commitment.",
+      "boundary": "Rules are for safety/efficiency, not for micromanagement."
+    },
+    "practice": {
+      "predictive_mindset": "Establish rules during the project kick-off and monitor compliance.",
+      "agile_mindset": "Review rules during retrospectives; allow for team evolution.",
+      "checklist": ["Communicate Rules", "Monitor Behavior", "Enforce Standards"],
+      "traps": "Rules without enforcement are merely suggestions.",
+      "artifacts": "Team Charter // Social Contract."
+    }
+  },
+  "Mentoring": {
+    "learn": {
+      "definition": "Guidance for professional growth and career development.",
+      "context": "Focuses on the person, not just the project task.",
+      "path": "Identify potential and match with experienced advisors.",
+      "boundary": "Mentoring is career-focused; Coaching is task-focused."
+    },
+    "practice": {
+      "predictive_mindset": "Formal mentor programs linked to professional development plans.",
+      "agile_mindset": "Peer-to-peer mentoring through pair programming and swarming.",
+      "checklist": ["Identify Mentors", "Match with Mentees", "Measure Progress"],
+      "traps": "Do not force mentoring; it must be a voluntary relationship.",
+      "artifacts": "Development Plans // Resource Plan."
+    }
+  },
+  "EQ Performance": {
+    "learn": {
+      "definition": "Using Emotional Intelligence to handle project dynamics.",
+      "context": "Critical for managing difficult stakeholders/stress.",
+      "path": "Self-awareness, self-regulation, and empathy.",
+      "boundary": "EQ is about influence; IQ is about information."
+    },
+    "practice": {
+      "predictive_mindset": "Use EQ to manage the 'Political Environment' of a project.",
+      "agile_mindset": "Use EQ to facilitate psychological safety and team trust.",
+      "checklist": ["Assess Awareness", "Regulation Check", "Empathy Mapping"],
+      "traps": "High EQ is not a substitute for technical competence.",
+      "artifacts": "Stakeholder Engagement Plan // Team Charter."
     }
   }
 }
