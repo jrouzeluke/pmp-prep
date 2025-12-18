@@ -20,6 +20,18 @@ const PMPApp = () => {
     showingFeedback: false,
     showEndScreen: false
   });
+  const [lightningRoundState, setLightningRoundState] = useState({
+    currentQuestion: 0,
+    score: 0,
+    streak: 0,
+    timeRemaining: 30,
+    userAnswers: [],
+    showingFeedback: false,
+    lastAnswerCorrect: false,
+    lastAnswerTime: 0,
+    showEndScreen: false,
+    quizStarted: false
+  });
 
   useEffect(() => {
     fetch('./data/taskData.json')
@@ -27,6 +39,65 @@ const PMPApp = () => {
       .then(data => setTaskDatabase(data))
       .catch(err => console.error("Data Load Failure", err));
   }, []);
+
+  // Lightning Round Timer Effect
+  useEffect(() => {
+    if (view !== 'lightning-round') return;
+    if (!lightningRoundState.quizStarted || lightningRoundState.showingFeedback || lightningRoundState.showEndScreen) return;
+    
+    if (lightningRoundState.timeRemaining > 0) {
+      const timer = setTimeout(() => {
+        setLightningRoundState(prev => ({ ...prev, timeRemaining: prev.timeRemaining - 1 }));
+      }, 1000);
+      return () => clearTimeout(timer);
+    } else {
+      // Time ran out - mark as incorrect
+      setLightningRoundState(prev => {
+        const timeUsed = 30;
+        return {
+          ...prev,
+          showingFeedback: true,
+          lastAnswerCorrect: false,
+          lastAnswerTime: timeUsed,
+          streak: 0,
+          userAnswers: [...prev.userAnswers, {
+            question: prev.currentQuestion,
+            correct: false,
+            timeUsed,
+            points: 0
+          }]
+        };
+      });
+
+      // Auto-advance after timeout feedback
+      setTimeout(() => {
+        setLightningRoundState(prev => {
+          const reflexPrompts = taskDatabase?.[selectedTask]?.practice?.reflex_prompts || [];
+          const totalQuestions = Math.min(10, reflexPrompts.length);
+          const bestScore = parseInt(localStorage.getItem(`lightning-round-best-${selectedTask}`) || '0');
+          
+          if (prev.currentQuestion < totalQuestions - 1) {
+            return {
+              ...prev,
+              currentQuestion: prev.currentQuestion + 1,
+              timeRemaining: 30,
+              showingFeedback: false
+            };
+          } else {
+            const finalScore = prev.score;
+            if (finalScore > bestScore) {
+              localStorage.setItem(`lightning-round-best-${selectedTask}`, finalScore.toString());
+            }
+            return {
+              ...prev,
+              showEndScreen: true,
+              showingFeedback: false
+            };
+          }
+        });
+      }, 3000);
+    }
+  }, [view, lightningRoundState.timeRemaining, lightningRoundState.quizStarted, lightningRoundState.showingFeedback, lightningRoundState.showEndScreen, selectedTask, taskDatabase]);
 
   if (!taskDatabase) return (
     <div className="text-center p-20 animate-pulse">
@@ -453,8 +524,353 @@ const PMPApp = () => {
     );
   }
 
+  // Lightning Round Activity View
+  if (view === 'lightning-round') {
+    const reflexPrompts = currentTask.practice?.reflex_prompts || [];
+    const totalQuestions = Math.min(10, reflexPrompts.length);
+    const currentPrompt = reflexPrompts[lightningRoundState.currentQuestion];
+    const bestScore = parseInt(localStorage.getItem(`lightning-round-best-${selectedTask}`) || '0');
+
+    const handleAnswer = (answerIndex) => {
+      if (!currentPrompt) return;
+      const isCorrect = answerIndex === (currentPrompt.correct - 1); // Convert to 0-based index
+      const timeUsed = 30 - lightningRoundState.timeRemaining;
+      const newStreak = isCorrect ? lightningRoundState.streak + 1 : 0;
+      
+      // Calculate score
+      let points = 0;
+      if (isCorrect) {
+        points = 500; // Base points
+        points += (lightningRoundState.timeRemaining * 10); // Time bonus
+        if (newStreak >= 3) {
+          points = Math.floor(points * 1.5); // Streak bonus
+        }
+      }
+
+      setLightningRoundState(prev => ({
+        ...prev,
+        score: prev.score + points,
+        streak: newStreak,
+        showingFeedback: true,
+        lastAnswerCorrect: isCorrect,
+        lastAnswerTime: timeUsed,
+        userAnswers: [...prev.userAnswers, {
+          question: prev.currentQuestion,
+          correct: isCorrect,
+          timeUsed,
+          points
+        }]
+      }));
+
+      // Auto-advance after 3 seconds
+      setTimeout(() => {
+        advanceToNextQuestion();
+      }, 3000);
+    };
+
+    const advanceToNextQuestion = () => {
+      if (lightningRoundState.currentQuestion < totalQuestions - 1) {
+        setLightningRoundState(prev => ({
+          ...prev,
+          currentQuestion: prev.currentQuestion + 1,
+          timeRemaining: 30,
+          showingFeedback: false
+        }));
+      } else {
+        // Quiz complete
+        const finalScore = lightningRoundState.score;
+        if (finalScore > bestScore) {
+          localStorage.setItem(`lightning-round-best-${selectedTask}`, finalScore.toString());
+        }
+        setLightningRoundState(prev => ({
+          ...prev,
+          showEndScreen: true,
+          showingFeedback: false
+        }));
+      }
+    };
+
+    const startQuiz = () => {
+      setLightningRoundState({
+        currentQuestion: 0,
+        score: 0,
+        streak: 0,
+        timeRemaining: 30,
+        userAnswers: [],
+        showingFeedback: false,
+        lastAnswerCorrect: false,
+        lastAnswerTime: 0,
+        showEndScreen: false,
+        quizStarted: true
+      });
+    };
+
+    const resetQuiz = () => {
+      setLightningRoundState({
+        currentQuestion: 0,
+        score: 0,
+        streak: 0,
+        timeRemaining: 30,
+        userAnswers: [],
+        showingFeedback: false,
+        lastAnswerCorrect: false,
+        lastAnswerTime: 0,
+        showEndScreen: false,
+        quizStarted: false
+      });
+    };
+
+    // Start screen
+    if (!lightningRoundState.quizStarted) {
+      return (
+        <div className="max-w-6xl w-full p-10 animate-fadeIn text-left">
+          <header className="mb-8">
+            <div className="flex items-center gap-4 mb-6">
+              <button 
+                onClick={() => {
+                  resetQuiz();
+                  setView('practice-hub');
+                }}
+                className="px-4 py-2 executive-font text-xs text-slate-400 hover:text-white uppercase font-semibold transition-colors flex items-center gap-2"
+              >
+                ← Back
+              </button>
+            </div>
+            <h1 className="executive-font text-5xl font-bold text-white tracking-tight">⚡ Lightning Round</h1>
+          </header>
+          <div className="glass-card p-10 text-center">
+            <h2 className="executive-font text-2xl font-bold text-white mb-4">{selectedTask}</h2>
+            <p className="text-slate-400 mb-6">Test your reflexes with 10 rapid-fire questions. 30 seconds per question!</p>
+            <p className="text-slate-300 mb-8">Best Score: <span className="text-emerald-400 font-bold">{bestScore.toLocaleString()}</span> points</p>
+            <button 
+              onClick={startQuiz}
+              className="px-8 py-4 bg-yellow-500 hover:bg-yellow-600 text-white font-bold rounded-lg transition-colors executive-font text-lg"
+            >
+              Start Quiz ⚡
+            </button>
+          </div>
+          <GlobalNavFooter />
+        </div>
+      );
+    }
+
+    // End Screen
+    if (lightningRoundState.showEndScreen) {
+      const correctCount = lightningRoundState.userAnswers.filter(a => a.correct).length;
+      const accuracy = totalQuestions > 0 ? Math.round((correctCount / totalQuestions) * 100) : 0;
+      const avgTime = lightningRoundState.userAnswers.length > 0 ? lightningRoundState.userAnswers.reduce((sum, a) => sum + a.timeUsed, 0) / lightningRoundState.userAnswers.length : 0;
+      
+      // Calculate longest streak
+      let longestStreak = 0;
+      let currentStreak = 0;
+      lightningRoundState.userAnswers.forEach(a => {
+        if (a.correct) {
+          currentStreak++;
+          longestStreak = Math.max(longestStreak, currentStreak);
+        } else {
+          currentStreak = 0;
+        }
+      });
+      
+      const fastestAnswer = lightningRoundState.userAnswers.length > 0 ? Math.min(...lightningRoundState.userAnswers.map(a => a.timeUsed)) : 0;
+      const isNewBest = lightningRoundState.score > bestScore;
+      
+      return (
+        <div className="max-w-6xl w-full p-10 animate-fadeIn text-left">
+          <header className="mb-8">
+            <div className="flex items-center gap-4 mb-6">
+              <button 
+                onClick={() => {
+                  resetQuiz();
+                  setView('practice-hub');
+                }}
+                className="px-4 py-2 executive-font text-xs text-slate-400 hover:text-white uppercase font-semibold transition-colors flex items-center gap-2"
+              >
+                ← Back
+              </button>
+            </div>
+            <h1 className="executive-font text-5xl font-bold text-white tracking-tight">🎉 Lightning Round Complete!</h1>
+          </header>
+
+          <div className="glass-card p-8 mb-6">
+            <div className="text-center mb-6">
+              <h2 className="executive-font text-4xl font-bold text-white mb-2">Final Score: {lightningRoundState.score.toLocaleString()}</h2>
+              {isNewBest && (
+                <p className="text-emerald-400 text-xl font-bold animate-pulse">🏆 NEW HIGH SCORE! 🏆</p>
+              )}
+              <p className="text-slate-400 mt-2">Best Score: {Math.max(lightningRoundState.score, bestScore).toLocaleString()}</p>
+            </div>
+
+            <div className="grid grid-cols-2 gap-6 mb-6">
+              <div className="glass-card p-4 border-l-4 border-blue-500">
+                <div className="text-sm text-slate-400 uppercase mb-1">Accuracy</div>
+                <div className="text-3xl font-bold text-white">{accuracy}%</div>
+                <div className="text-xs text-slate-500">({correctCount}/{totalQuestions} correct)</div>
+              </div>
+              <div className="glass-card p-4 border-l-4 border-purple-500">
+                <div className="text-sm text-slate-400 uppercase mb-1">Average Time</div>
+                <div className="text-3xl font-bold text-white">{avgTime.toFixed(1)}s</div>
+              </div>
+              <div className="glass-card p-4 border-l-4 border-emerald-500">
+                <div className="text-sm text-slate-400 uppercase mb-1">Longest Streak</div>
+                <div className="text-3xl font-bold text-white">{'🔥'.repeat(Math.min(longestStreak, 5))} {longestStreak}x</div>
+              </div>
+              <div className="glass-card p-4 border-l-4 border-yellow-500">
+                <div className="text-sm text-slate-400 uppercase mb-1">Fastest Answer</div>
+                <div className="text-3xl font-bold text-white">{fastestAnswer.toFixed(1)}s</div>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex gap-4 mb-6">
+            <button 
+              onClick={() => {
+                startQuiz();
+              }}
+              className="px-6 py-3 bg-yellow-500 hover:bg-yellow-600 text-white font-semibold rounded-lg transition-colors executive-font"
+            >
+              Play Again ⚡
+            </button>
+            <button 
+              onClick={() => {
+                resetQuiz();
+                setView('practice-hub');
+              }}
+              className="px-6 py-3 bg-slate-700 hover:bg-slate-600 text-white font-semibold rounded-lg transition-colors executive-font"
+            >
+              Back to Practice Hub
+            </button>
+          </div>
+          <GlobalNavFooter />
+        </div>
+      );
+    }
+
+    if (!currentPrompt) {
+      return (
+        <div className="max-w-6xl w-full p-10 animate-fadeIn text-left">
+          <div className="glass-card p-10 text-center">
+            <h1 className="executive-font text-3xl font-bold text-white mb-4">⚡ Lightning Round</h1>
+            <p className="text-slate-400">No questions available for this task.</p>
+            <button 
+              onClick={() => {
+                resetQuiz();
+                setView('practice-hub');
+              }}
+              className="mt-6 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors executive-font"
+            >
+              ← Back to Practice Hub
+            </button>
+            <GlobalNavFooter />
+          </div>
+        </div>
+      );
+    }
+
+    // Feedback Screen
+    if (lightningRoundState.showingFeedback) {
+      const lastAnswer = lightningRoundState.userAnswers[lightningRoundState.userAnswers.length - 1];
+      const isCorrect = lightningRoundState.lastAnswerCorrect;
+      
+      return (
+        <div className="max-w-6xl w-full p-10 animate-fadeIn text-left">
+          <header className="mb-6">
+            <h1 className="executive-font text-4xl font-bold text-white tracking-tight">⚡ Lightning Round</h1>
+          </header>
+
+          <div className="glass-card p-8 text-center mb-6">
+            <div className={`text-6xl mb-4 ${isCorrect ? 'text-emerald-400' : 'text-red-400'}`}>
+              {isCorrect ? '✅' : '❌'}
+            </div>
+            {isCorrect && (
+              <div className="text-2xl font-bold text-emerald-400 mb-2">
+                +{lastAnswer.points.toLocaleString()} points
+              </div>
+            )}
+            {currentPrompt.explanation && (
+              <p className="text-slate-300 mb-4">{currentPrompt.explanation}</p>
+            )}
+            {currentPrompt.mode_used && (
+              <div className="text-emerald-400 font-semibold mb-2">Conflict Mode: {currentPrompt.mode_used}</div>
+            )}
+          </div>
+
+          <div className="text-center text-slate-400">Moving to next question...</div>
+          <GlobalNavFooter />
+        </div>
+      );
+    }
+
+    // Question Display
+    const timeProgress = (lightningRoundState.timeRemaining / 30) * 100;
+    const streakFires = '🔥'.repeat(Math.min(lightningRoundState.streak, 5));
+
+    return (
+      <div className="max-w-6xl w-full p-10 animate-fadeIn text-left">
+        <header className="mb-6">
+          <div className="flex items-center gap-4 mb-4">
+            <button 
+              onClick={() => {
+                resetQuiz();
+                setView('practice-hub');
+              }}
+              className="px-4 py-2 executive-font text-xs text-slate-400 hover:text-white uppercase font-semibold transition-colors flex items-center gap-2"
+            >
+              ← Back
+            </button>
+          </div>
+          <h1 className="executive-font text-4xl font-bold text-white tracking-tight">⚡ Lightning Round</h1>
+        </header>
+
+        {/* Timer Progress Bar */}
+        <div className="glass-card p-4 mb-6">
+          <div className="flex justify-between items-center mb-2">
+            <div className="text-slate-400 text-sm">⏱️ {lightningRoundState.timeRemaining}s</div>
+            <div className="text-slate-400 text-sm">Streak: {streakFires} {lightningRoundState.streak}x</div>
+          </div>
+          <div className="w-full bg-slate-800 rounded-full h-3">
+            <div 
+              className={`${lightningRoundState.timeRemaining > 10 ? 'bg-yellow-500' : 'bg-red-500'} h-3 rounded-full transition-all duration-1000`}
+              style={{width: `${timeProgress}%`}}
+            ></div>
+          </div>
+        </div>
+
+        {/* Question Counter and Score */}
+        <div className="flex justify-between items-center mb-6">
+          <div className="text-slate-400 text-sm uppercase tracking-wide">Question {lightningRoundState.currentQuestion + 1}/10</div>
+          <div className="flex gap-4 text-sm">
+            <div className="text-white">Score: <span className="text-yellow-400 font-bold">{lightningRoundState.score.toLocaleString()}</span></div>
+            <div className="text-slate-400">Best: <span className="text-emerald-400">{bestScore.toLocaleString()}</span></div>
+          </div>
+        </div>
+
+        {/* Question */}
+        <div className="glass-card p-8 mb-6">
+          <h2 className="executive-font text-2xl font-bold text-white mb-6">{currentPrompt.question}</h2>
+          
+          <div className="space-y-3">
+            {currentPrompt.options?.map((option, idx) => (
+              <button
+                key={idx}
+                onClick={() => handleAnswer(idx)}
+                className="w-full glass-card p-4 text-left hover:bg-blue-500/10 transition-all border-l-4 border-blue-500/50 hover:border-blue-500"
+              >
+                <div className="flex items-start gap-3">
+                  <span className="font-bold text-blue-400 text-xl">{String.fromCharCode(65 + idx)}.</span>
+                  <span className="text-white flex-1">{option}</span>
+                </div>
+              </button>
+            ))}
+          </div>
+        </div>
+        <GlobalNavFooter />
+      </div>
+    );
+  }
+
   // Placeholder views for other activities
-  if (view === 'lightning-round' || view === 'document-detective' || view === 'conflict-matcher' || view === 'timeline-reconstructor' || view === 'empathy-exercise') {
+  if (view === 'document-detective' || view === 'conflict-matcher' || view === 'timeline-reconstructor' || view === 'empathy-exercise') {
     const activityNames = {
       'lightning-round': 'Lightning Round',
       'document-detective': 'Document Detective',
