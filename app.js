@@ -2924,6 +2924,180 @@ const PMPApp = () => {
     </div>
   );
 
+  // Progress Stats View
+  if (view === 'progress-stats') {
+    const allTasks = Object.values(domainMap).flat();
+    const totalTasks = allTasks.length;
+    const totalActivities = totalTasks * 6;
+    
+    // Calculate overall stats
+    let tasksStarted = 0;
+    let activitiesCompleted = 0;
+    const activityTypeScores = {
+      'pm-simulator': [],
+      'lightning-round': [],
+      'document-detective': [],
+      'conflict-matcher': [],
+      'timeline-reconstructor': [],
+      'empathy-exercise': []
+    };
+    
+    allTasks.forEach(taskName => {
+      const taskActivities = progressData.completedActivities[taskName] || {};
+      const taskScores = progressData.activityScores[taskName] || {};
+      
+      if (Object.keys(taskActivities).length > 0) {
+        tasksStarted++;
+      }
+      
+      Object.keys(taskActivities).forEach(activityName => {
+        if (taskActivities[activityName].completed) {
+          activitiesCompleted++;
+          if (taskScores[activityName] && activityTypeScores[activityName]) {
+            activityTypeScores[activityName].push(...taskScores[activityName].map(s => s.score));
+          }
+        }
+      });
+    });
+    
+    // Calculate average scores
+    const avgScores = Object.keys(activityTypeScores).map(activityName => {
+      const scores = activityTypeScores[activityName];
+      const avg = scores.length > 0 ? scores.reduce((sum, s) => sum + s, 0) / scores.length : 0;
+      return { activityName, avg, attempts: scores.length };
+    });
+    
+    // Find tasks that need more activities
+    const recommendations = allTasks.filter(taskName => {
+      const taskActivities = progressData.completedActivities[taskName] || {};
+      const completedCount = Object.keys(taskActivities).filter(a => taskActivities[a].completed).length;
+      return completedCount > 0 && completedCount < 6;
+    }).slice(0, 5);
+    
+    return (
+      <div className="max-w-7xl w-full p-10 animate-fadeIn text-left">
+        <header className="mb-8">
+          <div className="flex items-center gap-4 mb-6">
+            <button 
+              onClick={() => setView('practice-hub')}
+              className="px-4 py-2 executive-font text-xs text-slate-400 hover:text-white uppercase font-semibold transition-colors flex items-center gap-2"
+            >
+              ← Back
+            </button>
+          </div>
+          <h1 className="executive-font text-5xl font-bold text-white tracking-tight">📊 Progress Statistics</h1>
+        </header>
+
+        {/* Overall Stats */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <div className="glass-card p-6 border-l-4 border-blue-500">
+            <div className="text-sm text-slate-400 uppercase mb-2">Tasks Started</div>
+            <div className="text-4xl font-bold text-white">{tasksStarted}/{totalTasks}</div>
+            <div className="text-xs text-slate-500 mt-2">{Math.round((tasksStarted / totalTasks) * 100)}%</div>
+          </div>
+          <div className="glass-card p-6 border-l-4 border-purple-500">
+            <div className="text-sm text-slate-400 uppercase mb-2">Activities Completed</div>
+            <div className="text-4xl font-bold text-white">{activitiesCompleted}/{totalActivities}</div>
+            <div className="text-xs text-slate-500 mt-2">{Math.round((activitiesCompleted / totalActivities) * 100)}%</div>
+          </div>
+          <div className="glass-card p-6 border-l-4 border-emerald-500">
+            <div className="text-sm text-slate-400 uppercase mb-2">Tasks Mastered</div>
+            <div className="text-4xl font-bold text-white">
+              {allTasks.filter(t => getTaskMastery(t).level === 'mastered').length}
+            </div>
+            <div className="text-xs text-slate-500 mt-2">All 6 activities completed</div>
+          </div>
+        </div>
+
+        {/* Average Scores */}
+        <div className="glass-card p-6 mb-6">
+          <h2 className="executive-font text-2xl font-bold text-white mb-4">Average Scores by Activity Type</h2>
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+            {avgScores.map(({ activityName, avg, attempts }) => {
+              const activityLabels = {
+                'pm-simulator': 'PM Simulator',
+                'lightning-round': 'Lightning Round',
+                'document-detective': 'Document Detective',
+                'conflict-matcher': 'Conflict Matcher',
+                'timeline-reconstructor': 'Timeline Reconstructor',
+                'empathy-exercise': 'Empathy Exercise'
+              };
+              
+              return (
+                <div key={activityName} className="glass-card p-4 bg-slate-800/30">
+                  <div className="text-sm text-slate-400 mb-1">{activityLabels[activityName]}</div>
+                  <div className="text-2xl font-bold text-white">{Math.round(avg).toLocaleString()}</div>
+                  <div className="text-xs text-slate-500">{attempts} attempts</div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Recommendations */}
+        {recommendations.length > 0 && (
+          <div className="glass-card p-6 mb-6 border-l-4 border-orange-500">
+            <h2 className="executive-font text-2xl font-bold text-white mb-4">📋 Recommendations</h2>
+            <p className="text-slate-300 mb-4">Tasks where you've started but haven't completed all activities:</p>
+            <div className="space-y-2">
+              {recommendations.map(taskName => {
+                const mastery = getTaskMastery(taskName);
+                return (
+                  <div key={taskName} className="flex items-center justify-between p-3 bg-slate-800/30 rounded">
+                    <span className="text-white font-semibold">{taskName}</span>
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm text-slate-400">{mastery.completed}/6 activities</span>
+                      <button
+                        onClick={() => {
+                          setSelectedTask(taskName);
+                          setView('practice-hub');
+                        }}
+                        className="text-xs px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded transition-colors"
+                      >
+                        Practice →
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        {/* Task Mastery Overview */}
+        <div className="glass-card p-6">
+          <h2 className="executive-font text-2xl font-bold text-white mb-4">Task Mastery Overview</h2>
+          <div className="space-y-3 max-h-96 overflow-y-auto custom-scrollbar">
+            {allTasks.map(taskName => {
+              const mastery = getTaskMastery(taskName);
+              const progressBars = '■'.repeat(mastery.completed) + '□'.repeat(mastery.total - mastery.completed);
+              const colorClass = mastery.color === 'slate' ? 'text-slate-500' : mastery.color === 'yellow' ? 'text-yellow-500' : mastery.color === 'orange' ? 'text-orange-500' : 'text-emerald-500';
+              
+              return (
+                <div key={taskName} className="flex items-center justify-between p-3 bg-slate-800/30 rounded">
+                  <span className="text-white">{taskName}</span>
+                  <div className="flex items-center gap-3">
+                    <span className={`text-sm font-mono ${colorClass}`}>{progressBars}</span>
+                    <span className={`text-xs px-2 py-1 rounded ${
+                      mastery.color === 'slate' ? 'bg-slate-700 text-slate-300' :
+                      mastery.color === 'yellow' ? 'bg-yellow-500/20 text-yellow-400' :
+                      mastery.color === 'orange' ? 'bg-orange-500/20 text-orange-400' :
+                      'bg-emerald-500/20 text-emerald-400'
+                    }`}>
+                      {mastery.label}
+                    </span>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        <GlobalNavFooter />
+      </div>
+    );
+  }
+
   if (view === 'learn-hub') return (
     <div className="max-w-6xl w-full p-10 animate-fadeIn text-left">
       {/* Header with Back Button */}
