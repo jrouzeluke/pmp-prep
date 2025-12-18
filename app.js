@@ -32,6 +32,12 @@ const PMPApp = () => {
     showEndScreen: false,
     quizStarted: false
   });
+  const [documentDetectiveState, setDocumentDetectiveState] = useState({
+    currentCase: 0,
+    selectedDocs: [],
+    showingFeedback: false,
+    score: 0
+  });
 
   useEffect(() => {
     fetch('./data/taskData.json')
