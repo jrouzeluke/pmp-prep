@@ -11,6 +11,15 @@ const PMPApp = () => {
   const [selectedTask, setSelectedTask] = useState('Manage Conflict');
   const [taskDatabase, setTaskDatabase] = useState(null);
   const [subView, setSubView] = useState('overview');
+  const [simulatorState, setSimulatorState] = useState({
+    currentScene: 0,
+    morale: 75,
+    projectHealth: 75,
+    trust: 75,
+    choices: [],
+    showingFeedback: false,
+    showEndScreen: false
+  });
 
   useEffect(() => {
     fetch('./data/taskData.json')
@@ -85,6 +94,401 @@ const PMPApp = () => {
       <GlobalNavFooter />
     </div>
   );
+
+  // PM Simulator Activity View
+  if (view === 'pm-simulator') {
+    const stressTests = currentTask.practice?.stress_test || [];
+    const currentScenario = stressTests[simulatorState.currentScene];
+    const totalScenes = stressTests.length;
+    
+    const handleChoice = (choiceIndex) => {
+      if (!currentScenario?.options) return;
+      const choice = currentScenario.options[choiceIndex];
+      
+      // Infer meter changes based on outcome - SUCCESS outcomes increase, others decrease
+      const isSuccess = choice.outcome?.toUpperCase().includes('SUCCESS') || choice.outcome?.toUpperCase().includes('BEST OUTCOME');
+      const isBad = choice.outcome?.toLowerCase().includes('loses') || choice.outcome?.toLowerCase().includes('collapses') || choice.outcome?.toLowerCase().includes('fails');
+      
+      let moraleChange = 0;
+      let projectHealthChange = 0;
+      let trustChange = 0;
+      
+      if (isSuccess) {
+        moraleChange = 15;
+        projectHealthChange = 15;
+        trustChange = 15;
+      } else if (isBad) {
+        moraleChange = -20;
+        projectHealthChange = -20;
+        trustChange = -25;
+      } else {
+        // Neutral outcomes - small changes
+        moraleChange = -5;
+        projectHealthChange = -5;
+        trustChange = -5;
+      }
+      
+      const newMorale = Math.max(0, Math.min(100, simulatorState.morale + moraleChange));
+      const newProjectHealth = Math.max(0, Math.min(100, simulatorState.projectHealth + projectHealthChange));
+      const newTrust = Math.max(0, Math.min(100, simulatorState.trust + trustChange));
+      
+      setSimulatorState({
+        ...simulatorState,
+        choices: [...simulatorState.choices, { scene: simulatorState.currentScene, choiceIndex, choice }],
+        showingFeedback: true,
+        lastChoice: choiceIndex,
+        moraleChange,
+        projectHealthChange,
+        trustChange,
+        morale: newMorale,
+        projectHealth: newProjectHealth,
+        trust: newTrust
+      });
+    };
+
+    const continueToNextScene = () => {
+      if (simulatorState.currentScene < totalScenes - 1) {
+        setSimulatorState({
+          ...simulatorState,
+          currentScene: simulatorState.currentScene + 1,
+          showingFeedback: false
+        });
+      } else {
+        setSimulatorState({
+          ...simulatorState,
+          showingFeedback: false,
+          showEndScreen: true
+        });
+      }
+    };
+
+    const getBarColor = (value) => {
+      if (value >= 70) return 'bg-emerald-500';
+      if (value >= 40) return 'bg-yellow-500';
+      return 'bg-red-500';
+    };
+
+    if (!stressTests || stressTests.length === 0) {
+      return (
+        <div className="max-w-6xl w-full p-10 animate-fadeIn text-left">
+          <div className="glass-card p-10 text-center">
+            <h1 className="executive-font text-3xl font-bold text-white mb-4">PM Simulator</h1>
+            <p className="text-slate-400">No scenarios available for this task.</p>
+            <button 
+              onClick={() => setView('practice-hub')}
+              className="mt-6 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors executive-font"
+            >
+              ← Back to Practice Hub
+            </button>
+            <GlobalNavFooter />
+          </div>
+        </div>
+      );
+    }
+
+    // End Screen
+    if (simulatorState.showEndScreen) {
+      const finalScore = (simulatorState.morale + simulatorState.projectHealth + simulatorState.trust) / 3;
+      const missionStatus = finalScore >= 70 ? "Mission Complete" : "Mission Failed";
+      
+      return (
+        <div className="max-w-6xl w-full p-10 animate-fadeIn text-left">
+          <header className="mb-8">
+            <div className="flex items-center gap-4 mb-6">
+              <button 
+                onClick={() => {
+                  setSimulatorState({ currentScene: 0, morale: 75, projectHealth: 75, trust: 75, choices: [], showingFeedback: false, showEndScreen: false });
+                  setView('practice-hub');
+                }}
+                className="px-4 py-2 executive-font text-xs text-slate-400 hover:text-white uppercase font-semibold transition-colors flex items-center gap-2"
+              >
+                ← Back
+              </button>
+            </div>
+            <h1 className="executive-font text-5xl font-bold text-white tracking-tight">{missionStatus}</h1>
+          </header>
+
+          <div className="glass-card p-8 mb-6">
+            <h2 className="executive-font text-2xl font-bold text-white mb-6">Final Status</h2>
+            <div className="space-y-4">
+              <div>
+                <div className="flex justify-between mb-2">
+                  <span className="text-white font-semibold">Team Morale</span>
+                  <span className="text-white font-bold">{simulatorState.morale}%</span>
+                </div>
+                <div className="w-full bg-slate-800 rounded-full h-4">
+                  <div className={`${getBarColor(simulatorState.morale)} h-4 rounded-full transition-all duration-500`} style={{width: `${simulatorState.morale}%`}}></div>
+                </div>
+              </div>
+              <div>
+                <div className="flex justify-between mb-2">
+                  <span className="text-white font-semibold">Project Health</span>
+                  <span className="text-white font-bold">{simulatorState.projectHealth}%</span>
+                </div>
+                <div className="w-full bg-slate-800 rounded-full h-4">
+                  <div className={`${getBarColor(simulatorState.projectHealth)} h-4 rounded-full transition-all duration-500`} style={{width: `${simulatorState.projectHealth}%`}}></div>
+                </div>
+              </div>
+              <div>
+                <div className="flex justify-between mb-2">
+                  <span className="text-white font-semibold">Trust</span>
+                  <span className="text-white font-bold">{simulatorState.trust}%</span>
+                </div>
+                <div className="w-full bg-slate-800 rounded-full h-4">
+                  <div className={`${getBarColor(simulatorState.trust)} h-4 rounded-full transition-all duration-500`} style={{width: `${simulatorState.trust}%`}}></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {simulatorState.choices.length > 0 && (
+            <div className="glass-card p-8 mb-6">
+              <h2 className="executive-font text-2xl font-bold text-white mb-4">Your Choices</h2>
+              <div className="space-y-4">
+                {simulatorState.choices.map((choiceRecord, idx) => {
+                  const choice = choiceRecord.choice;
+                  return (
+                    <div key={idx} className="border-l-4 border-blue-500 pl-4">
+                      <h3 className="text-white font-semibold mb-2">Scene {choiceRecord.scene + 1}</h3>
+                      <p className="text-slate-300 text-sm mb-2">{choice.text}</p>
+                      {choice.analysis && <p className="text-xs text-slate-400 mb-1">{choice.analysis}</p>}
+                      {choice.outcome && <p className="text-xs text-slate-400">{choice.outcome}</p>}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
+          <div className="flex gap-4">
+            <button 
+              onClick={() => setSimulatorState({ currentScene: 0, morale: 75, projectHealth: 75, trust: 75, choices: [], showingFeedback: false, showEndScreen: false })}
+              className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors executive-font"
+            >
+              Try Again
+            </button>
+            <button 
+              onClick={() => {
+                setSimulatorState({ currentScene: 0, morale: 75, projectHealth: 75, trust: 75, choices: [], showingFeedback: false, showEndScreen: false });
+                setView('practice-hub');
+              }}
+              className="px-6 py-3 bg-slate-700 hover:bg-slate-600 text-white font-semibold rounded-lg transition-colors executive-font"
+            >
+              Back to Practice Hub
+            </button>
+          </div>
+          <GlobalNavFooter />
+        </div>
+      );
+    }
+
+    // Feedback Screen
+    if (simulatorState.showingFeedback && simulatorState.lastChoice !== undefined && currentScenario?.options) {
+      const choice = currentScenario.options[simulatorState.lastChoice];
+      const isGoodChoice = (simulatorState.moraleChange || 0) + (simulatorState.projectHealthChange || 0) + (simulatorState.trustChange || 0) > 0;
+      
+      return (
+        <div className="max-w-6xl w-full p-10 animate-fadeIn text-left">
+          <header className="mb-8">
+            <div className="flex items-center gap-4 mb-6">
+              <button 
+                onClick={() => {
+                  setSimulatorState({ currentScene: 0, morale: 75, projectHealth: 75, trust: 75, choices: [], showingFeedback: false, showEndScreen: false });
+                  setView('practice-hub');
+                }}
+                className="px-4 py-2 executive-font text-xs text-slate-400 hover:text-white uppercase font-semibold transition-colors flex items-center gap-2"
+              >
+                ← Back
+              </button>
+            </div>
+            <h1 className="executive-font text-5xl font-bold text-white tracking-tight">PM Simulator: {currentScenario?.title || 'Scenario'}</h1>
+          </header>
+
+          {/* Status Meters */}
+          <div className="glass-card p-6 mb-6">
+            <div className="space-y-4">
+              <div>
+                <div className="flex justify-between mb-2">
+                  <span className="text-white font-semibold">Team Morale</span>
+                  <span className="text-white font-bold">{simulatorState.morale}% {simulatorState.moraleChange > 0 ? '↗️' : simulatorState.moraleChange < 0 ? '↘️' : ''} {simulatorState.moraleChange !== 0 && `${simulatorState.moraleChange > 0 ? '+' : ''}${simulatorState.moraleChange}%`}</span>
+                </div>
+                <div className="w-full bg-slate-800 rounded-full h-4">
+                  <div className={`${getBarColor(simulatorState.morale)} h-4 rounded-full transition-all duration-500`} style={{width: `${simulatorState.morale}%`}}></div>
+                </div>
+              </div>
+              <div>
+                <div className="flex justify-between mb-2">
+                  <span className="text-white font-semibold">Project Health</span>
+                  <span className="text-white font-bold">{simulatorState.projectHealth}% {simulatorState.projectHealthChange > 0 ? '↗️' : simulatorState.projectHealthChange < 0 ? '↘️' : ''} {simulatorState.projectHealthChange !== 0 && `${simulatorState.projectHealthChange > 0 ? '+' : ''}${simulatorState.projectHealthChange}%`}</span>
+                </div>
+                <div className="w-full bg-slate-800 rounded-full h-4">
+                  <div className={`${getBarColor(simulatorState.projectHealth)} h-4 rounded-full transition-all duration-500`} style={{width: `${simulatorState.projectHealth}%`}}></div>
+                </div>
+              </div>
+              <div>
+                <div className="flex justify-between mb-2">
+                  <span className="text-white font-semibold">Trust</span>
+                  <span className="text-white font-bold">{simulatorState.trust}% {simulatorState.trustChange > 0 ? '↗️' : simulatorState.trustChange < 0 ? '↘️' : ''} {simulatorState.trustChange !== 0 && `${simulatorState.trustChange > 0 ? '+' : ''}${simulatorState.trustChange}%`}</span>
+                </div>
+                <div className="w-full bg-slate-800 rounded-full h-4">
+                  <div className={`${getBarColor(simulatorState.trust)} h-4 rounded-full transition-all duration-500`} style={{width: `${simulatorState.trust}%`}}></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Feedback Card */}
+          <div className="glass-card p-8 mb-6">
+            <div className={`text-4xl mb-4 ${isGoodChoice ? 'text-emerald-400' : 'text-yellow-400'}`}>
+              {isGoodChoice ? '✅ EXCELLENT CHOICE!' : '⚠️ NOT IDEAL'}
+            </div>
+            <h2 className="executive-font text-2xl font-bold text-white mb-4">What Happened</h2>
+            {choice.outcome && <p className="text-slate-300 mb-4">{choice.outcome}</p>}
+            {choice.analysis && (
+              <>
+                <h3 className="executive-font text-lg font-semibold text-white mb-2">Analysis</h3>
+                <p className="text-slate-300 mb-4">{choice.analysis}</p>
+              </>
+            )}
+          </div>
+
+          <button 
+            onClick={continueToNextScene}
+            className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors executive-font"
+          >
+            {simulatorState.currentScene < totalScenes - 1 ? `Continue to Scene ${simulatorState.currentScene + 2}` : 'View Results'}
+          </button>
+          <GlobalNavFooter />
+        </div>
+      );
+    }
+
+    // Main Scene Display
+    if (!currentScenario) {
+      return (
+        <div className="max-w-6xl w-full p-10 animate-fadeIn text-left">
+          <div className="glass-card p-10 text-center">
+            <h1 className="executive-font text-3xl font-bold text-white mb-4">PM Simulator</h1>
+            <p className="text-slate-400">Loading scenario...</p>
+            <GlobalNavFooter />
+          </div>
+        </div>
+      );
+    }
+
+    return (
+      <div className="max-w-6xl w-full p-10 animate-fadeIn text-left">
+        <header className="mb-8">
+          <div className="flex items-center gap-4 mb-6">
+            <button 
+              onClick={() => {
+                setSimulatorState({ currentScene: 0, morale: 75, projectHealth: 75, trust: 75, choices: [], showingFeedback: false, showEndScreen: false });
+                setView('practice-hub');
+              }}
+              className="px-4 py-2 executive-font text-xs text-slate-400 hover:text-white uppercase font-semibold transition-colors flex items-center gap-2"
+            >
+              ← Back
+            </button>
+          </div>
+          <h1 className="executive-font text-5xl font-bold text-white tracking-tight">PM Simulator: {currentScenario?.title || 'Scenario'}</h1>
+        </header>
+
+        {/* Status Meters */}
+        <div className="glass-card p-6 mb-6">
+          <div className="space-y-4">
+            <div>
+              <div className="flex justify-between mb-2">
+                <span className="text-white font-semibold">Team Morale</span>
+                <span className="text-white font-bold">{simulatorState.morale}%</span>
+              </div>
+              <div className="w-full bg-slate-800 rounded-full h-4">
+                <div className={`${getBarColor(simulatorState.morale)} h-4 rounded-full transition-all duration-500`} style={{width: `${simulatorState.morale}%`}}></div>
+              </div>
+            </div>
+            <div>
+              <div className="flex justify-between mb-2">
+                <span className="text-white font-semibold">Project Health</span>
+                <span className="text-white font-bold">{simulatorState.projectHealth}%</span>
+              </div>
+              <div className="w-full bg-slate-800 rounded-full h-4">
+                <div className={`${getBarColor(simulatorState.projectHealth)} h-4 rounded-full transition-all duration-500`} style={{width: `${simulatorState.projectHealth}%`}}></div>
+              </div>
+            </div>
+            <div>
+              <div className="flex justify-between mb-2">
+                <span className="text-white font-semibold">Trust</span>
+                <span className="text-white font-bold">{simulatorState.trust}%</span>
+              </div>
+              <div className="w-full bg-slate-800 rounded-full h-4">
+                <div className={`${getBarColor(simulatorState.trust)} h-4 rounded-full transition-all duration-500`} style={{width: `${simulatorState.trust}%`}}></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Scene Display */}
+        <div className="glass-card p-8 mb-6">
+          <div className="text-slate-400 text-sm mb-4 uppercase tracking-wide">Scene {simulatorState.currentScene + 1} of {totalScenes}</div>
+          <h2 className="executive-font text-2xl font-bold text-white mb-4">{currentScenario?.scenario || 'No scenario description available'}</h2>
+          
+          {currentScenario.options && currentScenario.options.length > 0 && (
+            <div className="space-y-3 mt-6">
+              {currentScenario.options.map((option, idx) => (
+                <button
+                  key={idx}
+                  onClick={() => handleChoice(idx)}
+                  className="w-full glass-card p-4 text-left hover:bg-blue-500/10 transition-all border-l-4 border-blue-500/50 hover:border-blue-500"
+                >
+                  <div className="flex items-start gap-3">
+                    <span className="font-bold text-blue-400 text-xl">{String.fromCharCode(65 + idx)}.</span>
+                    <span className="text-white flex-1">{option.text}</span>
+                  </div>
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+        <GlobalNavFooter />
+      </div>
+    );
+  }
+
+  // Placeholder views for other activities
+  if (view === 'lightning-round' || view === 'document-detective' || view === 'conflict-matcher' || view === 'timeline-reconstructor' || view === 'empathy-exercise') {
+    const activityNames = {
+      'lightning-round': 'Lightning Round',
+      'document-detective': 'Document Detective',
+      'conflict-matcher': 'Conflict Mode Matcher',
+      'timeline-reconstructor': 'Timeline Reconstructor',
+      'empathy-exercise': 'Empathy Exercise'
+    };
+    
+    return (
+      <div className="max-w-6xl w-full p-10 animate-fadeIn text-left">
+        <header className="mb-8">
+          <div className="flex items-center gap-4 mb-6">
+            <button 
+              onClick={() => setView('practice-hub')}
+              className="px-4 py-2 executive-font text-xs text-slate-400 hover:text-white uppercase font-semibold transition-colors flex items-center gap-2"
+            >
+              ← Back
+            </button>
+          </div>
+          <h1 className="executive-font text-5xl font-bold text-white tracking-tight">{activityNames[view]}: {selectedTask}</h1>
+        </header>
+        <div className="glass-card p-10 text-center">
+          <p className="text-slate-400 text-lg mb-6">This activity is coming soon!</p>
+          <button 
+            onClick={() => setView('practice-hub')}
+            className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors executive-font"
+          >
+            ← Back to Practice Hub
+          </button>
+        </div>
+        <GlobalNavFooter />
+      </div>
+    );
+  }
 
   // Deep Dive Analysis View
   if (view === 'deep-dive') return (
@@ -496,58 +900,73 @@ const PMPApp = () => {
   // Practice Hub View
   if (view === 'practice-hub') return (
     <div className="max-w-7xl w-full p-10 animate-fadeIn text-left">
-      <div className="executive-header mb-10">
-        <h1 className="executive-font text-5xl font-bold text-white mb-2 tracking-tight">Practice Hub</h1>
-        <p className="text-slate-400 text-lg">Choose your practice activity for {selectedTask}</p>
-      </div>
+      {/* Header with Back Button */}
+      <header className="mb-10">
+        <div className="flex items-center gap-4 mb-6">
+          <button 
+            onClick={() => setView('task-interstitial')}
+            className="px-4 py-2 executive-font text-xs text-slate-400 hover:text-white uppercase font-semibold transition-colors flex items-center gap-2"
+          >
+            ← Back
+          </button>
+        </div>
+        <h1 className="executive-font text-5xl font-bold text-white mb-2 tracking-tight">Practice Hub: {selectedTask}</h1>
+      </header>
       
-      <div className="grid grid-cols-3 gap-6 mb-8">
+      {/* Activity Cards Grid - 3x2 */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         <button 
-          onClick={() => {/* Checklist Practice */}}
-          className="glass-card p-8 text-left hover:bg-purple-500/10 transition-all border-l-4 border-purple-500"
+          onClick={() => setView('pm-simulator')}
+          className="glass-card p-8 text-left hover:bg-blue-500/10 transition-all border-l-4 border-blue-500 min-h-[200px] transform hover:scale-105 hover:shadow-2xl hover:shadow-blue-500/20"
         >
-          <h3 className="executive-font text-2xl font-semibold text-white mb-3">Checklist Practice</h3>
-          <p className="text-slate-400 text-sm">Review and practice key checklists for this task</p>
+          <div className="text-6xl mb-4">🎯</div>
+          <h3 className="executive-font text-2xl font-semibold text-white mb-3">PM Simulator</h3>
+          <p className="text-slate-400 text-sm">Branching scenarios with consequences</p>
         </button>
         
         <button 
-          onClick={() => {/* Reflex Prompts */}}
-          className="glass-card p-8 text-left hover:bg-blue-500/10 transition-all border-l-4 border-blue-500"
+          onClick={() => setView('lightning-round')}
+          className="glass-card p-8 text-left hover:bg-yellow-500/10 transition-all border-l-4 border-yellow-500 min-h-[200px] transform hover:scale-105 hover:shadow-2xl hover:shadow-yellow-500/20"
         >
-          <h3 className="executive-font text-2xl font-semibold text-white mb-3">Reflex Prompts</h3>
-          <p className="text-slate-400 text-sm">Practice quick decision-making scenarios</p>
+          <div className="text-6xl mb-4">⚡</div>
+          <h3 className="executive-font text-2xl font-semibold text-white mb-3">Lightning Round</h3>
+          <p className="text-slate-400 text-sm">Fast-paced quiz - 10 questions</p>
         </button>
         
         <button 
-          onClick={() => {/* Stress Test */}}
-          className="glass-card p-8 text-left hover:bg-rose-500/10 transition-all border-l-4 border-rose-500"
+          onClick={() => setView('document-detective')}
+          className="glass-card p-8 text-left hover:bg-purple-500/10 transition-all border-l-4 border-purple-500 min-h-[200px] transform hover:scale-105 hover:shadow-2xl hover:shadow-purple-500/20"
         >
-          <h3 className="executive-font text-2xl font-semibold text-white mb-3">Stress Test</h3>
-          <p className="text-slate-400 text-sm">Challenge yourself with advanced scenarios</p>
+          <div className="text-6xl mb-4">🕵️</div>
+          <h3 className="executive-font text-2xl font-semibold text-white mb-3">Document Detective</h3>
+          <p className="text-slate-400 text-sm">Match documents to scenarios</p>
         </button>
         
         <button 
-          onClick={() => setView('practice-quizzes')}
-          className="glass-card p-8 text-left hover:bg-emerald-500/10 transition-all border-l-4 border-emerald-500"
+          onClick={() => setView('conflict-matcher')}
+          className="glass-card p-8 text-left hover:bg-emerald-500/10 transition-all border-l-4 border-emerald-500 min-h-[200px] transform hover:scale-105 hover:shadow-2xl hover:shadow-emerald-500/20"
         >
-          <h3 className="executive-font text-2xl font-semibold text-white mb-3">Quick Quiz</h3>
-          <p className="text-slate-400 text-sm">Test your knowledge with practice questions</p>
+          <div className="text-6xl mb-4">🧩</div>
+          <h3 className="executive-font text-2xl font-semibold text-white mb-3">Conflict Mode Matcher</h3>
+          <p className="text-slate-400 text-sm">Drag-drop conflict modes</p>
         </button>
-
+        
         <button 
-          onClick={() => {/* Activity Picker */}}
-          className="glass-card p-8 text-left hover:bg-cyan-500/10 transition-all border-l-4 border-cyan-500"
+          onClick={() => setView('timeline-reconstructor')}
+          className="glass-card p-8 text-left hover:bg-cyan-500/10 transition-all border-l-4 border-cyan-500 min-h-[200px] transform hover:scale-105 hover:shadow-2xl hover:shadow-cyan-500/20"
         >
-          <h3 className="executive-font text-2xl font-semibold text-white mb-3">Activity Picker</h3>
-          <p className="text-slate-400 text-sm">Browse all available practice activities</p>
+          <div className="text-6xl mb-4">📋</div>
+          <h3 className="executive-font text-2xl font-semibold text-white mb-3">Timeline Reconstructor</h3>
+          <p className="text-slate-400 text-sm">Order resolution steps</p>
         </button>
-
+        
         <button 
-          onClick={() => {/* Mock Exam */}}
-          className="glass-card p-8 text-left hover:bg-yellow-500/10 transition-all border-l-4 border-yellow-500"
+          onClick={() => setView('empathy-exercise')}
+          className="glass-card p-8 text-left hover:bg-rose-500/10 transition-all border-l-4 border-rose-500 min-h-[200px] transform hover:scale-105 hover:shadow-2xl hover:shadow-rose-500/20"
         >
-          <h3 className="executive-font text-2xl font-semibold text-white mb-3">Mock Exam</h3>
-          <p className="text-slate-400 text-sm">Full-length exam simulation</p>
+          <div className="text-6xl mb-4">👥</div>
+          <h3 className="executive-font text-2xl font-semibold text-white mb-3">Empathy Exercise</h3>
+          <p className="text-slate-400 text-sm">See all perspectives</p>
         </button>
       </div>
 
