@@ -11,6 +11,7 @@ const PMPApp = () => {
   const [selectedTask, setSelectedTask] = useState('Manage Conflict');
   const [taskDatabase, setTaskDatabase] = useState(null);
   const [subView, setSubView] = useState('overview');
+  const [batch1SubView, setBatch1SubView] = useState('overview');
   const [simulatorState, setSimulatorState] = useState({
     currentScene: 0,
     morale: 75,
@@ -63,6 +64,15 @@ const PMPApp = () => {
   const [progressData, setProgressData] = useState({
     completedActivities: {}, // { 'taskName': { 'activityName': { completed: true, completedAt: 'date', attempts: 1, bestScore: 0 } } }
     activityScores: {} // { 'taskName': { 'activityName': [{ attempt: 1, score: 0, date: 'date', ... }] } }
+  });
+
+  // Batch 1 Content State
+  const [batch1Content, setBatch1Content] = useState({
+    overview: '',
+    pmpConnection: '',
+    tuckmansModel: '',
+    leadershipStyles: '',
+    activities: []
   });
 
   useEffect(() => {
@@ -130,6 +140,38 @@ const PMPApp = () => {
       }, 3000);
     }
   }, [view, lightningRoundState.timeRemaining, lightningRoundState.quizStarted, lightningRoundState.showingFeedback, lightningRoundState.showEndScreen, selectedTask, taskDatabase]);
+
+  // Load Batch 1 content files
+  useEffect(() => {
+    const loadBatch1Content = async () => {
+      try {
+        const [overview, pmpConnection, tuckmansModel, leadershipStyles] = await Promise.all([
+          fetch('./contentbatch1-lead_team/1_overview.md').then(r => r.ok ? r.text() : ''),
+          fetch('./contentbatch1-lead_team/2_pmp_connection.md').then(r => r.ok ? r.text() : ''),
+          fetch('./contentbatch1-lead_team/3_tuckmans_model.md').then(r => r.ok ? r.text() : ''),
+          fetch('./contentbatch1-lead_team/4_leadership_styles.md').then(r => r.ok ? r.text() : '')
+        ]);
+        
+        setBatch1Content({
+          overview,
+          pmpConnection,
+          tuckmansModel,
+          leadershipStyles,
+          activities: [
+            { name: 'PM Simulator Lightning Round', file: '5_activity_pm_simulator.md', duration: '20-30 min' },
+            { name: 'Document Detective', file: '6_activity_document_detective.md', duration: '30-40 min' },
+            { name: 'Timeline Reconstructor', file: '7_activity_timeline_reconstructor.md', duration: '30-40 min' },
+            { name: 'Relationship Matcher', file: '8_activity_relationship_matcher.md', duration: '30 min' },
+            { name: 'Empathy Exercise', file: '9_activity_empathy_exercise.md', duration: '40 min' }
+          ]
+        });
+      } catch (err) {
+        console.error("Batch 1 Content Load Failure", err);
+      }
+    };
+    
+    loadBatch1Content();
+  }, []);
 
   if (!taskDatabase) return (
     <div className="text-center p-20 animate-pulse">
@@ -2734,6 +2776,18 @@ const PMPApp = () => {
         </button>
       </div>
 
+      {/* Batch 1: Lead a Team Module */}
+      <div className="mb-6">
+        <button 
+          onClick={() => setView('batch1-learn-hub')} 
+          className="executive-btn p-12 text-left group w-full border-l-4 border-cyan-500"
+        >
+          <div className="text-cyan-400 text-sm uppercase font-semibold mb-3 tracking-widest executive-font">Training Module</div>
+          <div className="text-3xl font-bold text-white mb-2 executive-font">BATCH 1: Lead a Team</div>
+          <div className="text-slate-400 text-sm">Master team leadership, Tuckman's model, and leadership styles</div>
+        </button>
+      </div>
+
       <div className="grid grid-cols-2 gap-6">
         <button 
           onClick={() => {/* Add Formula Lab navigation */}} 
@@ -3091,6 +3145,180 @@ const PMPApp = () => {
               );
             })}
           </div>
+        </div>
+
+        <GlobalNavFooter />
+      </div>
+    );
+  }
+
+  // Helper function to render markdown content as HTML
+  const renderMarkdown = (markdown) => {
+    if (!markdown) return <div className="text-slate-400">Loading content...</div>;
+    
+    // Simple markdown to HTML conversion (basic support)
+    let html = markdown
+      // Headers
+      .replace(/^# (.+)$/gm, '<h1 class="executive-font text-3xl font-bold text-white mb-4 mt-8">$1</h1>')
+      .replace(/^## (.+)$/gm, '<h2 class="executive-font text-2xl font-semibold text-white mb-3 mt-6">$1</h2>')
+      .replace(/^### (.+)$/gm, '<h3 class="executive-font text-xl font-semibold text-white mb-2 mt-4">$1</h3>')
+      .replace(/^#### (.+)$/gm, '<h4 class="executive-font text-lg font-semibold text-white mb-2 mt-3">$1</h4>')
+      // Bold
+      .replace(/\*\*(.+?)\*\*/g, '<strong class="text-white font-semibold">$1</strong>')
+      // Lists
+      .replace(/^\- (.+)$/gm, '<li class="text-slate-300 mb-2 ml-4">• $1</li>')
+      .replace(/^\d+\. (.+)$/gm, '<li class="text-slate-300 mb-2 ml-4">$1</li>')
+      // Code blocks
+      .replace(/```([\s\S]*?)```/g, '<pre class="bg-slate-900 p-4 rounded my-4 overflow-x-auto"><code class="text-slate-300 text-sm">$1</code></pre>')
+      // Inline code
+      .replace(/`(.+?)`/g, '<code class="bg-slate-800 px-1 py-0.5 rounded text-cyan-400 text-sm">$1</code>')
+      // Links
+      .replace(/\[(.+?)\]\((.+?)\)/g, '<a href="$2" class="text-cyan-400 hover:text-cyan-300 underline">$1</a>')
+      // Horizontal rules
+      .replace(/^---$/gm, '<hr class="border-white/10 my-6" />')
+      // Paragraphs
+      .split('\n\n')
+      .map(para => {
+        if (para.trim().startsWith('<') || para.trim() === '') return para;
+        return `<p class="text-slate-300 leading-relaxed mb-4">${para.trim()}</p>`;
+      })
+      .join('\n');
+    
+    return <div className="prose prose-invert max-w-none" dangerouslySetInnerHTML={{ __html: html }} />;
+  };
+
+  // Batch 1 Learn Hub View
+  if (view === 'batch1-learn-hub') {
+    return (
+      <div className="max-w-6xl w-full p-10 animate-fadeIn text-left">
+        {/* Header with Back Button */}
+        <header className="mb-8">
+          <div className="flex items-center gap-4 mb-6">
+            <button 
+              onClick={() => setView('executive-hud')}
+              className="px-4 py-2 executive-font text-xs text-slate-400 hover:text-white uppercase font-semibold transition-colors flex items-center gap-2"
+            >
+              ← Back
+            </button>
+          </div>
+          <h1 className="executive-font text-5xl font-bold text-white tracking-tight mb-6">BATCH 1: Lead a Team</h1>
+          
+          {/* Tab Navigation */}
+          <div className="flex gap-8 border-b border-white/10 flex-wrap">
+            <button 
+              onClick={() => setBatch1SubView('overview')} 
+              className={`px-4 py-3 executive-font text-xs font-semibold uppercase transition-all relative ${
+                batch1SubView === 'overview' 
+                  ? 'text-white border-b-2 border-cyan-400' 
+                  : 'text-slate-500 hover:text-slate-300'
+              }`}
+            >
+              Overview
+            </button>
+            <button 
+              onClick={() => setBatch1SubView('pmp-connection')} 
+              className={`px-4 py-3 executive-font text-xs font-semibold uppercase transition-all relative ${
+                batch1SubView === 'pmp-connection' 
+                  ? 'text-white border-b-2 border-cyan-400' 
+                  : 'text-slate-500 hover:text-slate-300'
+              }`}
+            >
+              PMP Connection
+            </button>
+            <button 
+              onClick={() => setBatch1SubView('tuckmans-model')} 
+              className={`px-4 py-3 executive-font text-xs font-semibold uppercase transition-all relative ${
+                batch1SubView === 'tuckmans-model' 
+                  ? 'text-white border-b-2 border-cyan-400' 
+                  : 'text-slate-500 hover:text-slate-300'
+              }`}
+            >
+              Deep Dive: Tuckman's Model
+            </button>
+            <button 
+              onClick={() => setBatch1SubView('leadership-styles')} 
+              className={`px-4 py-3 executive-font text-xs font-semibold uppercase transition-all relative ${
+                batch1SubView === 'leadership-styles' 
+                  ? 'text-white border-b-2 border-cyan-400' 
+                  : 'text-slate-500 hover:text-slate-300'
+              }`}
+            >
+              Deep Dive: Leadership Styles
+            </button>
+            <button 
+              onClick={() => setBatch1SubView('activities')} 
+              className={`px-4 py-3 executive-font text-xs font-semibold uppercase transition-all relative ${
+                batch1SubView === 'activities' 
+                  ? 'text-white border-b-2 border-cyan-400' 
+                  : 'text-slate-500 hover:text-slate-300'
+              }`}
+            >
+              Activities Menu
+            </button>
+          </div>
+        </header>
+
+        {/* Content Area with Smooth Transitions */}
+        <div className="min-h-[400px] max-h-[70vh] overflow-y-auto custom-scrollbar">
+          {batch1SubView === 'overview' && (
+            <div className="space-y-6 animate-fadeIn">
+              <div className="glass-card p-8">
+                {renderMarkdown(batch1Content.overview)}
+              </div>
+            </div>
+          )}
+
+          {batch1SubView === 'pmp-connection' && (
+            <div className="space-y-6 animate-fadeIn">
+              <div className="glass-card p-8">
+                {renderMarkdown(batch1Content.pmpConnection)}
+              </div>
+            </div>
+          )}
+
+          {batch1SubView === 'tuckmans-model' && (
+            <div className="space-y-6 animate-fadeIn">
+              <div className="glass-card p-8">
+                {renderMarkdown(batch1Content.tuckmansModel)}
+              </div>
+            </div>
+          )}
+
+          {batch1SubView === 'leadership-styles' && (
+            <div className="space-y-6 animate-fadeIn">
+              <div className="glass-card p-8">
+                {renderMarkdown(batch1Content.leadershipStyles)}
+              </div>
+            </div>
+          )}
+
+          {batch1SubView === 'activities' && (
+            <div className="space-y-6 animate-fadeIn">
+              <div className="glass-card p-8">
+                <h2 className="executive-font text-2xl font-bold text-white mb-6">Available Activities</h2>
+                <p className="text-slate-300 mb-6 leading-relaxed">
+                  Choose from the following hands-on activities to practice and apply what you've learned:
+                </p>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {batch1Content.activities.map((activity, idx) => (
+                    <div key={idx} className="glass-card p-6 bg-slate-800/30 hover:bg-slate-800/50 transition-colors border-l-4 border-cyan-500">
+                      <h3 className="executive-font text-lg font-semibold text-white mb-2">{activity.name}</h3>
+                      <p className="text-slate-400 text-sm mb-4">Duration: {activity.duration}</p>
+                      <button
+                        onClick={() => {
+                          // For now, open the markdown file in a new tab
+                          window.open(`./contentbatch1-lead_team/${activity.file}`, '_blank');
+                        }}
+                        className="text-sm px-4 py-2 bg-cyan-600 hover:bg-cyan-700 text-white rounded transition-colors"
+                      >
+                        View Activity →
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
         </div>
 
         <GlobalNavFooter />
