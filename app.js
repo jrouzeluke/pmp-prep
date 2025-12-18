@@ -2034,33 +2034,362 @@ const PMPApp = () => {
     );
   }
 
-  // Placeholder views for other activities
+  // Empathy Exercise Activity View
   if (view === 'empathy-exercise') {
-    const activityNames = {
-      'timeline-reconstructor': 'Timeline Reconstructor',
-      'empathy-exercise': 'Empathy Exercise'
+    const empathyScenarios = currentTask.practice?.empathy_exercise || [];
+    const currentScenarioData = empathyScenarios[empathyExerciseState.currentScenario];
+
+    const handlePerspectiveView = (perspective) => {
+      const scenarioId = currentScenarioData?.id;
+      if (!scenarioId) return;
+
+      setEmpathyExerciseState(prev => ({
+        ...prev,
+        currentPerspective: perspective,
+        viewedPerspectives: {
+          ...prev.viewedPerspectives,
+          [scenarioId]: {
+            ...(prev.viewedPerspectives[scenarioId] || {}),
+            [perspective]: true
+          }
+        }
+      }));
+
+      // Check if all perspectives viewed
+      const viewedForScenario = empathyExerciseState.viewedPerspectives[scenarioId] || {};
+      const allViewed = viewedForScenario.personA && viewedForScenario.personB && viewedForScenario.pm;
+      if (allViewed || (perspective === 'pm' && viewedForScenario.personA && viewedForScenario.personB)) {
+        setTimeout(() => {
+          setEmpathyExerciseState(prev => {
+            const newState = { ...prev, showingInsight: true };
+            // Record completion when all perspectives viewed for first time
+            if (!prev.progressRecorded || prev.lastRecordedScenario !== scenarioId) {
+              recordActivityCompletion(selectedTask, 'empathy-exercise', 100, {
+                scenarioCompleted: scenarioId
+              });
+              newState.progressRecorded = true;
+              newState.lastRecordedScenario = scenarioId;
+            }
+            return newState;
+          });
+        }, 500);
+      }
     };
-    
+
+    const handleReflectionChange = (questionIndex, value) => {
+      const scenarioId = currentScenarioData?.id;
+      if (!scenarioId) return;
+
+      setEmpathyExerciseState(prev => ({
+        ...prev,
+        reflections: {
+          ...prev.reflections,
+          [scenarioId]: {
+            ...(prev.reflections[scenarioId] || {}),
+            [questionIndex]: value
+          }
+        }
+      }));
+    };
+
+    const nextScenario = () => {
+      if (empathyExerciseState.currentScenario < empathyScenarios.length - 1) {
+        setEmpathyExerciseState({
+          currentScenario: empathyExerciseState.currentScenario + 1,
+          currentPerspective: 'personA',
+          viewedPerspectives: empathyExerciseState.viewedPerspectives,
+          showingInsight: false,
+          reflections: empathyExerciseState.reflections,
+          progressRecorded: false,
+          lastRecordedScenario: -1
+        });
+      } else {
+        // Loop back to first
+        setEmpathyExerciseState({
+          currentScenario: 0,
+          currentPerspective: 'personA',
+          viewedPerspectives: empathyExerciseState.viewedPerspectives,
+          showingInsight: false,
+          reflections: empathyExerciseState.reflections,
+          progressRecorded: false,
+          lastRecordedScenario: -1
+        });
+      }
+    };
+
+    const goToPracticeHub = () => {
+      setEmpathyExerciseState({
+        currentScenario: 0,
+        currentPerspective: 'personA',
+        viewedPerspectives: {},
+        showingInsight: false,
+        reflections: {},
+        progressRecorded: false,
+        lastRecordedScenario: -1
+      });
+      setView('practice-hub');
+    };
+
+    if (!currentScenarioData) {
+      return (
+        <div className="max-w-6xl w-full p-10 animate-fadeIn text-left">
+          <div className="glass-card p-10 text-center">
+            <h1 className="executive-font text-3xl font-bold text-white mb-4">👥 Empathy Exercise</h1>
+            <p className="text-slate-400">No scenarios available for this task.</p>
+            <button 
+              onClick={goToPracticeHub}
+              className="mt-6 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors executive-font"
+            >
+              ← Back to Practice Hub
+            </button>
+            <GlobalNavFooter />
+          </div>
+        </div>
+      );
+    }
+
+    const scenarioId = currentScenarioData.id;
+    const viewedForScenario = empathyExerciseState.viewedPerspectives[scenarioId] || {};
+    const allPerspectivesViewed = viewedForScenario.personA && viewedForScenario.personB && viewedForScenario.pm;
+
     return (
       <div className="max-w-6xl w-full p-10 animate-fadeIn text-left">
         <header className="mb-8">
           <div className="flex items-center gap-4 mb-6">
             <button 
-              onClick={() => setView('practice-hub')}
+              onClick={goToPracticeHub}
               className="px-4 py-2 executive-font text-xs text-slate-400 hover:text-white uppercase font-semibold transition-colors flex items-center gap-2"
             >
               ← Back
             </button>
           </div>
-          <h1 className="executive-font text-5xl font-bold text-white tracking-tight">{activityNames[view]}: {selectedTask}</h1>
+          <div className="flex items-center justify-between mb-4">
+            <h1 className="executive-font text-5xl font-bold text-white tracking-tight">👥 Empathy Exercise: See Both Sides</h1>
+            <div className="text-slate-400 text-sm uppercase tracking-wide">
+              Scenario {empathyExerciseState.currentScenario + 1} of {empathyScenarios.length}
+            </div>
+          </div>
+          <p className="text-slate-400 text-lg">Read the conflict, then VIEW from each person's perspective.</p>
         </header>
-        <div className="glass-card p-10 text-center">
-          <p className="text-slate-400 text-lg mb-6">This activity is coming soon!</p>
+
+        {/* Scenario Card */}
+        <div className="glass-card p-6 mb-6 border-l-4 border-blue-500">
+          <h2 className="executive-font text-2xl font-bold text-white mb-4">{currentScenarioData.title}</h2>
+          <p className="text-slate-300 text-lg leading-relaxed">{currentScenarioData.situation}</p>
+        </div>
+
+        {/* Perspective Tabs */}
+        <div className="mb-6">
+          <div className="flex gap-4 border-b border-white/10 mb-4">
+            <button
+              onClick={() => handlePerspectiveView('personA')}
+              className={`px-6 py-3 executive-font text-xs font-semibold uppercase transition-all relative ${
+                empathyExerciseState.currentPerspective === 'personA'
+                  ? 'text-white border-b-2 border-blue-400'
+                  : 'text-slate-500 hover:text-slate-300'
+              }`}
+            >
+              View as {currentScenarioData.perspectives.personA.name} {currentScenarioData.perspectives.personA.emoji}
+              {viewedForScenario.personA && <span className="ml-2 text-emerald-400">✓</span>}
+            </button>
+            <button
+              onClick={() => handlePerspectiveView('personB')}
+              className={`px-6 py-3 executive-font text-xs font-semibold uppercase transition-all relative ${
+                empathyExerciseState.currentPerspective === 'personB'
+                  ? 'text-white border-b-2 border-orange-400'
+                  : 'text-slate-500 hover:text-slate-300'
+              }`}
+            >
+              View as {currentScenarioData.perspectives.personB.name} {currentScenarioData.perspectives.personB.emoji}
+              {viewedForScenario.personB && <span className="ml-2 text-emerald-400">✓</span>}
+            </button>
+            <button
+              onClick={() => handlePerspectiveView('pm')}
+              className={`px-6 py-3 executive-font text-xs font-semibold uppercase transition-all relative ${
+                empathyExerciseState.currentPerspective === 'pm'
+                  ? 'text-white border-b-2 border-purple-400'
+                  : 'text-slate-500 hover:text-slate-300'
+              }`}
+            >
+              View as PM {currentScenarioData.perspectives.pm.emoji}
+              {viewedForScenario.pm && <span className="ml-2 text-emerald-400">✓</span>}
+            </button>
+          </div>
+
+          {/* Person A Perspective */}
+          {empathyExerciseState.currentPerspective === 'personA' && (
+            <div className="glass-card p-8 border-l-4 border-blue-500 bg-blue-500/5 animate-fadeIn">
+              <div className="flex items-center gap-3 mb-6">
+                <span className="text-4xl">{currentScenarioData.perspectives.personA.emoji}</span>
+                <div>
+                  <h3 className="executive-font text-2xl font-bold text-white">{currentScenarioData.perspectives.personA.name}</h3>
+                  <p className="text-slate-400">{currentScenarioData.perspectives.personA.role}</p>
+                </div>
+              </div>
+              <div className="bg-slate-800/50 p-6 rounded border-l-4 border-blue-400 mb-6">
+                <p className="text-white text-lg italic leading-relaxed">"{currentScenarioData.perspectives.personA.thoughts}"</p>
+              </div>
+              <div className="space-y-4">
+                <div>
+                  <h4 className="text-white font-semibold mb-2">Concerns:</h4>
+                  <ul className="list-disc list-inside space-y-1 text-slate-300">
+                    {currentScenarioData.perspectives.personA.concerns.map((concern, idx) => (
+                      <li key={idx}>{concern}</li>
+                    ))}
+                  </ul>
+                </div>
+                <div>
+                  <h4 className="text-white font-semibold mb-2">Fears:</h4>
+                  <p className="text-slate-300">{currentScenarioData.perspectives.personA.fears}</p>
+                </div>
+                <div>
+                  <h4 className="text-white font-semibold mb-2">What they wish others knew:</h4>
+                  <p className="text-slate-300 italic">{currentScenarioData.perspectives.personA.wishesOthersKnew}</p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Person B Perspective */}
+          {empathyExerciseState.currentPerspective === 'personB' && (
+            <div className="glass-card p-8 border-l-4 border-orange-500 bg-orange-500/5 animate-fadeIn">
+              <div className="flex items-center gap-3 mb-6">
+                <span className="text-4xl">{currentScenarioData.perspectives.personB.emoji}</span>
+                <div>
+                  <h3 className="executive-font text-2xl font-bold text-white">{currentScenarioData.perspectives.personB.name}</h3>
+                  <p className="text-slate-400">{currentScenarioData.perspectives.personB.role}</p>
+                </div>
+              </div>
+              <div className="bg-slate-800/50 p-6 rounded border-l-4 border-orange-400 mb-6">
+                <p className="text-white text-lg italic leading-relaxed">"{currentScenarioData.perspectives.personB.thoughts}"</p>
+              </div>
+              <div className="space-y-4">
+                <div>
+                  <h4 className="text-white font-semibold mb-2">Concerns:</h4>
+                  <ul className="list-disc list-inside space-y-1 text-slate-300">
+                    {currentScenarioData.perspectives.personB.concerns.map((concern, idx) => (
+                      <li key={idx}>{concern}</li>
+                    ))}
+                  </ul>
+                </div>
+                <div>
+                  <h4 className="text-white font-semibold mb-2">Fears:</h4>
+                  <p className="text-slate-300">{currentScenarioData.perspectives.personB.fears}</p>
+                </div>
+                <div>
+                  <h4 className="text-white font-semibold mb-2">What they wish others knew:</h4>
+                  <p className="text-slate-300 italic">{currentScenarioData.perspectives.personB.wishesOthersKnew}</p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* PM Perspective */}
+          {empathyExerciseState.currentPerspective === 'pm' && (
+            <div className="glass-card p-8 border-l-4 border-purple-500 bg-purple-500/5 animate-fadeIn">
+              <div className="flex items-center gap-3 mb-6">
+                <span className="text-4xl">{currentScenarioData.perspectives.pm.emoji}</span>
+                <h3 className="executive-font text-2xl font-bold text-white">Project Manager's View</h3>
+              </div>
+              <div className="space-y-6">
+                <div>
+                  <h4 className="text-white font-semibold mb-3">Observations:</h4>
+                  <ul className="list-disc list-inside space-y-2 text-slate-300">
+                    {currentScenarioData.perspectives.pm.observations.map((obs, idx) => (
+                      <li key={idx}>{obs}</li>
+                    ))}
+                  </ul>
+                </div>
+                <div>
+                  <h4 className="text-white font-semibold mb-3">Valid Points:</h4>
+                  <div className="space-y-2">
+                    <div className="bg-blue-500/10 p-3 rounded border-l-2 border-blue-400">
+                      <p className="text-slate-300"><span className="font-semibold text-blue-400">{currentScenarioData.perspectives.personA.name}:</span> {currentScenarioData.perspectives.pm.validPoints.architect || currentScenarioData.perspectives.pm.validPoints.personA}</p>
+                    </div>
+                    <div className="bg-orange-500/10 p-3 rounded border-l-2 border-orange-400">
+                      <p className="text-slate-300"><span className="font-semibold text-orange-400">{currentScenarioData.perspectives.personB.name}:</span> {currentScenarioData.perspectives.pm.validPoints.engineer || currentScenarioData.perspectives.pm.validPoints.personB || currentScenarioData.perspectives.pm.validPoints.marketing}</p>
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <h4 className="text-white font-semibold mb-2">The Real Issue:</h4>
+                  <p className="text-slate-300">{currentScenarioData.perspectives.pm.realIssue}</p>
+                </div>
+                <div>
+                  <h4 className="text-white font-semibold mb-2">Solution:</h4>
+                  <p className="text-slate-300">{currentScenarioData.perspectives.pm.solution}</p>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Insight Reveal */}
+        {empathyExerciseState.showingInsight && (
+          <div className="glass-card p-8 mb-6 border-l-4 border-yellow-500 bg-yellow-500/10 animate-fadeIn">
+            <div className="flex items-center gap-3 mb-6">
+              <span className="text-4xl">💡</span>
+              <h2 className="executive-font text-3xl font-bold text-white">KEY INSIGHT</h2>
+            </div>
+            <div className="space-y-6">
+              <div>
+                <h3 className="text-yellow-400 font-bold text-xl mb-3">{currentScenarioData.insight.title}</h3>
+                <p className="text-white text-lg leading-relaxed">{currentScenarioData.insight.revelation}</p>
+              </div>
+              <div>
+                <h4 className="text-white font-semibold mb-2">Best Approach:</h4>
+                <p className="text-slate-300 leading-relaxed">{currentScenarioData.insight.bestApproach}</p>
+              </div>
+              <div className="bg-blue-500/10 p-4 rounded border-l-2 border-blue-400">
+                <h4 className="text-blue-400 font-semibold mb-2">Emotional Intelligence Connection:</h4>
+                <p className="text-slate-300">{currentScenarioData.insight.eiConnection}</p>
+              </div>
+              {currentScenarioData.insight.examTip && (
+                <div className="bg-emerald-500/10 p-4 rounded border-l-2 border-emerald-400">
+                  <h4 className="text-emerald-400 font-semibold mb-2">Exam Tip:</h4>
+                  <p className="text-slate-300">{currentScenarioData.insight.examTip}</p>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* Reflection Questions */}
+        {empathyExerciseState.showingInsight && currentScenarioData.reflectionQuestions && (
+          <div className="glass-card p-8 mb-6">
+            <h3 className="executive-font text-2xl font-bold text-white mb-6">Reflection Questions</h3>
+            <div className="space-y-6">
+              {currentScenarioData.reflectionQuestions.map((question, idx) => (
+                <div key={idx}>
+                  <label className="block text-white font-semibold mb-2">{question}</label>
+                  <textarea
+                    value={empathyExerciseState.reflections[scenarioId]?.[idx] || ''}
+                    onChange={(e) => handleReflectionChange(idx, e.target.value)}
+                    placeholder="Type your thoughts here (optional)..."
+                    className="w-full glass-card p-4 text-slate-300 bg-slate-800/30 border border-white/10 rounded focus:outline-none focus:border-blue-500 resize-none"
+                    rows="3"
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Action Buttons */}
+        <div className="flex gap-4">
+          {empathyExerciseState.showingInsight && (
+            <button 
+              onClick={nextScenario}
+              className="px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-lg transition-colors executive-font"
+            >
+              Next Scenario →
+            </button>
+          )}
           <button 
-            onClick={() => setView('practice-hub')}
-            className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors executive-font"
+            onClick={goToPracticeHub}
+            className="px-6 py-3 bg-slate-700 hover:bg-slate-600 text-white font-semibold rounded-lg transition-colors executive-font"
           >
-            ← Back to Practice Hub
+            Back to Practice Hub
           </button>
         </div>
         <GlobalNavFooter />

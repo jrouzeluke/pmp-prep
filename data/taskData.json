@@ -665,7 +665,115 @@
               "commonMistake": "Considering the conflict resolved after the meeting, without monitoring if the solution actually works"
             }
           ]
-        }
+        },
+        "empathy_exercise": [
+          {
+            "id": 1,
+            "title": "The Architect's Dilemma",
+            "situation": "Your senior architect (15 years experience) and talented new engineer (2 years experience) have reached deadlock on database architecture. The architect insists on relational, the engineer advocates for NoSQL. Tensions are rising.",
+            "perspectives": {
+              "personA": {
+                "role": "Senior Architect",
+                "emoji": "👨‍💼",
+                "name": "The Architect",
+                "thoughts": "I've seen 10 failed NoSQL migrations in my career. This kid doesn't know what they're getting into. If this fails, I'll be the one getting calls at 2am to fix it. I'm not being stuck in the past - I'm being realistic.",
+                "concerns": ["Risk of system failure", "Having to clean up if wrong choice made", "Years of hard-won experience being dismissed"],
+                "fears": "That my experience will be devalued, and I'll be blamed when modern 'solutions' create problems",
+                "wishesOthersKnew": "Every technology I'm 'resistant' to is because I've seen it fail. I'd love to be wrong, but I need more than enthusiasm."
+              },
+              "personB": {
+                "role": "New Engineer",
+                "emoji": "👩‍💻",
+                "name": "The Engineer",
+                "thoughts": "We're losing market share because we're too slow. I've successfully used NoSQL at scale at my last company. This team treats me like I don't know anything. My ideas get dismissed because I'm 'junior' even though I have relevant experience.",
+                "concerns": ["Company falling behind competitors", "Career growth stagnating in outdated environment", "Not being taken seriously"],
+                "fears": "That I'll waste years learning 'legacy' approaches that make me less marketable",
+                "wishesOthersKnew": "Age doesn't equal expertise in fast-moving technology fields. I left my last job to bring modern practices here - I want to help, not threaten."
+              },
+              "pm": {
+                "emoji": "🎯",
+                "observations": [
+                  "Both are actually risk-averse - architect fears failure, engineer fears irrelevance",
+                  "Neither feels truly heard or respected by the other",
+                  "This is a trust issue masquerading as a technical debate",
+                  "Both have valid concerns AND neither has complete information"
+                ],
+                "validPoints": {
+                  "architect": "Experience with failures IS valuable. Risk assessment and operational support matter. Seen-it-before wisdom prevents repeated mistakes.",
+                  "engineer": "Modern solutions ARE needed to stay competitive. Fresh perspectives drive innovation. Recent experience with new tech is valuable."
+                },
+                "realIssue": "Lack of mutual respect and trust. Need to build the relationship before solving the technical problem. Both need to feel valued.",
+                "solution": "Create structured space for both to teach each other. Architect shares war stories (what went wrong and why). Engineer shares modern success patterns. Build hybrid approach leveraging both perspectives."
+              }
+            },
+            "insight": {
+              "title": "This isn't really about databases",
+              "revelation": "The surface conflict is technical, but the real issues are: Trust, Experience vs Innovation, Fear of failure, Fear of irrelevance, Generational differences, Need to feel heard and respected.",
+              "bestApproach": "1. Address the relationship first - create space for mutual learning. 2. Acknowledge both perspectives have value. 3. The technical decision will emerge naturally from building trust. 4. Possible outcome: Hybrid solution neither initially considered.",
+              "eiConnection": "Emotional Intelligence in action: Looking beyond positions ('I want NoSQL' vs 'I want relational') to understand underlying fears, motivations, and unspoken needs. Classic Getting to Yes principle: Separate people from problem.",
+              "examTip": "PMP exam loves scenarios where 'technical conflicts' are actually relationship/trust issues. The answer isn't picking a side - it's facilitating understanding between parties."
+            },
+            "reflectionQuestions": [
+              "Before reading the perspectives, which person would you have sided with? Why?",
+              "What did you learn that changed your initial reaction?",
+              "How would you approach facilitating a conversation between them now?",
+              "Which perspective was hardest for you to empathize with? What does that tell you about your own biases?"
+            ]
+          },
+          {
+            "id": 2,
+            "title": "The Resource War",
+            "situation": "Two department heads are in heated disagreement over who gets access to your best data analyst for Q1. Both projects are important. Both are escalating to your sponsor.",
+            "perspectives": {
+              "personA": {
+                "role": "Marketing Director",
+                "emoji": "📊",
+                "name": "Marketing Director",
+                "thoughts": "We promised the board a customer segmentation model by end of Q1. That was THEIR ask. If we don't deliver, it reflects poorly on the entire marketing org. We requested this resource first.",
+                "concerns": ["Credibility with board", "Team's ability to deliver on commitments", "Being deprioritized"],
+                "fears": "That engineering always gets priority because they're 'technical' and marketing is seen as 'soft'",
+                "wishesOthersKnew": "This isn't about politics - the board explicitly requested this analysis. We can't deliver without expert help."
+              },
+              "personB": {
+                "role": "Engineering Director",
+                "emoji": "⚙️",
+                "name": "Engineering Director",
+                "thoughts": "Our data pipeline is breaking under load. If we don't analyze and optimize, we risk system failures that affect all customers. This isn't a 'nice to have' - it's infrastructure stability.",
+                "concerns": ["System reliability", "Customer experience", "Technical debt compounding"],
+                "fears": "That business stakeholders don't understand technical risk until something breaks, then blame engineering",
+                "wishesOthersKnew": "Infrastructure work is invisible until it fails. We're trying to prevent a crisis, not play political games."
+              },
+              "pm": {
+                "emoji": "🎯",
+                "observations": [
+                  "Both requests are legitimate and urgent",
+                  "Both are escalating because they feel unheard",
+                  "Neither has full visibility into the other's constraints",
+                  "The analyst hasn't been asked what's feasible"
+                ],
+                "validPoints": {
+                  "marketing": "Board commitment is real. Missing it has organizational impact. First-come-first-served has merit.",
+                  "engineering": "System stability is foundational. Everything else depends on infrastructure working. Prevention beats crisis management."
+                },
+                "realIssue": "Resource allocation hasn't been based on clear, agreed-upon criteria. No transparent prioritization framework. Competing 'urgencies' with no way to objectively evaluate.",
+                "solution": "1. Don't pick a side - facilitate evaluation against criteria. 2. Explore creative options (sequencing, task breakdown, alternative resources). 3. Make prioritization transparent. 4. Document decision rationale for future situations."
+              }
+            },
+            "insight": {
+              "title": "This isn't about this analyst - it's about how decisions get made",
+              "revelation": "Both directors are frustrated because there's no transparent way resources get allocated. Each feels the other's project is always prioritized. The real problem: lack of agreed-upon prioritization framework.",
+              "bestApproach": "1. Don't referee individual resource battles. 2. Facilitate creation of prioritization criteria (business value, urgency, risk). 3. Evaluate both requests against criteria together. 4. Document for future. 5. May discover creative solutions (task sequencing, shared approach, alternative resources).",
+              "eiConnection": "Social awareness: Recognizing both parties feel their concerns aren't valued. Relationship management: Creating fair process builds trust even when someone doesn't get their way.",
+              "examTip": "Resource conflicts often test whether you'll 'pick a side' (wrong) vs facilitate objective evaluation (right). PMI wants to see fair processes, stakeholder engagement, and creative problem-solving."
+            },
+            "reflectionQuestions": [
+              "What criteria would you use to prioritize if you absolutely had to choose?",
+              "What creative solutions might exist beyond 'marketing gets analyst' vs 'engineering gets analyst'?",
+              "How would you prevent this type of conflict in the future?",
+              "What role does the analyst themselves play in this decision?"
+            ]
+          }
+        ]
       }
     },
   "Lead a Team": {
