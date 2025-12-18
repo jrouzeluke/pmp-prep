@@ -611,7 +611,61 @@
               }
             ]
           }
-        ]
+        ],
+        "timeline_reconstructor": {
+          "title": "Conflict Resolution Process",
+          "description": "A conflict just occurred on your project. Arrange these steps in the correct order.",
+          "steps": [
+            {
+              "id": 1,
+              "correctOrder": 1,
+              "text": "Recognize conflict early",
+              "details": "Watch for signs: tension, passive-aggressive behavior, reduced communication, missed commitments. Don't wait for escalation - address when first noticed.",
+              "whyThisOrder": "You can't resolve a conflict you haven't identified. Early recognition prevents minor issues from becoming major problems.",
+              "commonMistake": "Waiting for conflict to become obvious and disruptive before taking action"
+            },
+            {
+              "id": 2,
+              "correctOrder": 2,
+              "text": "Understand root cause",
+              "details": "Speak privately with each party. Is it about resources, technical approach, personality, process, or priorities? Separate facts from emotions. Identify underlying interests, not just stated positions.",
+              "whyThisOrder": "You need to understand what you're actually resolving before choosing an approach. Surface issues often mask deeper problems.",
+              "commonMistake": "Assuming you know the issue without investigation, or taking sides based on first conversation"
+            },
+            {
+              "id": 3,
+              "correctOrder": 3,
+              "text": "Choose appropriate conflict mode",
+              "details": "Assess: Is it urgent? Important? What's the relationship context? Default to Collaborate when time permits and issue matters.",
+              "whyThisOrder": "Different conflicts require different approaches. One-size-fits-all creates ineffective resolutions.",
+              "commonMistake": "Using your comfortable conflict mode for every situation, or copying what worked last time"
+            },
+            {
+              "id": 4,
+              "correctOrder": 4,
+              "text": "Facilitate resolution",
+              "details": "Create neutral space. Establish ground rules (respect, listening, focus on issue not person). Use active listening. Focus on interests and objectives, not positions. Generate options together.",
+              "whyThisOrder": "Now that you understand the issue and chosen your approach, you facilitate the actual resolution conversation.",
+              "commonMistake": "Solving the problem yourself instead of facilitating parties to solve it together"
+            },
+            {
+              "id": 5,
+              "correctOrder": 5,
+              "text": "Document the agreement",
+              "details": "Document the agreement (even if informal). Clarify next actions and responsibilities. Make sure all parties have same understanding.",
+              "whyThisOrder": "Verbal agreements fade. Documentation ensures accountability and prevents 'I thought we agreed to...' conflicts later.",
+              "commonMistake": "Assuming everyone remembers what was agreed, or that documentation is bureaucratic overhead"
+            },
+            {
+              "id": 6,
+              "correctOrder": 6,
+              "text": "Follow up to ensure resolution holds",
+              "details": "Set check-in point to verify resolution is working. If conflict recurrs, escalate or use different mode. Capture lessons learned for future conflicts.",
+              "whyThisOrder": "Resolution isn't complete until it's proven to work over time. Many agreements fall apart under pressure.",
+              "commonMistake": "Considering the conflict resolved after the meeting, without monitoring if the solution actually works"
+            }
+          ]
+        }
       }
     },
   "Lead a Team": {

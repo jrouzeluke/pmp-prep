@@ -44,6 +44,13 @@ const PMPApp = () => {
     score: 0,
     draggedScenario: null
   });
+  const [timelineReconstructorState, setTimelineReconstructorState] = useState({
+    steps: [], // Array of step objects in current order
+    showingFeedback: false,
+    score: 0,
+    draggedStep: null,
+    dragOverIndex: null
+  });
 
   useEffect(() => {
     fetch('./data/taskData.json')
@@ -881,6 +888,360 @@ const PMPApp = () => {
     );
   }
 
+  // Document Detective Activity View
+  if (view === 'document-detective') {
+    // For now, create sample cases if document_detective data doesn't exist
+    const documentDetectiveCases = currentTask.practice?.document_detective || [
+      {
+        title: "The Resource Conflict",
+        scenario: "Two departments are requesting the same senior developer for overlapping project timelines. Marketing needs the developer for a critical customer-facing feature launch in 3 weeks. Engineering needs them for a technical debt refactoring that's blocking 5 other features. Both projects are high priority. Team meetings have become tense, with each department presenting their case more aggressively. You need to resolve this conflict and ensure both projects can proceed.",
+        correctDocs: ["Resource Management Plan", "Stakeholder Engagement Plan", "Communication Plan"],
+        allDocs: [
+          "Team Charter",
+          "Stakeholder Engagement Plan",
+          "Resource Management Plan",
+          "Risk Register",
+          "Communication Plan",
+          "Budget Report",
+          "Project Schedule",
+          "Issue Log",
+          "Scope Statement",
+          "RACI Matrix"
+        ],
+        explanations: {
+          "Resource Management Plan": {
+            howToUse: "Check the resource allocation matrix and availability windows. Look for alternative resources or capacity adjustments.",
+            purpose: "Determine actual resource availability and identify if the conflict can be resolved through scheduling or alternative assignments.",
+            example: "Review the Resource Management Plan to see if another developer has similar skills, or if the timelines can be adjusted by a few days to allow sequential allocation."
+          },
+          "Stakeholder Engagement Plan": {
+            howToUse: "Identify the key stakeholders from each department. Understand their influence, interest, and communication preferences.",
+            purpose: "Plan how to engage both departments in a collaborative discussion, ensuring their concerns are heard and addressed.",
+            example: "Use the Stakeholder Engagement Plan to schedule a joint meeting with both department heads, using their preferred communication channels and presenting the situation in terms that matter to each group."
+          },
+          "Communication Plan": {
+            howToUse: "Follow the established escalation path and communication protocols. Ensure transparent communication with both parties.",
+            purpose: "Maintain open dialogue, prevent information asymmetry, and ensure both departments understand the full context and constraints.",
+            example: "Follow the Communication Plan to send a structured update to both departments, schedule a facilitated discussion, and document the resolution process."
+          }
+        },
+        missedDocs: {
+          "Issue Log": {
+            why: "This resource conflict should be documented in the Issue Log to track it as an active impediment and ensure it's addressed systematically."
+          }
+        }
+      }
+    ];
+
+    const currentCaseData = documentDetectiveCases[documentDetectiveState.currentCase];
+
+    const toggleDocument = (docName) => {
+      setDocumentDetectiveState(prev => {
+        if (prev.selectedDocs.includes(docName)) {
+          // Deselect
+          return { ...prev, selectedDocs: prev.selectedDocs.filter(d => d !== docName) };
+        } else if (prev.selectedDocs.length < 3) {
+          // Select (if less than 3)
+          return { ...prev, selectedDocs: [...prev.selectedDocs, docName] };
+        }
+        return prev; // Can't select more than 3
+      });
+    };
+
+    const submitSelections = () => {
+      if (documentDetectiveState.selectedDocs.length !== 3) return;
+      
+      const correctCount = documentDetectiveState.selectedDocs.filter(doc => 
+        currentCaseData.correctDocs.includes(doc)
+      ).length;
+      
+      setDocumentDetectiveState(prev => ({
+        ...prev,
+        showingFeedback: true,
+        score: correctCount
+      }));
+    };
+
+    const resetCase = () => {
+      setDocumentDetectiveState(prev => ({
+        ...prev,
+        selectedDocs: [],
+        showingFeedback: false,
+        score: 0
+      }));
+    };
+
+    const nextCase = () => {
+      if (documentDetectiveState.currentCase < documentDetectiveCases.length - 1) {
+        setDocumentDetectiveState({
+          currentCase: documentDetectiveState.currentCase + 1,
+          selectedDocs: [],
+          showingFeedback: false,
+          score: 0
+        });
+      } else {
+        // All cases complete - loop back to first
+        setDocumentDetectiveState({
+          currentCase: 0,
+          selectedDocs: [],
+          showingFeedback: false,
+          score: 0
+        });
+      }
+    };
+
+    const goToPracticeHub = () => {
+      setDocumentDetectiveState({
+        currentCase: 0,
+        selectedDocs: [],
+        showingFeedback: false,
+        score: 0
+      });
+      setView('practice-hub');
+    };
+
+    if (!currentCaseData) {
+      return (
+        <div className="max-w-6xl w-full p-10 animate-fadeIn text-left">
+          <div className="glass-card p-10 text-center">
+            <h1 className="executive-font text-3xl font-bold text-white mb-4">🕵️ Document Detective</h1>
+            <p className="text-slate-400">No cases available for this task.</p>
+            <button 
+              onClick={goToPracticeHub}
+              className="mt-6 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors executive-font"
+            >
+              ← Back to Practice Hub
+            </button>
+            <GlobalNavFooter />
+          </div>
+        </div>
+      );
+    }
+
+    // Feedback Screen
+    if (documentDetectiveState.showingFeedback) {
+      const selectedCorrect = documentDetectiveState.selectedDocs.filter(doc => 
+        currentCaseData.correctDocs.includes(doc)
+      );
+      const selectedIncorrect = documentDetectiveState.selectedDocs.filter(doc => 
+        !currentCaseData.correctDocs.includes(doc)
+      );
+      const missedImportant = currentCaseData.correctDocs.filter(doc => 
+        !documentDetectiveState.selectedDocs.includes(doc)
+      );
+
+      return (
+        <div className="max-w-6xl w-full p-10 animate-fadeIn text-left">
+          <header className="mb-8">
+            <div className="flex items-center gap-4 mb-6">
+              <button 
+                onClick={goToPracticeHub}
+                className="px-4 py-2 executive-font text-xs text-slate-400 hover:text-white uppercase font-semibold transition-colors flex items-center gap-2"
+              >
+                ← Back
+              </button>
+            </div>
+            <h1 className="executive-font text-5xl font-bold text-white tracking-tight">🕵️ Document Detective: {currentCaseData.title}</h1>
+          </header>
+
+          {/* Score Display */}
+          <div className="glass-card p-6 mb-6 text-center">
+            <h2 className="executive-font text-3xl font-bold text-white mb-2">
+              Score: {documentDetectiveState.score}/3
+            </h2>
+            <p className="text-slate-400">You selected {documentDetectiveState.score} out of 3 correct documents</p>
+          </div>
+
+          {/* Correct Selections */}
+          {selectedCorrect.length > 0 && (
+            <div className="mb-6">
+              <h3 className="executive-font text-xl font-semibold text-white mb-4">✅ Correct Selections</h3>
+              <div className="space-y-4">
+                {selectedCorrect.map((doc, idx) => {
+                  const explanation = currentCaseData.explanations[doc];
+                  return (
+                    <div key={idx} className="glass-card p-6 border-l-4 border-emerald-500">
+                      <h4 className="executive-font text-lg font-semibold text-white mb-3">{doc}</h4>
+                      {explanation && (
+                        <>
+                          <div className="mb-3">
+                            <span className="text-sm font-semibold text-emerald-400">Look for: </span>
+                            <span className="text-slate-300">{explanation.howToUse}</span>
+                          </div>
+                          <div className="mb-3">
+                            <span className="text-sm font-semibold text-emerald-400">Use it to: </span>
+                            <span className="text-slate-300">{explanation.purpose}</span>
+                          </div>
+                          {explanation.example && (
+                            <div className="bg-slate-800/50 p-3 rounded border-l-2 border-emerald-400/50">
+                              <p className="text-sm text-slate-300 italic">{explanation.example}</p>
+                            </div>
+                          )}
+                        </>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
+          {/* Missed Important Documents */}
+          {missedImportant.length > 0 && (
+            <div className="mb-6">
+              <h3 className="executive-font text-xl font-semibold text-white mb-4">❌ Important Documents You Missed</h3>
+              <div className="space-y-4">
+                {missedImportant.map((doc, idx) => {
+                  const explanation = currentCaseData.explanations[doc];
+                  return (
+                    <div key={idx} className="glass-card p-6 border-l-4 border-orange-500">
+                      <h4 className="executive-font text-lg font-semibold text-white mb-3">You didn't pick {doc}</h4>
+                      {explanation && (
+                        <>
+                          <div className="mb-3">
+                            <span className="text-sm font-semibold text-orange-400">Why it matters: </span>
+                            <span className="text-slate-300">{explanation.purpose}</span>
+                          </div>
+                          <div className="mb-3">
+                            <span className="text-sm font-semibold text-orange-400">How to use it: </span>
+                            <span className="text-slate-300">{explanation.howToUse}</span>
+                          </div>
+                          {explanation.example && (
+                            <div className="bg-slate-800/50 p-3 rounded border-l-2 border-orange-400/50">
+                              <p className="text-sm text-slate-300 italic">{explanation.example}</p>
+                            </div>
+                          )}
+                        </>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
+          {/* Incorrect Selections (if any) */}
+          {selectedIncorrect.length > 0 && (
+            <div className="mb-6">
+              <h3 className="executive-font text-xl font-semibold text-white mb-4">Incorrect Selections</h3>
+              <div className="space-y-2">
+                {selectedIncorrect.map((doc, idx) => (
+                  <div key={idx} className="glass-card p-4 border-l-4 border-slate-600">
+                    <p className="text-slate-400">{doc} - Not the most relevant for this scenario</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Action Buttons */}
+          <div className="flex gap-4">
+            <button 
+              onClick={resetCase}
+              className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors executive-font"
+            >
+              Try Again
+            </button>
+            {documentDetectiveCases.length > 1 && (
+              <button 
+                onClick={nextCase}
+                className="px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-lg transition-colors executive-font"
+              >
+                Next Case →
+              </button>
+            )}
+            <button 
+              onClick={goToPracticeHub}
+              className="px-6 py-3 bg-slate-700 hover:bg-slate-600 text-white font-semibold rounded-lg transition-colors executive-font"
+            >
+              Back to Practice Hub
+            </button>
+          </div>
+          <GlobalNavFooter />
+        </div>
+      );
+    }
+
+    // Case Display
+    return (
+      <div className="max-w-6xl w-full p-10 animate-fadeIn text-left">
+        <header className="mb-8">
+          <div className="flex items-center gap-4 mb-6">
+            <button 
+              onClick={goToPracticeHub}
+              className="px-4 py-2 executive-font text-xs text-slate-400 hover:text-white uppercase font-semibold transition-colors flex items-center gap-2"
+            >
+              ← Back
+            </button>
+          </div>
+          <h1 className="executive-font text-5xl font-bold text-white tracking-tight">🕵️ Document Detective: {currentCaseData.title}</h1>
+        </header>
+
+        {/* Case Display */}
+        <div className="glass-card p-8 mb-6">
+          <h2 className="executive-font text-2xl font-bold text-white mb-4">{currentCaseData.title}</h2>
+          <div className="text-slate-300 mb-6 whitespace-pre-line leading-relaxed">
+            {currentCaseData.scenario}
+          </div>
+          <div className="glass-card p-4 bg-blue-500/10 border-l-4 border-blue-500">
+            <p className="text-blue-400 font-semibold">📋 Your Mission: Select the 3 most relevant documents</p>
+          </div>
+        </div>
+
+        {/* Document Selection */}
+        <div className="glass-card p-6 mb-6">
+          <h3 className="executive-font text-xl font-semibold text-white mb-4">
+            Available Documents ({documentDetectiveState.selectedDocs.length}/3 selected)
+          </h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {currentCaseData.allDocs.map((doc, idx) => {
+              const isSelected = documentDetectiveState.selectedDocs.includes(doc);
+              return (
+                <button
+                  key={idx}
+                  onClick={() => toggleDocument(doc)}
+                  disabled={!isSelected && documentDetectiveState.selectedDocs.length >= 3}
+                  className={`glass-card p-4 text-left transition-all border-l-4 ${
+                    isSelected 
+                      ? 'border-cyan-500 bg-cyan-500/10' 
+                      : documentDetectiveState.selectedDocs.length >= 3
+                        ? 'border-slate-600 opacity-50 cursor-not-allowed'
+                        : 'border-slate-600 hover:border-cyan-500/50 hover:bg-cyan-500/5'
+                  }`}
+                >
+                  <div className="flex items-center gap-3">
+                    <div className={`w-5 h-5 rounded border-2 flex items-center justify-center ${
+                      isSelected ? 'bg-cyan-500 border-cyan-500' : 'border-slate-400'
+                    }`}>
+                      {isSelected && <span className="text-white text-xs">✓</span>}
+                    </div>
+                    <span className={`font-semibold ${isSelected ? 'text-cyan-400' : 'text-white'}`}>{doc}</span>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Submit Button */}
+        <div className="flex justify-center">
+          <button
+            onClick={submitSelections}
+            disabled={documentDetectiveState.selectedDocs.length !== 3}
+            className={`px-8 py-4 font-semibold rounded-lg transition-colors executive-font text-lg ${
+              documentDetectiveState.selectedDocs.length === 3
+                ? 'bg-purple-600 hover:bg-purple-700 text-white'
+                : 'bg-slate-700 text-slate-400 cursor-not-allowed'
+            }`}
+          >
+            Submit Selections
+          </button>
+        </div>
+        <GlobalNavFooter />
+      </div>
+    );
+  }
+
   // Conflict Mode Matcher Activity View
   if (view === 'conflict-matcher') {
     const conflictMatcherScenarios = currentTask.practice?.conflict_matcher || [
@@ -1239,8 +1600,372 @@ const PMPApp = () => {
     );
   }
 
+  // Timeline Reconstructor Activity View
+  if (view === 'timeline-reconstructor') {
+    const timelineData = currentTask.practice?.timeline_reconstructor;
+    
+    // Initialize steps in random order if not already initialized
+    const initializeSteps = () => {
+      if (!timelineData?.steps) return [];
+      const steps = [...timelineData.steps];
+      // Shuffle array using Fisher-Yates
+      for (let i = steps.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [steps[i], steps[j]] = [steps[j], steps[i]];
+      }
+      return steps;
+    };
+
+    // Initialize steps on first render if needed
+    if (timelineReconstructorState.steps.length === 0 && timelineData?.steps && timelineData.steps.length > 0) {
+      // Initialize with shuffled steps - this will run on component mount
+      const shuffledSteps = initializeSteps();
+      if (shuffledSteps.length > 0) {
+        // Use setTimeout to avoid state update during render
+        setTimeout(() => {
+          setTimelineReconstructorState(prev => ({ ...prev, steps: shuffledSteps }));
+        }, 0);
+      }
+    }
+
+    const handleDragStart = (stepId) => {
+      setTimelineReconstructorState(prev => ({ ...prev, draggedStep: stepId }));
+    };
+
+    const handleDragOver = (e, index) => {
+      e.preventDefault();
+      setTimelineReconstructorState(prev => ({ ...prev, dragOverIndex: index }));
+    };
+
+    const handleDrop = (e, dropIndex) => {
+      e.preventDefault();
+      if (timelineReconstructorState.draggedStep === null) return;
+
+      const draggedStepId = timelineReconstructorState.draggedStep;
+      const steps = [...timelineReconstructorState.steps];
+      const draggedIndex = steps.findIndex(s => s.id === draggedStepId);
+
+      if (draggedIndex === -1 || draggedIndex === dropIndex) {
+        setTimelineReconstructorState(prev => ({ ...prev, draggedStep: null, dragOverIndex: null }));
+        return;
+      }
+
+      // Remove dragged step and insert at new position
+      const [draggedStep] = steps.splice(draggedIndex, 1);
+      steps.splice(dropIndex, 0, draggedStep);
+
+      setTimelineReconstructorState(prev => ({
+        ...prev,
+        steps,
+        draggedStep: null,
+        dragOverIndex: null
+      }));
+    };
+
+    const moveStep = (stepId, direction) => {
+      const steps = [...timelineReconstructorState.steps];
+      const index = steps.findIndex(s => s.id === stepId);
+      if (index === -1) return;
+
+      const newIndex = direction === 'up' ? index - 1 : index + 1;
+      if (newIndex < 0 || newIndex >= steps.length) return;
+
+      [steps[index], steps[newIndex]] = [steps[newIndex], steps[index]];
+
+      setTimelineReconstructorState(prev => ({ ...prev, steps }));
+    };
+
+    const checkOrder = () => {
+      if (!timelineData?.steps) return;
+      
+      let correctCount = 0;
+      timelineReconstructorState.steps.forEach((step, index) => {
+        if (step.correctOrder === index + 1) {
+          correctCount++;
+        }
+      });
+
+      setTimelineReconstructorState(prev => ({
+        ...prev,
+        showingFeedback: true,
+        score: correctCount
+      }));
+    };
+
+    const resetGame = () => {
+      const newSteps = timelineData?.steps ? initializeSteps() : [];
+      setTimelineReconstructorState({
+        steps: newSteps,
+        showingFeedback: false,
+        score: 0,
+        draggedStep: null,
+        dragOverIndex: null
+      });
+    };
+
+    const goToPracticeHub = () => {
+      setTimelineReconstructorState({
+        steps: [],
+        showingFeedback: false,
+        score: 0,
+        draggedStep: null,
+        dragOverIndex: null
+      });
+      setView('practice-hub');
+    };
+
+    if (!timelineData || !timelineData.steps || timelineData.steps.length === 0) {
+      return (
+        <div className="max-w-6xl w-full p-10 animate-fadeIn text-left">
+          <div className="glass-card p-10 text-center">
+            <h1 className="executive-font text-3xl font-bold text-white mb-4">📋 Timeline Reconstructor</h1>
+            <p className="text-slate-400">No timeline data available for this task.</p>
+            <button 
+              onClick={goToPracticeHub}
+              className="mt-6 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors executive-font"
+            >
+              ← Back to Practice Hub
+            </button>
+            <GlobalNavFooter />
+          </div>
+        </div>
+      );
+    }
+
+    // Use initialized steps or initialize on first render
+    const currentSteps = timelineReconstructorState.steps.length > 0 
+      ? timelineReconstructorState.steps 
+      : initializeSteps();
+
+    // Initialize on mount if needed
+    if (timelineReconstructorState.steps.length === 0 && currentSteps.length > 0) {
+      setTimeout(() => {
+        setTimelineReconstructorState(prev => ({ ...prev, steps: currentSteps }));
+      }, 0);
+    }
+
+    // Feedback Screen
+    if (timelineReconstructorState.showingFeedback) {
+      const stepsForFeedback = timelineReconstructorState.steps.length > 0 ? timelineReconstructorState.steps : currentSteps;
+      
+      return (
+        <div className="max-w-6xl w-full p-10 animate-fadeIn text-left">
+          <header className="mb-8">
+            <div className="flex items-center gap-4 mb-6">
+              <button 
+                onClick={goToPracticeHub}
+                className="px-4 py-2 executive-font text-xs text-slate-400 hover:text-white uppercase font-semibold transition-colors flex items-center gap-2"
+              >
+                ← Back
+              </button>
+            </div>
+            <h1 className="executive-font text-5xl font-bold text-white tracking-tight">📋 Timeline Reconstructor: {timelineData.title}</h1>
+          </header>
+
+          {/* Score Display */}
+          <div className="glass-card p-6 mb-6 text-center">
+            <h2 className="executive-font text-3xl font-bold text-white mb-2">
+              Score: {timelineReconstructorState.score}/{timelineData.steps.length}
+            </h2>
+            <p className="text-slate-400">You got {timelineReconstructorState.score} steps in the correct order</p>
+          </div>
+
+          {/* Feedback for each step */}
+          <div className="space-y-4 mb-6">
+            {stepsForFeedback.map((step, index) => {
+              const isCorrect = step.correctOrder === index + 1;
+              const correctStep = timelineData.steps.find(s => s.correctOrder === index + 1);
+
+              return (
+                <div 
+                  key={step.id} 
+                  className={`glass-card p-6 border-l-4 ${
+                    isCorrect ? 'border-emerald-500' : 'border-red-500'
+                  }`}
+                >
+                  <div className="flex items-start gap-4">
+                    <div className="flex-shrink-0">
+                      <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-2xl`}>
+                        {isCorrect ? '✅' : '❌'}
+                      </div>
+                    </div>
+                    <div className="flex-1">
+                      <div className="flex items-center gap-3 mb-2">
+                        <span className="text-lg font-bold text-white">Step {index + 1}:</span>
+                        <span className="text-white font-semibold">{step.text}</span>
+                        {isCorrect && <span className="text-emerald-400 font-bold text-sm">+50 points</span>}
+                      </div>
+                      {!isCorrect && (
+                        <div className="mb-3">
+                          <span className="text-sm text-slate-400">Correct position: Step {step.correctOrder}</span>
+                          {correctStep && (
+                            <span className="text-sm text-emerald-400 ml-2">({correctStep.text})</span>
+                          )}
+                        </div>
+                      )}
+                      <div className="mt-3">
+                        <span className="text-sm font-semibold text-white">Why this order:</span>
+                        <p className="text-sm text-slate-300 mt-1">{step.whyThisOrder}</p>
+                      </div>
+                      {step.commonMistake && (
+                        <div className="mt-2 bg-slate-800/50 p-3 rounded border-l-2 border-orange-500/50">
+                          <p className="text-xs text-orange-400 italic">Common mistake: {step.commonMistake}</p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Correct Sequence Display */}
+          <div className="glass-card p-6 mb-6">
+            <h3 className="executive-font text-xl font-semibold text-white mb-4">Correct Sequence</h3>
+            <div className="space-y-3">
+              {[...timelineData.steps].sort((a, b) => a.correctOrder - b.correctOrder).map((step) => (
+                <div key={step.id} className="flex items-start gap-3">
+                  <div className="w-8 h-8 rounded-full bg-emerald-500 text-white font-bold flex items-center justify-center flex-shrink-0">
+                    {step.correctOrder}
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-white font-semibold">{step.text}</p>
+                    <p className="text-sm text-slate-400 mt-1">{step.details}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Action Buttons */}
+          <div className="flex gap-4">
+            <button 
+              onClick={resetGame}
+              className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors executive-font"
+            >
+              Try Again
+            </button>
+            <button 
+              onClick={resetGame}
+              className="px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-lg transition-colors executive-font"
+            >
+              New Challenge
+            </button>
+            <button 
+              onClick={goToPracticeHub}
+              className="px-6 py-3 bg-slate-700 hover:bg-slate-600 text-white font-semibold rounded-lg transition-colors executive-font"
+            >
+              Back to Practice Hub
+            </button>
+          </div>
+          <GlobalNavFooter />
+        </div>
+      );
+    }
+
+    // Game Display - use current steps
+    const displaySteps = timelineReconstructorState.steps.length > 0 ? timelineReconstructorState.steps : currentSteps;
+    
+    return (
+      <div className="max-w-6xl w-full p-10 animate-fadeIn text-left">
+        <header className="mb-8">
+          <div className="flex items-center gap-4 mb-6">
+            <button 
+              onClick={goToPracticeHub}
+              className="px-4 py-2 executive-font text-xs text-slate-400 hover:text-white uppercase font-semibold transition-colors flex items-center gap-2"
+            >
+              ← Back
+            </button>
+          </div>
+          <h1 className="executive-font text-5xl font-bold text-white tracking-tight">📋 Timeline Reconstructor: {timelineData.title}</h1>
+        </header>
+
+        {/* Instructions Card */}
+        <div className="glass-card p-6 mb-6 bg-blue-500/10 border-l-4 border-blue-500">
+          <p className="text-blue-400 font-semibold text-lg">{timelineData.description || "A conflict just occurred. Arrange these conflict resolution steps in the CORRECT order (drag to reorder)."}</p>
+        </div>
+
+        {/* Steps Display */}
+        <div className="glass-card p-6 mb-6">
+          <div className="space-y-3">
+            {displaySteps.map((step, index) => {
+              const isDragging = timelineReconstructorState.draggedStep === step.id;
+              const isDragOver = timelineReconstructorState.dragOverIndex === index;
+
+              return (
+                <div
+                  key={step.id}
+                  draggable
+                  onDragStart={() => handleDragStart(step.id)}
+                  onDragOver={(e) => handleDragOver(e, index)}
+                  onDrop={(e) => handleDrop(e, index)}
+                  className={`glass-card p-4 flex items-center gap-4 cursor-move transition-all ${
+                    isDragging ? 'opacity-50 scale-95' : 'hover:scale-[1.02]'
+                  } ${isDragOver ? 'border-t-4 border-cyan-500' : ''}`}
+                  style={{ 
+                    boxShadow: isDragging ? '0 8px 16px rgba(0,0,0,0.4)' : 'none'
+                  }}
+                >
+                  {/* Drag Handle */}
+                  <div className="text-slate-400 text-2xl cursor-grab active:cursor-grabbing">☰</div>
+                  
+                  {/* Step Number */}
+                  <div className="w-10 h-10 rounded-full bg-slate-700 text-white font-bold flex items-center justify-center flex-shrink-0">
+                    {index + 1}
+                  </div>
+
+                  {/* Step Text */}
+                  <div className="flex-1">
+                    <p className="text-white font-semibold">{step.text}</p>
+                  </div>
+
+                  {/* Up/Down Arrow Buttons (Accessibility) */}
+                  <div className="flex flex-col gap-1">
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        moveStep(step.id, 'up');
+                      }}
+                      disabled={index === 0}
+                      className="px-2 py-1 text-xs glass-card hover:bg-blue-500/10 text-white disabled:opacity-30 disabled:cursor-not-allowed"
+                      title="Move up"
+                    >
+                      ↑
+                    </button>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        moveStep(step.id, 'down');
+                      }}
+                      disabled={index === displaySteps.length - 1}
+                      className="px-2 py-1 text-xs glass-card hover:bg-blue-500/10 text-white disabled:opacity-30 disabled:cursor-not-allowed"
+                      title="Move down"
+                    >
+                      ↓
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Check Order Button */}
+        <div className="flex justify-center">
+          <button
+            onClick={checkOrder}
+            className="px-8 py-4 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-lg transition-colors executive-font text-lg"
+          >
+            Check Order
+          </button>
+        </div>
+        <GlobalNavFooter />
+      </div>
+    );
+  }
+
   // Placeholder views for other activities
-  if (view === 'timeline-reconstructor' || view === 'empathy-exercise') {
+  if (view === 'empathy-exercise') {
     const activityNames = {
       'timeline-reconstructor': 'Timeline Reconstructor',
       'empathy-exercise': 'Empathy Exercise'
