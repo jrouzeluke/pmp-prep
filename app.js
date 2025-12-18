@@ -3144,6 +3144,18 @@ const PMPApp = () => {
           >
             Deep Dive
           </button>
+          {currentTask.practice?.activities_menu && (
+            <button 
+              onClick={() => setSubView('activities')} 
+              className={`px-4 py-3 executive-font text-xs font-semibold uppercase transition-all relative ${
+                subView === 'activities' 
+                  ? 'text-white border-b-2 border-cyan-400' 
+                  : 'text-slate-500 hover:text-slate-300'
+              }`}
+            >
+              Activities
+            </button>
+          )}
         </div>
       </header>
 
@@ -3155,6 +3167,45 @@ const PMPApp = () => {
               <div className="glass-card p-10 border-l-4 border-blue-500 bg-white/[0.02]">
                 <h3 className="executive-font text-xl font-semibold text-white mb-4 uppercase tracking-wide">Definition</h3>
                 <p className="text-3xl text-white font-light italic leading-tight">"{currentTask.learn.overview.definition}"</p>
+              </div>
+            )}
+
+            {currentTask.learn?.overview?.module_introduction && (
+              <div className="glass-card p-6 border-l-4 border-blue-500">
+                <h3 className="executive-font text-xl font-semibold text-white mb-4 uppercase tracking-wide">Module Introduction</h3>
+                <p className="text-slate-300 leading-relaxed">{currentTask.learn.overview.module_introduction}</p>
+              </div>
+            )}
+
+            {currentTask.learn?.overview?.what_youll_learn && currentTask.learn.overview.what_youll_learn.length > 0 && (
+              <div className="glass-card p-6 border-l-4 border-purple-500">
+                <h3 className="executive-font text-lg font-semibold text-white mb-4 uppercase tracking-wide">What You'll Learn</h3>
+                <ul className="space-y-3">
+                  {currentTask.learn.overview.what_youll_learn.map((item, idx) => (
+                    <li key={idx} className="text-slate-300 flex items-start gap-3">
+                      <span className="text-purple-400 mt-1">•</span>
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {currentTask.learn?.overview?.key_learning_objectives && currentTask.learn.overview.key_learning_objectives.length > 0 && (
+              <div className="glass-card p-6 border-l-4 border-emerald-500">
+                <h3 className="executive-font text-lg font-semibold text-white mb-4 uppercase tracking-wide">Key Learning Objectives</h3>
+                <ol className="space-y-2 list-decimal list-inside">
+                  {currentTask.learn.overview.key_learning_objectives.map((objective, idx) => (
+                    <li key={idx} className="text-slate-300">{objective}</li>
+                  ))}
+                </ol>
+              </div>
+            )}
+
+            {currentTask.learn?.overview?.why_this_matters && (
+              <div className="glass-card p-6 border-l-4 border-cyan-500">
+                <h3 className="executive-font text-lg font-semibold text-white mb-4 uppercase tracking-wide">Why This Matters</h3>
+                <p className="text-slate-300 leading-relaxed">{currentTask.learn.overview.why_this_matters}</p>
               </div>
             )}
             
@@ -3216,10 +3267,81 @@ const PMPApp = () => {
 
         {subView === 'pmp-application' && (
             <div className="space-y-6 animate-fadeIn">
+              {currentTask.learn?.pmp_application?.connection_to_pmp && (
+                <div className="glass-card p-6 border-l-4 border-purple-500">
+                  <h3 className="executive-font text-xl font-semibold text-white mb-4 uppercase tracking-wide">Connection to PMP Certification</h3>
+                  <p className="text-slate-300 mb-4">{currentTask.learn.pmp_application.connection_to_pmp}</p>
+                  {currentTask.learn.pmp_application.domain && (
+                    <p className="text-emerald-400 font-semibold">Domain: {currentTask.learn.pmp_application.domain}</p>
+                  )}
+                </div>
+              )}
+
+              {currentTask.learn?.pmp_application?.related_tasks && currentTask.learn.pmp_application.related_tasks.length > 0 && (
+                <div className="glass-card p-6 border-l-4 border-blue-500">
+                  <h3 className="executive-font text-xl font-semibold text-white mb-4 uppercase tracking-wide">Related PMP Tasks</h3>
+                  <div className="space-y-6">
+                    {currentTask.learn.pmp_application.related_tasks.map((task, idx) => (
+                      <div key={idx} className="border-l-2 border-blue-500/50 pl-4">
+                        <h4 className="font-semibold text-white text-lg mb-2">{task.task}</h4>
+                        <p className="text-sm text-slate-300 mb-3">{task.description}</p>
+                        {task.knowledge_and_skills && task.knowledge_and_skills.length > 0 && (
+                          <div className="mb-3">
+                            <p className="text-xs text-slate-400 uppercase mb-2">Knowledge and Skills:</p>
+                            <ul className="list-disc list-inside space-y-1 text-sm text-slate-300">
+                              {task.knowledge_and_skills.map((skill, skillIdx) => (
+                                <li key={skillIdx}>{skill}</li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+                        {task.what_youll_learn && task.what_youll_learn.length > 0 && (
+                          <div>
+                            <p className="text-xs text-slate-400 uppercase mb-2">What You'll Learn:</p>
+                            <ul className="list-disc list-inside space-y-1 text-sm text-slate-300">
+                              {task.what_youll_learn.map((item, itemIdx) => (
+                                <li key={itemIdx}>{item}</li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               {currentTask.learn?.pmp_application?.exam_strategy && (
                 <div className="glass-card p-6 border-l-4 border-purple-500">
                   <h3 className="executive-font text-xl font-semibold text-white mb-4 uppercase tracking-wide">Exam Strategy</h3>
                   <p className="text-slate-300">{currentTask.learn.pmp_application.exam_strategy}</p>
+                </div>
+              )}
+
+              {currentTask.learn?.pmp_application?.how_module_supports_pmp_application && currentTask.learn.pmp_application.how_module_supports_pmp_application.length > 0 && (
+                <div className="glass-card p-6 border-l-4 border-emerald-500">
+                  <h3 className="executive-font text-lg font-semibold text-white mb-4 uppercase tracking-wide">How This Module Supports Your PMP Application</h3>
+                  <p className="text-slate-300 mb-3">When documenting your project experience for the PMP application, you'll need to describe situations where you demonstrated these competencies. This module provides:</p>
+                  <ol className="space-y-2 list-decimal list-inside text-slate-300">
+                    {currentTask.learn.pmp_application.how_module_supports_pmp_application.map((item, idx) => (
+                      <li key={idx}>{item}</li>
+                    ))}
+                  </ol>
+                </div>
+              )}
+
+              {currentTask.learn?.pmp_application?.application_tips && currentTask.learn.pmp_application.application_tips.length > 0 && (
+                <div className="glass-card p-6 border-l-4 border-orange-500">
+                  <h3 className="executive-font text-lg font-semibold text-white mb-4 uppercase tracking-wide">Application Tips</h3>
+                  <p className="text-slate-300 mb-3">When writing your PMP application experience descriptions:</p>
+                  <ul className="space-y-2 text-slate-300">
+                    {currentTask.learn.pmp_application.application_tips.map((tip, idx) => (
+                      <li key={idx} className="flex items-start gap-2">
+                        <span className="text-orange-400 mt-1">•</span>
+                        <span>{tip}</span>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
               )}
 
