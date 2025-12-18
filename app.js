@@ -91,34 +91,94 @@ const PMPApp = () => {
       </div>
       
       <div className="space-y-6">
-        <div className="glass-card p-6 border-l-4 border-blue-500">
-          <h3 className="executive-font text-xl font-semibold text-white mb-4 uppercase tracking-wide">Detailed Breakdown</h3>
-          <div className="text-slate-300 space-y-3">
-            {currentTask.learn?.detailed_breakdown ? (
-              <p>{currentTask.learn.detailed_breakdown}</p>
-            ) : (
-              <p className="italic text-slate-500">Detailed analysis coming soon...</p>
-            )}
+        {currentTask.learn?.deep_dive?.foundational_concept && (
+          <div className="glass-card p-6 border-l-4 border-blue-500">
+            <h3 className="executive-font text-xl font-semibold text-white mb-4 uppercase tracking-wide">Foundational Concept</h3>
+            <div className="text-slate-300 space-y-3">
+              <p>{currentTask.learn.deep_dive.foundational_concept}</p>
+            </div>
           </div>
-        </div>
+        )}
 
-        <div className="glass-card p-6 border-l-4 border-purple-500">
-          <h3 className="executive-font text-xl font-semibold text-white mb-4 uppercase tracking-wide">Key Insights</h3>
-          <div className="text-slate-300 space-y-3">
-            {currentTask.learn?.key_insights ? (
-              <ul className="list-disc list-inside space-y-2">
-                {Array.isArray(currentTask.learn.key_insights) 
-                  ? currentTask.learn.key_insights.map((insight, idx) => (
-                      <li key={idx}>{insight}</li>
-                    ))
-                  : <li>{currentTask.learn.key_insights}</li>
-                }
-              </ul>
-            ) : (
-              <p className="italic text-slate-500">Insights will appear here as you progress...</p>
-            )}
+        {currentTask.learn?.deep_dive?.thomas_kilmann_model && (
+          <div className="glass-card p-6 border-l-4 border-purple-500">
+            <h3 className="executive-font text-xl font-semibold text-white mb-4 uppercase tracking-wide">Thomas-Kilmann Conflict Model</h3>
+            <div className="text-slate-300 space-y-4">
+              <p className="mb-4">{currentTask.learn.deep_dive.thomas_kilmann_model.description}</p>
+              {currentTask.learn.deep_dive.thomas_kilmann_model.five_modes && (
+                <div className="space-y-4">
+                  {currentTask.learn.deep_dive.thomas_kilmann_model.five_modes.map((mode, idx) => (
+                    <div key={idx} className="border-l-2 border-purple-500/50 pl-4">
+                      <h4 className="font-semibold text-white mb-2">{mode.mode}</h4>
+                      <p className="text-sm mb-2">{mode.description}</p>
+                      <div className="text-xs text-slate-400">
+                        <div className="mb-1"><span className="font-semibold">Assertiveness:</span> {mode.assertiveness}</div>
+                        <div className="mb-1"><span className="font-semibold">Cooperativeness:</span> {mode.cooperativeness}</div>
+                        <div className="mb-1"><span className="font-semibold">Outcome:</span> {mode.outcome}</div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
-        </div>
+        )}
+
+        {currentTask.learn?.deep_dive?.step_by_step_process && (
+          <div className="glass-card p-6 border-l-4 border-emerald-500">
+            <h3 className="executive-font text-xl font-semibold text-white mb-4 uppercase tracking-wide">Step-by-Step Process</h3>
+            <div className="text-slate-300 space-y-4">
+              {currentTask.learn.deep_dive.step_by_step_process.map((step, idx) => (
+                <div key={idx} className="border-l-2 border-emerald-500/50 pl-4">
+                  <h4 className="font-semibold text-white mb-2">Step {step.step}: {step.title}</h4>
+                  {step.actions && (
+                    <ul className="list-disc list-inside space-y-1 text-sm">
+                      {step.actions.map((action, actionIdx) => (
+                        <li key={actionIdx}>{action}</li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {currentTask.learn?.deep_dive?.common_mistakes && (
+          <div className="glass-card p-6 border-l-4 border-rose-500">
+            <h3 className="executive-font text-xl font-semibold text-white mb-4 uppercase tracking-wide">Common Mistakes</h3>
+            <div className="text-slate-300 space-y-3">
+              {currentTask.learn.deep_dive.common_mistakes.map((mistake, idx) => (
+                <div key={idx} className="border-l-2 border-rose-500/50 pl-4">
+                  <h4 className="font-semibold text-white mb-1">{mistake.mistake}</h4>
+                  <p className="text-sm text-slate-400 mb-1"><span className="font-semibold">Consequence:</span> {mistake.consequence}</p>
+                  <p className="text-sm text-emerald-400"><span className="font-semibold">Correction:</span> {mistake.correction}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {currentTask.learn?.deep_dive?.emotional_intelligence_connection && (
+          <div className="glass-card p-6 border-l-4 border-cyan-500">
+            <h3 className="executive-font text-xl font-semibold text-white mb-4 uppercase tracking-wide">Emotional Intelligence Connection</h3>
+            <div className="text-slate-300 space-y-3 text-sm">
+              <div><span className="font-semibold text-white">Self-Awareness:</span> {currentTask.learn.deep_dive.emotional_intelligence_connection.self_awareness}</div>
+              <div><span className="font-semibold text-white">Self-Management:</span> {currentTask.learn.deep_dive.emotional_intelligence_connection.self_management}</div>
+              <div><span className="font-semibold text-white">Social Awareness:</span> {currentTask.learn.deep_dive.emotional_intelligence_connection.social_awareness}</div>
+              <div><span className="font-semibold text-white">Relationship Management:</span> {currentTask.learn.deep_dive.emotional_intelligence_connection.relationship_management}</div>
+            </div>
+          </div>
+        )}
+
+        {!currentTask.learn?.deep_dive && (
+          <div className="glass-card p-6 border-l-4 border-blue-500">
+            <h3 className="executive-font text-xl font-semibold text-white mb-4 uppercase tracking-wide">Detailed Breakdown</h3>
+            <div className="text-slate-300 space-y-3">
+              <p className="italic text-slate-500">Detailed analysis coming soon...</p>
+            </div>
+          </div>
+        )}
       </div>
 
       <button 
@@ -376,7 +436,7 @@ const PMPApp = () => {
           <div className="text-rose-400 text-sm uppercase font-semibold mb-3 tracking-widest executive-font">Full Mock Exam</div>
           <div className="text-3xl font-bold text-white mb-2 executive-font">Complete Simulation</div>
           <div className="text-slate-400 text-sm">Full-length 180-question practice exam</div>
-        </button>
+          </button>
       </div>
       <GlobalFooter />
     </div>
@@ -438,8 +498,67 @@ const PMPApp = () => {
       </header>
       <div className="min-h-[300px]">
           {subView === 'fundamentals' ? (
-              <div className="glass-card p-10 border-l-4 border-blue-500 bg-white/[0.02] animate-fadeIn">
-                <p className="text-3xl text-white font-light italic leading-tight">"{currentTask.learn?.definition || "Briefing Locked."}"</p>
+              <div className="space-y-6 animate-fadeIn">
+                {currentTask.learn?.overview?.definition && (
+                  <div className="glass-card p-10 border-l-4 border-blue-500 bg-white/[0.02]">
+                    <h3 className="executive-font text-xl font-semibold text-white mb-4 uppercase tracking-wide">Definition</h3>
+                    <p className="text-3xl text-white font-light italic leading-tight">"{currentTask.learn.overview.definition}"</p>
+                  </div>
+                )}
+                
+                {currentTask.learn?.overview?.exam_triggers && currentTask.learn.overview.exam_triggers.length > 0 && (
+                  <div className="glass-card p-6 border-l-4 border-purple-500">
+                    <h3 className="executive-font text-lg font-semibold text-white mb-4 uppercase tracking-wide">Exam Triggers</h3>
+                    <ul className="space-y-2">
+                      {currentTask.learn.overview.exam_triggers.map((trigger, idx) => (
+                        <li key={idx} className="text-slate-300 flex items-start gap-2">
+                          <span className="text-purple-400 mt-1">•</span>
+                          <span>{trigger}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
+                {currentTask.learn?.overview?.pmi_hierarchy && currentTask.learn.overview.pmi_hierarchy.length > 0 && (
+                  <div className="glass-card p-6 border-l-4 border-emerald-500">
+                    <h3 className="executive-font text-lg font-semibold text-white mb-4 uppercase tracking-wide">PMI Hierarchy of Conflict Resolution</h3>
+                    <div className="space-y-3">
+                      {currentTask.learn.overview.pmi_hierarchy.map((item, idx) => (
+                        <div key={idx} className="border-l-2 border-emerald-500/50 pl-4">
+                          <div className="flex items-center gap-3 mb-1">
+                            <span className="text-2xl">{item.emoji}</span>
+                            <span className="font-semibold text-white">{item.rank}. {item.mode}</span>
+                          </div>
+                          <p className="text-sm text-slate-300 mb-1"><span className="font-semibold">When:</span> {item.when}</p>
+                          <p className="text-sm text-emerald-400 italic">{item.exam_tip}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {currentTask.learn?.overview?.quick_scenarios && currentTask.learn.overview.quick_scenarios.length > 0 && (
+                  <div className="glass-card p-6 border-l-4 border-cyan-500">
+                    <h3 className="executive-font text-lg font-semibold text-white mb-4 uppercase tracking-wide">Quick Scenarios</h3>
+                    <div className="space-y-4">
+                      {currentTask.learn.overview.quick_scenarios.map((scenario, idx) => (
+                        <div key={idx} className="border-l-2 border-cyan-500/50 pl-4">
+                          <p className="text-white font-semibold mb-2">{scenario.scenario}</p>
+                          <p className="text-sm text-red-400 mb-1"><span className="font-semibold">Wrong:</span> {scenario.wrong_answer}</p>
+                          <p className="text-sm text-emerald-400 mb-1"><span className="font-semibold">Right:</span> {scenario.right_answer}</p>
+                          <p className="text-sm text-slate-400 italic">{scenario.why}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {!currentTask.learn?.overview && !currentTask.learn?.definition && (
+                  <div className="glass-card p-10 border-l-4 border-blue-500 bg-white/[0.02]">
+                    <p className="text-3xl text-white font-light italic leading-tight">"Briefing Locked."</p>
+                  </div>
+                )}
               </div>
           ) : (
             <div className="grid grid-cols-12 gap-8 animate-fadeIn">
