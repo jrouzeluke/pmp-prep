@@ -76,10 +76,45 @@ const PMPApp = () => {
   });
 
   useEffect(() => {
-    fetch('./data/taskData.json')
-      .then(res => res.json())
-      .then(data => setTaskDatabase(data))
-      .catch(err => console.error("Data Load Failure", err));
+    // Load taskData.json with timeout to prevent hanging
+    let timeoutId;
+    const controller = new AbortController();
+    
+    const fetchData = async () => {
+      timeoutId = setTimeout(() => {
+        console.warn("taskData.json fetch timed out after 10 seconds");
+        controller.abort();
+        setTaskDatabase({}); // Set empty object so app can continue
+      }, 10000); // 10 second timeout
+      
+      try {
+        const response = await fetch('./data/taskData.json', { signal: controller.signal });
+        if (timeoutId) clearTimeout(timeoutId);
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        setTaskDatabase(data);
+      } catch (err) {
+        if (timeoutId) clearTimeout(timeoutId);
+        if (err.name !== 'AbortError') {
+          console.error("Data Load Failure", err);
+        }
+        // Don't block the app - set empty database so app can still render
+        setTaskDatabase({});
+      }
+    };
+    
+    fetchData();
+    
+    return () => {
+      if (timeoutId) clearTimeout(timeoutId);
+      if (!controller.signal.aborted) {
+        controller.abort();
+      }
+    };
   }, []);
 
   // Lightning Round Timer Effect
@@ -141,45 +176,71 @@ const PMPApp = () => {
     }
   }, [view, lightningRoundState.timeRemaining, lightningRoundState.quizStarted, lightningRoundState.showingFeedback, lightningRoundState.showEndScreen, selectedTask, taskDatabase]);
 
-  // Load Batch 1 content files
+  // Load Batch 1 content files (non-blocking with timeout)
   useEffect(() => {
+    // Set default activities immediately so UI doesn't break
+    const defaultActivities = [
+      { name: 'PM Simulator Lightning Round', file: '5_activity_pm_simulator.md', duration: '20-30 min' },
+      { name: 'Document Detective', file: '6_activity_document_detective.md', duration: '30-40 min' },
+      { name: 'Timeline Reconstructor', file: '7_activity_timeline_reconstructor.md', duration: '30-40 min' },
+      { name: 'Relationship Matcher', file: '8_activity_relationship_matcher.md', duration: '30 min' },
+      { name: 'Empathy Exercise', file: '9_activity_empathy_exercise.md', duration: '40 min' }
+    ];
+    
+    setBatch1Content(prev => ({
+      ...prev,
+      activities: defaultActivities
+    }));
+    
     const loadBatch1Content = async () => {
+      const fetchWithTimeout = async (url, timeout = 3000) => {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), timeout);
+        
+        try {
+          const response = await fetch(url, { signal: controller.signal });
+          clearTimeout(timeoutId);
+          return response.ok ? await response.text() : '';
+        } catch (err) {
+          clearTimeout(timeoutId);
+          // Silently fail - content will just be empty
+          return '';
+        }
+      };
+      
       try {
-        const [overview, pmpConnection, tuckmansModel, leadershipStyles] = await Promise.all([
-          fetch('./contentbatch1-lead_team/1_overview.md').then(r => r.ok ? r.text() : ''),
-          fetch('./contentbatch1-lead_team/2_pmp_connection.md').then(r => r.ok ? r.text() : ''),
-          fetch('./contentbatch1-lead_team/3_tuckmans_model.md').then(r => r.ok ? r.text() : ''),
-          fetch('./contentbatch1-lead_team/4_leadership_styles.md').then(r => r.ok ? r.text() : '')
+        const [overview, pmpConnection, tuckmansModel, leadershipStyles] = await Promise.allSettled([
+          fetchWithTimeout('./contentbatch1-lead_team/1_overview.md', 3000),
+          fetchWithTimeout('./contentbatch1-lead_team/2_pmp_connection.md', 3000),
+          fetchWithTimeout('./contentbatch1-lead_team/3_tuckmans_model.md', 3000),
+          fetchWithTimeout('./contentbatch1-lead_team/4_leadership_styles.md', 3000)
         ]);
         
         setBatch1Content({
-          overview,
-          pmpConnection,
-          tuckmansModel,
-          leadershipStyles,
-          activities: [
-            { name: 'PM Simulator Lightning Round', file: '5_activity_pm_simulator.md', duration: '20-30 min' },
-            { name: 'Document Detective', file: '6_activity_document_detective.md', duration: '30-40 min' },
-            { name: 'Timeline Reconstructor', file: '7_activity_timeline_reconstructor.md', duration: '30-40 min' },
-            { name: 'Relationship Matcher', file: '8_activity_relationship_matcher.md', duration: '30 min' },
-            { name: 'Empathy Exercise', file: '9_activity_empathy_exercise.md', duration: '40 min' }
-          ]
+          overview: overview.status === 'fulfilled' ? overview.value : '',
+          pmpConnection: pmpConnection.status === 'fulfilled' ? pmpConnection.value : '',
+          tuckmansModel: tuckmansModel.status === 'fulfilled' ? tuckmansModel.value : '',
+          leadershipStyles: leadershipStyles.status === 'fulfilled' ? leadershipStyles.value : '',
+          activities: defaultActivities
         });
       } catch (err) {
-        console.error("Batch 1 Content Load Failure", err);
+        // Already set defaults above, so just continue
+        console.warn("Batch 1 Content Load Failure (non-critical):", err);
       }
     };
     
+    // Load in background - don't block app
     loadBatch1Content();
   }, []);
 
-  if (!taskDatabase) return (
+  // Show loading only if taskDatabase hasn't been initialized yet (null, not empty object)
+  if (taskDatabase === null) return (
     <div className="text-center p-20 animate-pulse">
       <h1 className="executive-font text-4xl text-white font-semibold tracking-tight">Initializing PMP Prep Center...</h1>
     </div>
   );
 
-  const currentTask = taskDatabase[selectedTask] || { learn: {}, practice: { checklist: [], reflex_prompts: [], stress_test: [] } };
+  const currentTask = (taskDatabase && taskDatabase[selectedTask]) || { learn: {}, practice: { checklist: [], reflex_prompts: [], stress_test: [] } };
 
   // Progress tracking helper functions
   const recordActivityCompletion = (taskName, activityName, score = null, metadata = {}) => {
