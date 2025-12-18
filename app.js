@@ -58,6 +58,12 @@ const PMPApp = () => {
     showingInsight: false,
     reflections: {}
   });
+  
+  // Progress Tracking State
+  const [progressData, setProgressData] = useState({
+    completedActivities: {}, // { 'taskName': { 'activityName': { completed: true, completedAt: 'date', attempts: 1, bestScore: 0 } } }
+    activityScores: {} // { 'taskName': { 'activityName': [{ attempt: 1, score: 0, date: 'date', ... }] } }
+  });
 
   useEffect(() => {
     fetch('./data/taskData.json')
@@ -132,6 +138,63 @@ const PMPApp = () => {
   );
 
   const currentTask = taskDatabase[selectedTask] || { learn: {}, practice: { checklist: [], reflex_prompts: [], stress_test: [] } };
+
+  // Progress tracking helper functions
+  const recordActivityCompletion = (taskName, activityName, score = null, metadata = {}) => {
+    const date = new Date().toISOString().split('T')[0];
+    
+    setProgressData(prev => {
+      const newCompleted = { ...prev.completedActivities };
+      const newScores = { ...prev.activityScores };
+      
+      // Initialize task if needed
+      if (!newCompleted[taskName]) newCompleted[taskName] = {};
+      if (!newScores[taskName]) newScores[taskName] = {};
+      
+      // Update completion data
+      const existingCompletion = newCompleted[taskName][activityName] || { attempts: 0, bestScore: 0 };
+      newCompleted[taskName][activityName] = {
+        completed: true,
+        completedAt: existingCompletion.completedAt || date,
+        attempts: existingCompletion.attempts + 1,
+        bestScore: score !== null ? Math.max(existingCompletion.bestScore || 0, score) : existingCompletion.bestScore,
+        lastAttempted: date,
+        ...metadata
+      };
+      
+      // Update scores array
+      if (score !== null) {
+        if (!newScores[taskName][activityName]) newScores[taskName][activityName] = [];
+        newScores[taskName][activityName].push({
+          attempt: existingCompletion.attempts + 1,
+          score,
+          date,
+          ...metadata
+        });
+      }
+      
+      return {
+        completedActivities: newCompleted,
+        activityScores: newScores
+      };
+    });
+  };
+
+  const getActivityProgress = (taskName, activityName) => {
+    return progressData.completedActivities[taskName]?.[activityName] || null;
+  };
+
+  const getTaskMastery = (taskName) => {
+    const activities = ['pm-simulator', 'lightning-round', 'document-detective', 'conflict-matcher', 'timeline-reconstructor', 'empathy-exercise'];
+    const completed = activities.filter(activity => 
+      progressData.completedActivities[taskName]?.[activity]?.completed
+    ).length;
+    
+    if (completed === 0) return { level: 'not-started', completed, total: 6, label: 'Not Started', color: 'slate' };
+    if (completed <= 3) return { level: 'in-progress', completed, total: 6, label: 'In Progress', color: 'yellow' };
+    if (completed <= 5) return { level: 'advanced', completed, total: 6, label: 'Advanced', color: 'orange' };
+    return { level: 'mastered', completed, total: 6, label: 'Mastered', color: 'emerald' };
+  };
 
   const GlobalNavFooter = () => (
     <div className="flex justify-center gap-8 mt-12 border-t border-white/10 pt-8">
@@ -2376,15 +2439,28 @@ const PMPApp = () => {
           <div key={d} className="glass-card p-6 border-t-4 border-blue-500/50">
             <h3 className="executive-font text-blue-400 mb-6 uppercase text-sm font-bold tracking-widest">{d}</h3>
             <div className="space-y-1 h-[450px] overflow-y-auto pr-2 custom-scrollbar">
-              {tasks.map(t => (
-                <button 
-                  key={t} 
-                  onClick={() => { setSelectedTask(t); setView('task-interstitial'); }} 
-                  className="task-btn"
-                >
-                  {t}
-                </button>
-              ))}
+              {tasks.map(t => {
+                const mastery = getTaskMastery(t);
+                const progressBars = '■'.repeat(mastery.completed) + '□'.repeat(mastery.total - mastery.completed);
+                const colorClass = mastery.color === 'slate' ? 'text-slate-500' : mastery.color === 'yellow' ? 'text-yellow-500' : mastery.color === 'orange' ? 'text-orange-500' : 'text-emerald-500';
+                
+                return (
+                  <button 
+                    key={t} 
+                    onClick={() => { setSelectedTask(t); setView('task-interstitial'); }} 
+                    className="task-btn relative"
+                  >
+                    <div className="flex items-center justify-between">
+                      <span>{t}</span>
+                      {mastery.completed > 0 && (
+                        <span className={`text-xs font-mono ${colorClass}`} title={mastery.label}>
+                          {progressBars}
+                        </span>
+                      )}
+                    </div>
+                  </button>
+                );
+              })}
             </div>
           </div>
         ))}
@@ -2430,58 +2506,53 @@ const PMPApp = () => {
       
       {/* Activity Cards Grid - 3x2 */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <button 
-          onClick={() => setView('pm-simulator')}
-          className="glass-card p-8 text-left hover:bg-blue-500/10 transition-all border-l-4 border-blue-500 min-h-[200px] transform hover:scale-105 hover:shadow-2xl hover:shadow-blue-500/20"
+        {[
+          { name: 'pm-simulator', emoji: '🎯', title: 'PM Simulator', desc: 'Branching scenarios with consequences', color: 'blue', borderColor: 'border-blue-500', hoverColor: 'hover:bg-blue-500/10', shadowColor: 'hover:shadow-blue-500/20' },
+          { name: 'lightning-round', emoji: '⚡', title: 'Lightning Round', desc: 'Fast-paced quiz - 10 questions', color: 'yellow', borderColor: 'border-yellow-500', hoverColor: 'hover:bg-yellow-500/10', shadowColor: 'hover:shadow-yellow-500/20' },
+          { name: 'document-detective', emoji: '🕵️', title: 'Document Detective', desc: 'Match documents to scenarios', color: 'purple', borderColor: 'border-purple-500', hoverColor: 'hover:bg-purple-500/10', shadowColor: 'hover:shadow-purple-500/20' },
+          { name: 'conflict-matcher', emoji: '🧩', title: 'Conflict Mode Matcher', desc: 'Drag-drop conflict modes', color: 'emerald', borderColor: 'border-emerald-500', hoverColor: 'hover:bg-emerald-500/10', shadowColor: 'hover:shadow-emerald-500/20' },
+          { name: 'timeline-reconstructor', emoji: '📋', title: 'Timeline Reconstructor', desc: 'Order resolution steps', color: 'cyan', borderColor: 'border-cyan-500', hoverColor: 'hover:bg-cyan-500/10', shadowColor: 'hover:shadow-cyan-500/20' },
+          { name: 'empathy-exercise', emoji: '👥', title: 'Empathy Exercise', desc: 'See all perspectives', color: 'rose', borderColor: 'border-rose-500', hoverColor: 'hover:bg-rose-500/10', shadowColor: 'hover:shadow-rose-500/20' }
+        ].map(activity => {
+          const progress = getActivityProgress(selectedTask, activity.name);
+          const isCompleted = progress?.completed;
+          const bestScore = progress?.bestScore;
+          const lastAttempted = progress?.lastAttempted;
+          
+          return (
+            <button
+              key={activity.name}
+              onClick={() => setView(activity.name)}
+              className={`glass-card p-8 text-left ${activity.hoverColor} transition-all ${isCompleted ? 'border-l-4 border-emerald-500' : activity.borderColor} min-h-[200px] transform hover:scale-105 hover:shadow-2xl ${activity.shadowColor} relative`}
+            >
+              {isCompleted && (
+                <div className="absolute top-4 right-4 text-2xl">✓</div>
+              )}
+              <div className="text-6xl mb-4">{activity.emoji}</div>
+              <h3 className="executive-font text-2xl font-semibold text-white mb-3">{activity.title}</h3>
+              <p className="text-slate-400 text-sm mb-2">{activity.desc}</p>
+              {isCompleted && (
+                <div className="mt-3 pt-3 border-t border-white/10">
+                  {bestScore > 0 && (
+                    <p className="text-emerald-400 text-xs font-semibold mb-1">Best: {bestScore.toLocaleString()} pts</p>
+                  )}
+                  {lastAttempted && (
+                    <p className="text-slate-500 text-xs">Last: {new Date(lastAttempted).toLocaleDateString()}</p>
+                  )}
+                </div>
+              )}
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Progress Stats Button */}
+      <div className="flex justify-center mb-8">
+        <button
+          onClick={() => setView('progress-stats')}
+          className="px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-lg transition-colors executive-font"
         >
-          <div className="text-6xl mb-4">🎯</div>
-          <h3 className="executive-font text-2xl font-semibold text-white mb-3">PM Simulator</h3>
-          <p className="text-slate-400 text-sm">Branching scenarios with consequences</p>
-        </button>
-        
-        <button 
-          onClick={() => setView('lightning-round')}
-          className="glass-card p-8 text-left hover:bg-yellow-500/10 transition-all border-l-4 border-yellow-500 min-h-[200px] transform hover:scale-105 hover:shadow-2xl hover:shadow-yellow-500/20"
-        >
-          <div className="text-6xl mb-4">⚡</div>
-          <h3 className="executive-font text-2xl font-semibold text-white mb-3">Lightning Round</h3>
-          <p className="text-slate-400 text-sm">Fast-paced quiz - 10 questions</p>
-        </button>
-        
-        <button 
-          onClick={() => setView('document-detective')}
-          className="glass-card p-8 text-left hover:bg-purple-500/10 transition-all border-l-4 border-purple-500 min-h-[200px] transform hover:scale-105 hover:shadow-2xl hover:shadow-purple-500/20"
-        >
-          <div className="text-6xl mb-4">🕵️</div>
-          <h3 className="executive-font text-2xl font-semibold text-white mb-3">Document Detective</h3>
-          <p className="text-slate-400 text-sm">Match documents to scenarios</p>
-        </button>
-        
-        <button 
-          onClick={() => setView('conflict-matcher')}
-          className="glass-card p-8 text-left hover:bg-emerald-500/10 transition-all border-l-4 border-emerald-500 min-h-[200px] transform hover:scale-105 hover:shadow-2xl hover:shadow-emerald-500/20"
-        >
-          <div className="text-6xl mb-4">🧩</div>
-          <h3 className="executive-font text-2xl font-semibold text-white mb-3">Conflict Mode Matcher</h3>
-          <p className="text-slate-400 text-sm">Drag-drop conflict modes</p>
-        </button>
-        
-        <button 
-          onClick={() => setView('timeline-reconstructor')}
-          className="glass-card p-8 text-left hover:bg-cyan-500/10 transition-all border-l-4 border-cyan-500 min-h-[200px] transform hover:scale-105 hover:shadow-2xl hover:shadow-cyan-500/20"
-        >
-          <div className="text-6xl mb-4">📋</div>
-          <h3 className="executive-font text-2xl font-semibold text-white mb-3">Timeline Reconstructor</h3>
-          <p className="text-slate-400 text-sm">Order resolution steps</p>
-        </button>
-        
-        <button 
-          onClick={() => setView('empathy-exercise')}
-          className="glass-card p-8 text-left hover:bg-rose-500/10 transition-all border-l-4 border-rose-500 min-h-[200px] transform hover:scale-105 hover:shadow-2xl hover:shadow-rose-500/20"
-        >
-          <div className="text-6xl mb-4">👥</div>
-          <h3 className="executive-font text-2xl font-semibold text-white mb-3">Empathy Exercise</h3>
-          <p className="text-slate-400 text-sm">See all perspectives</p>
+          View Progress Stats →
         </button>
       </div>
 
