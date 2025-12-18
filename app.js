@@ -38,6 +38,12 @@ const PMPApp = () => {
     showingFeedback: false,
     score: 0
   });
+  const [conflictMatcherState, setConflictMatcherState] = useState({
+    matches: {}, // { scenarioId: mode }
+    showingFeedback: false,
+    score: 0,
+    draggedScenario: null
+  });
 
   useEffect(() => {
     fetch('./data/taskData.json')
@@ -875,12 +881,367 @@ const PMPApp = () => {
     );
   }
 
+  // Conflict Mode Matcher Activity View
+  if (view === 'conflict-matcher') {
+    const conflictMatcherScenarios = currentTask.practice?.conflict_matcher || [
+      {
+        id: 1,
+        scenario: "Two developers disagree on API design during Sprint Planning. Both have valid technical arguments.",
+        correctMode: "COLLABORATE",
+        explanation: "Technical decisions benefit from collaborative discussion to find the best solution that leverages both perspectives.",
+        examTip: "For technical disagreements between team members, collaboration is almost always the best answer."
+      },
+      {
+        id: 2,
+        scenario: "Team member consistently misses daily standup. When asked, they say it's not important.",
+        correctMode: "CONFRONT",
+        explanation: "Address issues directly with facts and empathy. This is a behavior that needs correction.",
+        examTip: "When someone isn't following agreed processes, confront (direct but respectful) is the right first step."
+      },
+      {
+        id: 3,
+        scenario: "Emergency: Production system down. Two experts suggest different fixes. Decision needed NOW.",
+        correctMode: "FORCE",
+        explanation: "In emergency situations, use expertise and authority to make fast decision. Document rationale afterwards.",
+        examTip: "Force mode is only correct for emergencies, safety issues, or legal/ethical violations."
+      },
+      {
+        id: 4,
+        scenario: "Designer prefers blue interface, you prefer green. Both work. Issue is minor.",
+        correctMode: "ACCOMMODATE",
+        explanation: "When the issue is minor and the other party is the expert (designer), accommodating preserves relationship and leverages their expertise.",
+        examTip: "Accommodate when issue is minor and relationship/expertise matters more than the specific choice."
+      },
+      {
+        id: 5,
+        scenario: "Two departments want same resource for overlapping timeframes. Both projects critical. Budget is fixed.",
+        correctMode: "COMPROMISE",
+        explanation: "When both parties have equal legitimate needs and time/budget constraints prevent full satisfaction, compromise finds middle ground.",
+        examTip: "Compromise is acceptable when time is limited and both parties can give ground."
+      },
+      {
+        id: 6,
+        scenario: "Two team members have minor disagreement about meeting time. One prefers morning, one prefers afternoon.",
+        correctMode: "COLLABORATE",
+        explanation: "Even for minor issues, collaboration builds team ownership and may reveal creative solutions (e.g., alternating times).",
+        examTip: "PMI prefers collaboration whenever possible, even for minor issues."
+      }
+    ];
+
+    const conflictModes = [
+      { name: "COLLABORATE", emoji: "🤝", color: "emerald" },
+      { name: "CONFRONT", emoji: "🎯", color: "blue" },
+      { name: "COMPROMISE", emoji: "⚖️", color: "yellow" },
+      { name: "ACCOMMODATE", emoji: "🤝", color: "orange" },
+      { name: "FORCE", emoji: "⚠️", color: "red" },
+      { name: "AVOID", emoji: "❌", color: "slate" }
+    ];
+
+    const handleDragStart = (scenarioId) => {
+      setConflictMatcherState(prev => ({ ...prev, draggedScenario: scenarioId }));
+    };
+
+    const handleDragOver = (e) => {
+      e.preventDefault();
+    };
+
+    const handleDrop = (modeName) => {
+      if (!conflictMatcherState.draggedScenario) return;
+      
+      setConflictMatcherState(prev => ({
+        ...prev,
+        matches: { ...prev.matches, [prev.draggedScenario]: modeName },
+        draggedScenario: null
+      }));
+    };
+
+    const handleClickSelect = (scenarioId, modeName) => {
+      setConflictMatcherState(prev => ({
+        ...prev,
+        matches: { ...prev.matches, [scenarioId]: modeName },
+        draggedScenario: null
+      }));
+    };
+
+    const checkAnswers = () => {
+      let correctCount = 0;
+      conflictMatcherScenarios.forEach(scenario => {
+        if (conflictMatcherState.matches[scenario.id] === scenario.correctMode) {
+          correctCount++;
+        }
+      });
+
+      setConflictMatcherState(prev => ({
+        ...prev,
+        showingFeedback: true,
+        score: correctCount
+      }));
+    };
+
+    const resetGame = () => {
+      setConflictMatcherState({
+        matches: {},
+        showingFeedback: false,
+        score: 0,
+        draggedScenario: null
+      });
+    };
+
+    const goToPracticeHub = () => {
+      resetGame();
+      setView('practice-hub');
+    };
+
+    const allMatched = Object.keys(conflictMatcherState.matches).length === conflictMatcherScenarios.length;
+
+    // Feedback Screen
+    if (conflictMatcherState.showingFeedback) {
+      return (
+        <div className="max-w-7xl w-full p-10 animate-fadeIn text-left">
+          <header className="mb-8">
+            <div className="flex items-center gap-4 mb-6">
+              <button 
+                onClick={goToPracticeHub}
+                className="px-4 py-2 executive-font text-xs text-slate-400 hover:text-white uppercase font-semibold transition-colors flex items-center gap-2"
+              >
+                ← Back
+              </button>
+            </div>
+            <h1 className="executive-font text-5xl font-bold text-white tracking-tight">🧩 Conflict Mode Matcher</h1>
+          </header>
+
+          {/* Score Display */}
+          <div className="glass-card p-6 mb-6 text-center">
+            <h2 className="executive-font text-3xl font-bold text-white mb-2">
+              Score: {conflictMatcherState.score}/6
+            </h2>
+            {conflictMatcherState.score === 6 && (
+              <p className="text-emerald-400 text-xl font-bold animate-pulse">🎉 Perfect! All matches correct! 🎉</p>
+            )}
+          </div>
+
+          {/* Feedback for each scenario */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            {conflictMatcherScenarios.map(scenario => {
+              const userMatch = conflictMatcherState.matches[scenario.id];
+              const isCorrect = userMatch === scenario.correctMode;
+
+              return (
+                <div 
+                  key={scenario.id} 
+                  className={`glass-card p-6 border-l-4 ${
+                    isCorrect ? 'border-emerald-500' : 'border-red-500'
+                  }`}
+                >
+                  <div className="flex items-start gap-3 mb-4">
+                    <span className="text-3xl">{isCorrect ? '✅' : '❌'}</span>
+                    <div className="flex-1">
+                      <p className="text-white mb-2">{scenario.scenario}</p>
+                      <div className="flex items-center gap-2 mb-2">
+                        <span className="text-xs text-slate-400">Your match:</span>
+                        <span className={`px-2 py-1 rounded text-xs font-semibold ${
+                          isCorrect ? 'bg-emerald-500/20 text-emerald-400' : 'bg-red-500/20 text-red-400'
+                        }`}>
+                          {userMatch || 'No match'}
+                        </span>
+                      </div>
+                      {!isCorrect && (
+                        <div className="flex items-center gap-2 mb-2">
+                          <span className="text-xs text-slate-400">Correct:</span>
+                          <span className="px-2 py-1 rounded text-xs font-semibold bg-emerald-500/20 text-emerald-400">
+                            {scenario.correctMode}
+                          </span>
+                        </div>
+                      )}
+                      {isCorrect && (
+                        <span className="text-emerald-400 font-bold text-sm">+100 points</span>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="mt-4 space-y-3">
+                    <div>
+                      <span className="text-sm font-semibold text-white">Why {scenario.correctMode}:</span>
+                      <p className="text-sm text-slate-300 mt-1">{scenario.explanation}</p>
+                    </div>
+                    {scenario.examTip && (
+                      <div className="bg-blue-500/10 p-3 rounded border-l-2 border-blue-500">
+                        <p className="text-xs text-blue-400 italic">{scenario.examTip}</p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Action Buttons */}
+          <div className="flex gap-4">
+            <button 
+              onClick={resetGame}
+              className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors executive-font"
+            >
+              Try Again
+            </button>
+            <button 
+              onClick={goToPracticeHub}
+              className="px-6 py-3 bg-slate-700 hover:bg-slate-600 text-white font-semibold rounded-lg transition-colors executive-font"
+            >
+              Back to Practice Hub
+            </button>
+          </div>
+          <GlobalNavFooter />
+        </div>
+      );
+    }
+
+    // Game Display
+    return (
+      <div className="max-w-7xl w-full p-10 animate-fadeIn text-left">
+        <header className="mb-8">
+          <div className="flex items-center gap-4 mb-6">
+            <button 
+              onClick={goToPracticeHub}
+              className="px-4 py-2 executive-font text-xs text-slate-400 hover:text-white uppercase font-semibold transition-colors flex items-center gap-2"
+            >
+              ← Back
+            </button>
+          </div>
+          <h1 className="executive-font text-5xl font-bold text-white tracking-tight">🧩 Conflict Mode Matcher</h1>
+          <p className="text-slate-400 mt-2">Drag each scenario to the correct conflict mode, or click scenario then select mode</p>
+        </header>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-6">
+          {/* Left Column - Scenarios */}
+          <div>
+            <h2 className="executive-font text-2xl font-bold text-white mb-4">Scenarios</h2>
+            <div className="space-y-4">
+              {conflictMatcherScenarios.map(scenario => {
+                const isMatched = conflictMatcherState.matches[scenario.id];
+                const isDragging = conflictMatcherState.draggedScenario === scenario.id;
+
+                if (isMatched) return null; // Don't show matched scenarios
+
+                return (
+                  <div
+                    key={scenario.id}
+                    draggable
+                    onDragStart={() => handleDragStart(scenario.id)}
+                    onClick={() => setConflictMatcherState(prev => ({ ...prev, draggedScenario: scenario.id }))}
+                    className={`glass-card p-4 cursor-move transition-all ${
+                      isDragging ? 'opacity-50 scale-95' : 'hover:scale-105'
+                    } ${!isMatched ? 'animate-pulse' : ''}`}
+                    style={{ boxShadow: isDragging ? '0 8px 16px rgba(0,0,0,0.3)' : 'none' }}
+                  >
+                    <p className="text-white text-sm">{scenario.scenario}</p>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Right Column - Conflict Modes */}
+          <div>
+            <h2 className="executive-font text-2xl font-bold text-white mb-4">Conflict Modes</h2>
+            <div className="space-y-4">
+              {conflictModes.map(mode => {
+                const matchedScenarioId = Object.keys(conflictMatcherState.matches).find(
+                  id => conflictMatcherState.matches[id] === mode.name
+                );
+                const matchedScenario = matchedScenarioId ? 
+                  conflictMatcherScenarios.find(s => s.id === parseInt(matchedScenarioId)) : null;
+                const isEmpty = !matchedScenario;
+                const borderColor = isEmpty ? 'border-slate-600' : mode.color === 'emerald' ? 'border-emerald-500' : mode.color === 'blue' ? 'border-blue-500' : mode.color === 'yellow' ? 'border-yellow-500' : mode.color === 'orange' ? 'border-orange-500' : mode.color === 'red' ? 'border-red-500' : 'border-slate-500';
+
+                return (
+                  <div
+                    key={mode.name}
+                    onDragOver={handleDragOver}
+                    onDrop={() => handleDrop(mode.name)}
+                    onClick={() => conflictMatcherState.draggedScenario && handleClickSelect(conflictMatcherState.draggedScenario, mode.name)}
+                    className={`glass-card p-4 border-2 transition-all cursor-pointer ${
+                      isEmpty 
+                        ? 'border-dashed border-slate-600 hover:border-cyan-500' 
+                        : `border-solid ${borderColor}`
+                    }`}
+                  >
+                    <div className="flex items-center gap-3 mb-2">
+                      <span className="text-2xl">{mode.emoji}</span>
+                      <span className="executive-font text-lg font-semibold text-white">{mode.name}</span>
+                    </div>
+                    {matchedScenario ? (
+                      <div className="mt-3 pt-3 border-t border-white/10">
+                        <p className="text-slate-300 text-sm">{matchedScenario.scenario}</p>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setConflictMatcherState(prev => {
+                              const newMatches = { ...prev.matches };
+                              delete newMatches[matchedScenario.id];
+                              return { ...prev, matches: newMatches };
+                            });
+                          }}
+                          className="text-xs text-red-400 hover:text-red-300 mt-2"
+                        >
+                          Remove
+                        </button>
+                      </div>
+                    ) : (
+                      <p className="text-slate-500 text-xs mt-2">Drop scenario here or click to select</p>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+
+        {/* Click-to-Select Alternative (for accessibility) */}
+        {conflictMatcherState.draggedScenario && (
+          <div className="glass-card p-4 mb-6">
+            <p className="text-slate-400 text-sm mb-3">Select conflict mode for this scenario:</p>
+            <div className="flex flex-wrap gap-2">
+              {conflictModes.map(mode => (
+                <button
+                  key={mode.name}
+                  onClick={() => handleClickSelect(conflictMatcherState.draggedScenario, mode.name)}
+                  className="px-4 py-2 glass-card hover:bg-blue-500/10 text-white text-sm transition-colors"
+                >
+                  {mode.emoji} {mode.name}
+                </button>
+              ))}
+              <button
+                onClick={() => setConflictMatcherState(prev => ({ ...prev, draggedScenario: null }))}
+                className="px-4 py-2 glass-card hover:bg-red-500/10 text-red-400 text-sm transition-colors"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Check Answers Button */}
+        <div className="flex justify-center">
+          <button
+            onClick={checkAnswers}
+            disabled={!allMatched}
+            className={`px-8 py-4 font-semibold rounded-lg transition-colors executive-font text-lg ${
+              allMatched
+                ? 'bg-emerald-600 hover:bg-emerald-700 text-white'
+                : 'bg-slate-700 text-slate-400 cursor-not-allowed'
+            }`}
+          >
+            Check Answers ({Object.keys(conflictMatcherState.matches).length}/6)
+          </button>
+        </div>
+        <GlobalNavFooter />
+      </div>
+    );
+  }
+
   // Placeholder views for other activities
-  if (view === 'document-detective' || view === 'conflict-matcher' || view === 'timeline-reconstructor' || view === 'empathy-exercise') {
+  if (view === 'timeline-reconstructor' || view === 'empathy-exercise') {
     const activityNames = {
-      'lightning-round': 'Lightning Round',
-      'document-detective': 'Document Detective',
-      'conflict-matcher': 'Conflict Mode Matcher',
       'timeline-reconstructor': 'Timeline Reconstructor',
       'empathy-exercise': 'Empathy Exercise'
     };
