@@ -556,81 +556,122 @@ const PMPApp = () => {
   );
 
   if (view === 'learn-hub') return (
-    <div className="max-w-6xl w-full p-10 glass-card animate-fadeIn shadow-2xl text-left">
-      <header className="flex justify-between items-end mb-10 executive-header">
-          <h1 className="executive-font text-5xl font-bold text-white tracking-tight">{selectedTask}</h1>
-          <div className="flex gap-6">
-              <button onClick={() => setSubView('overview')} className={`px-4 py-2 executive-font text-xs font-semibold uppercase transition-all ${subView === 'overview' ? 'text-blue-400 border-b-2 border-blue-400' : 'text-slate-500'}`}>Overview</button>
-              <button onClick={() => setSubView('pmp-application')} className={`px-4 py-2 executive-font text-xs font-semibold uppercase transition-all ${subView === 'pmp-application' ? 'text-purple-400 border-b-2 border-purple-400' : 'text-slate-500'}`}>PMP Application</button>
-              <button onClick={() => setSubView('execution')} className={`px-4 py-2 executive-font text-xs font-semibold uppercase transition-all ${subView === 'execution' ? 'text-emerald-400 border-b-2 border-emerald-400' : 'text-slate-500'}`}>Execution</button>
-              <button onClick={() => setSubView('deep-dive')} className={`px-4 py-2 executive-font text-xs font-semibold uppercase transition-all ${subView === 'deep-dive' ? 'text-cyan-400 border-b-2 border-cyan-400' : 'text-slate-500'}`}>Deep Dive</button>
-          </div>
+    <div className="max-w-6xl w-full p-10 animate-fadeIn text-left">
+      {/* Header with Back Button */}
+      <header className="mb-8">
+        <div className="flex items-center gap-4 mb-6">
+          <button 
+            onClick={() => setView('task-interstitial')}
+            className="px-4 py-2 executive-font text-xs text-slate-400 hover:text-white uppercase font-semibold transition-colors flex items-center gap-2"
+          >
+            ← Back
+          </button>
+        </div>
+        <h1 className="executive-font text-5xl font-bold text-white tracking-tight mb-6">{selectedTask}</h1>
+        
+        {/* Tab Navigation */}
+        <div className="flex gap-8 border-b border-white/10">
+          <button 
+            onClick={() => setSubView('overview')} 
+            className={`px-4 py-3 executive-font text-xs font-semibold uppercase transition-all relative ${
+              subView === 'overview' 
+                ? 'text-white border-b-2 border-cyan-400' 
+                : 'text-slate-500 hover:text-slate-300'
+            }`}
+          >
+            Overview
+          </button>
+          <button 
+            onClick={() => setSubView('pmp-application')} 
+            className={`px-4 py-3 executive-font text-xs font-semibold uppercase transition-all relative ${
+              subView === 'pmp-application' 
+                ? 'text-white border-b-2 border-cyan-400' 
+                : 'text-slate-500 hover:text-slate-300'
+            }`}
+          >
+            PMP Application
+          </button>
+          <button 
+            onClick={() => setSubView('deep-dive')} 
+            className={`px-4 py-3 executive-font text-xs font-semibold uppercase transition-all relative ${
+              subView === 'deep-dive' 
+                ? 'text-white border-b-2 border-cyan-400' 
+                : 'text-slate-500 hover:text-slate-300'
+            }`}
+          >
+            Deep Dive
+          </button>
+        </div>
       </header>
-      <div className="min-h-[300px]">
-          {subView === 'overview' ? (
-              <div className="space-y-6 animate-fadeIn">
-                {currentTask.learn?.overview?.definition && (
-                  <div className="glass-card p-10 border-l-4 border-blue-500 bg-white/[0.02]">
-                    <h3 className="executive-font text-xl font-semibold text-white mb-4 uppercase tracking-wide">Definition</h3>
-                    <p className="text-3xl text-white font-light italic leading-tight">"{currentTask.learn.overview.definition}"</p>
-                  </div>
-                )}
-                
-                {currentTask.learn?.overview?.exam_triggers && currentTask.learn.overview.exam_triggers.length > 0 && (
-                  <div className="glass-card p-6 border-l-4 border-purple-500">
-                    <h3 className="executive-font text-lg font-semibold text-white mb-4 uppercase tracking-wide">Exam Triggers</h3>
-                    <ul className="space-y-2">
-                      {currentTask.learn.overview.exam_triggers.map((trigger, idx) => (
-                        <li key={idx} className="text-slate-300 flex items-start gap-2">
-                          <span className="text-purple-400 mt-1">•</span>
-                          <span>{trigger}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
 
-                {currentTask.learn?.overview?.pmi_hierarchy && currentTask.learn.overview.pmi_hierarchy.length > 0 && (
-                  <div className="glass-card p-6 border-l-4 border-emerald-500">
-                    <h3 className="executive-font text-lg font-semibold text-white mb-4 uppercase tracking-wide">PMI Hierarchy of Conflict Resolution</h3>
-                    <div className="space-y-3">
-                      {currentTask.learn.overview.pmi_hierarchy.map((item, idx) => (
-                        <div key={idx} className="border-l-2 border-emerald-500/50 pl-4">
-                          <div className="flex items-center gap-3 mb-1">
-                            <span className="text-2xl">{item.emoji}</span>
-                            <span className="font-semibold text-white">{item.rank}. {item.mode}</span>
-                          </div>
-                          <p className="text-sm text-slate-300 mb-1"><span className="font-semibold">When:</span> {item.when}</p>
-                          <p className="text-sm text-emerald-400 italic">{item.exam_tip}</p>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {currentTask.learn?.overview?.quick_scenarios && currentTask.learn.overview.quick_scenarios.length > 0 && (
-                  <div className="glass-card p-6 border-l-4 border-cyan-500">
-                    <h3 className="executive-font text-lg font-semibold text-white mb-4 uppercase tracking-wide">Quick Scenarios</h3>
-                    <div className="space-y-4">
-                      {currentTask.learn.overview.quick_scenarios.map((scenario, idx) => (
-                        <div key={idx} className="border-l-2 border-cyan-500/50 pl-4">
-                          <p className="text-white font-semibold mb-2">{scenario.scenario}</p>
-                          <p className="text-sm text-red-400 mb-1"><span className="font-semibold">Wrong:</span> {scenario.wrong_answer}</p>
-                          <p className="text-sm text-emerald-400 mb-1"><span className="font-semibold">Right:</span> {scenario.right_answer}</p>
-                          <p className="text-sm text-slate-400 italic">{scenario.why}</p>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {!currentTask.learn?.overview && !currentTask.learn?.definition && (
-                  <div className="glass-card p-10 border-l-4 border-blue-500 bg-white/[0.02]">
-                    <p className="text-3xl text-white font-light italic leading-tight">"Briefing Locked."</p>
-                  </div>
-                )}
+      {/* Content Area with Smooth Transitions */}
+      <div className="min-h-[400px] max-h-[70vh] overflow-y-auto custom-scrollbar">
+        {subView === 'overview' && (
+          <div className="space-y-6 animate-fadeIn">
+            {currentTask.learn?.overview?.definition && (
+              <div className="glass-card p-10 border-l-4 border-blue-500 bg-white/[0.02]">
+                <h3 className="executive-font text-xl font-semibold text-white mb-4 uppercase tracking-wide">Definition</h3>
+                <p className="text-3xl text-white font-light italic leading-tight">"{currentTask.learn.overview.definition}"</p>
               </div>
-          ) : subView === 'pmp-application' ? (
+            )}
+            
+            {currentTask.learn?.overview?.exam_triggers && currentTask.learn.overview.exam_triggers.length > 0 && (
+              <div className="glass-card p-6 border-l-4 border-purple-500">
+                <h3 className="executive-font text-lg font-semibold text-white mb-4 uppercase tracking-wide">Exam Triggers</h3>
+                <ul className="space-y-2">
+                  {currentTask.learn.overview.exam_triggers.map((trigger, idx) => (
+                    <li key={idx} className="text-slate-300 flex items-start gap-2">
+                      <span className="text-purple-400 mt-1">•</span>
+                      <span>{trigger}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {currentTask.learn?.overview?.pmi_hierarchy && currentTask.learn.overview.pmi_hierarchy.length > 0 && (
+              <div className="glass-card p-6 border-l-4 border-emerald-500">
+                <h3 className="executive-font text-lg font-semibold text-white mb-4 uppercase tracking-wide">PMI Hierarchy of Conflict Resolution</h3>
+                <div className="space-y-3">
+                  {currentTask.learn.overview.pmi_hierarchy.map((item, idx) => (
+                    <div key={idx} className="border-l-2 border-emerald-500/50 pl-4">
+                      <div className="flex items-center gap-3 mb-1">
+                        <span className="text-2xl">{item.emoji}</span>
+                        <span className="font-semibold text-white">{item.rank}. {item.mode}</span>
+                      </div>
+                      <p className="text-sm text-slate-300 mb-1"><span className="font-semibold">When:</span> {item.when}</p>
+                      <p className="text-sm text-emerald-400 italic">{item.exam_tip}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {currentTask.learn?.overview?.quick_scenarios && currentTask.learn.overview.quick_scenarios.length > 0 && (
+              <div className="glass-card p-6 border-l-4 border-cyan-500">
+                <h3 className="executive-font text-lg font-semibold text-white mb-4 uppercase tracking-wide">Quick Scenarios</h3>
+                <div className="space-y-4">
+                  {currentTask.learn.overview.quick_scenarios.map((scenario, idx) => (
+                    <div key={idx} className="border-l-2 border-cyan-500/50 pl-4">
+                      <p className="text-white font-semibold mb-2">{scenario.scenario}</p>
+                      <p className="text-sm text-red-400 mb-1"><span className="font-semibold">Wrong:</span> {scenario.wrong_answer}</p>
+                      <p className="text-sm text-emerald-400 mb-1"><span className="font-semibold">Right:</span> {scenario.right_answer}</p>
+                      <p className="text-sm text-slate-400 italic">{scenario.why}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {!currentTask.learn?.overview && !currentTask.learn?.definition && (
+              <div className="glass-card p-10 border-l-4 border-blue-500 bg-white/[0.02]">
+                <p className="text-3xl text-white font-light italic leading-tight">"Briefing Locked."</p>
+              </div>
+            )}
+          </div>
+        )}
+
+        {subView === 'pmp-application' && (
             <div className="space-y-6 animate-fadeIn">
               {currentTask.learn?.pmp_application?.exam_strategy && (
                 <div className="glass-card p-6 border-l-4 border-purple-500">
@@ -688,24 +729,10 @@ const PMPApp = () => {
                 </div>
               )}
             </div>
-          ) : subView === 'execution' ? (
-            <div className="grid grid-cols-12 gap-8 animate-fadeIn">
-                <div className="col-span-6 glass-card p-8 border-l-4 border-purple-500 bg-purple-500/5">
-                  <h3 className="executive-font text-lg font-semibold text-white mb-4 uppercase tracking-wide">Agile Mindset</h3>
-                  <p className="text-slate-200 text-sm italic">{currentTask.practice?.agile_mindset || "Mindset Analysis Pending."}</p>
-                </div>
-                <div className="col-span-6 glass-card p-8 border-l-4 border-emerald-500 bg-emerald-500/5">
-                  <h3 className="executive-font text-lg font-semibold text-white mb-4 uppercase tracking-wide">Key Checklists</h3>
-                  {currentTask.practice?.checklist?.map(item => (
-                    <div key={item} className="text-xs text-slate-400 uppercase font-semibold mb-2 flex items-center gap-2">
-                      <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full"></div>
-                      {item}
-                    </div>
-                  ))}
-                </div>
-            </div>
-          ) : subView === 'deep-dive' ? (
-            <div className="space-y-6 animate-fadeIn">
+        )}
+
+        {subView === 'deep-dive' && (
+          <div className="space-y-6 animate-fadeIn">
               {currentTask.learn?.deep_dive?.foundational_concept && (
                 <div className="glass-card p-6 border-l-4 border-blue-500">
                   <h3 className="executive-font text-xl font-semibold text-white mb-4 uppercase tracking-wide">Foundational Concept</h3>
@@ -773,8 +800,20 @@ const PMPApp = () => {
                   </div>
                 </div>
               )}
-            </div>
-          ) : null}
+
+              {currentTask.learn?.deep_dive?.emotional_intelligence_connection && (
+                <div className="glass-card p-6 border-l-4 border-cyan-500">
+                  <h3 className="executive-font text-xl font-semibold text-white mb-4 uppercase tracking-wide">Emotional Intelligence Connection</h3>
+                  <div className="text-slate-300 space-y-3 text-sm">
+                    <div><span className="font-semibold text-white">Self-Awareness:</span> {currentTask.learn.deep_dive.emotional_intelligence_connection.self_awareness}</div>
+                    <div><span className="font-semibold text-white">Self-Management:</span> {currentTask.learn.deep_dive.emotional_intelligence_connection.self_management}</div>
+                    <div><span className="font-semibold text-white">Social Awareness:</span> {currentTask.learn.deep_dive.emotional_intelligence_connection.social_awareness}</div>
+                    <div><span className="font-semibold text-white">Relationship Management:</span> {currentTask.learn.deep_dive.emotional_intelligence_connection.relationship_management}</div>
+                  </div>
+                </div>
+              )}
+          </div>
+        )}
       </div>
       <GlobalNavFooter />
     </div>
