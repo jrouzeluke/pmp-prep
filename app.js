@@ -10,7 +10,7 @@ const PMPApp = () => {
   const [view, setView] = useState('executive-hud');
   const [selectedTask, setSelectedTask] = useState('Manage Conflict');
   const [taskDatabase, setTaskDatabase] = useState(null);
-  const [subView, setSubView] = useState('fundamentals');
+  const [subView, setSubView] = useState('overview');
 
   useEffect(() => {
     fetch('./data/taskData.json')
@@ -27,13 +27,17 @@ const PMPApp = () => {
 
   const currentTask = taskDatabase[selectedTask] || { learn: {}, practice: { checklist: [], reflex_prompts: [], stress_test: [] } };
 
-  const GlobalFooter = () => (
+  const GlobalNavFooter = () => (
     <div className="flex justify-center gap-8 mt-12 border-t border-white/10 pt-8">
-        <button onClick={() => setView('briefing')} className="text-xs text-slate-400 uppercase font-semibold hover:text-blue-400 transition-colors executive-font">Learning Lab</button>
-        <button onClick={() => setView('strategy-suite')} className="text-xs text-slate-400 uppercase font-semibold hover:text-purple-400 transition-colors executive-font">Strategy Suite</button>
-        <button onClick={() => setView('executive-hud')} className="text-xs text-slate-400 uppercase font-semibold hover:text-blue-400 transition-colors executive-font">Dashboard</button>
+        <button onClick={() => setView('learn-hub')} className="text-xs text-slate-400 uppercase font-semibold hover:text-blue-400 transition-colors executive-font">Learn</button>
+        <button onClick={() => setView('practice-hub')} className="text-xs text-slate-400 uppercase font-semibold hover:text-purple-400 transition-colors executive-font">Practice</button>
+        <button onClick={() => setView('strategy-suite')} className="text-xs text-slate-400 uppercase font-semibold hover:text-emerald-400 transition-colors executive-font">Tasks</button>
+        <button onClick={() => setView('executive-hud')} className="text-xs text-slate-400 uppercase font-semibold hover:text-blue-400 transition-colors executive-font">Home</button>
     </div>
   );
+
+  // Keep old GlobalFooter for backward compatibility if needed
+  const GlobalFooter = GlobalNavFooter;
 
   // Practice Quizzes View
   if (view === 'practice-quizzes') return (
@@ -78,7 +82,7 @@ const PMPApp = () => {
       >
         ← Back to Dashboard
       </button>
-      <GlobalFooter />
+      <GlobalNavFooter />
     </div>
   );
 
@@ -182,12 +186,12 @@ const PMPApp = () => {
       </div>
 
       <button 
-        onClick={() => setView('briefing')} 
+        onClick={() => setView('learn-hub')} 
         className="mt-8 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors executive-font"
       >
         ← Back to Learning
       </button>
-      <GlobalFooter />
+      <GlobalNavFooter />
     </div>
   );
 
@@ -239,7 +243,7 @@ const PMPApp = () => {
       >
         ← Back to Task
       </button>
-      <GlobalFooter />
+      <GlobalNavFooter />
     </div>
   );
 
@@ -327,7 +331,7 @@ const PMPApp = () => {
       >
         ← Back to Dashboard
       </button>
-      <GlobalFooter />
+      <GlobalNavFooter />
     </div>
   );
 
@@ -438,7 +442,7 @@ const PMPApp = () => {
           <div className="text-slate-400 text-sm">Full-length 180-question practice exam</div>
           </button>
       </div>
-      <GlobalFooter />
+      <GlobalNavFooter />
     </div>
   );
 
@@ -466,38 +470,104 @@ const PMPApp = () => {
           </div>
         ))}
       </div>
-      <GlobalFooter />
+      <GlobalNavFooter />
     </div>
   );
 
   if (view === 'task-interstitial') return (
     <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/95 p-12 animate-fadeIn text-left">
-      <div className="max-w-4xl w-full p-16 glass-card border-white/10 shadow-2xl">
+      <div className="max-w-5xl w-full p-16 glass-card border-white/10 shadow-2xl">
           <h1 className="executive-font text-5xl font-bold text-white mb-16 tracking-tight text-center">{selectedTask}</h1>
           <div className="grid grid-cols-2 gap-8 text-center">
-              <button onClick={() => setView('briefing')} className="executive-btn p-12 border-blue-500/30 hover:bg-blue-500/10 transition-all">
-                <h3 className="executive-font text-3xl text-blue-400 font-bold">Learn</h3>
+              <button onClick={() => setView('learn-hub')} className="executive-btn p-16 border-blue-500/30 hover:bg-blue-500/10 transition-all">
+                <h3 className="executive-font text-4xl text-blue-400 font-bold mb-3">Learn</h3>
+                <p className="text-slate-400 text-sm">Explore concepts and strategies</p>
               </button>
-              <button onClick={() => setView('activity-picker')} className="executive-btn p-12 border-purple-500/30 hover:bg-purple-500/10 transition-all">
-                <h3 className="executive-font text-3xl text-purple-400 font-bold">Practice Hub</h3>
+              <button onClick={() => setView('practice-hub')} className="executive-btn p-16 border-purple-500/30 hover:bg-purple-500/10 transition-all">
+                <h3 className="executive-font text-4xl text-purple-400 font-bold mb-3">Practice Hub</h3>
+                <p className="text-slate-400 text-sm">Practice with exercises and quizzes</p>
               </button>
           </div>
-          <GlobalFooter />
+          <GlobalNavFooter />
       </div>
     </div>
   );
 
-  if (view === 'briefing') return (
+  // Practice Hub View
+  if (view === 'practice-hub') return (
+    <div className="max-w-7xl w-full p-10 animate-fadeIn text-left">
+      <div className="executive-header mb-10">
+        <h1 className="executive-font text-5xl font-bold text-white mb-2 tracking-tight">Practice Hub</h1>
+        <p className="text-slate-400 text-lg">Choose your practice activity for {selectedTask}</p>
+      </div>
+      
+      <div className="grid grid-cols-3 gap-6 mb-8">
+        <button 
+          onClick={() => {/* Checklist Practice */}}
+          className="glass-card p-8 text-left hover:bg-purple-500/10 transition-all border-l-4 border-purple-500"
+        >
+          <h3 className="executive-font text-2xl font-semibold text-white mb-3">Checklist Practice</h3>
+          <p className="text-slate-400 text-sm">Review and practice key checklists for this task</p>
+        </button>
+        
+        <button 
+          onClick={() => {/* Reflex Prompts */}}
+          className="glass-card p-8 text-left hover:bg-blue-500/10 transition-all border-l-4 border-blue-500"
+        >
+          <h3 className="executive-font text-2xl font-semibold text-white mb-3">Reflex Prompts</h3>
+          <p className="text-slate-400 text-sm">Practice quick decision-making scenarios</p>
+        </button>
+        
+        <button 
+          onClick={() => {/* Stress Test */}}
+          className="glass-card p-8 text-left hover:bg-rose-500/10 transition-all border-l-4 border-rose-500"
+        >
+          <h3 className="executive-font text-2xl font-semibold text-white mb-3">Stress Test</h3>
+          <p className="text-slate-400 text-sm">Challenge yourself with advanced scenarios</p>
+        </button>
+        
+        <button 
+          onClick={() => setView('practice-quizzes')}
+          className="glass-card p-8 text-left hover:bg-emerald-500/10 transition-all border-l-4 border-emerald-500"
+        >
+          <h3 className="executive-font text-2xl font-semibold text-white mb-3">Quick Quiz</h3>
+          <p className="text-slate-400 text-sm">Test your knowledge with practice questions</p>
+        </button>
+
+        <button 
+          onClick={() => {/* Activity Picker */}}
+          className="glass-card p-8 text-left hover:bg-cyan-500/10 transition-all border-l-4 border-cyan-500"
+        >
+          <h3 className="executive-font text-2xl font-semibold text-white mb-3">Activity Picker</h3>
+          <p className="text-slate-400 text-sm">Browse all available practice activities</p>
+        </button>
+
+        <button 
+          onClick={() => {/* Mock Exam */}}
+          className="glass-card p-8 text-left hover:bg-yellow-500/10 transition-all border-l-4 border-yellow-500"
+        >
+          <h3 className="executive-font text-2xl font-semibold text-white mb-3">Mock Exam</h3>
+          <p className="text-slate-400 text-sm">Full-length exam simulation</p>
+        </button>
+      </div>
+
+      <GlobalNavFooter />
+    </div>
+  );
+
+  if (view === 'learn-hub') return (
     <div className="max-w-6xl w-full p-10 glass-card animate-fadeIn shadow-2xl text-left">
       <header className="flex justify-between items-end mb-10 executive-header">
           <h1 className="executive-font text-5xl font-bold text-white tracking-tight">{selectedTask}</h1>
-          <div className="flex gap-8">
-              <button onClick={() => setSubView('fundamentals')} className={`px-4 py-2 executive-font text-xs font-semibold uppercase transition-all ${subView === 'fundamentals' ? 'text-blue-400 border-b-2 border-blue-400' : 'text-slate-500'}`}>Fundamentals</button>
-              <button onClick={() => setSubView('execution')} className={`px-4 py-2 executive-font text-xs font-semibold uppercase transition-all ${subView === 'execution' ? 'text-purple-400 border-b-2 border-purple-400' : 'text-slate-500'}`}>Execution</button>
+          <div className="flex gap-6">
+              <button onClick={() => setSubView('overview')} className={`px-4 py-2 executive-font text-xs font-semibold uppercase transition-all ${subView === 'overview' ? 'text-blue-400 border-b-2 border-blue-400' : 'text-slate-500'}`}>Overview</button>
+              <button onClick={() => setSubView('pmp-application')} className={`px-4 py-2 executive-font text-xs font-semibold uppercase transition-all ${subView === 'pmp-application' ? 'text-purple-400 border-b-2 border-purple-400' : 'text-slate-500'}`}>PMP Application</button>
+              <button onClick={() => setSubView('execution')} className={`px-4 py-2 executive-font text-xs font-semibold uppercase transition-all ${subView === 'execution' ? 'text-emerald-400 border-b-2 border-emerald-400' : 'text-slate-500'}`}>Execution</button>
+              <button onClick={() => setSubView('deep-dive')} className={`px-4 py-2 executive-font text-xs font-semibold uppercase transition-all ${subView === 'deep-dive' ? 'text-cyan-400 border-b-2 border-cyan-400' : 'text-slate-500'}`}>Deep Dive</button>
           </div>
       </header>
       <div className="min-h-[300px]">
-          {subView === 'fundamentals' ? (
+          {subView === 'overview' ? (
               <div className="space-y-6 animate-fadeIn">
                 {currentTask.learn?.overview?.definition && (
                   <div className="glass-card p-10 border-l-4 border-blue-500 bg-white/[0.02]">
@@ -560,12 +630,72 @@ const PMPApp = () => {
                   </div>
                 )}
               </div>
-          ) : (
+          ) : subView === 'pmp-application' ? (
+            <div className="space-y-6 animate-fadeIn">
+              {currentTask.learn?.pmp_application?.exam_strategy && (
+                <div className="glass-card p-6 border-l-4 border-purple-500">
+                  <h3 className="executive-font text-xl font-semibold text-white mb-4 uppercase tracking-wide">Exam Strategy</h3>
+                  <p className="text-slate-300">{currentTask.learn.pmp_application.exam_strategy}</p>
+                </div>
+              )}
+
+              {currentTask.learn?.pmp_application?.question_patterns && currentTask.learn.pmp_application.question_patterns.length > 0 && (
+                <div className="glass-card p-6 border-l-4 border-blue-500">
+                  <h3 className="executive-font text-xl font-semibold text-white mb-4 uppercase tracking-wide">Question Patterns</h3>
+                  <div className="space-y-4">
+                    {currentTask.learn.pmp_application.question_patterns.map((pattern, idx) => (
+                      <div key={idx} className="border-l-2 border-blue-500/50 pl-4">
+                        <h4 className="font-semibold text-white mb-2">{pattern.pattern}</h4>
+                        <p className="text-sm text-slate-300 mb-2">{pattern.setup}</p>
+                        <div className="text-sm space-y-1 mb-2">
+                          <p className="text-red-400"><span className="font-semibold">Distractor 1:</span> {pattern.distractor_1} - {pattern.why_wrong_1}</p>
+                          <p className="text-red-400"><span className="font-semibold">Distractor 2:</span> {pattern.distractor_2} - {pattern.why_wrong_2}</p>
+                          <p className="text-red-400"><span className="font-semibold">Distractor 3:</span> {pattern.distractor_3} - {pattern.why_wrong_3}</p>
+                        </div>
+                        <p className="text-emerald-400 font-semibold"><span className="font-bold">Correct:</span> {pattern.correct}</p>
+                        <p className="text-sm text-emerald-300 italic">{pattern.why_correct}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {currentTask.learn?.pmp_application?.agile_vs_traditional && (
+                <div className="grid grid-cols-2 gap-6">
+                  <div className="glass-card p-6 border-l-4 border-orange-500">
+                    <h4 className="executive-font text-lg font-semibold text-white mb-3">Traditional Context</h4>
+                    <div className="text-sm text-slate-300 space-y-2">
+                      <p><span className="font-semibold">PM Role:</span> {currentTask.learn.pmp_application.agile_vs_traditional.traditional_context.pm_role}</p>
+                      <p><span className="font-semibold">Approach:</span> {currentTask.learn.pmp_application.agile_vs_traditional.traditional_context.approach}</p>
+                      <p><span className="font-semibold">Escalation:</span> {currentTask.learn.pmp_application.agile_vs_traditional.traditional_context.escalation}</p>
+                    </div>
+                  </div>
+                  <div className="glass-card p-6 border-l-4 border-emerald-500">
+                    <h4 className="executive-font text-lg font-semibold text-white mb-3">Agile Context</h4>
+                    <div className="text-sm text-slate-300 space-y-2">
+                      <p><span className="font-semibold">PM Role:</span> {currentTask.learn.pmp_application.agile_vs_traditional.agile_context.pm_role}</p>
+                      <p><span className="font-semibold">Approach:</span> {currentTask.learn.pmp_application.agile_vs_traditional.agile_context.approach}</p>
+                      <p><span className="font-semibold">Escalation:</span> {currentTask.learn.pmp_application.agile_vs_traditional.agile_context.escalation}</p>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {currentTask.learn?.pmp_application?.decision_tree_visual && (
+                <div className="glass-card p-6 border-l-4 border-cyan-500">
+                  <h3 className="executive-font text-xl font-semibold text-white mb-4 uppercase tracking-wide">Decision Tree</h3>
+                  <p className="text-slate-300 font-mono text-sm">{currentTask.learn.pmp_application.decision_tree_visual}</p>
+                </div>
+              )}
+            </div>
+          ) : subView === 'execution' ? (
             <div className="grid grid-cols-12 gap-8 animate-fadeIn">
                 <div className="col-span-6 glass-card p-8 border-l-4 border-purple-500 bg-purple-500/5">
+                  <h3 className="executive-font text-lg font-semibold text-white mb-4 uppercase tracking-wide">Agile Mindset</h3>
                   <p className="text-slate-200 text-sm italic">{currentTask.practice?.agile_mindset || "Mindset Analysis Pending."}</p>
                 </div>
                 <div className="col-span-6 glass-card p-8 border-l-4 border-emerald-500 bg-emerald-500/5">
+                  <h3 className="executive-font text-lg font-semibold text-white mb-4 uppercase tracking-wide">Key Checklists</h3>
                   {currentTask.practice?.checklist?.map(item => (
                     <div key={item} className="text-xs text-slate-400 uppercase font-semibold mb-2 flex items-center gap-2">
                       <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full"></div>
@@ -574,20 +704,86 @@ const PMPApp = () => {
                   ))}
                 </div>
             </div>
-          )}
+          ) : subView === 'deep-dive' ? (
+            <div className="space-y-6 animate-fadeIn">
+              {currentTask.learn?.deep_dive?.foundational_concept && (
+                <div className="glass-card p-6 border-l-4 border-blue-500">
+                  <h3 className="executive-font text-xl font-semibold text-white mb-4 uppercase tracking-wide">Foundational Concept</h3>
+                  <div className="text-slate-300 space-y-3">
+                    <p>{currentTask.learn.deep_dive.foundational_concept}</p>
+                  </div>
+                </div>
+              )}
+
+              {currentTask.learn?.deep_dive?.thomas_kilmann_model && (
+                <div className="glass-card p-6 border-l-4 border-purple-500">
+                  <h3 className="executive-font text-xl font-semibold text-white mb-4 uppercase tracking-wide">Thomas-Kilmann Conflict Model</h3>
+                  <div className="text-slate-300 space-y-4">
+                    <p className="mb-4">{currentTask.learn.deep_dive.thomas_kilmann_model.description}</p>
+                    {currentTask.learn.deep_dive.thomas_kilmann_model.five_modes && (
+                      <div className="space-y-4">
+                        {currentTask.learn.deep_dive.thomas_kilmann_model.five_modes.map((mode, idx) => (
+                          <div key={idx} className="border-l-2 border-purple-500/50 pl-4">
+                            <h4 className="font-semibold text-white mb-2">{mode.mode}</h4>
+                            <p className="text-sm mb-2">{mode.description}</p>
+                            <div className="text-xs text-slate-400">
+                              <div className="mb-1"><span className="font-semibold">Assertiveness:</span> {mode.assertiveness}</div>
+                              <div className="mb-1"><span className="font-semibold">Cooperativeness:</span> {mode.cooperativeness}</div>
+                              <div className="mb-1"><span className="font-semibold">Outcome:</span> {mode.outcome}</div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {currentTask.learn?.deep_dive?.step_by_step_process && (
+                <div className="glass-card p-6 border-l-4 border-emerald-500">
+                  <h3 className="executive-font text-xl font-semibold text-white mb-4 uppercase tracking-wide">Step-by-Step Process</h3>
+                  <div className="text-slate-300 space-y-4">
+                    {currentTask.learn.deep_dive.step_by_step_process.map((step, idx) => (
+                      <div key={idx} className="border-l-2 border-emerald-500/50 pl-4">
+                        <h4 className="font-semibold text-white mb-2">Step {step.step}: {step.title}</h4>
+                        {step.actions && (
+                          <ul className="list-disc list-inside space-y-1 text-sm">
+                            {step.actions.map((action, actionIdx) => (
+                              <li key={actionIdx}>{action}</li>
+                            ))}
+                          </ul>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {currentTask.learn?.deep_dive?.common_mistakes && (
+                <div className="glass-card p-6 border-l-4 border-rose-500">
+                  <h3 className="executive-font text-xl font-semibold text-white mb-4 uppercase tracking-wide">Common Mistakes</h3>
+                  <div className="text-slate-300 space-y-3">
+                    {currentTask.learn.deep_dive.common_mistakes.map((mistake, idx) => (
+                      <div key={idx} className="border-l-2 border-rose-500/50 pl-4">
+                        <h4 className="font-semibold text-white mb-1">{mistake.mistake}</h4>
+                        <p className="text-sm text-slate-400 mb-1"><span className="font-semibold">Consequence:</span> {mistake.consequence}</p>
+                        <p className="text-sm text-emerald-400"><span className="font-semibold">Correction:</span> {mistake.correction}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          ) : null}
       </div>
-      <div className="grid grid-cols-2 gap-6 mt-12 pt-8 border-t border-white/10">
-          <button onClick={() => setView('deep-dive')} className="executive-btn py-6 executive-font text-sm text-blue-400 font-semibold uppercase tracking-widest hover:bg-blue-400/10 transition-all text-center shadow-lg">Deep Dive Analysis</button>
-          <button onClick={() => setView('activity-picker')} className="bg-purple-600 py-6 rounded-xl executive-font text-sm text-white font-semibold uppercase tracking-widest shadow-2xl hover:bg-purple-700 transition-all text-center">Let's Practice</button>
-      </div>
-      <GlobalFooter />
+      <GlobalNavFooter />
     </div>
   );
 
   return (
     <div className="p-20 text-center">
       <h1 className="executive-font text-4xl text-white animate-pulse font-semibold">Initializing PMP Prep Center...</h1>
-      <GlobalFooter />
+      <GlobalNavFooter />
     </div>
   );
 };
