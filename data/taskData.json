@@ -1,212 +1,672 @@
 {
   "Manage Conflict": {
-    "learn": {
-      "definition": "Professional friction over competing priorities, not personal 'fighting'.",
-      "context": "Peak during 'Storming'; PM facilitates transition to 'Norming'.",
-      "path": "Collaborate (Win-Win) first; Compromise is a fallback.",
-      "boundary": "Resolve peer disputes internally; do not escalate to Sponsor."
+      "learn": {
+        "overview": {
+          "definition": "Apply emotional intelligence and interpersonal skills to navigate disagreements, reach consensus, and maintain team productivity while preserving relationships.",
+          "exam_triggers": [
+            "Two team members disagree",
+            "Stakeholder conflict",
+            "Resource allocation dispute",
+            "Technical approach disagreement",
+            "Scope change argument"
+          ],
+          "pmi_hierarchy": [
+            {
+              "rank": 1,
+              "mode": "Collaborate/Problem-Solve",
+              "emoji": "⭐",
+              "when": "Important issue + Time available",
+              "exam_tip": "Almost always the best answer for team conflicts"
+            },
+            {
+              "rank": 2,
+              "mode": "Confront/Direct",
+              "emoji": "🎯",
+              "when": "Facts need discussion",
+              "exam_tip": "Good for addressing issues directly with data"
+            },
+            {
+              "rank": 3,
+              "mode": "Compromise",
+              "emoji": "⚖️",
+              "when": "Time is limited",
+              "exam_tip": "Acceptable when deadline pressure exists"
+            },
+            {
+              "rank": 4,
+              "mode": "Smooth/Accommodate",
+              "emoji": "🤝",
+              "when": "Relationship more important than issue",
+              "exam_tip": "Rarely correct on exam - can enable problems"
+            },
+            {
+              "rank": 5,
+              "mode": "Force/Direct",
+              "emoji": "⚠️",
+              "when": "Emergency or safety issue ONLY",
+              "exam_tip": "Only when immediate decision required"
+            },
+            {
+              "rank": 6,
+              "mode": "Avoid/Withdraw",
+              "emoji": "❌",
+              "when": "NEVER on the exam",
+              "exam_tip": "Almost always the wrong answer"
+            }
+          ],
+          "quick_scenarios": [
+            {
+              "scenario": "Two developers argue over database architecture during Sprint planning",
+              "wrong_answer": "Let them work it out (Avoid)",
+              "right_answer": "Facilitate technical discussion to evaluate both approaches (Collaborate)",
+              "why": "Technical decisions benefit from collaborative problem-solving"
+            },
+            {
+              "scenario": "Team member consistently misses daily standup",
+              "wrong_answer": "Ignore it to avoid confrontation (Avoid)",
+              "right_answer": "Private conversation to understand root cause (Confront)",
+              "why": "Address issues directly with facts and empathy"
+            },
+            {
+              "scenario": "Client demands feature outside approved scope",
+              "wrong_answer": "Add it to keep client happy (Smooth)",
+              "right_answer": "Discuss scope, timeline, budget impact with client (Confront)",
+              "why": "Scope changes require honest discussion of trade-offs"
+            }
+          ],
+          "visual_note": "Display hierarchy as vertical flowchart with color coding: Green (Collaborate), Blue (Confront), Yellow (Compromise), Orange (Smooth), Red (Force), Gray (Avoid)"
+        },
+        "pmp_application": {
+          "exam_strategy": "The current PMP exam (ECO 2021) focuses on situational judgment. 70% of conflict questions have multiple 'acceptable' answers - you must choose the BEST one. PMI strongly prefers collaborative, servant-leadership approaches over directive/controlling responses.",
+          "question_patterns": [
+            {
+              "pattern": "Team Member Disagreement",
+              "setup": "Two team members have conflicting views on technical approach",
+              "distractor_1": "Make the decision yourself (Force)",
+              "why_wrong_1": "Removes team empowerment and may miss best solution",
+              "distractor_2": "Let them figure it out (Avoid)",
+              "why_wrong_2": "Abdicates PM responsibility to facilitate",
+              "distractor_3": "Split the difference (Compromise)",
+              "why_wrong_3": "May result in suboptimal hybrid solution",
+              "correct": "Facilitate discussion to find best technical solution (Collaborate)",
+              "why_correct": "Leverages team expertise, builds consensus, finds optimal solution"
+            },
+            {
+              "pattern": "Resource Conflict",
+              "setup": "Two departments want the same specialist for overlapping timeframes",
+              "distractor_1": "First come, first served (Force)",
+              "why_wrong_1": "Ignores business priorities and relationships",
+              "distractor_2": "Give each 50% of the time (Compromise)",
+              "why_wrong_2": "May not align with actual project criticality",
+              "distractor_3": "Defer to senior leader to decide (Avoid)",
+              "why_wrong_3": "PM should facilitate, not escalate prematurely",
+              "correct": "Meet with both stakeholders to understand priorities and find win-win (Collaborate)",
+              "why_correct": "May reveal creative solutions like sequencing or alternative resources"
+            },
+            {
+              "pattern": "Performance Issue",
+              "setup": "Team member not following agreed processes, affecting others",
+              "distractor_1": "Publicly address in team meeting (Force)",
+              "why_wrong_1": "Embarrasses team member, damages psychological safety",
+              "distractor_2": "Ignore to avoid conflict (Avoid)",
+              "why_wrong_2": "Problem will escalate, affects team morale",
+              "distractor_3": "Reassign their work to others (Smooth)",
+              "why_wrong_3": "Doesn't address root cause, unfair to other team members",
+              "correct": "Private conversation to understand barriers and provide support (Confront)",
+              "why_correct": "Direct but respectful, focuses on facts, seeks to understand and solve"
+            },
+            {
+              "pattern": "Scope Disagreement",
+              "setup": "Stakeholder insists feature is 'in scope' but it's not documented",
+              "distractor_1": "Add it to keep stakeholder happy (Smooth)",
+              "why_wrong_1": "Scope creep, sets bad precedent, impacts timeline/budget",
+              "distractor_2": "Refuse to discuss it (Force)",
+              "why_wrong_2": "Damages relationship, may be legitimate misunderstanding",
+              "distractor_3": "Add it if they provide extra budget (Compromise)",
+              "why_wrong_3": "Scope should be managed through change control, not negotiations",
+              "correct": "Review scope documentation together, discuss change control process (Confront)",
+              "why_correct": "Fact-based, educational, follows process, preserves relationship"
+            },
+            {
+              "pattern": "Agile Context - Sprint Goal Conflict",
+              "setup": "Product Owner and Dev Team disagree on Sprint capacity",
+              "distractor_1": "PM decides final Sprint commitment (Force)",
+              "why_wrong_1": "Violates Agile principle of team self-organization",
+              "distractor_2": "Let them argue until Sprint Planning ends (Avoid)",
+              "why_wrong_2": "Wastes time, doesn't facilitate resolution",
+              "distractor_3": "Commit to less than Dev Team suggests (Smooth)",
+              "why_wrong_3": "Doesn't address root cause of disagreement",
+              "correct": "Facilitate discussion using velocity data and capacity planning (Collaborate)",
+              "why_correct": "Data-driven, respects both roles, builds shared understanding"
+            }
+          ],
+          "agile_vs_traditional": {
+            "traditional_context": {
+              "pm_role": "Decision maker, conflict resolver",
+              "approach": "May use more directive approaches when appropriate",
+              "escalation": "More hierarchical, may escalate to sponsor faster"
+            },
+            "agile_context": {
+              "pm_role": "Servant leader, facilitator, impediment remover",
+              "approach": "Always prefer collaboration and team empowerment",
+              "escalation": "Team self-resolves when possible, retrospectives for systemic issues"
+            },
+            "exam_tip": "When question mentions 'Agile,' 'Scrum,' 'iterative,' or 'self-organizing team,' ALWAYS favor collaborative, facilitative answers over directive ones."
+          },
+          "wrong_answer_analysis": {
+            "avoid_withdraw": {
+              "why_tempting": "Seems diplomatic, gives space, avoids confrontation",
+              "why_wrong": "Conflicts escalate when ignored, PM must facilitate resolution",
+              "exam_frequency": "Common distractor - appears in ~40% of conflict questions"
+            },
+            "force_direct": {
+              "why_tempting": "Fast, decisive, shows leadership",
+              "why_wrong": "Removes team empowerment, may miss better solutions, damages morale",
+              "when_actually_right": "Safety issues, legal compliance, ethical violations"
+            },
+            "smooth_accommodate": {
+              "why_tempting": "Preserves relationships, seems collaborative",
+              "why_wrong": "Enables problems, creates precedent, unfair to others",
+              "exam_frequency": "Appears reasonable but usually wrong"
+            }
+          },
+          "decision_tree_visual": "START → Is it safety/legal/ethical? YES→Force (document!) | NO→ Time available for discussion? YES→Collaborate (facilitate meeting) | LIMITED→ Confront (direct discussion with data) or Compromise (if both can give ground) | NEVER→ Avoid (almost always wrong)"
+        },
+        "deep_dive": {
+          "foundational_concept": "Conflict is inevitable in projects due to competing priorities, resource constraints, diverse perspectives, and ambiguity. Effective conflict management transforms disagreements into opportunities for innovation, stronger relationships, and better decisions. The goal is not to eliminate conflict but to channel it productively.",
+          "thomas_kilmann_model": {
+            "description": "The Thomas-Kilmann Conflict Mode Instrument (TKI) maps five conflict-handling modes on two dimensions: Assertiveness (pursuing your own concerns) and Cooperativeness (satisfying others' concerns).",
+            "axes": {
+              "assertiveness": "Low to High - How much you push for your position",
+              "cooperativeness": "Low to High - How much you accommodate others"
+            },
+            "five_modes": [
+              {
+                "mode": "Collaborating (Problem-Solving)",
+                "assertiveness": "High",
+                "cooperativeness": "High",
+                "description": "Work WITH the other party to find a solution that fully satisfies both concerns. Requires open dialogue, creative thinking, and willingness to explore alternatives.",
+                "time_required": "Highest - requires discussion, analysis, creativity",
+                "when_to_use": [
+                  "Issue is too important to compromise",
+                  "Goal is to learn and test assumptions",
+                  "Need to merge insights from different perspectives",
+                  "Building commitment through consensus",
+                  "Working through hard feelings that interfere with relationship"
+                ],
+                "real_world_example": "Two senior engineers disagree on system architecture. PM facilitates a technical workshop where they: (1) List requirements and constraints, (2) Evaluate each approach against criteria, (3) Discover a hybrid solution that takes best elements of both proposals, (4) Both feel ownership of final design.",
+                "outcome": "Win-Win - Best solution, strongest buy-in, healthiest long-term relationship",
+                "pm_actions": [
+                  "Schedule dedicated time for discussion",
+                  "Establish ground rules for respectful dialogue",
+                  "Focus on interests, not positions",
+                  "Use objective criteria to evaluate options",
+                  "Encourage creative alternatives",
+                  "Document agreement"
+                ]
+              },
+              {
+                "mode": "Confronting (Forcing/Directing)",
+                "assertiveness": "High",
+                "cooperativeness": "Low",
+                "description": "Push for your position without regard for others' concerns. Use authority, power, or expertise to enforce a decision.",
+                "time_required": "Immediate - unilateral decision",
+                "when_to_use": [
+                  "Emergency requiring quick decision",
+                  "Safety or ethical issue",
+                  "Unpopular action is necessary (layoffs, cancellations)",
+                  "Other party is taking advantage",
+                  "You have critical expertise others lack"
+                ],
+                "real_world_example": "Team member proposes a technical shortcut that violates security standards. PM immediately says no, explains the security requirement, and documents the decision. No room for negotiation on security compliance.",
+                "outcome": "Win-Lose - Fast resolution but may damage relationship and create resentment",
+                "pm_actions": [
+                  "Make decision clearly and firmly",
+                  "Explain rationale (especially if safety/legal/ethical)",
+                  "Document the decision",
+                  "Be prepared to escalate if challenged",
+                  "Follow up to ensure compliance"
+                ],
+                "caution": "Overuse creates adversarial relationships. On PMP exam, only correct for emergencies/safety/ethics."
+              },
+              {
+                "mode": "Compromising (Splitting the Difference)",
+                "assertiveness": "Medium",
+                "cooperativeness": "Medium",
+                "description": "Find a middle ground where each party gives up something. Results in partial satisfaction for both sides.",
+                "time_required": "Moderate - negotiate trade-offs",
+                "when_to_use": [
+                  "Goals are moderately important but not worth collaboration effort",
+                  "Opponents with equal power are strongly committed to mutually exclusive goals",
+                  "Seeking temporary settlement to complex issue",
+                  "Time pressure prevents collaboration",
+                  "Fallback when collaboration or competition fails"
+                ],
+                "real_world_example": "Marketing wants 20 features in MVP, Engineering says 10 is realistic. After discussion of priorities, they agree on 15 features: Marketing's top 10 plus 5 from Engineering's 'doable' list. Neither fully satisfied but project moves forward.",
+                "outcome": "Lose-Lose (or Half-Win) - Both give up something, solution may be suboptimal",
+                "pm_actions": [
+                  "Identify what each party values most",
+                  "Explore trade-offs and priorities",
+                  "Negotiate incremental concessions",
+                  "Ensure both feel they gained something",
+                  "Document the agreement",
+                  "Monitor for lingering resentment"
+                ],
+                "caution": "Neither party fully satisfied. May result in 'Frankenstein' solutions that please no one."
+              },
+              {
+                "mode": "Accommodating (Smoothing)",
+                "assertiveness": "Low",
+                "cooperativeness": "High",
+                "description": "Neglect your own concerns to satisfy others. Give in, yield, or defer to maintain harmony.",
+                "time_required": "Very fast - immediate concession",
+                "when_to_use": [
+                  "Issue is much more important to the other party",
+                  "You realize you're wrong",
+                  "Preserving relationship is paramount",
+                  "Building social capital for future issues",
+                  "Maintaining harmony is critical"
+                ],
+                "real_world_example": "Designer prefers blue interface, PM prefers green. PM realizes: (1) Designer is the expert, (2) Issue is minor, (3) Designer's buy-in matters more than color choice. PM defers to designer's judgment.",
+                "outcome": "Lose-Win - Preserves relationship short-term but issue may resurface",
+                "pm_actions": [
+                  "Clearly communicate you're yielding (not avoiding)",
+                  "Explain your reasoning if appropriate",
+                  "Ensure it's not setting bad precedent",
+                  "Monitor that issue doesn't recurr"
+                ],
+                "caution": "Overuse enables others, builds resentment in you, may ignore legitimate concerns. On exam, usually wrong for significant project issues."
+              },
+              {
+                "mode": "Avoiding (Withdrawing)",
+                "assertiveness": "Low",
+                "cooperativeness": "Low",
+                "description": "Sidestep the issue entirely. Postpone, withdraw, or ignore the conflict.",
+                "time_required": "N/A - no action taken",
+                "when_to_use": [
+                  "Issue is truly trivial",
+                  "Emotions are too high to discuss productively (cool-down period)",
+                  "You need more information before addressing",
+                  "Others can resolve more effectively",
+                  "Issue will resolve itself"
+                ],
+                "real_world_example": "Two team members have heated exchange during standup about code review comments. PM: (1) Ends the meeting professionally, (2) Lets both cool down for 2 hours, (3) Then facilitates private discussion. The brief 'avoidance' was strategic, not permanent.",
+                "outcome": "Lose-Lose - Problem persists or escalates, relationships may deteriorate",
+                "pm_actions": [
+                  "If strategic avoidance: set specific time to revisit",
+                  "If delegating: ensure someone else will address",
+                  "If gathering info: communicate timeline",
+                  "Never use as permanent solution"
+                ],
+                "caution": "On PMP exam, almost ALWAYS the wrong answer. PMI expects PMs to facilitate conflict resolution, not ignore it."
+              }
+            ],
+            "visual_diagram": "2x2 matrix: Y-axis = Assertiveness (Low to High), X-axis = Cooperativeness (Low to High). Quadrants: Top-Left = Forcing, Top-Right = Collaborating, Center = Compromising, Bottom-Left = Avoiding, Bottom-Right = Accommodating"
+          },
+          "step_by_step_process": [
+            {
+              "step": 1,
+              "title": "Recognize Conflict Early",
+              "actions": [
+                "Watch for signs: tension, passive-aggressive behavior, reduced communication, missed commitments",
+                "Don't wait for escalation - address when first noticed",
+                "Create safe environment where team can raise concerns"
+              ]
+            },
+            {
+              "step": 2,
+              "title": "Understand Root Cause",
+              "actions": [
+                "Is it about: Resources? Technical approach? Personality? Process? Priorities?",
+                "Speak privately with each party to understand their perspective",
+                "Separate facts from emotions",
+                "Identify underlying interests, not just stated positions"
+              ]
+            },
+            {
+              "step": 3,
+              "title": "Choose Appropriate Mode",
+              "actions": [
+                "Assess urgency: Emergency? Time available?",
+                "Assess importance: Critical issue? Minor preference?",
+                "Assess relationship: Long-term team? One-time interaction?",
+                "Default to Collaborate when time permits and issue matters"
+              ]
+            },
+            {
+              "step": 4,
+              "title": "Facilitate Resolution",
+              "actions": [
+                "Create neutral space for discussion",
+                "Establish ground rules (respect, listening, focus on issue not person)",
+                "Use active listening and emotional intelligence",
+                "Focus on interests and objectives, not positions",
+                "Generate options together",
+                "Test for agreement"
+              ]
+            },
+            {
+              "step": 5,
+              "title": "Document and Follow Up",
+              "actions": [
+                "Document the agreement (even if informal)",
+                "Clarify next actions and responsibilities",
+                "Set check-in point to ensure resolution holds",
+                "If conflict recurrs, escalate or use different mode",
+                "Capture lessons learned for future conflicts"
+              ]
+            }
+          ],
+          "common_mistakes": [
+            {
+              "mistake": "Ignoring early warning signs",
+              "consequence": "Small issues become major problems",
+              "correction": "Address tensions proactively, create psychological safety for raising concerns"
+            },
+            {
+              "mistake": "Taking sides or making assumptions",
+              "consequence": "Lose credibility as neutral facilitator",
+              "correction": "Listen to all perspectives before forming view, remain impartial"
+            },
+            {
+              "mistake": "Solving the problem yourself instead of facilitating",
+              "consequence": "Removes team empowerment, creates dependency",
+              "correction": "Guide the parties to solve it themselves when possible"
+            },
+            {
+              "mistake": "Focusing on positions rather than interests",
+              "consequence": "Miss creative solutions that satisfy underlying needs",
+              "correction": "Ask 'why' to uncover interests behind stated positions"
+            },
+            {
+              "mistake": "Using same conflict mode for every situation",
+              "consequence": "Ineffective resolution, frustration",
+              "correction": "Assess each conflict and choose appropriate mode strategically"
+            },
+            {
+              "mistake": "Avoiding conflict to 'keep peace'",
+              "consequence": "Problems fester, resentment builds, productivity suffers",
+              "correction": "Recognize that healthy conflict leads to better decisions and innovation"
+            }
+          ],
+          "emotional_intelligence_connection": {
+            "self_awareness": "Recognize your own conflict style preferences and biases. What mode do you overuse? What makes you uncomfortable?",
+            "self_management": "Control your emotional reactions during conflict. Stay calm, objective, and focused on resolution.",
+            "social_awareness": "Read the emotional state of conflicting parties. Adjust your approach based on their stress level, communication style, cultural background.",
+            "relationship_management": "Build trust before conflicts arise. Use conflict as opportunity to strengthen relationships through honest dialogue and fair resolution."
+          }
+        }
+      },
+      "practice": {
+        "checklist": [
+          "Team Charter (defines how team will handle conflicts)",
+          "Communication Management Plan (escalation procedures)",
+          "Resource Management Plan (resource allocation decision criteria)",
+          "Stakeholder Engagement Plan (stakeholder priority matrix)",
+          "Ground Rules (team agreements on behavior)",
+          "Conflict Log (track recurring patterns)"
+        ],
+        "agile_mindset": "In Agile environments, the PM/Scrum Master acts as a servant leader who facilitates team self-organization. Rather than resolving conflicts directly, empower the team to resolve issues themselves during retrospectives, daily standups, or dedicated conflict resolution sessions. The PM removes impediments that prevent resolution, such as lack of information, unclear priorities, or organizational barriers.",
+        "reflex_prompts": [
+          {
+            "id": 1,
+            "question": "Two developers disagree on API design during Sprint Planning. What do you do first?",
+            "options": [
+              "Make the technical decision yourself",
+              "Facilitate discussion to evaluate both approaches",
+              "Escalate to Tech Lead",
+              "Table it and move on"
+            ],
+            "correct": 1,
+            "explanation": "Collaborate mode: Facilitate discussion to leverage both developers' expertise and build consensus. Leads to best technical solution and team buy-in.",
+            "mode_used": "Collaborate"
+          },
+          {
+            "question": "Team member openly challenges your decision in team meeting. What do you do?",
+            "options": [
+              "Defend your decision firmly",
+              "Acknowledge concern and offer to discuss privately after meeting",
+              "Ask team to vote on the decision",
+              "Ignore the challenge and continue"
+            ],
+            "correct": 1,
+            "explanation": "Confront mode: Address the concern professionally but move detailed discussion offline to avoid derailing meeting and provide space for honest dialogue.",
+            "mode_used": "Confront (with respect)"
+          },
+          {
+            "question": "Emergency: Production system down. Two experts suggest different fixes. Decision needed NOW.",
+            "options": [
+              "Facilitate quick discussion of both approaches",
+              "Choose the approach from more senior engineer",
+              "Compromise: try both approaches sequentially",
+              "Escalate to CTO"
+            ],
+            "correct": 1,
+            "explanation": "Force mode: In emergency, use expertise/seniority to make fast decision. Not ideal but appropriate given urgency. Document rationale.",
+            "mode_used": "Force (emergency context)"
+          },
+          {
+            "question": "Designer prefers serif font, you prefer sans-serif for website. Both work. What do you do?",
+            "options": [
+              "Use sans-serif (your preference)",
+              "Defer to designer's expertise",
+              "Compromise with mixed fonts",
+              "Survey users to decide"
+            ],
+            "correct": 1,
+            "explanation": "Accommodate mode: Designer is the expert, issue is minor, relationship and their expertise matter more than your preference.",
+            "mode_used": "Accommodate"
+          },
+          {
+            "question": "Two departments want same resource for overlapping timeframes. Both projects critical. What do you do?",
+            "options": [
+              "First project to request gets resource",
+              "Meet with both stakeholders to explore creative solutions",
+              "Split time 50/50",
+              "Escalate to sponsor to decide"
+            ],
+            "correct": 1,
+            "explanation": "Collaborate mode: Meeting may reveal: (1) Tasks can be sequenced, (2) Alternative resources exist, (3) One project can adjust timeline, (4) Resource can mentor a backup. Win-win possible.",
+            "mode_used": "Collaborate"
+          },
+          {
+            "question": "Stakeholder insists feature is 'clearly in scope' but scope document doesn't include it. What do you do?",
+            "options": [
+              "Add it to avoid conflict",
+              "Refuse to discuss it",
+              "Review scope document together and discuss change control process",
+              "Add it if they approve budget increase"
+            ],
+            "correct": 2,
+            "explanation": "Confront mode: Address with facts (scope document), educate on process (change control), preserve relationship through honest discussion.",
+            "mode_used": "Confront"
+          },
+          {
+            "question": "Team member consistently interrupts others in meetings, reducing psychological safety. What do you do?",
+            "options": [
+              "Ignore it to avoid embarrassing them",
+              "Call them out publicly in next meeting",
+              "Private conversation to address behavior with specific examples",
+              "Implement 'no interrupting' rule for everyone"
+            ],
+            "correct": 2,
+            "explanation": "Confront mode: Private, fact-based, respectful conversation. Focus on impact (others not speaking up), not intent. Provide opportunity to correct.",
+            "mode_used": "Confront"
+          },
+          {
+            "question": "In Agile retrospective, team disagrees on root cause of Sprint failure. Heated debate. What do you do?",
+            "options": [
+              "Determine root cause yourself based on data",
+              "Facilitate root cause analysis using 5 Whys or fishbone",
+              "Postpone discussion until emotions cool",
+              "Vote on most likely root cause"
+            ],
+            "correct": 1,
+            "explanation": "Collaborate mode + Agile mindset: Facilitate structured analysis so team can discover root cause together. Builds shared understanding and commitment to solutions.",
+            "mode_used": "Collaborate (Agile context)"
+          },
+          {
+            "question": "Budget meeting: Marketing wants 40% of budget, Engineering wants 50%. Budget is fixed. What do you do?",
+            "options": [
+              "Allocate 45% to each (compromise)",
+              "Discuss priorities and outcomes needed from each function",
+              "Give more to Engineering (technical needs are critical)",
+              "Escalate to sponsor to allocate"
+            ],
+            "correct": 1,
+            "explanation": "Collaborate mode: Discussion may reveal: Marketing can leverage free channels (reducing need), Engineering can use open-source (reducing cost), or phased approach changes timing of expenses. Explore before defaulting to split.",
+            "mode_used": "Collaborate (first choice) or Compromise (if no creative solution found)"
+          },
+          {
+            "question": "Team member violates safety protocol on construction site. What do you do FIRST?",
+            "options": [
+              "Discuss why safety protocols matter",
+              "Stop work immediately and correct the violation",
+              "Document incident for HR",
+              "Warn them not to do it again"
+            ],
+            "correct": 1,
+            "explanation": "Force mode: Safety violations require immediate action. Stop the unsafe behavior, then follow up with discussion, documentation, and corrective action.",
+            "mode_used": "Force (safety context)"
+          }
+        ],
+        "stress_test": [
+          {
+            "id": 1,
+            "title": "The Architect's Ultimatum",
+            "scenario": "Your senior architect (15 years experience) and a talented new engineer (2 years experience) have reached deadlock on database architecture for a critical microservice. The architect insists on a traditional relational database citing data integrity. The new engineer advocates for NoSQL citing performance and scalability. The architect has said: 'If we go with NoSQL, I can't support it - it's a career-limiting mistake for this company.' The new engineer has privately told you: 'The architect is stuck in 2010. Our competitors are eating us alive with faster tech.' Sprint Planning is in 2 hours. The team is waiting for direction. What do you do?",
+            "options": [
+              {
+                "text": "Side with the architect - experience and organizational knowledge matters, plus you can't afford to lose a senior resource",
+                "analysis": "Force/Accommodate mode. Risks: (1) May actually be wrong technical decision, (2) Demoralizes new engineer, (3) Doesn't address underlying tension, (4) Sets precedent that seniority trumps merit",
+                "outcome": "The NoSQL advocate becomes disengaged, stops contributing ideas. 6 months later, performance issues emerge with relational DB at scale. The new engineer leaves. You lose emerging talent and the team questions your technical judgment.",
+                "next_scenario": 2
+              },
+              {
+                "text": "Side with the new engineer - the architect needs to modernize, and you need to send a message that best ideas win regardless of seniority",
+                "analysis": "Force mode. Risks: (1) Alienates senior architect whose expertise you need, (2) May be premature optimization, (3) Creates 'I told you so' situation if issues arise, (4) Team sees you override experts",
+                "outcome": "Architect becomes passive-aggressive, provides minimal support. When NoSQL issues arise (normal teething problems), architect withholds help. Team fractures into 'old guard' vs 'new guard.' Project delays mount.",
+                "next_scenario": 2
+              },
+              {
+                "text": "Facilitate a structured technical evaluation session: both present their approach against defined criteria (performance, maintainability, team skillset, scalability, cost). Invite other senior engineers. Build consensus.",
+                "analysis": "Collaborate mode. Strengths: (1) Data-driven decision, (2) Respects both perspectives, (3) May reveal hybrid solution, (4) Team learns evaluation process, (5) Buy-in from entire team. Challenges: (1) Takes time, (2) Requires skillful facilitation",
+                "outcome": "SUCCESS: During evaluation, team discovers the architect's concerns about data integrity are valid for transactions but new engineer's scalability points are valid for analytics. Solution: Relational DB for transactional core, NoSQL for analytics layer. Both feel heard. Team learns polyglot persistence. Architect mentors new engineer on transaction design.",
+                "next_scenario": 3
+              },
+              {
+                "text": "Escalate to CTO to make the technical decision - this is above your expertise level",
+                "analysis": "Avoid/Escalate mode. Risks: (1) Abdicates PM responsibility to facilitate, (2) CTO may not have context, (3) Team sees you can't handle conflict, (4) Doesn't address relationship issue",
+                "outcome": "CTO picks relational DB (safer choice). New engineer loses respect for you. Architect feels validated but relationship with engineer worsens. Future conflicts go unresolved because team knows you'll escalate rather than facilitate.",
+                "next_scenario": 2
+              }
+            ]
+          },
+          {
+            "id": 2,
+            "title": "The Aftermath",
+            "scenario": "Regardless of your decision, tension remains. The architect and new engineer barely speak. Team velocity has dropped 30%. Daily standups are awkward. Retrospective revealed team frustration: 'We're walking on eggshells.' What do you do now?",
+            "options": [
+              {
+                "text": "Individual coaching sessions: privately coach each on collaboration and emotional intelligence",
+                "analysis": "Addresses symptom but not relationship. May help long-term but doesn't resolve current tension.",
+                "outcome": "Modest improvement but underlying tension persists. Team still divided."
+              },
+              {
+                "text": "Facilitated mediation: bring both together, establish ground rules, work through the conflict using structured dialogue",
+                "analysis": "Confront + Collaborate. Direct but respectful. Gets issues on table. Requires skilled facilitation and willingness from both parties.",
+                "outcome": "SUCCESS: Through facilitation, they discover: (1) Architect feels threatened by new technologies, (2) New engineer feels dismissed. Both commit to: monthly 'tech talk' where new engineer teaches emerging tech, architect shares war stories. Relationship heals."
+              },
+              {
+                "text": "Restructure team so they don't work together",
+                "analysis": "Avoid mode disguised as solution. Doesn't address root cause, limits team flexibility, sends message that conflict = separation.",
+                "outcome": "Team silos form. Organization loses cross-pollination. Other conflicts emerge because team knows they won't have to work through issues."
+              },
+              {
+                "text": "Implement team norm: 'disagree and commit' - once decision is made, everyone supports it regardless of personal view",
+                "analysis": "Smooth mode. Sounds mature but doesn't address relationship or underlying tension. Suppresses conflict rather than resolving.",
+                "outcome": "Resentment goes underground. Passive-aggressive behavior increases. Team technically complies but doesn't truly collaborate."
+              }
+            ]
+          },
+          {
+            "id": 3,
+            "title": "The Plot Twist",
+            "scenario": "Three months after your successful facilitation and hybrid architecture decision, performance monitoring reveals the NoSQL analytics layer is causing unexpected costs - $15K/month over budget. The architect says 'I knew this would happen - NoSQL is expensive at scale.' The new engineer says 'We can optimize it - give me a Sprint.' Your sponsor asks: 'Why did we go with the expensive option?' How do you respond?",
+            "options": [
+              {
+                "text": "Defend the decision: 'It was the right technical decision at the time based on available information. All new architectures have tuning needs.'",
+                "analysis": "Appropriate accountability. Maintains team trust. Explains context.",
+                "outcome": "Sponsor accepts explanation. You work with team to optimize. Team learns cost is a valid technical consideration."
+              },
+              {
+                "text": "Blame the new engineer: 'The junior engineer pushed for NoSQL. I should have gone with the architect's approach.'",
+                "analysis": "Avoids accountability. Destroys trust. Undermines team decision-making.",
+                "outcome": "New engineer loses confidence in you and company. Architect feels vindicated but knows you threw teammate under bus. Team dynamics collapse."
+              },
+              {
+                "text": "Own it fully: 'I facilitated the decision but didn't ensure we evaluated ongoing costs. That's on me. Here's how we'll fix it.' Then work with team on optimization.",
+                "analysis": "Strong leadership. Takes accountability. Focuses on solution. Models learning from mistakes.",
+                "outcome": "BEST OUTCOME: Sponsor respects ownership. Team sees you have their back. You add 'total cost of ownership' to future evaluation criteria. Team optimizes NoSQL (reducing cost 60%) and learns valuable lesson."
+              }
+            ]
+          }
+        ]
+      }
     },
-    "practice": {
-      "predictive_mindset": "Address conflict immediately to protect the critical path and schedule.",
-      "agile_mindset": "Empower the team to resolve issues during retrospectives; PM facilitates only.",
-      "checklist": ["Analyze Source", "Determine Context", "Apply Resolution Technique"],
-      "traps": "NEVER escalate internal team squabbles.",
-      "artifacts": "Conflict Log // Team Charter // TK Model."
-    }
-  },
   "Lead a Team": {
-    "learn": {
-      "definition": "Inspiring the team through shared vision and cultural alignment.",
-      "context": "Styles pivot based on team maturity (Situational Leadership).",
-      "path": "Prioritize Servant Leadership to remove obstacles.",
-      "boundary": "Leadership is people/culture; Management is tasks/control."
+    "learn": { 
+      "definition": "Setting clear vision and supporting team members to achieve peak performance.",
+      "dive_deeper_theory": "Utilize Tuckman's Ladder (Forming, Storming, Norming, Performing) to assess team maturity."
     },
-    "practice": {
-      "predictive_mindset": "Provide clear direction and structure to align with the Project Management Plan.",
-      "agile_mindset": "Focus on empowerment and removing blockers (Servant Leadership).",
-      "checklist": ["Set Vision", "Support Diversity", "Inspire Performance"],
-      "traps": "Avoid 'Command and Control' distractors.",
-      "artifacts": "RACI Matrix // Resource Management Plan."
-    }
+    "practice": { "agile_mindset": "Act as a servant leader and shield the team from outside interference.", "checklist": ["Project Vision", "Team Charter"], "reflex_prompts": [], "stress_test": [] }
   },
   "Support Performance": {
-    "learn": {
-      "definition": "Evaluating and feedback loop to optimize outcomes.",
-      "context": "Measured against the PMP and Team Charter.",
-      "path": "Feedback must be constructive, timely, and growth-oriented.",
-      "boundary": "Private feedback for individuals; Public celebration for teams."
-    },
-    "practice": {
-      "predictive_mindset": "Formal appraisals linked to scheduled milestones and work packages.",
-      "agile_mindset": "Continuous feedback during daily standups and retrospectives.",
-      "checklist": ["Appraise Performance", "Verify Competencies", "Reward Achievement"],
-      "traps": "Never delay feedback until the project end.",
-      "artifacts": "Performance Appraisals // Training Records."
-    }
+    "learn": { "definition": "Evaluating team performance against KPIs and providing necessary support." },
+    "practice": { "agile_mindset": "Focus on outcomes and value, not hours worked.", "checklist": ["KPI Dashboard", "Performance Reviews"], "reflex_prompts": [], "stress_test": [] }
   },
-  "Empower Team Members": {
-    "learn": {
-      "definition": "Granting authority/resources for decision-making ownership.",
-      "context": "Essential for speed in Agile/Hybrid environments.",
-      "path": "Shift from 'Director' to 'Facilitator'.",
-      "boundary": "Requires 'Guardrails' defined in the Team Charter."
-    },
-    "practice": {
-      "predictive_mindset": "Delegating specific work packages based on the WBS and RAM.",
-      "agile_mindset": "Foster self-organizing teams with high degrees of autonomy.",
-      "checklist": ["Delegate Authority", "Support Self-Org", "Foster Accountability"],
-      "traps": "Do not micromanage after delegating.",
-      "artifacts": "Delegation Log // Skills Matrix // Agile Manifesto."
-    }
+  "Empower Team": {
+    "learn": { "definition": "Delegating authority to foster autonomy and ownership." },
+    "practice": { "agile_mindset": "Decisions should be made by those closest to the work.", "checklist": ["Decision Log", "RACI Matrix"], "reflex_prompts": [], "stress_test": [] }
   },
-  "Ensure Training": {
-    "learn": {
-      "definition": "Identifying skill gaps and providing resources.",
-      "context": "Needs evolve as project lifecycle moves to execution.",
-      "path": "Invest early to prevent quality delays.",
-      "boundary": "Training is tactical; Mentoring is long-term."
-    },
-    "practice": {
-      "predictive_mindset": "Schedule training as a planned project activity with a set budget.",
-      "agile_mindset": "Focus on cross-training and T-shaped skills within the team.",
-      "checklist": ["Identify Gaps", "Allocate Budget", "Verify Efficacy"],
-      "traps": "Check for resource gaps before assuming training is the fix.",
-      "artifacts": "Skills Gap Analysis // Training Logs."
-    }
+  "Train Team": {
+    "learn": { "definition": "Determining competencies and ensuring the team has the skills to deliver." },
+    "practice": { "agile_mindset": "Continuous learning is a core Agile pillar.", "checklist": ["Training Plan", "Skills Matrix"], "reflex_prompts": [], "stress_test": [] }
   },
   "Build Team": {
-    "learn": {
-      "definition": "Fostering cohesive, productive group dynamics.",
-      "context": "Success depends on chemistry and technical alignment.",
-      "path": "Move team through Tuckman's stages (Forming-Performing).",
-      "boundary": "Continuous effort, not a one-time social event."
-    },
-    "practice": {
-      "predictive_mindset": "Focus on acquisition of specific resources per the staffing plan.",
-      "agile_mindset": "Build self-organizing units with a dedicated culture.",
-      "checklist": ["Hire Resources", "Build Culture", "Establish Ground Rules"],
-      "traps": "Avoid hiring 'experts' who cannot collaborate.",
-      "artifacts": "Team Charter // Staffing Estimates."
-    }
+    "learn": { "definition": "Acquiring and developing members into a high-functioning unit." },
+    "practice": { "agile_mindset": "Build trust through transparency and co-location.", "checklist": ["Resource Plan", "Onboarding Guide"], "reflex_prompts": [], "stress_test": [] }
   },
-  "Remove Impediments": {
-    "learn": {
-      "definition": "Clearing obstacles preventing team progress.",
-      "context": "Core responsibility of the Servant Leader.",
-      "path": "Maintain log; prioritize based on Critical Path impact.",
-      "boundary": "PMs remove blockers; teams solve technical problems."
-    },
-    "practice": {
-      "predictive_mindset": "Use formal Change Control if impediments impact scope/budget.",
-      "agile_mindset": "Identify and swarm blockers during Daily Standups.",
-      "checklist": ["Identify Blockers", "Prioritize Resolution", "Shield Team"],
-      "traps": "Do not ignore small blockers; they aggregate.",
-      "artifacts": "Impediment Log // Kanban Board."
-    }
+  "Address Obstacles": {
+    "learn": { "definition": "Identifying and removing blockers to maintain team velocity." },
+    "practice": { "agile_mindset": "The PM is a 'blocker-remover' first.", "checklist": ["Impediment Log", "Daily Stand-up Notes"], "reflex_prompts": [], "stress_test": [] }
   },
   "Negotiate Agreements": {
-    "learn": {
-      "definition": "Consensus on scope, budget, and resources.",
-      "context": "Constant across vendors and internal teams.",
-      "path": "Focus on interests, not positions; Win-Win.",
-      "boundary": "Negotiate for project health, not personal victory."
-    },
-    "practice": {
-      "predictive_mindset": "Formal procurement negotiations focused on firm contracts.",
-      "agile_mindset": "Continuous negotiation of priority in the Product Backlog.",
-      "checklist": ["Determine Strategy", "Facilitate Dialogue", "Finalize Agreement"],
-      "traps": "Never negotiate without a BATNA.",
-      "artifacts": "Procurement SOW // Resource Calendar."
-    }
+    "learn": { "definition": "Reaching consensus on project objectives with stakeholders." },
+    "practice": { "agile_mindset": "Seek win-win outcomes to maintain relationships.", "checklist": ["Project Charter", "Negotiation Log"], "reflex_prompts": [], "stress_test": [] }
   },
   "Collaborate Stakeholders": {
-    "learn": {
-      "definition": "Aligning expectations with project goals.",
-      "context": "Affected parties, not just customers.",
-      "path": "Tailor comms using Power/Interest grid.",
-      "boundary": "Engagement is active participation, not just reporting."
-    },
-    "practice": {
-      "predictive_mindset": "Manage expectations through a formal Communication Plan.",
-      "agile_mindset": "Continuous stakeholder involvement through Sprint Reviews.",
-      "checklist": ["Map Stakeholders", "Align Interests", "Manage Expectations"],
-      "traps": "Avoid the 'Inform-only' trap for high-power allies.",
-      "artifacts": "Stakeholder Register // Power-Interest Grid."
-    }
+    "learn": { "definition": "Working with internal and external parties to achieve project success." },
+    "practice": { "agile_mindset": "Active engagement prevents 'Surprise' friction.", "checklist": ["Stakeholder Register", "Comms Plan"], "reflex_prompts": [], "stress_test": [] }
   },
-  "Shared Understanding": {
-    "learn": {
-      "definition": "Ensuring all parties interpret goals/scope identically.",
-      "context": "Misalignment causes rework and conflict.",
-      "path": "Use visualization tools and consensus-building.",
-      "boundary": "Understanding is about intent; agreement is about action."
-    },
-    "practice": {
-      "predictive_mindset": "Strict adherence to the Scope Statement and WBS Dictionary.",
-      "agile_mindset": "Iterative refinement of User Stories and the 'Definition of Done'.",
-      "checklist": ["Break Down Goals", "Build Consensus", "Resolve Misalignment"],
-      "traps": "Never assume silence means agreement.",
-      "artifacts": "Project Charter // Kick-off Deck."
-    }
+  "Build Understanding": {
+    "learn": { "definition": "Ensuring all parties have a common view of project goals." },
+    "practice": { "agile_mindset": "Active listening is critical for alignment.", "checklist": ["Scope Statement", "WBS"], "reflex_prompts": [], "stress_test": [] }
   },
-  "Virtual Teams": {
-    "learn": {
-      "definition": "Managing geographically dispersed members.",
-      "context": "Increases diversity; complicates communication.",
-      "path": "Leverage collaborative tech and asynchronous workflows.",
-      "boundary": "Distance is physical; isolation is emotional/professional."
-    },
-    "practice": {
-      "predictive_mindset": "Standardize communication windows and reporting tools.",
-      "agile_mindset": "Emphasize 'Fishbowl Windows' and virtual whiteboards.",
-      "checklist": ["Assess Needs", "Identify Tech", "Foster Engagement"],
-      "traps": "Avoid 'headquarters bias'—ignoring remote voices.",
-      "artifacts": "Team Charter // Comms Plan."
-    }
+  "Support Virtual Teams": {
+    "learn": { "definition": "Enabling distributed teams to collaborate effectively via tools." },
+    "practice": { "agile_mindset": "Maximize face-to-face time via video when possible.", "checklist": ["Virtual Tools List", "Time Zone Map"], "reflex_prompts": [], "stress_test": [] }
   },
-  "Ground Rules": {
-    "learn": {
-      "definition": "Clear expectations for team behavior and interaction.",
-      "context": "Prevents conflict; established in Team Charter.",
-      "path": "Team-generated rules ensure higher commitment.",
-      "boundary": "Rules are for safety/efficiency, not for micromanagement."
-    },
-    "practice": {
-      "predictive_mindset": "Establish rules during the project kick-off and monitor compliance.",
-      "agile_mindset": "Review rules during retrospectives; allow for team evolution.",
-      "checklist": ["Communicate Rules", "Monitor Behavior", "Enforce Standards"],
-      "traps": "Rules without enforcement are merely suggestions.",
-      "artifacts": "Team Charter // Social Contract."
-    }
+  "Define Team Ground Rules": {
+    "learn": { "definition": "Establishing behavioral standards and values for the team." },
+    "practice": { "agile_mindset": "The team must define their own rules.", "checklist": ["Team Charter", "Code of Conduct"], "reflex_prompts": [], "stress_test": [] }
   },
-  "Mentoring": {
-    "learn": {
-      "definition": "Guidance for professional growth and career development.",
-      "context": "Focuses on the person, not just the project task.",
-      "path": "Identify potential and match with experienced advisors.",
-      "boundary": "Mentoring is career-focused; Coaching is task-focused."
-    },
-    "practice": {
-      "predictive_mindset": "Formal mentor programs linked to professional development plans.",
-      "agile_mindset": "Peer-to-peer mentoring through pair programming and swarming.",
-      "checklist": ["Identify Mentors", "Match with Mentees", "Measure Progress"],
-      "traps": "Do not force mentoring; it must be a voluntary relationship.",
-      "artifacts": "Development Plans // Resource Plan."
-    }
+  "Mentor Stakeholders": {
+    "learn": { "definition": "Guiding stakeholders to understand project processes and benefits." },
+    "practice": { "agile_mindset": "Educating stakeholders on Agile reduces friction.", "checklist": ["Mentoring Plan", "Stakeholder Matrix"], "reflex_prompts": [], "stress_test": [] }
   },
-  "EQ Performance": {
-    "learn": {
-      "definition": "Using Emotional Intelligence to handle project dynamics.",
-      "context": "Critical for managing difficult stakeholders/stress.",
-      "path": "Self-awareness, self-regulation, and empathy.",
-      "boundary": "EQ is about influence; IQ is about information."
-    },
-    "practice": {
-      "predictive_mindset": "Use EQ to manage the 'Political Environment' of a project.",
-      "agile_mindset": "Use EQ to facilitate psychological safety and team trust.",
-      "checklist": ["Assess Awareness", "Regulation Check", "Empathy Mapping"],
-      "traps": "High EQ is not a substitute for technical competence.",
-      "artifacts": "Stakeholder Engagement Plan // Team Charter."
-    }
+  "Promote Performance": {
+    "learn": { "definition": "Applying emotional intelligence to encourage team results." },
+    "practice": { "agile_mindset": "Recognition should be frequent and specific.", "checklist": ["Recognition Plan", "EQ Assessment"], "reflex_prompts": [], "stress_test": [] }
   }
 }
