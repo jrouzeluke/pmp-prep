@@ -51,6 +51,13 @@ const PMPApp = () => {
     draggedStep: null,
     dragOverIndex: null
   });
+  const [empathyExerciseState, setEmpathyExerciseState] = useState({
+    currentScenario: 0,
+    currentPerspective: 'personA',
+    viewedPerspectives: {},
+    showingInsight: false,
+    reflections: {}
+  });
 
   useEffect(() => {
     fetch('./data/taskData.json')
