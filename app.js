@@ -2516,18 +2516,53 @@ const PMPApp = () => {
         ].map(activity => {
           const progress = getActivityProgress(selectedTask, activity.name);
           const isCompleted = progress?.completed;
+          const isInProgress = progress?.attempts > 0 && !isCompleted;
           const bestScore = progress?.bestScore;
           const lastAttempted = progress?.lastAttempted;
+          const completedDate = progress?.completedAt;
+          
+          // Determine status indicator
+          let statusIndicator = null;
+          let statusTooltip = '';
+          if (isCompleted) {
+            statusTooltip = `✓ Completed on ${completedDate ? new Date(completedDate).toLocaleDateString() : 'recently'}`;
+          } else if (isInProgress) {
+            statusTooltip = '– In progress';
+          } else {
+            statusTooltip = '○ Not started yet';
+          }
           
           return (
             <button
               key={activity.name}
               onClick={() => setView(activity.name)}
-              className={`glass-card p-8 text-left ${activity.hoverColor} transition-all ${isCompleted ? 'border-l-4 border-emerald-500' : activity.borderColor} min-h-[200px] transform hover:scale-105 hover:shadow-2xl ${activity.shadowColor} relative`}
+              className={`glass-card p-8 text-left ${activity.hoverColor} transition-all ${isCompleted ? 'border-l-4 border-emerald-500' : activity.borderColor} min-h-[200px] transform hover:scale-105 hover:shadow-2xl ${activity.shadowColor} relative group`}
             >
-              {isCompleted && (
-                <div className="absolute top-4 right-4 text-2xl">✓</div>
-              )}
+              {/* Status Indicator */}
+              <div 
+                className={`absolute top-4 right-4 w-8 h-8 rounded-full flex items-center justify-center transition-all ${
+                  isCompleted 
+                    ? 'bg-emerald-500 text-white' 
+                    : isInProgress 
+                    ? 'bg-yellow-500 text-white' 
+                    : 'border-2 border-slate-500 bg-transparent'
+                }`}
+                title={statusTooltip}
+              >
+                {isCompleted ? (
+                  <span className="text-lg font-bold">✓</span>
+                ) : isInProgress ? (
+                  <span className="text-lg font-bold">–</span>
+                ) : (
+                  <span className="w-3 h-3 rounded-full border-2 border-slate-400"></span>
+                )}
+              </div>
+              
+              {/* Tooltip */}
+              <div className="absolute top-12 right-4 bg-slate-900 text-white text-xs px-3 py-2 rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10 whitespace-nowrap">
+                {statusTooltip}
+              </div>
+              
               <div className="text-6xl mb-4">{activity.emoji}</div>
               <h3 className="executive-font text-2xl font-semibold text-white mb-3">{activity.title}</h3>
               <p className="text-slate-400 text-sm mb-2">{activity.desc}</p>
