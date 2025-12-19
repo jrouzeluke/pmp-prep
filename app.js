@@ -3469,6 +3469,326 @@ const PMPApp = () => {
                 </div>
               )}
 
+              {currentTask.learn?.deep_dive?.introduction && (
+                <div className="glass-card p-6 border-l-4 border-cyan-500">
+                  <h3 className="executive-font text-xl font-semibold text-white mb-4 uppercase tracking-wide">Introduction</h3>
+                  <div className="text-slate-300 space-y-3">
+                    <p>{currentTask.learn.deep_dive.introduction}</p>
+                  </div>
+                </div>
+              )}
+
+              {/* Tuckman's Model Section */}
+              {currentTask.learn?.deep_dive?.tuckmans_model && (
+                <div className="glass-card p-6 border-l-4 border-purple-500">
+                  <h2 className="executive-font text-2xl font-bold text-white mb-4 uppercase tracking-wide">{currentTask.learn.deep_dive.tuckmans_model.title || "Tuckman's Stages of Team Development"}</h2>
+                  
+                  {currentTask.learn.deep_dive.tuckman_historical_context && (
+                    <div className="mb-6">
+                      <h3 className="executive-font text-lg font-semibold text-cyan-400 mb-2">Historical Context</h3>
+                      <p className="text-slate-300 mb-4">{currentTask.learn.deep_dive.tuckman_historical_context}</p>
+                    </div>
+                  )}
+
+                  {currentTask.learn.deep_dive.why_tuckman_matters && (
+                    <div className="mb-6">
+                      <h3 className="executive-font text-lg font-semibold text-cyan-400 mb-2">Why This Model Matters</h3>
+                      <p className="text-slate-300">{currentTask.learn.deep_dive.why_tuckman_matters}</p>
+                    </div>
+                  )}
+
+                  {currentTask.learn.deep_dive.tuckmans_model.stages && (
+                    <div className="space-y-6 mt-6">
+                      {currentTask.learn.deep_dive.tuckmans_model.stages.map((stageData, idx) => (
+                        <div key={idx} className="border-l-4 border-purple-400/50 pl-4 bg-white/[0.02] p-4 rounded">
+                          <h3 className="executive-font text-xl font-semibold text-white mb-3">Stage {idx + 1}: {stageData.stage}</h3>
+                          
+                          {stageData.overview && (
+                            <p className="text-slate-300 mb-4 italic">{stageData.overview}</p>
+                          )}
+
+                          {stageData.detailed_characteristics && (
+                            <div className="mb-4">
+                              <h4 className="text-white font-semibold mb-2">Detailed Characteristics:</h4>
+                              {stageData.detailed_characteristics.team_member_behaviors && (
+                                <div className="mb-3">
+                                  <h5 className="text-cyan-400 text-sm font-semibold mb-1">Team Member Behaviors:</h5>
+                                  <ul className="list-disc list-inside text-slate-300 text-sm space-y-1 ml-4">
+                                    {stageData.detailed_characteristics.team_member_behaviors.map((behavior, bIdx) => (
+                                      <li key={bIdx}>{behavior}</li>
+                                    ))}
+                                  </ul>
+                                </div>
+                              )}
+                              {stageData.detailed_characteristics.team_dynamics && (
+                                <div className="mb-3">
+                                  <h5 className="text-cyan-400 text-sm font-semibold mb-1">Team Dynamics:</h5>
+                                  <ul className="list-disc list-inside text-slate-300 text-sm space-y-1 ml-4">
+                                    {stageData.detailed_characteristics.team_dynamics.map((dynamic, dIdx) => (
+                                      <li key={dIdx}>{dynamic}</li>
+                                    ))}
+                                  </ul>
+                                </div>
+                              )}
+                            </div>
+                          )}
+
+                          {stageData.pm_leadership_actions && (
+                            <div className="mb-4">
+                              <h4 className="text-white font-semibold mb-2">PM Leadership Actions:</h4>
+                              <p className="text-slate-300 text-sm mb-2">{stageData.pm_leadership_actions.primary_style}</p>
+                              {stageData.pm_leadership_actions.specific_actions && Object.entries(stageData.pm_leadership_actions.specific_actions).map(([key, actions]) => (
+                                <div key={key} className="mb-3 ml-4">
+                                  <h5 className="text-cyan-400 text-sm font-semibold mb-1 capitalize">{key.replace(/_/g, ' ')}:</h5>
+                                  <ul className="list-disc list-inside text-slate-300 text-sm space-y-1">
+                                    {Array.isArray(actions) && actions.map((action, aIdx) => (
+                                      <li key={aIdx}>{action}</li>
+                                    ))}
+                                  </ul>
+                                </div>
+                              ))}
+                            </div>
+                          )}
+
+                          {stageData.duration_and_success_indicators && (
+                            <div className="mb-4">
+                              <h4 className="text-white font-semibold mb-2">Duration & Success Indicators:</h4>
+                              <p className="text-slate-300 text-sm"><span className="font-semibold text-cyan-400">Typical Duration:</span> {stageData.duration_and_success_indicators.typical_duration || stageData.duration_and_success_indicators.duration}</p>
+                            </div>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Leadership Styles Section */}
+              {currentTask.learn?.deep_dive?.leadership_styles && (
+                <div className="glass-card p-6 border-l-4 border-emerald-500">
+                  <h2 className="executive-font text-2xl font-bold text-white mb-4 uppercase tracking-wide">{currentTask.learn.deep_dive.leadership_styles.title || "Leadership Styles"}</h2>
+                  
+                  {currentTask.learn.deep_dive.leadership_styles.background_and_research && (
+                    <div className="mb-4">
+                      <p className="text-slate-300">{currentTask.learn.deep_dive.leadership_styles.background_and_research}</p>
+                    </div>
+                  )}
+
+                  {currentTask.learn.deep_dive.leadership_styles.key_research_findings && (
+                    <div className="mb-6">
+                      <h3 className="executive-font text-lg font-semibold text-cyan-400 mb-2">Key Research Findings</h3>
+                      <ul className="list-disc list-inside text-slate-300 space-y-1">
+                        {currentTask.learn.deep_dive.leadership_styles.key_research_findings.map((finding, idx) => (
+                          <li key={idx}>{finding}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+
+                  {currentTask.learn.deep_dive.leadership_styles.styles && (
+                    <div className="space-y-6 mt-6">
+                      {currentTask.learn.deep_dive.leadership_styles.styles.map((styleData, idx) => (
+                        <div key={idx} className="border-l-4 border-emerald-400/50 pl-4 bg-white/[0.02] p-4 rounded">
+                          <h3 className="executive-font text-xl font-semibold text-white mb-2">{styleData.style}</h3>
+                          {styleData.tagline && (
+                            <p className="text-cyan-400 text-sm italic mb-3">"{styleData.tagline}"</p>
+                          )}
+                          {styleData.description && (
+                            <p className="text-slate-300 mb-4">{styleData.description}</p>
+                          )}
+
+                          {styleData.when_to_use && (
+                            <div className="mb-4">
+                              <h4 className="text-white font-semibold mb-2">When to Use:</h4>
+                              {Object.entries(styleData.when_to_use).map(([key, values]) => (
+                                <div key={key} className="mb-2">
+                                  <h5 className="text-cyan-400 text-sm font-semibold mb-1 capitalize">{key.replace(/_/g, ' ')}:</h5>
+                                  <ul className="list-disc list-inside text-slate-300 text-sm space-y-1 ml-4">
+                                    {Array.isArray(values) && values.map((value, vIdx) => (
+                                      <li key={vIdx}>{value}</li>
+                                    ))}
+                                  </ul>
+                                </div>
+                              ))}
+                            </div>
+                          )}
+
+                          {styleData.characteristics && (
+                            <div className="mb-4">
+                              <h4 className="text-white font-semibold mb-2">Characteristics:</h4>
+                              {styleData.characteristics.how_it_looks && (
+                                <div className="mb-3">
+                                  <h5 className="text-cyan-400 text-sm font-semibold mb-1">How It Looks:</h5>
+                                  <ul className="list-disc list-inside text-slate-300 text-sm space-y-1 ml-4">
+                                    {styleData.characteristics.how_it_looks.map((item, itemIdx) => (
+                                      <li key={itemIdx}>{item}</li>
+                                    ))}
+                                  </ul>
+                                </div>
+                              )}
+                            </div>
+                          )}
+
+                          {styleData.strengths && (
+                            <div className="mb-4">
+                              <h4 className="text-white font-semibold mb-2">Strengths:</h4>
+                              <ul className="list-disc list-inside text-slate-300 text-sm space-y-1">
+                                {styleData.strengths.map((strength, sIdx) => (
+                                  <li key={sIdx}>{strength}</li>
+                                ))}
+                              </ul>
+                            </div>
+                          )}
+
+                          {styleData.common_mistakes && Array.isArray(styleData.common_mistakes) && styleData.common_mistakes.length > 0 && (
+                            <div className="mb-4">
+                              <h4 className="text-white font-semibold mb-2">Common Mistakes:</h4>
+                              {styleData.common_mistakes.map((mistake, mIdx) => (
+                                <div key={mIdx} className="mb-2 border-l-2 border-rose-500/50 pl-3">
+                                  <h5 className="text-rose-400 text-sm font-semibold">{mistake.mistake || mistake.mistake}:</h5>
+                                  <p className="text-slate-400 text-xs">{mistake.description || mistake.problem}</p>
+                                  {mistake.consequence && (
+                                    <p className="text-slate-400 text-xs mt-1"><span className="font-semibold">Consequence:</span> {mistake.consequence}</p>
+                                  )}
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Situational Leadership Section */}
+              {currentTask.learn?.deep_dive?.situational_leadership && (
+                <div className="glass-card p-6 border-l-4 border-yellow-500">
+                  <h2 className="executive-font text-2xl font-bold text-white mb-4 uppercase tracking-wide">{currentTask.learn.deep_dive.situational_leadership.title || "Situational Leadership"}</h2>
+                  {currentTask.learn.deep_dive.situational_leadership.integration_framework && (
+                    <p className="text-slate-300 mb-4">{currentTask.learn.deep_dive.situational_leadership.integration_framework}</p>
+                  )}
+                  
+                  {currentTask.learn.deep_dive.situational_leadership.by_team_stage && typeof currentTask.learn.deep_dive.situational_leadership.by_team_stage === 'object' && (
+                    <div className="mb-6">
+                      <h3 className="executive-font text-lg font-semibold text-cyan-400 mb-3">Matching Style to Team Stage:</h3>
+                      {Object.entries(currentTask.learn.deep_dive.situational_leadership.by_team_stage).map(([stage, styleInfo]) => (
+                        <div key={stage} className="mb-3 border-l-2 border-yellow-400/50 pl-4">
+                          <h4 className="text-white font-semibold capitalize">{stage}:</h4>
+                          <p className="text-slate-300 text-sm"><span className="text-cyan-400">Primary:</span> {styleInfo.primary}</p>
+                          <p className="text-slate-300 text-sm"><span className="text-cyan-400">Secondary:</span> {styleInfo.secondary}</p>
+                          <p className="text-slate-400 text-xs italic mt-1">{styleInfo.why}</p>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Practical Application Section */}
+              {currentTask.learn?.deep_dive?.practical_application && (
+                <div className="glass-card p-6 border-l-4 border-indigo-500">
+                  <h2 className="executive-font text-2xl font-bold text-white mb-4 uppercase tracking-wide">{currentTask.learn.deep_dive.practical_application.title || "Practical Application"}</h2>
+                  
+                  {currentTask.learn.deep_dive.practical_application.self_assessment_questions && (
+                    <div className="mb-6">
+                      <h3 className="executive-font text-lg font-semibold text-cyan-400 mb-3">Self-Assessment Questions:</h3>
+                      {currentTask.learn.deep_dive.practical_application.self_assessment_questions.diagnostic_questions && (
+                        <div className="space-y-4">
+                          {currentTask.learn.deep_dive.practical_application.self_assessment_questions.diagnostic_questions.map((q, idx) => (
+                            <div key={idx} className="border-l-2 border-indigo-400/50 pl-4">
+                              <h4 className="text-white font-semibold mb-2">{q.question}</h4>
+                              {q.guidance && Array.isArray(q.guidance) && (
+                                <ul className="list-disc list-inside text-slate-300 text-sm space-y-1 ml-4">
+                                  {q.guidance.map((guidance, gIdx) => (
+                                    <li key={gIdx}>{guidance}</li>
+                                  ))}
+                                </ul>
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Summary Section */}
+              {currentTask.learn?.deep_dive?.summary_and_key_takeaways && (
+                <div className="glass-card p-6 border-l-4 border-teal-500">
+                  <h2 className="executive-font text-2xl font-bold text-white mb-4 uppercase tracking-wide">{currentTask.learn.deep_dive.summary_and_key_takeaways.title || "Summary and Key Takeaways"}</h2>
+                  
+                  {currentTask.learn.deep_dive.summary_and_key_takeaways.tuckman_stages_key_points && (
+                    <div className="mb-6">
+                      <h3 className="executive-font text-lg font-semibold text-cyan-400 mb-3">Tuckman's Stages - Key Points:</h3>
+                      {currentTask.learn.deep_dive.summary_and_key_takeaways.tuckman_stages_key_points.map((point, idx) => (
+                        <div key={idx} className="mb-4 border-l-2 border-teal-400/50 pl-4">
+                          <h4 className="text-white font-semibold mb-2">{point.point}</h4>
+                          {point.details && Array.isArray(point.details) && (
+                            <ul className="list-disc list-inside text-slate-300 text-sm space-y-1 ml-4">
+                              {point.details.map((detail, dIdx) => (
+                                <li key={dIdx}>{detail}</li>
+                              ))}
+                            </ul>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {currentTask.learn.deep_dive.summary_and_key_takeaways.leadership_styles_key_points && (
+                    <div className="mb-6">
+                      <h3 className="executive-font text-lg font-semibold text-cyan-400 mb-3">Leadership Styles - Key Points:</h3>
+                      {currentTask.learn.deep_dive.summary_and_key_takeaways.leadership_styles_key_points.map((point, idx) => (
+                        <div key={idx} className="mb-4 border-l-2 border-teal-400/50 pl-4">
+                          <h4 className="text-white font-semibold mb-2">{point.point}</h4>
+                          {point.details && Array.isArray(point.details) && (
+                            <ul className="list-disc list-inside text-slate-300 text-sm space-y-1 ml-4">
+                              {point.details.map((detail, dIdx) => (
+                                <li key={dIdx}>{detail}</li>
+                              ))}
+                            </ul>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Additional Resources */}
+              {currentTask.learn?.deep_dive?.additional_resources && (
+                <div className="glass-card p-6 border-l-4 border-pink-500">
+                  <h2 className="executive-font text-2xl font-bold text-white mb-4 uppercase tracking-wide">Additional Resources</h2>
+                  
+                  {currentTask.learn.deep_dive.additional_resources.books && (
+                    <div className="mb-6">
+                      <h3 className="executive-font text-lg font-semibold text-cyan-400 mb-3">Books:</h3>
+                      <ul className="list-disc list-inside text-slate-300 space-y-2">
+                        {currentTask.learn.deep_dive.additional_resources.books.map((book, idx) => (
+                          <li key={idx}>
+                            <span className="font-semibold text-white">"{book.title}"</span> by {book.author}
+                            {book.focus && <span className="text-slate-400 text-sm"> - {book.focus}</span>}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+
+                  {currentTask.learn.deep_dive.additional_resources.tools && (
+                    <div className="mb-6">
+                      <h3 className="executive-font text-lg font-semibold text-cyan-400 mb-3">Tools:</h3>
+                      <ul className="list-disc list-inside text-slate-300 space-y-1">
+                        {currentTask.learn.deep_dive.additional_resources.tools.map((tool, idx) => (
+                          <li key={idx}>{tool}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </div>
+              )}
+
               {currentTask.learn?.deep_dive?.thomas_kilmann_model && (
                 <div className="glass-card p-6 border-l-4 border-purple-500">
                   <h3 className="executive-font text-xl font-semibold text-white mb-4 uppercase tracking-wide">Thomas-Kilmann Conflict Model</h3>
