@@ -1001,6 +1001,16 @@ const PMPApp = () => {
 
   // Document Detective Activity View
   if (view === 'document-detective') {
+    if (!currentTask) {
+      return (
+        <div className="max-w-6xl w-full p-10 animate-fadeIn text-left">
+          <div className="glass-card p-10 text-center">
+            <h1 className="executive-font text-3xl font-bold text-white mb-4">Loading...</h1>
+            <GlobalNavFooter />
+          </div>
+        </div>
+      );
+    }
     // Handle different data structures: array directly OR object with cases array
     let documentDetectiveCases = currentTask.practice?.document_detective;
     
@@ -2275,6 +2285,16 @@ const PMPApp = () => {
   // Empathy Exercise / Team Member Perspectives Activity View
   // Support both route names for Lead a Team
   if (view === 'empathy-exercise' || view === 'team-member-perspectives') {
+    if (!currentTask) {
+      return (
+        <div className="max-w-6xl w-full p-10 animate-fadeIn text-left">
+          <div className="glass-card p-10 text-center">
+            <h1 className="executive-font text-3xl font-bold text-white mb-4">Loading...</h1>
+            <GlobalNavFooter />
+          </div>
+        </div>
+      );
+    }
     // For Lead a Team, use team_member_perspectives, otherwise empathy_exercise
     const dataKey = selectedTask === 'Lead a Team' ? 'team_member_perspectives' : 'empathy_exercise';
     const activityTitle = selectedTask === 'Lead a Team' ? 'Team Member Perspectives' : 'Empathy Exercise';
@@ -4094,6 +4114,8 @@ const PMPApp = () => {
       <GlobalNavFooter />
     </div>
   );
+  }
+
 };
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
