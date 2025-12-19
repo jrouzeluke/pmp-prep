@@ -3625,18 +3625,6 @@ const PMPApp = () => {
           >
             Deep Dive
           </button>
-          {currentTask.practice?.activities_menu && (
-            <button 
-              onClick={() => setSubView('activities')} 
-              className={`px-4 py-3 executive-font text-xs font-semibold uppercase transition-all relative ${
-                subView === 'activities' 
-                  ? 'text-white border-b-2 border-cyan-400' 
-                  : 'text-slate-500 hover:text-slate-300'
-              }`}
-            >
-              Activities
-            </button>
-          )}
         </div>
       </header>
 

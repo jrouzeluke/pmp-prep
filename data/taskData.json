@@ -1507,51 +1507,762 @@
     }
   },
   "Support Performance": {
-    "learn": { "definition": "Evaluating team performance against KPIs and providing necessary support." },
+    "learn": {
+      "overview": {
+        "definition": "Evaluating team performance against KPIs and providing necessary support.",
+        "module_introduction": "",
+        "what_youll_learn": [],
+        "key_learning_objectives": [],
+        "why_this_matters": "",
+        "exam_triggers": []
+      },
+      "pmp_application": {
+        "connection_to_pmp": "",
+        "domain": "People (42% of exam)",
+        "related_tasks": [],
+        "how_module_supports_pmp_application": [],
+        "application_tips": []
+      },
+      "deep_dive": {
+        "foundational_concept": ""
+      }
+    },
     "practice": { "agile_mindset": "Focus on outcomes and value, not hours worked.", "checklist": ["KPI Dashboard", "Performance Reviews"], "reflex_prompts": [], "stress_test": [] }
   },
   "Empower Team": {
-    "learn": { "definition": "Delegating authority to foster autonomy and ownership." },
+    "learn": {
+      "overview": {
+        "definition": "Delegating authority to foster autonomy and ownership.",
+        "module_introduction": "",
+        "what_youll_learn": [],
+        "key_learning_objectives": [],
+        "why_this_matters": "",
+        "exam_triggers": []
+      },
+      "pmp_application": {
+        "connection_to_pmp": "",
+        "domain": "People (42% of exam)",
+        "related_tasks": [],
+        "how_module_supports_pmp_application": [],
+        "application_tips": []
+      },
+      "deep_dive": {
+        "foundational_concept": ""
+      }
+    },
     "practice": { "agile_mindset": "Decisions should be made by those closest to the work.", "checklist": ["Decision Log", "RACI Matrix"], "reflex_prompts": [], "stress_test": [] }
   },
   "Train Team": {
-    "learn": { "definition": "Determining competencies and ensuring the team has the skills to deliver." },
+    "learn": {
+      "overview": {
+        "definition": "Determining competencies and ensuring the team has the skills to deliver.",
+        "module_introduction": "",
+        "what_youll_learn": [],
+        "key_learning_objectives": [],
+        "why_this_matters": "",
+        "exam_triggers": []
+      },
+      "pmp_application": {
+        "connection_to_pmp": "",
+        "domain": "People (42% of exam)",
+        "related_tasks": [],
+        "how_module_supports_pmp_application": [],
+        "application_tips": []
+      },
+      "deep_dive": {
+        "foundational_concept": ""
+      }
+    },
     "practice": { "agile_mindset": "Continuous learning is a core Agile pillar.", "checklist": ["Training Plan", "Skills Matrix"], "reflex_prompts": [], "stress_test": [] }
   },
   "Build Team": {
-    "learn": { "definition": "Acquiring and developing members into a high-functioning unit." },
+    "learn": {
+      "overview": {
+        "definition": "Acquiring and developing members into a high-functioning unit.",
+        "module_introduction": "",
+        "what_youll_learn": [],
+        "key_learning_objectives": [],
+        "why_this_matters": "",
+        "exam_triggers": []
+      },
+      "pmp_application": {
+        "connection_to_pmp": "",
+        "domain": "People (42% of exam)",
+        "related_tasks": [],
+        "how_module_supports_pmp_application": [],
+        "application_tips": []
+      },
+      "deep_dive": {
+        "foundational_concept": ""
+      }
+    },
     "practice": { "agile_mindset": "Build trust through transparency and co-location.", "checklist": ["Resource Plan", "Onboarding Guide"], "reflex_prompts": [], "stress_test": [] }
   },
   "Address Obstacles": {
-    "learn": { "definition": "Identifying and removing blockers to maintain team velocity." },
+    "learn": {
+      "overview": {
+        "definition": "Identifying and removing blockers to maintain team velocity.",
+        "module_introduction": "",
+        "what_youll_learn": [],
+        "key_learning_objectives": [],
+        "why_this_matters": "",
+        "exam_triggers": []
+      },
+      "pmp_application": {
+        "connection_to_pmp": "",
+        "domain": "People (42% of exam)",
+        "related_tasks": [],
+        "how_module_supports_pmp_application": [],
+        "application_tips": []
+      },
+      "deep_dive": {
+        "foundational_concept": ""
+      }
+    },
     "practice": { "agile_mindset": "The PM is a 'blocker-remover' first.", "checklist": ["Impediment Log", "Daily Stand-up Notes"], "reflex_prompts": [], "stress_test": [] }
   },
   "Negotiate Agreements": {
-    "learn": { "definition": "Reaching consensus on project objectives with stakeholders." },
+    "learn": {
+      "overview": {
+        "definition": "Reaching consensus on project objectives with stakeholders.",
+        "module_introduction": "",
+        "what_youll_learn": [],
+        "key_learning_objectives": [],
+        "why_this_matters": "",
+        "exam_triggers": []
+      },
+      "pmp_application": {
+        "connection_to_pmp": "",
+        "domain": "People (42% of exam)",
+        "related_tasks": [],
+        "how_module_supports_pmp_application": [],
+        "application_tips": []
+      },
+      "deep_dive": {
+        "foundational_concept": ""
+      }
+    },
     "practice": { "agile_mindset": "Seek win-win outcomes to maintain relationships.", "checklist": ["Project Charter", "Negotiation Log"], "reflex_prompts": [], "stress_test": [] }
   },
   "Collaborate Stakeholders": {
-    "learn": { "definition": "Working with internal and external parties to achieve project success." },
+    "learn": {
+      "overview": {
+        "definition": "Working with internal and external parties to achieve project success.",
+        "module_introduction": "",
+        "what_youll_learn": [],
+        "key_learning_objectives": [],
+        "why_this_matters": "",
+        "exam_triggers": []
+      },
+      "pmp_application": {
+        "connection_to_pmp": "",
+        "domain": "People (42% of exam)",
+        "related_tasks": [],
+        "how_module_supports_pmp_application": [],
+        "application_tips": []
+      },
+      "deep_dive": {
+        "foundational_concept": ""
+      }
+    },
     "practice": { "agile_mindset": "Active engagement prevents 'Surprise' friction.", "checklist": ["Stakeholder Register", "Comms Plan"], "reflex_prompts": [], "stress_test": [] }
   },
   "Build Understanding": {
-    "learn": { "definition": "Ensuring all parties have a common view of project goals." },
+    "learn": {
+      "overview": {
+        "definition": "Ensuring all parties have a common view of project goals.",
+        "module_introduction": "",
+        "what_youll_learn": [],
+        "key_learning_objectives": [],
+        "why_this_matters": "",
+        "exam_triggers": []
+      },
+      "pmp_application": {
+        "connection_to_pmp": "",
+        "domain": "People (42% of exam)",
+        "related_tasks": [],
+        "how_module_supports_pmp_application": [],
+        "application_tips": []
+      },
+      "deep_dive": {
+        "foundational_concept": ""
+      }
+    },
     "practice": { "agile_mindset": "Active listening is critical for alignment.", "checklist": ["Scope Statement", "WBS"], "reflex_prompts": [], "stress_test": [] }
   },
   "Support Virtual Teams": {
-    "learn": { "definition": "Enabling distributed teams to collaborate effectively via tools." },
+    "learn": {
+      "overview": {
+        "definition": "Enabling distributed teams to collaborate effectively via tools.",
+        "module_introduction": "",
+        "what_youll_learn": [],
+        "key_learning_objectives": [],
+        "why_this_matters": "",
+        "exam_triggers": []
+      },
+      "pmp_application": {
+        "connection_to_pmp": "",
+        "domain": "People (42% of exam)",
+        "related_tasks": [],
+        "how_module_supports_pmp_application": [],
+        "application_tips": []
+      },
+      "deep_dive": {
+        "foundational_concept": ""
+      }
+    },
     "practice": { "agile_mindset": "Maximize face-to-face time via video when possible.", "checklist": ["Virtual Tools List", "Time Zone Map"], "reflex_prompts": [], "stress_test": [] }
   },
   "Define Team Ground Rules": {
-    "learn": { "definition": "Establishing behavioral standards and values for the team." },
+    "learn": {
+      "overview": {
+        "definition": "Establishing behavioral standards and values for the team.",
+        "module_introduction": "",
+        "what_youll_learn": [],
+        "key_learning_objectives": [],
+        "why_this_matters": "",
+        "exam_triggers": []
+      },
+      "pmp_application": {
+        "connection_to_pmp": "",
+        "domain": "People (42% of exam)",
+        "related_tasks": [],
+        "how_module_supports_pmp_application": [],
+        "application_tips": []
+      },
+      "deep_dive": {
+        "foundational_concept": ""
+      }
+    },
     "practice": { "agile_mindset": "The team must define their own rules.", "checklist": ["Team Charter", "Code of Conduct"], "reflex_prompts": [], "stress_test": [] }
   },
   "Mentor Stakeholders": {
-    "learn": { "definition": "Guiding stakeholders to understand project processes and benefits." },
+    "learn": {
+      "overview": {
+        "definition": "Guiding stakeholders to understand project processes and benefits.",
+        "module_introduction": "",
+        "what_youll_learn": [],
+        "key_learning_objectives": [],
+        "why_this_matters": "",
+        "exam_triggers": []
+      },
+      "pmp_application": {
+        "connection_to_pmp": "",
+        "domain": "People (42% of exam)",
+        "related_tasks": [],
+        "how_module_supports_pmp_application": [],
+        "application_tips": []
+      },
+      "deep_dive": {
+        "foundational_concept": ""
+      }
+    },
     "practice": { "agile_mindset": "Educating stakeholders on Agile reduces friction.", "checklist": ["Mentoring Plan", "Stakeholder Matrix"], "reflex_prompts": [], "stress_test": [] }
   },
   "Promote Performance": {
-    "learn": { "definition": "Applying emotional intelligence to encourage team results." },
+    "learn": {
+      "overview": {
+        "definition": "Applying emotional intelligence to encourage team results.",
+        "module_introduction": "",
+        "what_youll_learn": [],
+        "key_learning_objectives": [],
+        "why_this_matters": "",
+        "exam_triggers": []
+      },
+      "pmp_application": {
+        "connection_to_pmp": "",
+        "domain": "People (42% of exam)",
+        "related_tasks": [],
+        "how_module_supports_pmp_application": [],
+        "application_tips": []
+      },
+      "deep_dive": {
+        "foundational_concept": ""
+      }
+    },
     "practice": { "agile_mindset": "Recognition should be frequent and specific.", "checklist": ["Recognition Plan", "EQ Assessment"], "reflex_prompts": [], "stress_test": [] }
+  },
+  "Execute Urgency": {
+    "learn": {
+      "overview": {
+        "definition": "Implementing immediate actions to address urgent issues and maintain project momentum.",
+        "module_introduction": "",
+        "what_youll_learn": [],
+        "key_learning_objectives": [],
+        "why_this_matters": "",
+        "exam_triggers": []
+      },
+      "pmp_application": {
+        "connection_to_pmp": "",
+        "domain": "Process (50% of exam)",
+        "related_tasks": [],
+        "how_module_supports_pmp_application": [],
+        "application_tips": []
+      },
+      "deep_dive": {
+        "foundational_concept": ""
+      }
+    },
+    "practice": { "agile_mindset": "Respond to change over following a plan.", "checklist": ["Issue Log", "Risk Register"], "reflex_prompts": [], "stress_test": [] }
+  },
+  "Manage Communications": {
+    "learn": {
+      "overview": {
+        "definition": "Ensuring timely and appropriate planning, collection, creation, distribution, storage, retrieval, management, control, monitoring, and disposal of project information.",
+        "module_introduction": "",
+        "what_youll_learn": [],
+        "key_learning_objectives": [],
+        "why_this_matters": "",
+        "exam_triggers": []
+      },
+      "pmp_application": {
+        "connection_to_pmp": "",
+        "domain": "Process (50% of exam)",
+        "related_tasks": [],
+        "how_module_supports_pmp_application": [],
+        "application_tips": []
+      },
+      "deep_dive": {
+        "foundational_concept": ""
+      }
+    },
+    "practice": { "agile_mindset": "Face-to-face communication is most effective.", "checklist": ["Communication Plan", "Stakeholder Register"], "reflex_prompts": [], "stress_test": [] }
+  },
+  "Assess Risk": {
+    "learn": {
+      "overview": {
+        "definition": "Identifying, analyzing, and responding to project risks throughout the project life cycle.",
+        "module_introduction": "",
+        "what_youll_learn": [],
+        "key_learning_objectives": [],
+        "why_this_matters": "",
+        "exam_triggers": []
+      },
+      "pmp_application": {
+        "connection_to_pmp": "",
+        "domain": "Process (50% of exam)",
+        "related_tasks": [],
+        "how_module_supports_pmp_application": [],
+        "application_tips": []
+      },
+      "deep_dive": {
+        "foundational_concept": ""
+      }
+    },
+    "practice": { "agile_mindset": "Embrace risk as opportunity for innovation.", "checklist": ["Risk Register", "Risk Response Plan"], "reflex_prompts": [], "stress_test": [] }
+  },
+  "Engage Stakeholders": {
+    "learn": {
+      "overview": {
+        "definition": "Identifying project stakeholders regularly and analyzing and managing their expectations through effective communication.",
+        "module_introduction": "",
+        "what_youll_learn": [],
+        "key_learning_objectives": [],
+        "why_this_matters": "",
+        "exam_triggers": []
+      },
+      "pmp_application": {
+        "connection_to_pmp": "",
+        "domain": "Process (50% of exam)",
+        "related_tasks": [],
+        "how_module_supports_pmp_application": [],
+        "application_tips": []
+      },
+      "deep_dive": {
+        "foundational_concept": ""
+      }
+    },
+    "practice": { "agile_mindset": "Customer collaboration over contract negotiation.", "checklist": ["Stakeholder Register", "Engagement Assessment"], "reflex_prompts": [], "stress_test": [] }
+  },
+  "Plan Budget": {
+    "learn": {
+      "overview": {
+        "definition": "Estimating costs and establishing an authorized cost baseline for the project.",
+        "module_introduction": "",
+        "what_youll_learn": [],
+        "key_learning_objectives": [],
+        "why_this_matters": "",
+        "exam_triggers": []
+      },
+      "pmp_application": {
+        "connection_to_pmp": "",
+        "domain": "Process (50% of exam)",
+        "related_tasks": [],
+        "how_module_supports_pmp_application": [],
+        "application_tips": []
+      },
+      "deep_dive": {
+        "foundational_concept": ""
+      }
+    },
+    "practice": { "agile_mindset": "Budget flexibility enables value delivery.", "checklist": ["Cost Baseline", "Funding Requirements"], "reflex_prompts": [], "stress_test": [] }
+  },
+  "Plan Schedule": {
+    "learn": {
+      "overview": {
+        "definition": "Establishing policies, procedures, and documentation for planning, developing, managing, executing, and controlling the project schedule.",
+        "module_introduction": "",
+        "what_youll_learn": [],
+        "key_learning_objectives": [],
+        "why_this_matters": "",
+        "exam_triggers": []
+      },
+      "pmp_application": {
+        "connection_to_pmp": "",
+        "domain": "Process (50% of exam)",
+        "related_tasks": [],
+        "how_module_supports_pmp_application": [],
+        "application_tips": []
+      },
+      "deep_dive": {
+        "foundational_concept": ""
+      }
+    },
+    "practice": { "agile_mindset": "Working software over comprehensive documentation.", "checklist": ["Schedule Baseline", "Milestone List"], "reflex_prompts": [], "stress_test": [] }
+  },
+  "Plan Quality": {
+    "learn": {
+      "overview": {
+        "definition": "Identifying quality requirements and standards for the project and its deliverables.",
+        "module_introduction": "",
+        "what_youll_learn": [],
+        "key_learning_objectives": [],
+        "why_this_matters": "",
+        "exam_triggers": []
+      },
+      "pmp_application": {
+        "connection_to_pmp": "",
+        "domain": "Process (50% of exam)",
+        "related_tasks": [],
+        "how_module_supports_pmp_application": [],
+        "application_tips": []
+      },
+      "deep_dive": {
+        "foundational_concept": ""
+      }
+    },
+    "practice": { "agile_mindset": "Continuous attention to technical excellence.", "checklist": ["Quality Metrics", "Quality Management Plan"], "reflex_prompts": [], "stress_test": [] }
+  },
+  "Plan Scope": {
+    "learn": {
+      "overview": {
+        "definition": "Creating a scope management plan and defining the project scope.",
+        "module_introduction": "",
+        "what_youll_learn": [],
+        "key_learning_objectives": [],
+        "why_this_matters": "",
+        "exam_triggers": []
+      },
+      "pmp_application": {
+        "connection_to_pmp": "",
+        "domain": "Process (50% of exam)",
+        "related_tasks": [],
+        "how_module_supports_pmp_application": [],
+        "application_tips": []
+      },
+      "deep_dive": {
+        "foundational_concept": ""
+      }
+    },
+    "practice": { "agile_mindset": "Welcome changing requirements, even late in development.", "checklist": ["Scope Statement", "WBS"], "reflex_prompts": [], "stress_test": [] }
+  },
+  "Integrate Planning": {
+    "learn": {
+      "overview": {
+        "definition": "Developing and managing the project management plan and coordinating all project planning activities.",
+        "module_introduction": "",
+        "what_youll_learn": [],
+        "key_learning_objectives": [],
+        "why_this_matters": "",
+        "exam_triggers": []
+      },
+      "pmp_application": {
+        "connection_to_pmp": "",
+        "domain": "Process (50% of exam)",
+        "related_tasks": [],
+        "how_module_supports_pmp_application": [],
+        "application_tips": []
+      },
+      "deep_dive": {
+        "foundational_concept": ""
+      }
+    },
+    "practice": { "agile_mindset": "Individuals and interactions over processes and tools.", "checklist": ["Project Management Plan", "Baselines"], "reflex_prompts": [], "stress_test": [] }
+  },
+  "Manage Changes": {
+    "learn": {
+      "overview": {
+        "definition": "Reviewing, approving, and managing changes to project deliverables, organizational process assets, project documents, and the project management plan.",
+        "module_introduction": "",
+        "what_youll_learn": [],
+        "key_learning_objectives": [],
+        "why_this_matters": "",
+        "exam_triggers": []
+      },
+      "pmp_application": {
+        "connection_to_pmp": "",
+        "domain": "Process (50% of exam)",
+        "related_tasks": [],
+        "how_module_supports_pmp_application": [],
+        "application_tips": []
+      },
+      "deep_dive": {
+        "foundational_concept": ""
+      }
+    },
+    "practice": { "agile_mindset": "Respond to change over following a plan.", "checklist": ["Change Log", "Change Control Process"], "reflex_prompts": [], "stress_test": [] }
+  },
+  "Plan Procurement": {
+    "learn": {
+      "overview": {
+        "definition": "Documenting project procurement decisions, specifying the approach, and identifying potential sellers.",
+        "module_introduction": "",
+        "what_youll_learn": [],
+        "key_learning_objectives": [],
+        "why_this_matters": "",
+        "exam_triggers": []
+      },
+      "pmp_application": {
+        "connection_to_pmp": "",
+        "domain": "Process (50% of exam)",
+        "related_tasks": [],
+        "how_module_supports_pmp_application": [],
+        "application_tips": []
+      },
+      "deep_dive": {
+        "foundational_concept": ""
+      }
+    },
+    "practice": { "agile_mindset": "Customer collaboration over contract negotiation.", "checklist": ["Procurement Strategy", "SOW"], "reflex_prompts": [], "stress_test": [] }
+  },
+  "Manage Artifacts": {
+    "learn": {
+      "overview": {
+        "definition": "Creating and maintaining project artifacts throughout the project life cycle.",
+        "module_introduction": "",
+        "what_youll_learn": [],
+        "key_learning_objectives": [],
+        "why_this_matters": "",
+        "exam_triggers": []
+      },
+      "pmp_application": {
+        "connection_to_pmp": "",
+        "domain": "Process (50% of exam)",
+        "related_tasks": [],
+        "how_module_supports_pmp_application": [],
+        "application_tips": []
+      },
+      "deep_dive": {
+        "foundational_concept": ""
+      }
+    },
+    "practice": { "agile_mindset": "Working software over comprehensive documentation.", "checklist": ["Document Register", "Artifact Repository"], "reflex_prompts": [], "stress_test": [] }
+  },
+  "Determine Methodology": {
+    "learn": {
+      "overview": {
+        "definition": "Selecting an appropriate development approach and lifecycle for the project.",
+        "module_introduction": "",
+        "what_youll_learn": [],
+        "key_learning_objectives": [],
+        "why_this_matters": "",
+        "exam_triggers": []
+      },
+      "pmp_application": {
+        "connection_to_pmp": "",
+        "domain": "Process (50% of exam)",
+        "related_tasks": [],
+        "how_module_supports_pmp_application": [],
+        "application_tips": []
+      },
+      "deep_dive": {
+        "foundational_concept": ""
+      }
+    },
+    "practice": { "agile_mindset": "Choose methodology based on project characteristics.", "checklist": ["Lifecycle Selection", "Development Approach"], "reflex_prompts": [], "stress_test": [] }
+  },
+  "Establish Governance": {
+    "learn": {
+      "overview": {
+        "definition": "Developing a governance structure for the project and defining policies and procedures.",
+        "module_introduction": "",
+        "what_youll_learn": [],
+        "key_learning_objectives": [],
+        "why_this_matters": "",
+        "exam_triggers": []
+      },
+      "pmp_application": {
+        "connection_to_pmp": "",
+        "domain": "Process (50% of exam)",
+        "related_tasks": [],
+        "how_module_supports_pmp_application": [],
+        "application_tips": []
+      },
+      "deep_dive": {
+        "foundational_concept": ""
+      }
+    },
+    "practice": { "agile_mindset": "Self-organizing teams over command and control.", "checklist": ["Governance Framework", "Decision Rights"], "reflex_prompts": [], "stress_test": [] }
+  },
+  "Manage Issues": {
+    "learn": {
+      "overview": {
+        "definition": "Addressing issues that impede the project team's ability to achieve project goals.",
+        "module_introduction": "",
+        "what_youll_learn": [],
+        "key_learning_objectives": [],
+        "why_this_matters": "",
+        "exam_triggers": []
+      },
+      "pmp_application": {
+        "connection_to_pmp": "",
+        "domain": "Process (50% of exam)",
+        "related_tasks": [],
+        "how_module_supports_pmp_application": [],
+        "application_tips": []
+      },
+      "deep_dive": {
+        "foundational_concept": ""
+      }
+    },
+    "practice": { "agile_mindset": "Address issues immediately and transparently.", "checklist": ["Issue Log", "Escalation Path"], "reflex_prompts": [], "stress_test": [] }
+  },
+  "Transfer Knowledge": {
+    "learn": {
+      "overview": {
+        "definition": "Ensuring knowledge is transferred between project team members and other stakeholders.",
+        "module_introduction": "",
+        "what_youll_learn": [],
+        "key_learning_objectives": [],
+        "why_this_matters": "",
+        "exam_triggers": []
+      },
+      "pmp_application": {
+        "connection_to_pmp": "",
+        "domain": "Process (50% of exam)",
+        "related_tasks": [],
+        "how_module_supports_pmp_application": [],
+        "application_tips": []
+      },
+      "deep_dive": {
+        "foundational_concept": ""
+      }
+    },
+    "practice": { "agile_mindset": "Continuous learning and knowledge sharing.", "checklist": ["Lessons Learned", "Knowledge Repository"], "reflex_prompts": [], "stress_test": [] }
+  },
+  "Plan Closure": {
+    "learn": {
+      "overview": {
+        "definition": "Finalizing all project activities and completing the project or phase.",
+        "module_introduction": "",
+        "what_youll_learn": [],
+        "key_learning_objectives": [],
+        "why_this_matters": "",
+        "exam_triggers": []
+      },
+      "pmp_application": {
+        "connection_to_pmp": "",
+        "domain": "Process (50% of exam)",
+        "related_tasks": [],
+        "how_module_supports_pmp_application": [],
+        "application_tips": []
+      },
+      "deep_dive": {
+        "foundational_concept": ""
+      }
+    },
+    "practice": { "agile_mindset": "Reflect on how to become more effective.", "checklist": ["Final Report", "Lessons Learned"], "reflex_prompts": [], "stress_test": [] }
+  },
+  "Plan Compliance": {
+    "learn": {
+      "overview": {
+        "definition": "Determining and addressing compliance requirements for the project.",
+        "module_introduction": "",
+        "what_youll_learn": [],
+        "key_learning_objectives": [],
+        "why_this_matters": "",
+        "exam_triggers": []
+      },
+      "pmp_application": {
+        "connection_to_pmp": "",
+        "domain": "Business Environment (8% of exam)",
+        "related_tasks": [],
+        "how_module_supports_pmp_application": [],
+        "application_tips": []
+      },
+      "deep_dive": {
+        "foundational_concept": ""
+      }
+    },
+    "practice": { "agile_mindset": "Balance compliance with agility.", "checklist": ["Compliance Checklist", "Regulatory Requirements"], "reflex_prompts": [], "stress_test": [] }
+  },
+  "Evaluate Benefits": {
+    "learn": {
+      "overview": {
+        "definition": "Evaluating and delivering project benefits and value.",
+        "module_introduction": "",
+        "what_youll_learn": [],
+        "key_learning_objectives": [],
+        "why_this_matters": "",
+        "exam_triggers": []
+      },
+      "pmp_application": {
+        "connection_to_pmp": "",
+        "domain": "Business Environment (8% of exam)",
+        "related_tasks": [],
+        "how_module_supports_pmp_application": [],
+        "application_tips": []
+      },
+      "deep_dive": {
+        "foundational_concept": ""
+      }
+    },
+    "practice": { "agile_mindset": "Deliver value early and often.", "checklist": ["Benefits Realization Plan", "Value Metrics"], "reflex_prompts": [], "stress_test": [] }
+  },
+  "Support Change": {
+    "learn": {
+      "overview": {
+        "definition": "Supporting organizational change management activities.",
+        "module_introduction": "",
+        "what_youll_learn": [],
+        "key_learning_objectives": [],
+        "why_this_matters": "",
+        "exam_triggers": []
+      },
+      "pmp_application": {
+        "connection_to_pmp": "",
+        "domain": "Business Environment (8% of exam)",
+        "related_tasks": [],
+        "how_module_supports_pmp_application": [],
+        "application_tips": []
+      },
+      "deep_dive": {
+        "foundational_concept": ""
+      }
+    },
+    "practice": { "agile_mindset": "Respond to change over following a plan.", "checklist": ["Change Management Plan", "Impact Assessment"], "reflex_prompts": [], "stress_test": [] }
+  },
+  "Employ Continuous Improvement": {
+    "learn": {
+      "overview": {
+        "definition": "Identifying and implementing continuous improvement opportunities.",
+        "module_introduction": "",
+        "what_youll_learn": [],
+        "key_learning_objectives": [],
+        "why_this_matters": "",
+        "exam_triggers": []
+      },
+      "pmp_application": {
+        "connection_to_pmp": "",
+        "domain": "Business Environment (8% of exam)",
+        "related_tasks": [],
+        "how_module_supports_pmp_application": [],
+        "application_tips": []
+      },
+      "deep_dive": {
+        "foundational_concept": ""
+      }
+    },
+    "practice": { "agile_mindset": "Continuous attention to technical excellence and good design.", "checklist": ["Retrospectives", "Process Improvements"], "reflex_prompts": [], "stress_test": [] }
   }
 }
