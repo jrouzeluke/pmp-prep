@@ -1,36 +1,121 @@
-# BATCH 1: Lead a Team - Overview
+← Back
+Lead a Team
+Overview
 
-## Module Introduction
+Definition
+"Set a clear vision and mission, support diversity and inclusion, value servant leadership, and determine appropriate leadership style to inspire and guide team performance."
 
-Leading a team is one of the most critical and rewarding aspects of project management. Whether you're managing a small task force or a large, cross-functional team, your ability to guide, motivate, and develop your team members directly impacts project success.
+Exam Triggers
+* •New team formation
+* •Team not performing
+* •Leadership style question
+* •Team development stage
+* •Motivation/engagement issue
 
-## What You'll Learn
+Tuckman's Team Development Stages
 
-In this module, you will explore the essential competencies required to lead teams effectively, including:
+🌱1. Forming
+Characteristics: New team, polite, uncertain, dependent on PM
+PM Action: Provide structure, clarify roles, establish ground rules
+Duration: 1-4 weeks
 
-- **Understanding team development stages** - How teams evolve from formation to high performance
-- **Applying leadership styles** - When and how to use different approaches to maximize team effectiveness
-- **Building trust and psychological safety** - Creating an environment where team members feel valued and empowered
-- **Managing conflict constructively** - Turning disagreements into opportunities for growth
-- **Developing team members** - Coaching and mentoring to build capabilities
+⚡2. Storming
+Characteristics: Conflict, competition, challenging authority
+PM Action: Facilitate conflict resolution, reinforce vision, coach
+Duration: 3-8 weeks (can cycle back with changes)
 
-## Key Learning Objectives
+🤝3. Norming
+Characteristics: Cooperation, shared processes, "we" language
+PM Action: Step back, empower team, reinforce collaboration
+Duration: Ongoing with maintenance
 
-By the end of this module, you will be able to:
+🚀4. Performing
+Characteristics: High autonomy, self-organizing, excellent results
+PM Action: Delegate, remove obstacles, focus on strategy
+Duration: Sustained with stable team
 
-1. Identify which stage of team development your team is in and adapt your leadership approach accordingly
-2. Select and apply appropriate leadership styles based on team maturity and situational factors
-3. Create an environment of psychological safety where team members feel comfortable taking risks
-4. Facilitate productive conflict resolution using appropriate techniques
-5. Coach and develop team members to enhance their capabilities and engagement
-6. Build high-performing teams that deliver exceptional results
+👋5. Adjourning
+Characteristics: Project ending, reflection, transition concerns
+PM Action: Celebrate, document lessons, support transitions
+Duration: 2-4 weeks
 
-## Why This Matters
+Leadership Styles (Goleman)
 
-Effective team leadership is consistently identified as one of the top success factors in project management. Research shows that:
+⭐1. Authoritative/Visionary
+When: New direction needed, team lacks clarity
+Effect: Most positive impact on climate
+Action: "Here's where we're going, you determine how"
 
-- Teams with strong leadership are **2.5x more likely** to complete projects on time and within budget
-- Projects with engaged team members have **21% higher profitability**
-- High-performing teams spend **50% more time** in collaborative problem-solving than low-performing teams
+🎓2. Coaching
+When: Developing team members, time available
+Effect: Builds long-term capabilities
+Action: "Try this approach, let me give you feedback"
 
-Your ability to lead teams effectively will differentiate you as a project manager and directly contribute to your organization's success.
+🤝3. Affiliative
+When: Team stressed, relationships strained, after conflict
+Effect: Builds harmony and trust
+Action: "People first, let's support each other"
+
+💬4. Democratic/Participative
+When: Need buy-in, team has expertise, time available
+Effect: Builds consensus and engagement
+Action: "What do you think we should do?"
+
+⚡5. Pacesetting
+When: Quick results needed, competent team, short-term only
+Effect: Can damage climate if overused
+Action: "Do as I do, follow my example"
+
+⚠️6. Commanding/Coercive
+When: Crisis/emergency ONLY, immediate action required
+Effect: Most negative long-term impact
+Action: "Do what I say, now"
+
+Quick Scenarios
+
+Team is new and members don't know each other or their roles
+Wrong: Let them self-organize immediately (Delegating too early)
+Right: Provide clear structure, facilitate introductions, establish ground rules (Forming stage needs direction)
+New teams need PM guidance and structure
+
+Two senior developers publicly arguing about technical approach in team meeting
+Wrong: Force a decision to end argument quickly (Commanding)
+Right: Acknowledge both views, facilitate problem-solving discussion (Storming stage needs coaching)
+Conflict in Storming is normal and needs facilitation, not suppression
+
+High-performing team consistently delivering excellent results
+Wrong: Continue making all decisions to maintain control (Commanding)
+Right: Delegate authority, remove obstacles, focus on strategic issues (Performing stage needs autonomy)
+High performers need trust and empowerment, not micromanagement
+
+Team just completed intense 3-month death march and morale is low
+Wrong: Immediately start next high-pressure project (Pacesetting)
+Right: Acknowledge effort, provide recovery time, rebuild relationships (Affiliative)
+Burned-out teams need care and relationship repair
+
+Major organizational change affecting team, high anxiety
+Wrong: Focus only on deliverables and ignore emotions (Pacesetting)
+Right: Provide vision, address concerns, offer support (Authoritative + Affiliative)
+Change requires clear direction combined with emotional support
+
+Key Exam Principles
+
+Match Style to Situation
+• Forming → Authoritative/Commanding
+• Storming → Coaching/Affiliative
+• Norming → Democratic
+• Performing → Delegating
+• Crisis → Commanding (temporarily)
+
+Servant Leadership
+• Remove obstacles for team
+• Support team needs
+• Empower team members
+• Focus on team success over personal recognition
+
+Common Wrong Answers
+• Micromanaging high performers
+• Avoiding conflict in Storming stage
+• Using Commanding as default style
+• Failing to adapt style to team maturity
+• Ignoring team emotional needs
