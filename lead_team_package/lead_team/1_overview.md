@@ -1,3 +1,6 @@
+Perfect! Here's the complete content for the Lead a Team Overview page:
+
+```markdown
 ← Back
 Lead a Team
 Overview
@@ -75,17 +78,17 @@ Quick Scenarios
 
 Team is new and members don't know each other or their roles
 Wrong: Let them self-organize immediately (Delegating too early)
-Right: Provide clear structure, facilitate introductions, establish ground rules (Forming stage needs direction)
+Right: Provide clear structure, facilitate introductions, establish ground rules (Authoritative)
 New teams need PM guidance and structure
 
 Two senior developers publicly arguing about technical approach in team meeting
 Wrong: Force a decision to end argument quickly (Commanding)
-Right: Acknowledge both views, facilitate problem-solving discussion (Storming stage needs coaching)
+Right: Acknowledge both views, facilitate problem-solving discussion (Coaching)
 Conflict in Storming is normal and needs facilitation, not suppression
 
 High-performing team consistently delivering excellent results
 Wrong: Continue making all decisions to maintain control (Commanding)
-Right: Delegate authority, remove obstacles, focus on strategic issues (Performing stage needs autonomy)
+Right: Delegate authority, remove obstacles, focus on strategic issues (Delegating)
 High performers need trust and empowerment, not micromanagement
 
 Team just completed intense 3-month death march and morale is low
@@ -112,6 +115,12 @@ Servant Leadership
 • Support team needs
 • Empower team members
 • Focus on team success over personal recognition
+
+Adaptive Leadership
+• No single "best" style
+• Assess team maturity
+• Consider urgency and complexity
+• Flex between styles as needed
 
 Common Wrong Answers
 • Micromanaging high performers
