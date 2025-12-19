@@ -1885,6 +1885,16 @@ const PMPApp = () => {
   // Timeline Reconstructor / Stage Detective Activity View
   // Support both route names for Lead a Team
   if (view === 'timeline-reconstructor' || view === 'stage-detective') {
+    if (!currentTask) {
+      return (
+        <div className="max-w-6xl w-full p-10 animate-fadeIn text-left">
+          <div className="glass-card p-10 text-center">
+            <h1 className="executive-font text-3xl font-bold text-white mb-4">Loading...</h1>
+            <GlobalNavFooter />
+          </div>
+        </div>
+      );
+    }
     // For Lead a Team, use stage_detective, otherwise timeline_reconstructor
     const dataKey = selectedTask === 'Lead a Team' ? 'stage_detective' : 'timeline_reconstructor';
     const activityTitle = selectedTask === 'Lead a Team' ? 'Stage Detective' : 'Timeline Reconstructor';
@@ -2035,21 +2045,9 @@ const PMPApp = () => {
       );
     }
 
-    // Use initialized steps or initialize on first render
-    const currentSteps = timelineReconstructorState.steps.length > 0 
-      ? timelineReconstructorState.steps 
-      : initializeSteps();
-
-    // Initialize on mount if needed
-    if (timelineReconstructorState.steps.length === 0 && currentSteps.length > 0) {
-      setTimeout(() => {
-        setTimelineReconstructorState(prev => ({ ...prev, steps: currentSteps }));
-      }, 0);
-    }
-
     // Feedback Screen
     if (timelineReconstructorState.showingFeedback) {
-      const stepsForFeedback = timelineReconstructorState.steps.length > 0 ? timelineReconstructorState.steps : currentSteps;
+      const stepsForFeedback = displaySteps;
       
       return (
         <div className="max-w-6xl w-full p-10 animate-fadeIn text-left">
@@ -2077,7 +2075,10 @@ const PMPApp = () => {
           <div className="space-y-4 mb-6">
             {stepsForFeedback.map((step, index) => {
               const isCorrect = step.correctOrder === index + 1;
-              const correctStep = timelineData.steps.find(s => s.correctOrder === index + 1);
+              const stepsDataForLookup = selectedTask === 'Lead a Team' && timelineData?.scenarios?.[0]?.events
+                ? timelineData.scenarios[0].events
+                : timelineData?.steps || [];
+              const correctStep = stepsDataForLookup.find(s => s.correctOrder === index + 1);
 
               return (
                 <div 
@@ -2171,8 +2172,7 @@ const PMPApp = () => {
       );
     }
 
-    // Game Display - use current steps
-    const displaySteps = timelineReconstructorState.steps.length > 0 ? timelineReconstructorState.steps : currentSteps;
+    // Game Display - displaySteps already defined above
     
     return (
       <div className="max-w-6xl w-full p-10 animate-fadeIn text-left">
