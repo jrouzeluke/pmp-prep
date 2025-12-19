@@ -1918,7 +1918,7 @@
           }
         },
         "leadership_styles": {
-          "title": "Goleman's Six Leadership Styles",
+          "title": "Part 2: Goleman's Six Leadership Styles",
           "background_and_research": "Daniel Goleman, psychologist and author, identified six leadership styles based on research into emotional intelligence and organizational leadership. His research, published in Harvard Business Review (2000), demonstrated that leaders who master multiple styles and can flex between them achieve better results than those who rely on one approach.",
           "why_leadership_style_matters": "Research shows that leadership style has direct impact on organizational climate (working environment, morale, commitment), which in turn affects performance outcomes (productivity, quality, retention).",
           "key_research_findings": [
@@ -2535,14 +2535,97 @@
             }
           ],
           "situational_leadership": {
-            "description": "Effective leaders diagnose the situation and adapt their style accordingly. Consider team development stage, task maturity, urgency and risk, and complexity.",
-            "by_team_stage": [
-              {"stage": "Forming", "primary": "Commanding → Authoritative", "supporting": "Affiliative"},
-              {"stage": "Storming", "primary": "Coaching", "supporting": "Affiliative"},
-              {"stage": "Norming", "primary": "Democratic", "supporting": "Authoritative"},
-              {"stage": "Performing", "primary": "Delegating/Democratic", "supporting": "Coaching"},
-              {"stage": "Adjourning", "primary": "Coaching", "supporting": "Affiliative"}
-            ]
+            "title": "Part 3: Situational Leadership - Matching Style to Situation",
+            "integration_framework": "Effective leadership requires combining Tuckman's stages with appropriate leadership styles. Here's how they integrate:",
+            "by_team_stage": {
+              "forming": {
+                "primary": "Authoritative (provide vision)",
+                "secondary": "Commanding (provide structure)",
+                "why": "Team needs clear direction and can't self-organize yet"
+              },
+              "storming": {
+                "primary": "Coaching (facilitate through conflict)",
+                "secondary": "Affiliative (repair relationships)",
+                "why": "Team needs help working through disagreements constructively"
+              },
+              "norming": {
+                "primary": "Democratic (involve in decisions)",
+                "secondary": "Coaching (continue development)",
+                "why": "Team ready to participate, needs continued growth"
+              },
+              "performing": {
+                "primary": "Delegating (trust and empower)",
+                "secondary": "Authoritative (strategic direction only)",
+                "why": "Team capable of self-management, needs autonomy"
+              },
+              "adjourning": {
+                "primary": "Affiliative (support emotions)",
+                "secondary": "Coaching (reflect and learn)",
+                "why": "Team needs closure support and knowledge capture"
+              }
+            },
+            "additional_situational_factors": {
+              "urgency_level": {
+                "high": ["Commanding → Authoritative → Pacesetting"],
+                "medium": ["Authoritative → Democratic"],
+                "low": ["Democratic → Coaching"]
+              },
+              "task_complexity": {
+                "high": "Democratic (need multiple perspectives) + Coaching",
+                "medium": "Authoritative + Coaching",
+                "low": "Delegating or Pacesetting"
+              },
+              "team_member_competence": {
+                "low_competence_low_confidence": "Commanding + Coaching",
+                "some_competence_low_confidence": "Coaching + Affiliative",
+                "high_competence_low_confidence": "Democratic + Affiliative",
+                "high_competence_high_confidence": "Delegating"
+              },
+              "organizational_culture": {
+                "hierarchical": "Commanding and Authoritative more accepted",
+                "collaborative": "Democratic and Coaching expected",
+                "results_driven": "Pacesetting and Authoritative effective",
+                "relationship_focused": "Affiliative and Democratic valued"
+              },
+              "stakeholder_expectations": {
+                "command_control_sponsors": "May expect Commanding",
+                "collaborative_sponsors": "Expect Democratic approach",
+                "hands_off_sponsors": "Delegating works well"
+              }
+            },
+            "style_transitions": {
+              "how_to_shift": [
+                {
+                  "step": "Explain the Change",
+                  "examples": [
+                    "Given the emergency, I need to be more directive right now",
+                    "Now that crisis passed, let's return to collaborative approach"
+                  ]
+                },
+                {
+                  "step": "Be Intentional",
+                  "description": "Consciously choose style, don't default unconsciously, match to situation"
+                },
+                {
+                  "step": "Get Feedback",
+                  "questions": [
+                    "How is my leadership working for you?",
+                    "What do you need more/less of from me?"
+                  ],
+                  "action": "Adjust based on input"
+                },
+                {
+                  "step": "Develop Range",
+                  "actions": [
+                    "Practice unfamiliar styles",
+                    "Observe others using different styles",
+                    "Get coaching on weak areas",
+                    "Expand comfort zone"
+                  ]
+                }
+              ]
+            },
+            "description": "Effective leaders diagnose the situation and adapt their style accordingly. Consider team development stage, task maturity, urgency and risk, and complexity."
           },
           "style_combinations": [
             {
@@ -2598,6 +2681,172 @@
               "solution": "Explain your leadership choices when appropriate"
             }
           ],
+          "practical_application": {
+            "title": "Part 4: Practical Application",
+            "self_assessment_questions": {
+              "title": "Self-Assessment Questions",
+              "diagnostic_questions": [
+                {
+                  "question": "What stage is my team currently in?",
+                  "guidance": [
+                    "Look for behaviors, not just time elapsed",
+                    "Consider recent changes",
+                    "Ask team members"
+                  ]
+                },
+                {
+                  "question": "What's my default leadership style?",
+                  "guidance": [
+                    "What do I do when under stress?",
+                    "What feels most natural?",
+                    "What do others say about my style?"
+                  ]
+                },
+                {
+                  "question": "Is my current style appropriate?",
+                  "guidance": [
+                    "Does it match team needs?",
+                    "Is it working (results and morale)?",
+                    "What would work better?"
+                  ]
+                },
+                {
+                  "question": "What style do I avoid or struggle with?",
+                  "guidance": [
+                    "Which feels uncomfortable?",
+                    "Which do I rarely use?",
+                    "Why do I avoid it?"
+                  ]
+                },
+                {
+                  "question": "What's one style I should practice this week?",
+                  "guidance": [
+                    "What situation calls for it?",
+                    "How will I apply it?",
+                    "How will I know if it worked?"
+                  ]
+                }
+              ]
+            },
+            "action_planning_template": {
+              "title": "Action Planning Template",
+              "for_your_current_team": {
+                "team_assessment": {
+                  "current_stage": "",
+                  "evidence": "",
+                  "how_long_in_stage": "",
+                  "ready_to_progress": ""
+                },
+                "leadership_style_analysis": {
+                  "current_primary_style": "",
+                  "is_it_appropriate": "",
+                  "should_i_adjust": "",
+                  "to_what_style": ""
+                },
+                "action_plan": {
+                  "this_week_i_will": "",
+                  "to_support": "",
+                  "ill_know_working_when": "",
+                  "if_doesnt_work_ill": ""
+                },
+                "development_goals": {
+                  "style_to_develop": "",
+                  "why": "",
+                  "how": "",
+                  "by_when": ""
+                }
+              }
+            }
+          },
+          "summary_and_key_takeaways": {
+            "title": "Summary and Key Takeaways",
+            "tuckman_stages_key_points": [
+              {
+                "point": "Teams evolve through predictable stages",
+                "details": [
+                  "Forming → Storming → Norming → Performing → Adjourning",
+                  "Each stage has distinct characteristics",
+                  "Regression possible with changes"
+                ]
+              },
+              {
+                "point": "Each stage requires different leadership",
+                "details": [
+                  "Forming: Structure and direction",
+                  "Storming: Facilitation and coaching",
+                  "Norming: Participation and empowerment",
+                  "Performing: Delegation and support",
+                  "Adjourning: Recognition and closure"
+                ]
+              },
+              {
+                "point": "Not all teams reach Performing",
+                "details": [
+                  "Requires effective leadership through each stage",
+                  "Can get stuck in Storming without intervention",
+                  "Maintaining Performing requires ongoing effort"
+                ]
+              }
+            ],
+            "leadership_styles_key_points": [
+              {
+                "point": "Six styles, all have appropriate uses",
+                "details": [
+                  "Commanding: Emergencies only",
+                  "Authoritative: Most positive overall",
+                  "Affiliative: Relationship repair",
+                  "Democratic: Complex decisions",
+                  "Pacesetting: Short bursts with capable team",
+                  "Coaching: Long-term development"
+                ]
+              },
+              {
+                "point": "Flexibility is essential",
+                "details": [
+                  "Match style to situation",
+                  "Use multiple styles",
+                  "Transition as needed",
+                  "Develop full range"
+                ]
+              },
+              {
+                "point": "Some styles overused, others underused",
+                "details": [
+                  "Commanding overused (default under stress)",
+                  "Coaching underused (takes time)",
+                  "Affiliative underused (task focus dominates)"
+                ]
+              }
+            ],
+            "integration_key_points": [
+              {
+                "point": "Combine frameworks for best results",
+                "details": [
+                  "Team stage + situation + individual needs",
+                  "No single formula",
+                  "Requires judgment"
+                ]
+              },
+              {
+                "point": "Self-awareness is foundation",
+                "details": [
+                  "Know your default style",
+                  "Recognize your triggers",
+                  "Understand your impact",
+                  "Seek feedback"
+                ]
+              },
+              {
+                "point": "Practice and reflection",
+                "details": [
+                  "Try unfamiliar styles",
+                  "Reflect on results",
+                  "Adjust and improve",
+                  "Continuous learning"
+                ]
+              }
+            ]
+          },
           "key_takeaways": [
             "No single 'best' leadership style - Effectiveness depends on situation, team, and individual factors",
             "Flexibility is essential - The best leaders adapt their approach based on needs",
@@ -2609,7 +2858,49 @@
             "Self-awareness is the foundation of adaptive leadership",
             "Practice and feedback are necessary to develop style flexibility",
             "Explain your approach when helpful to build team understanding"
-          ]
+          ],
+          "additional_resources": {
+            "books": [
+              {
+                "title": "Primal Leadership",
+                "author": "Daniel Goleman",
+                "focus": "Leadership Styles"
+              },
+              {
+                "title": "The Five Dysfunctions of a Team",
+                "author": "Patrick Lencioni",
+                "focus": "Team dynamics and dysfunction"
+              },
+              {
+                "title": "Leaders Eat Last",
+                "author": "Simon Sinek",
+                "focus": "Servant leadership and team culture"
+              },
+              {
+                "title": "Dare to Lead",
+                "author": "Brené Brown",
+                "focus": "Courageous leadership and vulnerability"
+              }
+            ],
+            "articles": [
+              {
+                "title": "Leadership That Gets Results",
+                "author": "Daniel Goleman",
+                "publication": "Harvard Business Review",
+                "focus": "Research on leadership styles and organizational climate"
+              },
+              {
+                "title": "Original Tuckman research papers",
+                "focus": "Foundational research on team development stages"
+              }
+            ],
+            "tools": [
+              "Leadership style self-assessment",
+              "Team development stage diagnostic",
+              "360-degree feedback",
+              "Emotional intelligence assessment"
+            ]
+          }
         }
       }
     },
