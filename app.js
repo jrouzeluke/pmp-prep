@@ -36,7 +36,10 @@ const PMPApp = () => {
     currentCase: 0,
     selectedDocs: [],
     showingFeedback: false,
-    score: 0
+    score: 0,
+    currentQuestion: 0,
+    showingAnswer: false,
+    userAnswers: {}
   });
   const [conflictMatcherState, setConflictMatcherState] = useState({
     matches: {}, // { scenarioId: mode }
@@ -998,8 +1001,17 @@ const PMPApp = () => {
 
   // Document Detective Activity View
   if (view === 'document-detective') {
-    // For now, create sample cases if document_detective data doesn't exist
-    const documentDetectiveCases = currentTask.practice?.document_detective || [
+    // Handle different data structures: array directly OR object with cases array
+    let documentDetectiveCases = currentTask.practice?.document_detective;
+    
+    // If it's an object with a cases array (Lead a Team format), extract the cases
+    if (documentDetectiveCases && documentDetectiveCases.cases && Array.isArray(documentDetectiveCases.cases)) {
+      documentDetectiveCases = documentDetectiveCases.cases;
+    }
+    
+    // If still not an array or empty, use sample data
+    if (!Array.isArray(documentDetectiveCases) || documentDetectiveCases.length === 0) {
+      documentDetectiveCases = [
       {
         title: "The Resource Conflict",
         scenario: "Two departments are requesting the same senior developer for overlapping project timelines. Marketing needs the developer for a critical customer-facing feature launch in 3 weeks. Engineering needs them for a technical debt refactoring that's blocking 5 other features. Both projects are high priority. Team meetings have become tense, with each department presenting their case more aggressively. You need to resolve this conflict and ensure both projects can proceed.",
@@ -1075,7 +1087,10 @@ const PMPApp = () => {
         ...prev,
         selectedDocs: [],
         showingFeedback: false,
-        score: 0
+        score: 0,
+        currentQuestion: 0,
+        showingAnswer: false,
+        userAnswers: {}
       }));
     };
 
@@ -1085,7 +1100,10 @@ const PMPApp = () => {
           currentCase: documentDetectiveState.currentCase + 1,
           selectedDocs: [],
           showingFeedback: false,
-          score: 0
+          score: 0,
+          currentQuestion: 0,
+          showingAnswer: false,
+          userAnswers: {}
         });
       } else {
         // All cases complete - loop back to first
@@ -1093,7 +1111,10 @@ const PMPApp = () => {
           currentCase: 0,
           selectedDocs: [],
           showingFeedback: false,
-          score: 0
+          score: 0,
+          currentQuestion: 0,
+          showingAnswer: false,
+          userAnswers: {}
         });
       }
     };
@@ -1103,7 +1124,10 @@ const PMPApp = () => {
         currentCase: 0,
         selectedDocs: [],
         showingFeedback: false,
-        score: 0
+        score: 0,
+        currentQuestion: 0,
+        showingAnswer: false,
+        userAnswers: {}
       });
       setView('practice-hub');
     };
@@ -1270,7 +1294,141 @@ const PMPApp = () => {
       );
     }
 
-    // Case Display
+    // Case Display - Check format type
+    const isQAFormat = currentCaseData && (currentCaseData.questions || currentCaseData.document);
+    
+    // Q&A Format (Lead a Team)
+    if (isQAFormat) {
+      return (
+        <div className="max-w-6xl w-full p-10 animate-fadeIn text-left">
+          <header className="mb-8">
+            <div className="flex items-center gap-4 mb-6">
+              <button 
+                onClick={goToPracticeHub}
+                className="px-4 py-2 executive-font text-xs text-slate-400 hover:text-white uppercase font-semibold transition-colors flex items-center gap-2"
+              >
+                ← Back
+              </button>
+            </div>
+            <h1 className="executive-font text-5xl font-bold text-white tracking-tight">🕵️ Document Detective</h1>
+            <p className="text-slate-400 mt-2">Case {documentDetectiveState.currentCase + 1} of {documentDetectiveCases.length}: {currentCaseData.title}</p>
+          </header>
+
+          {/* Document Display */}
+          {currentCaseData.document && (
+            <div className="glass-card p-8 mb-6 border-l-4 border-purple-500">
+              <h2 className="executive-font text-2xl font-bold text-white mb-4">{currentCaseData.title}</h2>
+              <div className="bg-slate-900/50 p-6 rounded border border-slate-700">
+                <pre className="text-slate-300 whitespace-pre-wrap font-mono text-sm leading-relaxed">{currentCaseData.document}</pre>
+              </div>
+            </div>
+          )}
+
+          {/* Questions */}
+          {currentCaseData.questions && (
+            <div className="space-y-6">
+              {currentCaseData.questions.map((q, qIdx) => {
+                const isShowingAnswer = documentDetectiveState.showingAnswer === qIdx;
+                return (
+                  <div key={qIdx} className="glass-card p-6 border-l-4 border-cyan-500">
+                    <div className="flex items-center justify-between mb-4">
+                      <h3 className="executive-font text-xl font-semibold text-white">
+                        Question {qIdx + 1} of {currentCaseData.questions.length}
+                      </h3>
+                      <button
+                        onClick={() => setDocumentDetectiveState(prev => ({
+                          ...prev,
+                          showingAnswer: isShowingAnswer ? false : qIdx
+                        }))}
+                        className="px-4 py-2 bg-cyan-600 hover:bg-cyan-700 text-white text-sm font-semibold rounded transition-colors"
+                      >
+                        {isShowingAnswer ? 'Hide Answer' : 'Show Answer'}
+                      </button>
+                    </div>
+                    
+                    <p className="text-white text-lg mb-4">{q.question}</p>
+                    
+                    {isShowingAnswer && (
+                      <div className="mt-4 p-4 bg-emerald-900/30 border-l-4 border-emerald-500 rounded">
+                        <div className="mb-3">
+                          <span className="text-emerald-400 font-semibold">Correct Answer: </span>
+                          <span className="text-white">{q.correct}</span>
+                        </div>
+                        <div className="mt-3">
+                          <span className="text-cyan-400 font-semibold">Explanation: </span>
+                          <p className="text-slate-300 mt-2">{q.explanation}</p>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          )}
+
+          {/* Key Insights */}
+          {currentCaseData.key_insights && (
+            <div className="glass-card p-6 mt-6 border-l-4 border-yellow-500">
+              <h3 className="executive-font text-xl font-semibold text-white mb-4">💡 Key Insights</h3>
+              <ul className="list-disc list-inside text-slate-300 space-y-2">
+                {currentCaseData.key_insights.map((insight, idx) => (
+                  <li key={idx}>{insight}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {/* Navigation */}
+          <div className="flex gap-4 mt-8">
+            {documentDetectiveCases.length > 1 && (
+              <>
+                <button 
+                  onClick={() => {
+                    if (documentDetectiveState.currentCase > 0) {
+                      setDocumentDetectiveState(prev => ({
+                        ...prev,
+                        currentCase: prev.currentCase - 1,
+                        showingAnswer: false,
+                        currentQuestion: 0
+                      }));
+                    }
+                  }}
+                  disabled={documentDetectiveState.currentCase === 0}
+                  className="px-6 py-3 bg-slate-700 hover:bg-slate-600 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold rounded-lg transition-colors executive-font"
+                >
+                  ← Previous Case
+                </button>
+                <button 
+                  onClick={() => {
+                    if (documentDetectiveState.currentCase < documentDetectiveCases.length - 1) {
+                      setDocumentDetectiveState(prev => ({
+                        ...prev,
+                        currentCase: prev.currentCase + 1,
+                        showingAnswer: false,
+                        currentQuestion: 0
+                      }));
+                    }
+                  }}
+                  disabled={documentDetectiveState.currentCase >= documentDetectiveCases.length - 1}
+                  className="px-6 py-3 bg-purple-600 hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold rounded-lg transition-colors executive-font"
+                >
+                  Next Case →
+                </button>
+              </>
+            )}
+            <button 
+              onClick={goToPracticeHub}
+              className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors executive-font ml-auto"
+            >
+              Back to Practice Hub
+            </button>
+          </div>
+          <GlobalNavFooter />
+        </div>
+      );
+    }
+    
+    // Document Selection Format (Manage Conflict)
     return (
       <div className="max-w-6xl w-full p-10 animate-fadeIn text-left">
         <header className="mb-8">
@@ -1297,47 +1455,49 @@ const PMPApp = () => {
         </div>
 
         {/* Document Selection */}
-        <div className="glass-card p-6 mb-6">
-          <h3 className="executive-font text-xl font-semibold text-white mb-4">
-            Available Documents ({documentDetectiveState.selectedDocs.length}/3 selected)
-          </h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {currentCaseData.allDocs.map((doc, idx) => {
-              const isSelected = documentDetectiveState.selectedDocs.includes(doc);
-              return (
-                <button
-                  key={idx}
-                  onClick={() => toggleDocument(doc)}
-                  disabled={!isSelected && documentDetectiveState.selectedDocs.length >= 3}
-                  className={`glass-card p-4 text-left transition-all border-l-4 ${
-                    isSelected 
-                      ? 'border-cyan-500 bg-cyan-500/10' 
-                      : documentDetectiveState.selectedDocs.length >= 3
-                        ? 'border-slate-600 opacity-50 cursor-not-allowed'
-                        : 'border-slate-600 hover:border-cyan-500/50 hover:bg-cyan-500/5'
-                  }`}
-                >
-                  <div className="flex items-center gap-3">
-                    <div className={`w-5 h-5 rounded border-2 flex items-center justify-center ${
-                      isSelected ? 'bg-cyan-500 border-cyan-500' : 'border-slate-400'
-                    }`}>
-                      {isSelected && <span className="text-white text-xs">✓</span>}
+        {currentCaseData.allDocs && (
+          <div className="glass-card p-6 mb-6">
+            <h3 className="executive-font text-xl font-semibold text-white mb-4">
+              Available Documents ({documentDetectiveState.selectedDocs.length}/3 selected)
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {currentCaseData.allDocs.map((doc, idx) => {
+                const isSelected = documentDetectiveState.selectedDocs.includes(doc);
+                return (
+                  <button
+                    key={idx}
+                    onClick={() => toggleDocument(doc)}
+                    disabled={!isSelected && documentDetectiveState.selectedDocs.length >= 3}
+                    className={`glass-card p-4 text-left transition-all border-l-4 ${
+                      isSelected 
+                        ? 'border-cyan-500 bg-cyan-500/10' 
+                        : documentDetectiveState.selectedDocs.length >= 3
+                          ? 'border-slate-600 opacity-50 cursor-not-allowed'
+                          : 'border-slate-600 hover:border-cyan-500/50 hover:bg-cyan-500/5'
+                    }`}
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className={`w-5 h-5 rounded border-2 flex items-center justify-center ${
+                        isSelected ? 'bg-cyan-500 border-cyan-500' : 'border-slate-400'
+                      }`}>
+                        {isSelected && <span className="text-white text-xs">✓</span>}
+                      </div>
+                      <span className={`font-semibold ${isSelected ? 'text-cyan-400' : 'text-white'}`}>{doc}</span>
                     </div>
-                    <span className={`font-semibold ${isSelected ? 'text-cyan-400' : 'text-white'}`}>{doc}</span>
-                  </div>
-                </button>
-              );
-            })}
+                  </button>
+                );
+              })}
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Submit Button */}
         <div className="flex justify-center">
           <button
             onClick={submitSelections}
-            disabled={documentDetectiveState.selectedDocs.length !== 3}
+            disabled={!currentCaseData.allDocs || documentDetectiveState.selectedDocs.length !== 3}
             className={`px-8 py-4 font-semibold rounded-lg transition-colors executive-font text-lg ${
-              documentDetectiveState.selectedDocs.length === 3
+              currentCaseData.allDocs && documentDetectiveState.selectedDocs.length === 3
                 ? 'bg-purple-600 hover:bg-purple-700 text-white'
                 : 'bg-slate-700 text-slate-400 cursor-not-allowed'
             }`}
