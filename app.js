@@ -573,11 +573,10 @@ const PMPApp = () => {
             <p className="text-slate-400">Loading scenario...</p>
             <GlobalNavFooter />
           </div>
-        </div>
-      );
-    }
+    </div>
+  );
 
-    return (
+  return (
       <div className="max-w-6xl w-full p-10 animate-fadeIn text-left">
         <header className="mb-8">
           <div className="flex items-center gap-4 mb-6">
@@ -645,13 +644,13 @@ const PMPApp = () => {
                     <span className="text-white flex-1">{option.text}</span>
                   </div>
                 </button>
-              ))}
-            </div>
-          )}
+              )          )}
         </div>
-        <GlobalNavFooter />
       </div>
-    );
+      <GlobalNavFooter />
+    </div>
+  );
+  }
   }
 
   // Lightning Round Activity View
@@ -4101,6 +4100,8 @@ const PMPApp = () => {
                   </div>
                 </div>
               )}
+            </div>
+          )}
           </div>
         )}
       </div>
@@ -4114,8 +4115,6 @@ const PMPApp = () => {
       <GlobalNavFooter />
     </div>
   );
-  }
-
 };
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
