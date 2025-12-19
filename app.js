@@ -1510,9 +1510,13 @@ const PMPApp = () => {
     );
   }
 
-  // Conflict Mode Matcher Activity View
-  if (view === 'conflict-matcher') {
-    const conflictMatcherScenarios = currentTask.practice?.conflict_matcher || [
+  // Conflict Mode Matcher / Leadership Style Matcher Activity View
+  // Support both route names for Lead a Team
+  if (view === 'conflict-matcher' || view === 'leadership-style-matcher') {
+    // For Lead a Team, use leadership_style_matcher, otherwise conflict_matcher
+    const dataKey = selectedTask === 'Lead a Team' ? 'leadership_style_matcher' : 'conflict_matcher';
+    const activityTitle = selectedTask === 'Lead a Team' ? 'Leadership Style Matcher' : 'Conflict Mode Matcher';
+    const conflictMatcherScenarios = currentTask.practice?.[dataKey] || currentTask.practice?.conflict_matcher || [
       {
         id: 1,
         scenario: "Two developers disagree on API design during Sprint Planning. Both have valid technical arguments.",
@@ -1557,7 +1561,15 @@ const PMPApp = () => {
       }
     ];
 
-    const conflictModes = [
+    // Define modes/styles based on task
+    const conflictModes = selectedTask === 'Lead a Team' ? [
+      { name: "Commanding", emoji: "⚡", color: "red" },
+      { name: "Authoritative", emoji: "🎯", color: "blue" },
+      { name: "Affiliative", emoji: "🤝", color: "emerald" },
+      { name: "Democratic", emoji: "🗳️", color: "yellow" },
+      { name: "Pacesetting", emoji: "⚡", color: "orange" },
+      { name: "Coaching", emoji: "📚", color: "purple" }
+    ] : [
       { name: "COLLABORATE", emoji: "🤝", color: "emerald" },
       { name: "CONFRONT", emoji: "🎯", color: "blue" },
       { name: "COMPROMISE", emoji: "⚖️", color: "yellow" },
@@ -1595,7 +1607,8 @@ const PMPApp = () => {
     const checkAnswers = () => {
       let correctCount = 0;
       conflictMatcherScenarios.forEach(scenario => {
-        if (conflictMatcherState.matches[scenario.id] === scenario.correctMode) {
+        const correctAnswer = scenario.correctStyle || scenario.correctMode;
+        if (conflictMatcherState.matches[scenario.id] === correctAnswer) {
           correctCount++;
         }
       });
@@ -1636,7 +1649,7 @@ const PMPApp = () => {
                 ← Back
               </button>
             </div>
-            <h1 className="executive-font text-5xl font-bold text-white tracking-tight">🧩 Conflict Mode Matcher</h1>
+            <h1 className="executive-font text-5xl font-bold text-white tracking-tight">🧩 {activityTitle}</h1>
           </header>
 
           {/* Score Display */}
@@ -1653,7 +1666,8 @@ const PMPApp = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
             {conflictMatcherScenarios.map(scenario => {
               const userMatch = conflictMatcherState.matches[scenario.id];
-              const isCorrect = userMatch === scenario.correctMode;
+              const correctAnswer = scenario.correctStyle || scenario.correctMode;
+              const isCorrect = userMatch === correctAnswer;
 
               return (
                 <div 
@@ -1678,7 +1692,7 @@ const PMPApp = () => {
                         <div className="flex items-center gap-2 mb-2">
                           <span className="text-xs text-slate-400">Correct:</span>
                           <span className="px-2 py-1 rounded text-xs font-semibold bg-emerald-500/20 text-emerald-400">
-                            {scenario.correctMode}
+                            {scenario.correctStyle || scenario.correctMode}
                           </span>
                         </div>
                       )}
@@ -1690,7 +1704,7 @@ const PMPApp = () => {
 
                   <div className="mt-4 space-y-3">
                     <div>
-                      <span className="text-sm font-semibold text-white">Why {scenario.correctMode}:</span>
+                      <span className="text-sm font-semibold text-white">Why {scenario.correctStyle || scenario.correctMode}:</span>
                       <p className="text-sm text-slate-300 mt-1">{scenario.explanation}</p>
                     </div>
                     {scenario.examTip && (
@@ -1736,8 +1750,8 @@ const PMPApp = () => {
               ← Back
             </button>
           </div>
-          <h1 className="executive-font text-5xl font-bold text-white tracking-tight">🧩 Conflict Mode Matcher</h1>
-          <p className="text-slate-400 mt-2">Drag each scenario to the correct conflict mode, or click scenario then select mode</p>
+          <h1 className="executive-font text-5xl font-bold text-white tracking-tight">🧩 {activityTitle}</h1>
+          <p className="text-slate-400 mt-2">{selectedTask === 'Lead a Team' ? 'Drag each scenario to the correct leadership style, or click scenario then select style' : 'Drag each scenario to the correct conflict mode, or click scenario then select mode'}</p>
         </header>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-6">
@@ -1769,9 +1783,9 @@ const PMPApp = () => {
             </div>
           </div>
 
-          {/* Right Column - Conflict Modes */}
+          {/* Right Column - Conflict Modes / Leadership Styles */}
           <div>
-            <h2 className="executive-font text-2xl font-bold text-white mb-4">Conflict Modes</h2>
+            <h2 className="executive-font text-2xl font-bold text-white mb-4">{selectedTask === 'Lead a Team' ? 'Leadership Styles' : 'Conflict Modes'}</h2>
             <div className="space-y-4">
               {conflictModes.map(mode => {
                 const matchedScenarioId = Object.keys(conflictMatcherState.matches).find(
@@ -1868,14 +1882,21 @@ const PMPApp = () => {
     );
   }
 
-  // Timeline Reconstructor Activity View
-  if (view === 'timeline-reconstructor') {
-    const timelineData = currentTask.practice?.timeline_reconstructor;
+  // Timeline Reconstructor / Stage Detective Activity View
+  // Support both route names for Lead a Team
+  if (view === 'timeline-reconstructor' || view === 'stage-detective') {
+    // For Lead a Team, use stage_detective, otherwise timeline_reconstructor
+    const dataKey = selectedTask === 'Lead a Team' ? 'stage_detective' : 'timeline_reconstructor';
+    const activityTitle = selectedTask === 'Lead a Team' ? 'Stage Detective' : 'Timeline Reconstructor';
+    const timelineData = currentTask.practice?.[dataKey] || currentTask.practice?.timeline_reconstructor;
     
     // Initialize steps in random order if not already initialized
     const initializeSteps = () => {
-      if (!timelineData?.steps) return [];
-      const steps = [...timelineData.steps];
+      const dataSource = selectedTask === 'Lead a Team' && timelineData?.scenarios?.[0]?.events
+        ? timelineData.scenarios[0].events
+        : timelineData?.steps;
+      if (!dataSource) return [];
+      const steps = [...dataSource];
       // Shuffle array using Fisher-Yates
       for (let i = steps.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -1885,7 +1906,10 @@ const PMPApp = () => {
     };
 
     // Initialize steps on first render if needed
-    if (timelineReconstructorState.steps.length === 0 && timelineData?.steps && timelineData.steps.length > 0) {
+    const stepsData = selectedTask === 'Lead a Team' && timelineData?.scenarios?.[0]?.events
+      ? timelineData.scenarios[0].events
+      : timelineData?.steps;
+    if (timelineReconstructorState.steps.length === 0 && stepsData && stepsData.length > 0) {
       // Initialize with shuffled steps - this will run on component mount
       const shuffledSteps = initializeSteps();
       if (shuffledSteps.length > 0) {
@@ -1895,6 +1919,11 @@ const PMPApp = () => {
         }, 0);
       }
     }
+    
+    // Use the correct data structure for display
+    const displaySteps = timelineReconstructorState.steps.length > 0 
+      ? timelineReconstructorState.steps 
+      : (stepsData || []);
 
     const handleDragStart = (stepId) => {
       setTimelineReconstructorState(prev => ({ ...prev, draggedStep: stepId }));
@@ -1944,7 +1973,10 @@ const PMPApp = () => {
     };
 
     const checkOrder = () => {
-      if (!timelineData?.steps) return;
+      const stepsData = selectedTask === 'Lead a Team' && timelineData?.scenarios?.[0]?.events
+        ? timelineData.scenarios[0].events
+        : timelineData?.steps;
+      if (!stepsData) return;
       
       let correctCount = 0;
       timelineReconstructorState.steps.forEach((step, index) => {
@@ -1961,7 +1993,10 @@ const PMPApp = () => {
     };
 
     const resetGame = () => {
-      const newSteps = timelineData?.steps ? initializeSteps() : [];
+      const stepsData = selectedTask === 'Lead a Team' && timelineData?.scenarios?.[0]?.events
+        ? timelineData.scenarios[0].events
+        : timelineData?.steps;
+      const newSteps = stepsData ? initializeSteps() : [];
       setTimelineReconstructorState({
         steps: newSteps,
         showingFeedback: false,
@@ -1986,7 +2021,7 @@ const PMPApp = () => {
       return (
         <div className="max-w-6xl w-full p-10 animate-fadeIn text-left">
           <div className="glass-card p-10 text-center">
-            <h1 className="executive-font text-3xl font-bold text-white mb-4">📋 Timeline Reconstructor</h1>
+            <h1 className="executive-font text-3xl font-bold text-white mb-4">📋 {activityTitle}</h1>
             <p className="text-slate-400">No timeline data available for this task.</p>
             <button 
               onClick={goToPracticeHub}
@@ -2027,13 +2062,13 @@ const PMPApp = () => {
                 ← Back
               </button>
             </div>
-            <h1 className="executive-font text-5xl font-bold text-white tracking-tight">📋 Timeline Reconstructor: {timelineData.title}</h1>
+            <h1 className="executive-font text-5xl font-bold text-white tracking-tight">📋 {activityTitle}: {timelineData.title}</h1>
           </header>
 
           {/* Score Display */}
           <div className="glass-card p-6 mb-6 text-center">
             <h2 className="executive-font text-3xl font-bold text-white mb-2">
-              Score: {timelineReconstructorState.score}/{timelineData.steps.length}
+              Score: {timelineReconstructorState.score}/{displaySteps.length}
             </h2>
             <p className="text-slate-400">You got {timelineReconstructorState.score} steps in the correct order</p>
           </div>
@@ -2091,7 +2126,12 @@ const PMPApp = () => {
           <div className="glass-card p-6 mb-6">
             <h3 className="executive-font text-xl font-semibold text-white mb-4">Correct Sequence</h3>
             <div className="space-y-3">
-              {[...timelineData.steps].sort((a, b) => a.correctOrder - b.correctOrder).map((step) => (
+              {(() => {
+                const stepsData = selectedTask === 'Lead a Team' && timelineData?.scenarios?.[0]?.events
+                  ? timelineData.scenarios[0].events
+                  : timelineData?.steps || [];
+                return [...stepsData].sort((a, b) => a.correctOrder - b.correctOrder);
+              })().map((step) => (
                 <div key={step.id} className="flex items-start gap-3">
                   <div className="w-8 h-8 rounded-full bg-emerald-500 text-white font-bold flex items-center justify-center flex-shrink-0">
                     {step.correctOrder}
@@ -2145,7 +2185,7 @@ const PMPApp = () => {
               ← Back
             </button>
           </div>
-          <h1 className="executive-font text-5xl font-bold text-white tracking-tight">📋 Timeline Reconstructor: {timelineData.title}</h1>
+          <h1 className="executive-font text-5xl font-bold text-white tracking-tight">📋 {activityTitle}: {timelineData.title}</h1>
         </header>
 
         {/* Instructions Card */}
@@ -2232,9 +2272,13 @@ const PMPApp = () => {
     );
   }
 
-  // Empathy Exercise Activity View
-  if (view === 'empathy-exercise') {
-    const empathyScenarios = currentTask.practice?.empathy_exercise || [];
+  // Empathy Exercise / Team Member Perspectives Activity View
+  // Support both route names for Lead a Team
+  if (view === 'empathy-exercise' || view === 'team-member-perspectives') {
+    // For Lead a Team, use team_member_perspectives, otherwise empathy_exercise
+    const dataKey = selectedTask === 'Lead a Team' ? 'team_member_perspectives' : 'empathy_exercise';
+    const activityTitle = selectedTask === 'Lead a Team' ? 'Team Member Perspectives' : 'Empathy Exercise';
+    const empathyScenarios = currentTask.practice?.[dataKey] || currentTask.practice?.empathy_exercise || [];
     const currentScenarioData = empathyScenarios[empathyExerciseState.currentScenario];
 
     const handlePerspectiveView = (perspective) => {
@@ -2332,7 +2376,7 @@ const PMPApp = () => {
       return (
         <div className="max-w-6xl w-full p-10 animate-fadeIn text-left">
           <div className="glass-card p-10 text-center">
-            <h1 className="executive-font text-3xl font-bold text-white mb-4">👥 Empathy Exercise</h1>
+            <h1 className="executive-font text-3xl font-bold text-white mb-4">👥 {activityTitle}</h1>
             <p className="text-slate-400">No scenarios available for this task.</p>
             <button 
               onClick={goToPracticeHub}
@@ -2362,7 +2406,7 @@ const PMPApp = () => {
             </button>
           </div>
           <div className="flex items-center justify-between mb-4">
-            <h1 className="executive-font text-5xl font-bold text-white tracking-tight">👥 Empathy Exercise: See Both Sides</h1>
+            <h1 className="executive-font text-5xl font-bold text-white tracking-tight">👥 {activityTitle}: See Both Sides</h1>
             <div className="text-slate-400 text-sm uppercase tracking-wide">
               Scenario {empathyExerciseState.currentScenario + 1} of {empathyScenarios.length}
             </div>
@@ -3033,14 +3077,32 @@ const PMPApp = () => {
       
       {/* Activity Cards Grid - 3x2 */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        {[
-          { name: 'pm-simulator', emoji: '🎯', title: 'PM Simulator', desc: 'Branching scenarios with consequences', color: 'blue', borderColor: 'border-blue-500', hoverColor: 'hover:bg-blue-500/10', shadowColor: 'hover:shadow-blue-500/20' },
-          { name: 'lightning-round', emoji: '⚡', title: 'Lightning Round', desc: 'Fast-paced quiz - 10 questions', color: 'yellow', borderColor: 'border-yellow-500', hoverColor: 'hover:bg-yellow-500/10', shadowColor: 'hover:shadow-yellow-500/20' },
-          { name: 'document-detective', emoji: '🕵️', title: 'Document Detective', desc: 'Match documents to scenarios', color: 'purple', borderColor: 'border-purple-500', hoverColor: 'hover:bg-purple-500/10', shadowColor: 'hover:shadow-purple-500/20' },
-          { name: 'conflict-matcher', emoji: '🧩', title: 'Conflict Mode Matcher', desc: 'Drag-drop conflict modes', color: 'emerald', borderColor: 'border-emerald-500', hoverColor: 'hover:bg-emerald-500/10', shadowColor: 'hover:shadow-emerald-500/20' },
-          { name: 'timeline-reconstructor', emoji: '📋', title: 'Timeline Reconstructor', desc: 'Order resolution steps', color: 'cyan', borderColor: 'border-cyan-500', hoverColor: 'hover:bg-cyan-500/10', shadowColor: 'hover:shadow-cyan-500/20' },
-          { name: 'empathy-exercise', emoji: '👥', title: 'Empathy Exercise', desc: 'See all perspectives', color: 'rose', borderColor: 'border-rose-500', hoverColor: 'hover:bg-rose-500/10', shadowColor: 'hover:shadow-rose-500/20' }
-        ].map(activity => {
+        {(() => {
+          // Base activity configuration
+          const baseActivities = [
+            { name: 'pm-simulator', emoji: '🎯', title: 'PM Simulator', desc: 'Branching scenarios with consequences', color: 'blue', borderColor: 'border-blue-500', hoverColor: 'hover:bg-blue-500/10', shadowColor: 'hover:shadow-blue-500/20' },
+            { name: 'lightning-round', emoji: '⚡', title: 'Lightning Round', desc: 'Fast-paced quiz - 10 questions', color: 'yellow', borderColor: 'border-yellow-500', hoverColor: 'hover:bg-yellow-500/10', shadowColor: 'hover:shadow-yellow-500/20' },
+            { name: 'document-detective', emoji: '🕵️', title: 'Document Detective', desc: 'Match documents to scenarios', color: 'purple', borderColor: 'border-purple-500', hoverColor: 'hover:bg-purple-500/10', shadowColor: 'hover:shadow-purple-500/20' },
+            { name: 'conflict-matcher', emoji: '🧩', title: 'Conflict Mode Matcher', desc: 'Drag-drop conflict modes', color: 'emerald', borderColor: 'border-emerald-500', hoverColor: 'hover:bg-emerald-500/10', shadowColor: 'hover:shadow-emerald-500/20' },
+            { name: 'timeline-reconstructor', emoji: '📋', title: 'Timeline Reconstructor', desc: 'Order resolution steps', color: 'cyan', borderColor: 'border-cyan-500', hoverColor: 'hover:bg-cyan-500/10', shadowColor: 'hover:shadow-cyan-500/20' },
+            { name: 'empathy-exercise', emoji: '👥', title: 'Empathy Exercise', desc: 'See all perspectives', color: 'rose', borderColor: 'border-rose-500', hoverColor: 'hover:bg-rose-500/10', shadowColor: 'hover:shadow-rose-500/20' }
+          ];
+          
+          // For Lead a Team, rename specific activities
+          if (selectedTask === 'Lead a Team') {
+            return baseActivities.map(activity => {
+              if (activity.name === 'conflict-matcher') {
+                return { ...activity, title: 'Leadership Style Matcher', desc: 'Match scenarios to leadership styles' };
+              } else if (activity.name === 'timeline-reconstructor') {
+                return { ...activity, title: 'Stage Detective', desc: 'Diagnose team development stages' };
+              } else if (activity.name === 'empathy-exercise') {
+                return { ...activity, title: 'Team Member Perspectives', desc: 'See team member viewpoints' };
+              }
+              return activity;
+            });
+          }
+          return baseActivities;
+        })().map(activity => {
           const progress = getActivityProgress(selectedTask, activity.name);
           const isCompleted = progress?.completed;
           const isInProgress = progress?.attempts > 0 && !isCompleted;
