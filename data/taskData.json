@@ -1074,12 +1074,17 @@
       },
       "deep_dive": {
         "foundational_concept": "Effective team leadership requires understanding how teams develop over time and adapting your leadership style to match the team's current stage and the situation. Two foundational frameworks guide this: Tuckman's stages of team development and Goleman's six leadership styles.",
+        "introduction": "Leading a team effectively is one of the most critical competencies for project managers. This deep dive explores two foundational frameworks that guide effective team leadership: Tuckman's Stages of Team Development and Goleman's Leadership Styles. Understanding when and how to apply these frameworks enables project managers to maximize team performance, navigate challenges, and deliver successful outcomes.",
+        "part1_title": "Tuckman's Stages of Team Development",
+        "tuckman_historical_context": "Dr. Bruce Tuckman introduced this model in 1965 based on his research into group dynamics. The model originally had four stages (Forming, Storming, Norming, Performing) and was later expanded in 1977 to include a fifth stage (Adjourning). This model has become the most widely recognized framework for understanding team development in organizational settings.",
+        "why_tuckman_matters": "Teams don't automatically perform at high levels. They evolve through predictable stages, each with distinct characteristics and challenges. Understanding these stages allows project managers to: Anticipate challenges before they become critical, Adapt leadership approach to what the team needs at each stage, Accelerate development by addressing stage-specific needs, Recognize regression when team composition or context changes, Set realistic expectations for team performance timelines.",
         "tuckmans_model": {
           "title": "Tuckman's Stages of Team Development",
           "introduction": "Developed by psychologist Bruce Tuckman in 1965, this model describes the path that teams follow as they develop from initial formation to peak performance. Understanding these stages helps project managers anticipate challenges and provide appropriate support at each phase. Tuckman later added a fifth stage (Adjourning) in 1977, recognizing that teams also experience an ending phase.",
           "stages": [
             {
               "stage": "Forming",
+              "overview": "Forming is the orientation stage where team members meet, understand the project, and begin establishing relationships. This stage is characterized by politeness, uncertainty, and high dependence on the project manager for direction.",
               "characteristics": [
                 "Team members meet and learn about the project and their formal roles and responsibilities",
                 "High dependence on the leader for guidance and direction",
@@ -1089,17 +1094,130 @@
                 "Politeness and tentative behavior as members get to know each other",
                 "Low productivity as team focuses on orientation"
               ],
+              "detailed_characteristics": {
+                "team_member_behaviors": [
+                  "Polite and tentative with each other",
+                  "Avoid conflict or controversial topics",
+                  "Seek approval from PM and each other",
+                  "Ask many questions about roles, processes, and expectations",
+                  "Test boundaries cautiously",
+                  "Focus on understanding the task",
+                  "Socially anxious about fitting in",
+                  "Reluctant to share opinions openly"
+                ],
+                "team_dynamics": [
+                  "Little agreement except on broad objectives provided by PM",
+                  "Individual roles unclear or uncertain",
+                  "Low productivity (focused on orientation, not output)",
+                  "High dependence on PM for structure and direction",
+                  "Limited team identity or cohesion",
+                  "Communication is guarded and formal",
+                  "No established processes or norms"
+                ],
+                "common_concerns": [
+                  "Will I fit in with this group?",
+                  "What exactly is my role?",
+                  "Who has what authority?",
+                  "What are the standards and expectations?",
+                  "Can I trust these people?",
+                  "Will my contributions be valued?"
+                ]
+              },
               "team_member_behaviors": {
                 "positive": ["Excitement", "Enthusiasm", "Optimism about the project"],
                 "negative": ["Anxiety", "Uncertainty", "Suspicion", "Fear about their role"],
                 "common_questions": ["What's my role?", "Who else is on the team?", "What are we trying to achieve?"]
               },
-              "pm_leadership_style": "Directive (Commanding)",
+              "pm_leadership_style": "Authoritative/Commanding",
+              "pm_leadership_actions": {
+                "primary_style": "Authoritative/Commanding - Provide clear structure and direction, don't expect self-organization yet, be visible and available, make decisions confidently",
+                "specific_actions": {
+                  "establish_structure": [
+                    "Conduct kickoff meeting with clear agenda",
+                    "Create and communicate project charter",
+                    "Define roles and responsibilities explicitly",
+                    "Establish reporting relationships",
+                    "Set up communication channels and protocols"
+                  ],
+                  "facilitate_relationship_building": [
+                    "Organize team-building activities",
+                    "Create opportunities for informal interaction",
+                    "Facilitate introductions (skills, backgrounds, strengths)",
+                    "Share personal information about yourself appropriately",
+                    "Encourage team members to share about themselves"
+                  ],
+                  "set_clear_expectations": [
+                    "Define project goals and success criteria",
+                    "Establish ground rules collaboratively",
+                    "Clarify decision-making processes",
+                    "Define quality standards",
+                    "Set behavioral expectations"
+                  ],
+                  "build_initial_trust": [
+                    "Be consistent and reliable",
+                    "Follow through on commitments",
+                    "Demonstrate competence and confidence",
+                    "Show respect for all team members",
+                    "Create psychological safety for questions"
+                  ],
+                  "provide_direction": [
+                    "Answer questions patiently and thoroughly",
+                    "Make decisions without expecting team consensus",
+                    "Provide templates, examples, and guidance",
+                    "Don't delegate prematurely",
+                    "Check understanding frequently"
+                  ]
+                }
+              },
               "pm_key_activities": [
                 "Provide clear direction and structure - Articulate project vision, goals, and success criteria",
                 "Facilitate team formation - Organize team kickoff meeting, create opportunities for team members to get acquainted",
                 "Build initial trust - Be visible, available, and responsive, model desired behaviors and values",
                 "Set the foundation - Develop team charter collaboratively, establish communication protocols, define decision-making processes"
+              ],
+              "duration_and_success_indicators": {
+                "typical_duration": "1-4 weeks for new project teams",
+                "factors_affecting_duration": [
+                  "Prior relationships among team members (shorter if known each other)",
+                  "Complexity of project (more complex = longer forming)",
+                  "PM's effectiveness in providing structure",
+                  "Organizational culture and norms",
+                  "Team size (larger teams take longer)",
+                  "Clarity of objectives and roles"
+                ],
+                "signs_ready_for_storming": [
+                  "Team members start expressing opinions more freely",
+                  "Questions shift from 'what' to 'how' and 'why'",
+                  "Members challenge suggestions or approaches",
+                  "Informal coalitions or subgroups begin forming",
+                  "Comfort level increases (less politeness, more authenticity)"
+                ]
+              },
+              "common_mistakes_detailed": [
+                {
+                  "mistake": "Rushing Through Forming",
+                  "description": "Skipping relationship building to 'get to work'",
+                  "consequence": "Trust deficits cause problems later",
+                  "better_approach": "Invest time upfront in team formation"
+                },
+                {
+                  "mistake": "Expecting Self-Organization Too Soon",
+                  "description": "Delegating decisions team isn't ready to make",
+                  "consequence": "Confusion, anxiety, poor decisions",
+                  "better_approach": "Provide structure, gradually increase autonomy"
+                },
+                {
+                  "mistake": "Not Addressing Logistics",
+                  "description": "Assuming everyone knows how things work",
+                  "consequence": "Wasted time, missed meetings, confusion",
+                  "better_approach": "Explicitly establish all operational details"
+                },
+                {
+                  "mistake": "Allowing Ambiguity in Roles",
+                  "description": "Vague job descriptions or overlapping responsibilities",
+                  "consequence": "Gaps, duplicated work, territorial conflicts",
+                  "better_approach": "Crystal clear role definition with RACI or similar"
+                }
               ],
               "common_pitfalls": [
                 "Assuming team will self-organize without guidance",
@@ -1111,6 +1229,7 @@
             },
             {
               "stage": "Storming",
+              "overview": "Storming is the conflict stage where team members push against boundaries, compete for position, and challenge the PM's authority and each other's ideas. This stage is often uncomfortable but necessary for team development.",
               "characteristics": [
                 "Team members push against boundaries established in the forming stage",
                 "Purpose, goals, and roles may be challenged or questioned",
@@ -1120,18 +1239,156 @@
                 "Subgroups and cliques may form",
                 "Some members may question the wisdom of the project itself"
               ],
+              "detailed_characteristics": {
+                "team_member_behaviors": [
+                  "Challenge PM's decisions and authority",
+                  "Compete for influence and position",
+                  "Form coalitions or cliques",
+                  "Express frustrations openly (sometimes aggressively)",
+                  "Resist group norms or processes",
+                  "Focus on differences rather than similarities",
+                  "Test boundaries of acceptable behavior",
+                  "May question project value or approach"
+                ],
+                "team_dynamics": [
+                  "Increased conflict over methods, priorities, and responsibilities",
+                  "Power struggles emerge",
+                  "Communication becomes more direct (sometimes too direct)",
+                  "Subgroups with competing agendas",
+                  "Emotional reactions to disagreements",
+                  "Productivity often drops as energy goes to conflict",
+                  "Team may question whether they can succeed together",
+                  "Trust is tested"
+                ],
+                "why_storming_happens": [
+                  "Reality sets in (initial politeness wears off)",
+                  "Work pressures create stress",
+                  "Different working styles clash",
+                  "Competition for limited resources or recognition",
+                  "Unclear authority boundaries",
+                  "Personality differences become apparent",
+                  "Different values or priorities emerge",
+                  "Natural resistance to structure and norms"
+                ]
+              },
               "team_member_behaviors": {
                 "positive": ["Authentic opinions emerge", "Creative tension drives innovation"],
                 "negative": ["Competition", "Resistance", "Impatience", "Frustration", "Infighting"],
                 "common_questions": ["Who's really in charge here?", "Why are we doing it this way?", "Do I have to work with them?"]
               },
-              "pm_leadership_style": "Coaching (with some Commanding when necessary)",
+              "pm_leadership_style": "Coaching (with some Affiliative)",
+              "pm_leadership_actions": {
+                "primary_style": "Coaching (with some Affiliative) - Facilitate conflict resolution, don't force premature consensus, allow healthy debate, focus on team development, not just tasks",
+                "specific_actions": {
+                  "acknowledge_and_normalize": [
+                    "Recognize Storming as healthy and necessary",
+                    "Don't overreact to disagreements",
+                    "Frame conflict as 'working through how we'll succeed together'",
+                    "Maintain calm demeanor (don't get defensive)",
+                    "Communicate that this stage is temporary"
+                  ],
+                  "facilitate_constructive_conflict": [
+                    "Create safe forums for disagreement",
+                    "Establish ground rules for respectful debate",
+                    "Focus discussions on interests, not positions",
+                    "Use structured problem-solving techniques",
+                    "Ensure all voices are heard",
+                    "Don't let conflicts become personal attacks"
+                  ],
+                  "reinforce_vision_and_goals": [
+                    "Regularly reconnect team to shared objectives",
+                    "Highlight common ground",
+                    "Celebrate small wins together",
+                    "Remind team why project matters",
+                    "Keep focus on external goals, not internal dynamics"
+                  ],
+                  "provide_coaching": [
+                    "Individual conversations with struggling team members",
+                    "Help members understand others' perspectives",
+                    "Teach conflict resolution skills",
+                    "Model desired behaviors",
+                    "Give feedback on destructive behaviors"
+                  ],
+                  "maintain_structure_while_flexible": [
+                    "Keep essential processes in place",
+                    "Be open to improving approaches",
+                    "Don't be rigid about 'my way or the highway'",
+                    "Involve team in process refinement",
+                    "Balance stability with adaptability"
+                  ],
+                  "build_relationships": [
+                    "Increase team-building activities",
+                    "Create informal interaction opportunities",
+                    "Facilitate one-on-one connections",
+                    "Share meals or social time if possible",
+                    "Help team members see each other as humans"
+                  ]
+                }
+              },
               "pm_key_activities": [
                 "Acknowledge and normalize conflict - Recognize storming as a natural and necessary stage",
                 "Facilitate constructive conflict resolution - Address conflicts directly and promptly, focus on interests not positions",
                 "Reinforce team goals and vision - Refocus team on shared objectives when discussions drift",
                 "Maintain structure while allowing input - Stay firm on non-negotiables, be flexible where appropriate",
                 "Build relationships - Increase team-building activities, create opportunities for informal interaction"
+              ],
+              "duration_and_success_indicators": {
+                "typical_duration": "3-8 weeks (can be longer for complex projects or challenging team dynamics)",
+                "factors_affecting_duration": [
+                  "PM's skill in facilitating conflict",
+                  "Severity of personality or style differences",
+                  "Clarity of project goals and roles",
+                  "External pressures and deadlines",
+                  "Leadership support from sponsor",
+                  "Prior team experiences with conflict"
+                ],
+                "may_cycle_back_when": [
+                  "New members join",
+                  "Significant project changes occur",
+                  "External pressures intensify",
+                  "Leadership changes",
+                  "Major setbacks or failures"
+                ],
+                "signs_ready_for_norming": [
+                  "Conflicts become less frequent and less intense",
+                  "Team can resolve disagreements without PM intervention",
+                  "Focus shifts from 'who's right' to 'what's best for project'",
+                  "Humor and bonding emerge",
+                  "Members start supporting each other",
+                  "'We' language appears more frequently"
+                ]
+              },
+              "common_mistakes_detailed": [
+                {
+                  "mistake": "Avoiding or Suppressing Conflict",
+                  "description": "Trying to smooth over disagreements or force harmony",
+                  "consequence": "Conflict goes underground, lengthens Storming stage",
+                  "better_approach": "Facilitate healthy conflict, address issues directly"
+                },
+                {
+                  "mistake": "Taking Sides in Conflicts",
+                  "description": "Favoring one party over another",
+                  "consequence": "Lost credibility, increased division",
+                  "better_approach": "Stay neutral, focus on interests and solutions"
+                },
+                {
+                  "mistake": "Using Commanding Style Excessively",
+                  "description": "Forcing decisions to end debates quickly",
+                  "consequence": "Resentment, lack of buy-in, suppressed conflict",
+                  "better_approach": "Facilitate discussion, build consensus when possible"
+                },
+                {
+                  "mistake": "Becoming Defensive",
+                  "description": "Taking challenges to authority personally",
+                  "consequence": "Power struggles with PM, damaged relationships",
+                  "better_approach": "Welcome feedback, stay composed, focus on goals"
+                },
+                {
+                  "mistake": "Giving Up on the Team",
+                  "description": "Concluding team can't work together, requesting replacements",
+                  "consequence": "Lost opportunity for high performance, reputation damage",
+                  "better_approach": "Persist through Storming with appropriate support"
+                }
               ],
               "common_pitfalls": [
                 "Avoiding or suppressing conflict (prolongs storming)",
@@ -1144,6 +1401,7 @@
             },
             {
               "stage": "Norming",
+              "overview": "Norming is the cohesion stage where team members establish working agreements, develop mutual respect, and begin functioning as a unit. The focus shifts from internal dynamics to external goals.",
               "characteristics": [
                 "Team develops consensus about how to work together",
                 "Roles and responsibilities are clear and accepted",
@@ -1155,18 +1413,143 @@
                 "Constructive criticism is accepted and provided",
                 "Productivity increases as energy shifts from process to output"
               ],
+              "detailed_characteristics": {
+                "team_member_behaviors": [
+                  "Actively cooperate with each other",
+                  "Give and receive constructive feedback",
+                  "Support each other's efforts",
+                  "Share responsibility for team success",
+                  "Flexible and open to others' perspectives",
+                  "Socialize and enjoy each other's company",
+                  "Take pride in being part of the team"
+                ],
+                "team_dynamics": [
+                  "Agreement on shared processes and norms",
+                  "Clear and accepted roles",
+                  "'We' language dominant ('our approach,' 'we decided')",
+                  "Mutual respect and trust developing",
+                  "Constructive disagreements (resolved collaboratively)",
+                  "Team identity emerges",
+                  "Productivity increases",
+                  "Information flows freely"
+                ],
+                "whats_different_from_storming": [
+                  "Conflicts are about work, not personal",
+                  "Disagreements resolved constructively",
+                  "Team self-corrects when someone violates norms",
+                  "Focus is external (project goals) not internal (team dynamics)",
+                  "Energy goes to output, not conflict management"
+                ]
+              },
               "team_member_behaviors": {
                 "positive": ["Collaboration", "Mutual support", "Openness to feedback", "Humor"],
                 "negative": ["Avoiding conflict to preserve harmony", "Reluctance to rock the boat"],
                 "common_statements": ["We're starting to gel.", "I appreciate how everyone contributes.", "Let's figure this out together."]
               },
-              "pm_leadership_style": "Participating (Collaborative)",
+              "pm_leadership_style": "Democratic/Participative",
+              "pm_leadership_actions": {
+                "primary_style": "Democratic/Participative - Involve team in decisions, step back strategically, facilitate rather than direct, build on team's growing capability",
+                "specific_actions": {
+                  "reduce_directive_leadership": [
+                    "Transition from telling to asking",
+                    "Seek team input before deciding",
+                    "Let team drive discussions and decisions",
+                    "Intervene less frequently",
+                    "Trust team's judgment more"
+                  ],
+                  "facilitate_collaboration": [
+                    "Create opportunities for team problem-solving",
+                    "Encourage peer-to-peer communication",
+                    "Support collaborative work arrangements",
+                    "Remove obstacles to teamwork",
+                    "Celebrate collaborative successes"
+                  ],
+                  "reinforce_positive_behaviors": [
+                    "Recognize collaboration publicly",
+                    "Praise team cohesion and mutual support",
+                    "Highlight effective team processes",
+                    "Share positive feedback from stakeholders",
+                    "Document what's working well"
+                  ],
+                  "maintain_momentum": [
+                    "Keep team focused on goals",
+                    "Ensure workload is balanced",
+                    "Monitor for signs of regression",
+                    "Address small issues before they grow",
+                    "Continue regular team touchpoints"
+                  ],
+                  "continue_development": [
+                    "Provide coaching on skills",
+                    "Support learning and growth",
+                    "Cross-train team members",
+                    "Prepare team for Performing stage",
+                    "Increase complexity of delegated work"
+                  ],
+                  "avoid_disrupting_norms": [
+                    "Think carefully before changing processes",
+                    "Involve team in any changes",
+                    "Don't add unnecessary complexity",
+                    "Respect team's established rhythms",
+                    "Protect team from organizational turbulence"
+                  ]
+                }
+              },
               "pm_key_activities": [
                 "Step back strategically - Reduce directive leadership as team self-manages",
                 "Facilitate collaboration - Encourage team members to help each other",
                 "Reinforce positive behaviors - Recognize collaborative behaviors publicly",
                 "Maintain momentum - Keep team focused on goals, address small issues before they escalate",
                 "Develop team capabilities - Provide coaching and mentoring, support learning and skill development"
+              ],
+              "duration_and_success_indicators": {
+                "typical_duration": "Can be sustained for months with proper maintenance",
+                "signs_of_healthy_norming": [
+                  "Team resolves conflicts without PM involvement",
+                  "Processes run smoothly",
+                  "Information sharing is automatic",
+                  "Team helps each other without being asked",
+                  "Quality of work is consistently good",
+                  "Team makes good decisions together"
+                ],
+                "risks_in_norming": [
+                  "Complacency: Team becomes comfortable, stops improving",
+                  "Groupthink: Desire for harmony suppresses good ideas",
+                  "Insularity: Team becomes closed to outside input",
+                  "Conflict Avoidance: Fear of returning to Storming prevents healthy debate"
+                ],
+                "signs_ready_for_performing": [
+                  "Sustained high performance over time",
+                  "Team anticipates and prevents problems",
+                  "Self-correction without PM involvement",
+                  "Innovation and continuous improvement",
+                  "High trust and psychological safety"
+                ]
+              },
+              "common_mistakes_detailed": [
+                {
+                  "mistake": "Returning to Directive Leadership",
+                  "description": "Reverting to Forming/Storming style behaviors",
+                  "consequence": "Undermines team development, damages trust",
+                  "better_approach": "Continue stepping back, delegate more"
+                },
+                {
+                  "mistake": "Disrupting Working Norms Unnecessarily",
+                  "description": "Changing processes that are working",
+                  "consequence": "Confusion, frustration, possible regression",
+                  "better_approach": "Involve team in any changes, change only when needed"
+                },
+                {
+                  "mistake": "Taking Credit for Team Success",
+                  "description": "Positioning yourself as the reason for success",
+                  "consequence": "Resentment, reduced motivation",
+                  "better_approach": "Give credit to team, celebrate their capability"
+                },
+                {
+                  "mistake": "Assuming Team Has 'Arrived'",
+                  "description": "Neglecting team maintenance and development",
+                  "consequence": "Regression or stagnation",
+                  "better_approach": "Continue investing in team relationships and growth"
+                }
               ],
               "common_pitfalls": [
                 "Disrupting working norms unnecessarily",
@@ -1179,6 +1562,7 @@
             },
             {
               "stage": "Performing",
+              "overview": "Performing is the peak performance stage where teams operate with high autonomy, deliver exceptional results, and function as a cohesive, self-managing unit. This is the goal state that effective leadership enables.",
               "characteristics": [
                 "Team functions as a well-oiled machine",
                 "High degree of autonomy and self-organization",
@@ -1190,18 +1574,142 @@
                 "High productivity and quality output",
                 "Team can make most decisions without PM involvement"
               ],
+              "detailed_characteristics": {
+                "team_member_behaviors": [
+                  "Take initiative without prompting",
+                  "Solve problems independently",
+                  "Help each other proactively",
+                  "Hold each other accountable",
+                  "Make good decisions autonomously",
+                  "Focus on continuous improvement",
+                  "Share leadership naturally",
+                  "Demonstrate high commitment"
+                ],
+                "team_dynamics": [
+                  "High trust and psychological safety",
+                  "Efficient, effective processes",
+                  "Shared leadership emerges",
+                  "Disagreements resolved quickly and constructively",
+                  "High productivity and quality",
+                  "Innovation and creativity flourish",
+                  "Team makes most decisions without PM",
+                  "Clear sense of purpose and identity",
+                  "Pride in team accomplishments"
+                ],
+                "what_makes_performing_different": [
+                  "Autonomy: Team doesn't need PM for day-to-day decisions",
+                  "Proactivity: Team anticipates and prevents problems",
+                  "Resilience: Team handles setbacks without falling apart",
+                  "Excellence: Consistently high-quality outputs",
+                  "Growth: Continuous improvement mindset",
+                  "Synergy: Whole is greater than sum of parts"
+                ]
+              },
               "team_member_behaviors": {
                 "positive": ["Initiative", "Ownership", "Mutual accountability", "Excellence"],
                 "negative": ["Complacency", "Insularity (may resist outside input)"],
                 "common_statements": ["We've got this.", "Let me take that on.", "How can we do this even better?"]
               },
               "pm_leadership_style": "Delegating",
+              "pm_leadership_actions": {
+                "primary_style": "Delegating - Minimal intervention in day-to-day work, focus on strategic issues, remove obstacles, trust team's capability",
+                "specific_actions": {
+                  "empower_and_trust": [
+                    "Delegate meaningful authority",
+                    "Allow team to self-organize",
+                    "Step in only when asked or truly necessary",
+                    "Support team's decisions even when you'd decide differently",
+                    "Give team credit and visibility"
+                  ],
+                  "remove_strategic_obstacles": [
+                    "Focus on organizational barriers",
+                    "Secure resources and support",
+                    "Manage stakeholder expectations",
+                    "Shield team from unnecessary distractions",
+                    "Escalate issues beyond team's control"
+                  ],
+                  "challenge_and_stretch": [
+                    "Set ambitious goals",
+                    "Encourage innovation",
+                    "Support calculated risk-taking",
+                    "Provide growth opportunities",
+                    "Increase complexity of delegated work"
+                  ],
+                  "maintain_alignment": [
+                    "Ensure team stays connected to organizational strategy",
+                    "Communicate changes in direction or priorities",
+                    "Connect team to broader organizational goals",
+                    "Share relevant external information",
+                    "Keep team informed of their impact"
+                  ],
+                  "celebrate_and_recognize": [
+                    "Publicly acknowledge team excellence",
+                    "Ensure team gets organizational recognition",
+                    "Celebrate milestones and achievements",
+                    "Share positive feedback from stakeholders",
+                    "Reward team appropriately"
+                  ],
+                  "prepare_for_transition": [
+                    "Document lessons learned continuously",
+                    "Build organizational capabilities",
+                    "Plan for knowledge transfer",
+                    "Develop succession for key roles",
+                    "Think about project closure or transition"
+                  ]
+                }
+              },
               "pm_key_activities": [
                 "Empower and trust - Delegate meaningful authority and accountability",
                 "Remove obstacles - Focus on strategic issues and organizational barriers",
                 "Challenge and stretch - Set ambitious goals, encourage innovation and experimentation",
                 "Maintain alignment - Ensure team stays connected to organizational strategy",
                 "Prepare for transition - Document lessons learned continuously, plan for knowledge transfer"
+              ],
+              "duration_and_success_indicators": {
+                "duration": "Can be sustained indefinitely with stable team and proper maintenance",
+                "characteristics_of_high_performing_teams": [
+                  "Deliver exceptional results consistently",
+                  "Innovate and improve continuously",
+                  "Handle crises and setbacks resiliently",
+                  "Self-correct without external intervention",
+                  "Maintain high morale and engagement",
+                  "Develop members' capabilities",
+                  "Achieve stretch goals"
+                ],
+                "threats_to_performing_stage": [
+                  "Major team composition changes",
+                  "Significant organizational changes",
+                  "Loss of key members",
+                  "Extended periods of crisis or pressure",
+                  "Lack of recognition or support",
+                  "Changing project scope or goals dramatically"
+                ]
+              },
+              "common_mistakes_detailed": [
+                {
+                  "mistake": "Micromanaging",
+                  "description": "Reverting to directive leadership with capable team",
+                  "consequence": "Demotivation, resentment, reduced performance",
+                  "better_approach": "Continue trusting and empowering"
+                },
+                {
+                  "mistake": "Taking Team for Granted",
+                  "description": "Assuming performance will continue without support",
+                  "consequence": "Burnout, disengagement, departure of key members",
+                  "better_approach": "Continue recognition, development, and care"
+                },
+                {
+                  "mistake": "Introducing Unnecessary Change",
+                  "description": "Fixing what isn't broken",
+                  "consequence": "Disruption, confusion, possible regression",
+                  "better_approach": "Change only when clearly beneficial, involve team"
+                },
+                {
+                  "mistake": "Not Preparing for Closure",
+                  "description": "No planning for project end or transition",
+                  "consequence": "Chaotic closure, knowledge loss, team stress",
+                  "better_approach": "Begin closure planning well in advance"
+                }
               ],
               "common_pitfalls": [
                 "Micromanaging a performing team",
@@ -1214,6 +1722,7 @@
             },
             {
               "stage": "Adjourning (or Mourning)",
+              "overview": "Adjourning is the dissolution stage when the project ends and the team disbands. This stage involves closure activities, emotional processing, and transition planning.",
               "characteristics": [
                 "Project is ending and team is disbanding",
                 "Focus shifts from performance to closure",
@@ -1223,18 +1732,130 @@
                 "Decreased productivity as team members mentally transition",
                 "Ceremonies and celebrations mark the ending"
               ],
+              "detailed_characteristics": {
+                "team_member_behaviors": [
+                  "Reflect on accomplishments and experiences",
+                  "Express gratitude to each other",
+                  "Feel sadness or loss about ending",
+                  "Anxiety about future assignments",
+                  "Nostalgia about team experiences",
+                  "Desire to stay connected",
+                  "Pride in what was accomplished",
+                  "Variable engagement (some check out early)"
+                ],
+                "team_dynamics": [
+                  "Focus shifts from project work to closure",
+                  "Productivity may decline slightly",
+                  "Emotional processing becomes important",
+                  "Relationships and connections emphasized",
+                  "Celebration and recognition",
+                  "Knowledge transfer and documentation",
+                  "Reduced urgency about ongoing work"
+                ],
+                "emotional_reactions_vary": [
+                  "Relief: For difficult or stressful projects",
+                  "Sadness: For strong, positive team experiences",
+                  "Anxiety: About what's next professionally",
+                  "Pride: In accomplishments achieved together",
+                  "Loss: Of daily connection and relationships",
+                  "Excitement: About new opportunities"
+                ]
+              },
               "team_member_behaviors": {
                 "positive": ["Gratitude", "Pride", "Satisfaction", "Nostalgia"],
                 "negative": ["Sadness", "Anxiety about future", "Loss of identity"],
                 "common_statements": ["I'll miss this team.", "What's next for me?", "We should stay in touch."]
               },
-              "pm_leadership_style": "Supportive (Coaching)",
+              "pm_leadership_style": "Coaching/Affiliative (Supporting)",
+              "pm_leadership_actions": {
+                "primary_style": "Coaching/Affiliative (Supporting) - Facilitate proper closure, support emotional needs, ensure knowledge transfer, celebrate accomplishments",
+                "specific_actions": {
+                  "facilitate_proper_closure": [
+                    "Conduct comprehensive project retrospective",
+                    "Capture lessons learned thoroughly",
+                    "Complete all deliverables and documentation",
+                    "Archive project materials appropriately",
+                    "Close contracts and financial accounts",
+                    "Formal acceptance and sign-off"
+                  ],
+                  "celebrate_achievements": [
+                    "Host closing celebration or ceremony",
+                    "Recognize individual contributions publicly",
+                    "Thank team members specifically and personally",
+                    "Share success stories with organization",
+                    "Provide performance recognition",
+                    "Create team memory artifacts (photos, stories)"
+                  ],
+                  "support_transition": [
+                    "Assist team members with next assignments",
+                    "Provide references or recommendations",
+                    "Share information about future opportunities",
+                    "Help process emotions about ending",
+                    "Maintain communication during transition",
+                    "Check in on team members after project ends"
+                  ],
+                  "ensure_knowledge_transfer": [
+                    "Document processes, decisions, and lessons",
+                    "Train operational or maintenance teams",
+                    "Create comprehensive handoff materials",
+                    "Record tacit knowledge and expertise",
+                    "Complete lessons learned repository",
+                    "Share best practices with organization"
+                  ],
+                  "maintain_relationships": [
+                    "Exchange contact information",
+                    "Plan reunion or follow-up",
+                    "Connect via professional networks",
+                    "Stay available for questions",
+                    "Build lasting professional relationships",
+                    "Reflect on growth and development"
+                  ]
+                }
+              },
               "pm_key_activities": [
                 "Facilitate proper closure - Conduct thorough project retrospective, capture and document lessons learned",
                 "Celebrate achievements - Recognize individual and team contributions",
                 "Support transition - Assist team members with next assignments",
                 "Ensure knowledge transfer - Document tacit knowledge and expertise",
                 "Maintain relationships - Exchange contact information, commit to staying connected professionally"
+              ],
+              "duration_and_success_indicators": {
+                "typical_duration": "2-4 weeks depending on project length and team bonding",
+                "signs_of_healthy_adjourning": [
+                  "All deliverables completed and accepted",
+                  "Lessons learned captured comprehensively",
+                  "Team members have clear next steps",
+                  "Relationships preserved positively",
+                  "Knowledge successfully transferred",
+                  "Appropriate closure ceremony held",
+                  "Emotional needs addressed"
+                ]
+              },
+              "common_mistakes_detailed": [
+                {
+                  "mistake": "Rushing Through Closure",
+                  "description": "Disbanding team immediately after last deliverable",
+                  "consequence": "Knowledge loss, unresolved emotions, incomplete closure",
+                  "better_approach": "Plan adequate time for proper closure activities"
+                },
+                {
+                  "mistake": "Failing to Acknowledge Contributions",
+                  "description": "No recognition or celebration of team",
+                  "consequence": "Resentment, reduced future commitment, missed morale opportunity",
+                  "better_approach": "Recognize individuals and team meaningfully"
+                },
+                {
+                  "mistake": "Not Capturing Lessons Learned",
+                  "description": "Skipping retrospective or documentation",
+                  "consequence": "Organizational learning lost, same mistakes repeated",
+                  "better_approach": "Thorough lessons learned process with action items"
+                },
+                {
+                  "mistake": "Ignoring Emotional Aspects",
+                  "description": "Treating ending as purely transactional",
+                  "consequence": "Team members feel undervalued, relationships damaged",
+                  "better_approach": "Acknowledge emotions, provide space for processing"
+                }
               ],
               "common_pitfalls": [
                 "Rushing through closure",
@@ -1297,19 +1918,75 @@
           }
         },
         "leadership_styles": {
-          "title": "Leadership Styles in Project Management",
+          "title": "Goleman's Six Leadership Styles",
+          "background_and_research": "Daniel Goleman, psychologist and author, identified six leadership styles based on research into emotional intelligence and organizational leadership. His research, published in Harvard Business Review (2000), demonstrated that leaders who master multiple styles and can flex between them achieve better results than those who rely on one approach.",
+          "why_leadership_style_matters": "Research shows that leadership style has direct impact on organizational climate (working environment, morale, commitment), which in turn affects performance outcomes (productivity, quality, retention).",
+          "key_research_findings": [
+            "Leaders who use 4+ styles have best organizational climate",
+            "Most effective leaders flex between styles based on situation",
+            "Climate accounts for ~30% of business performance",
+            "Authoritative style has most positive overall impact",
+            "Commanding style has most negative overall impact",
+            "All styles have appropriate use cases"
+          ],
           "introduction": "Effective project managers don't rely on a single leadership approach. Instead, they adapt their style based on the situation, team maturity, and individual team member needs. This deep dive explores six primary leadership styles, drawn from Daniel Goleman's research on emotional intelligence and leadership. Understanding when and how to use each style is essential for maximizing team performance and navigating the diverse challenges project managers face.",
           "styles": [
             {
               "style": "Commanding (Coercive, Directive)",
-              "description": "Do what I tell you. The leader makes decisions unilaterally and expects immediate compliance. Clear direction with little input from team members.",
-              "when_to_use": [
-                "Crisis situations - When quick, decisive action is needed",
-                "Forming stage - New teams need clear structure and direction",
-                "Dealing with problem employees - When other approaches have failed",
-                "High-risk situations - Safety issues or critical deadlines",
-                "Turnaround situations - When a project is failing and needs immediate correction"
-              ],
+              "tagline": "Do what I tell you",
+              "description": "Do what I tell you. The leader makes decisions unilaterally, gives orders, and expects immediate compliance.",
+              "when_to_use": {
+                "crisis_situations": [
+                  "Emergency requiring immediate action",
+                  "Safety issues",
+                  "Security breaches",
+                  "Production failures affecting customers",
+                  "Regulatory violations"
+                ],
+                "dealing_with_problem_employees": [
+                  "After coaching has failed",
+                  "When termination is imminent",
+                  "Serious policy violations",
+                  "Willful non-compliance"
+                ],
+                "turnaround_situations": [
+                  "Failing project needs quick correction",
+                  "Team has lost direction completely",
+                  "Previous approaches have failed",
+                  "Urgent restructuring needed"
+                ],
+                "military_emergency_context": [
+                  "Situations where hesitation risks lives",
+                  "Time for discussion does not exist",
+                  "Chain of command is essential"
+                ]
+              },
+              "characteristics": {
+                "how_it_looks": [
+                  "Clear, direct orders",
+                  "No explanation of rationale",
+                  "Minimal input from others",
+                  "Focus on immediate compliance",
+                  "Tight control and oversight",
+                  "Consequences for non-compliance",
+                  "Fast decision-making"
+                ],
+                "impact_on_team_climate": [
+                  "Most negative long-term impact of all styles",
+                  "Reduces flexibility (team can't adapt)",
+                  "Damages responsibility (team becomes dependent)",
+                  "Lowers commitment (people don't own work)",
+                  "Stifles innovation and creativity",
+                  "Can increase fear and anxiety"
+                ],
+                "when_it_works_well": [
+                  "Team understands urgency",
+                  "Crisis is obvious to all",
+                  "Used temporarily",
+                  "Followed by other styles",
+                  "Team knows it's exceptional"
+                ]
+              },
               "strengths": [
                 "Provides clear direction and structure",
                 "Enables quick decision-making",
@@ -1325,25 +2002,88 @@
                 "May cause resentment and resistance",
                 "Limits information flow from team"
               ],
+              "common_mistakes": [
+                {
+                  "mistake": "Using as Default Style",
+                  "description": "Using commanding as primary approach",
+                  "consequence": "Creates dependent, unmotivated team, reduces initiative and creativity, damages long-term relationships, limits team development"
+                },
+                {
+                  "mistake": "Over-Explaining Why",
+                  "description": "In true crisis, explanation wastes time",
+                  "consequence": "Can appear indecisive, mixed message (commanding or not?)"
+                },
+                {
+                  "mistake": "Continuing After Crisis Passes",
+                  "description": "Not transitioning to collaborative styles",
+                  "consequence": "Damages relationships unnecessarily, limits team capability development, reduces future performance"
+                }
+              ],
               "impact_on_performance": "Can dramatically improve short-term performance in crisis, but most negative long-term impact on team climate and engagement",
               "best_practices": [
                 "Use sparingly and temporarily",
-                "Explain the rationale when possible",
-                "Transition to more collaborative styles as soon as feasible",
-                "Balance with relationship-building activities",
-                "Monitor team morale closely"
+                "Explain the 'why' after crisis passes",
+                "Transition to collaborative styles ASAP",
+                "Apologize if style was unnecessarily harsh",
+                "Rebuild relationships after using",
+                "Reserve for true emergencies only"
               ]
             },
             {
               "style": "Authoritative (Visionary)",
-              "description": "Come with me. The leader provides a clear vision and direction but allows team members autonomy in how they achieve goals. Inspires and mobilizes toward a shared vision.",
-              "when_to_use": [
-                "New project initiation - Setting direction and building enthusiasm",
-                "Significant change - When new direction is needed",
-                "Team lacks clarity - When vision or goals are unclear",
-                "Forming/Norming stages - Building shared understanding",
-                "Diverse teams - Uniting people around common purpose"
-              ],
+              "tagline": "Come with me",
+              "description": "Come with me. The leader provides clear vision and direction while allowing team autonomy in how they achieve goals.",
+              "when_to_use": {
+                "new_direction_needed": [
+                  "Project starting",
+                  "Strategy shift",
+                  "Market changes",
+                  "New opportunities emerging"
+                ],
+                "team_lacks_clarity": [
+                  "Confusion about goals",
+                  "Lack of alignment",
+                  "Competing priorities",
+                  "Mission drift"
+                ],
+                "change_management": [
+                  "Organizational restructuring",
+                  "New methodology adoption",
+                  "Cultural transformation",
+                  "Major process changes"
+                ],
+                "building_consensus": [
+                  "Diverse team needs alignment",
+                  "Stakeholder confusion",
+                  "Multiple competing perspectives"
+                ]
+              },
+              "characteristics": {
+                "how_it_looks": [
+                  "Articulate compelling vision",
+                  "Explain the 'why' clearly",
+                  "Set direction, not methods",
+                  "Inspire and motivate",
+                  "Build confidence",
+                  "Connect daily work to bigger purpose",
+                  "Allow flexibility in execution"
+                ],
+                "impact_on_team_climate": [
+                  "Most positive overall impact",
+                  "Maximizes commitment",
+                  "Provides clarity",
+                  "Builds confidence",
+                  "Encourages innovation within boundaries",
+                  "Creates sense of purpose"
+                ],
+                "when_it_works_well": [
+                  "Leader has credibility",
+                  "Vision is compelling",
+                  "Team is competent enough to execute",
+                  "Direction is genuinely needed",
+                  "Leader can articulate vision well"
+                ]
+              },
               "strengths": [
                 "Provides clear direction while allowing flexibility",
                 "Highly motivating and inspiring",
@@ -1359,27 +2099,89 @@
                 "May be seen as out of touch with day-to-day realities",
                 "Doesn't work if team knows more than leader"
               ],
+              "common_mistakes": [
+                {
+                  "mistake": "Using with Highly Expert Teams",
+                  "description": "Experts don't need vision from someone less expert",
+                  "consequence": "Can seem condescending, may be rejected if vision seems uninformed"
+                },
+                {
+                  "mistake": "Vision is Vague or Unconvincing",
+                  "description": "Generic statements don't inspire",
+                  "consequence": "Lack of specificity causes confusion, vision disconnected from reality"
+                },
+                {
+                  "mistake": "Not Allowing Autonomy",
+                  "description": "Providing vision then micromanaging 'how'",
+                  "consequence": "Contradicts the style's premise, reduces motivation"
+                }
+              ],
               "impact_on_performance": "Most positive impact on team climate - Builds confidence, clarity, and enthusiasm",
               "best_practices": [
-                "Articulate compelling, clear vision",
-                "Connect individual roles to bigger picture",
-                "Allow flexibility in execution methods",
-                "Seek input on how to achieve vision",
-                "Model the values and behaviors you espouse",
-                "Stay connected to team realities"
+                "Develop clear, compelling vision first",
+                "Communicate 'why' before 'what'",
+                "Connect individual roles to vision",
+                "Allow team to determine 'how'",
+                "Share your passion and enthusiasm",
+                "Check that vision resonates",
+                "Adjust based on feedback"
               ]
             },
             {
               "style": "Affiliative (Relationship-Oriented)",
-              "description": "People come first. The leader prioritizes harmony, relationships, and emotional needs. Creates strong bonds and resolves conflicts through connection.",
-              "when_to_use": [
-                "Team is stressed - High pressure or difficult circumstances",
-                "Trust is broken - Healing relationships after conflict",
-                "Building team cohesion - Storming or early Norming stages",
-                "Low morale - Team is discouraged or disconnected",
-                "Major organizational change - People need emotional support",
-                "After traumatic events - Team needs to process and recover"
-              ],
+              "tagline": "People come first",
+              "description": "People come first. The leader prioritizes harmony, relationships, and emotional well-being over tasks.",
+              "when_to_use": {
+                "team_is_under_stress": [
+                  "High-pressure periods",
+                  "Difficult work conditions",
+                  "External challenges",
+                  "Personal struggles affecting work"
+                ],
+                "trust_has_been_broken": [
+                  "After conflict",
+                  "Following layoffs or reorganization",
+                  "New leader joining",
+                  "Major disappointments"
+                ],
+                "building_team_cohesion": [
+                  "New team forming",
+                  "After Storming stage",
+                  "Distributed team needing connection",
+                  "Low morale"
+                ],
+                "after_traumatic_events": [
+                  "Project failure",
+                  "Team member departure",
+                  "Organizational crisis",
+                  "External tragedies"
+                ]
+              },
+              "characteristics": {
+                "how_it_looks": [
+                  "Emphasis on emotional well-being",
+                  "Flexible on deadlines if people need it",
+                  "Frequent praise and encouragement",
+                  "Active listening to personal concerns",
+                  "Team-building activities",
+                  "Celebration of relationships",
+                  "Harmony prioritized over confrontation"
+                ],
+                "impact_on_team_climate": [
+                  "Builds strong bonds",
+                  "Increases loyalty",
+                  "Creates psychological safety",
+                  "Improves morale significantly",
+                  "Enhances trust"
+                ],
+                "when_it_works_well": [
+                  "Used in combination with other styles",
+                  "Team needs emotional support",
+                  "Relationships actually are priority",
+                  "Balanced with accountability",
+                  "Temporary focus on people"
+                ]
+              },
               "strengths": [
                 "Builds strong relationships and trust",
                 "Improves team morale and satisfaction",
@@ -1396,27 +2198,92 @@
                 "May lack clear direction",
                 "Risk of favoritism"
               ],
+              "common_mistakes": [
+                {
+                  "mistake": "Using Exclusively",
+                  "description": "Only using affiliative without other styles",
+                  "consequence": "Performance may suffer, accountability decreases, standards may slip, difficult conversations avoided"
+                },
+                {
+                  "mistake": "Avoiding All Conflict",
+                  "description": "Never addressing difficult issues",
+                  "consequence": "Issues fester, problems don't get solved, can enable poor performance"
+                },
+                {
+                  "mistake": "Over-Praising",
+                  "description": "Praising everything without discrimination",
+                  "consequence": "Recognition loses meaning, can seem insincere, grade inflation"
+                },
+                {
+                  "mistake": "Ignoring Performance Issues",
+                  "description": "Protecting relationships at expense of results",
+                  "consequence": "Problem employees protected, team resentment builds, results suffer"
+                }
+              ],
               "impact_on_performance": "Positive for morale and relationships, but insufficient alone for high performance",
               "best_practices": [
-                "Combine with other styles (especially Authoritative or Democratic)",
+                "Combine with Authoritative or Democratic",
                 "Don't avoid necessary difficult conversations",
-                "Balance relationship focus with results accountability",
-                "Recognize good performance, address poor performance",
-                "Build relationships through team activities",
-                "Show genuine care while maintaining boundaries"
+                "Balance relationship focus with results",
+                "Use strategically when relationships need repair",
+                "Show genuine care and concern",
+                "Follow up on personal situations"
               ]
             },
             {
               "style": "Democratic (Participative)",
-              "description": "What do you think? The leader actively seeks input and builds consensus before making decisions. Team members participate in decision-making processes.",
-              "when_to_use": [
-                "Norming/Performing stages - Team has experience and capability",
-                "Complex problems - Need diverse perspectives",
-                "Building buy-in - Implementation requires team commitment",
-                "Team has expertise - Members know more about certain areas",
-                "Non-urgent situations - Time available for consultation",
-                "Building capability - Developing team's decision-making skills"
-              ],
+              "tagline": "What do you think?",
+              "description": "What do you think? The leader actively seeks input, builds consensus, and makes decisions collaboratively.",
+              "when_to_use": {
+                "need_team_buy_in": [
+                  "Significant changes",
+                  "New processes",
+                  "Strategy decisions",
+                  "Resource allocation"
+                ],
+                "team_has_expertise": [
+                  "Technical decisions",
+                  "Process design",
+                  "Quality standards",
+                  "Tool selection"
+                ],
+                "complex_problems": [
+                  "Multiple perspectives needed",
+                  "No obvious solution",
+                  "High uncertainty",
+                  "Innovative thinking required"
+                ],
+                "building_capability": [
+                  "Developing team's decision-making",
+                  "Increasing engagement",
+                  "Building ownership"
+                ]
+              },
+              "characteristics": {
+                "how_it_looks": [
+                  "Frequent team meetings",
+                  "Soliciting opinions actively",
+                  "Voting or consensus-building",
+                  "Explaining how input influenced decision",
+                  "Shared decision-making",
+                  "Lengthy discussions",
+                  "Team feels heard and valued"
+                ],
+                "impact_on_team_climate": [
+                  "Increases flexibility",
+                  "Builds responsibility",
+                  "Enhances commitment",
+                  "Improves morale",
+                  "Develops capability"
+                ],
+                "when_it_works_well": [
+                  "Team is competent and informed",
+                  "Time available for discussion",
+                  "Team's input will genuinely influence decision",
+                  "Multiple valid perspectives exist",
+                  "Implementation requires team commitment"
+                ]
+              },
               "strengths": [
                 "Increases buy-in and ownership",
                 "Leverages team expertise and creativity",
@@ -1433,26 +2300,87 @@
                 "Frustrating in emergencies",
                 "May appear indecisive"
               ],
+              "common_mistakes": [
+                {
+                  "mistake": "Using in Emergencies",
+                  "description": "Seeking consensus when time is critical",
+                  "consequence": "Wastes precious time, appears indecisive, creates confusion"
+                },
+                {
+                  "mistake": "When Team Lacks Expertise",
+                  "description": "Seeking input from uninformed team",
+                  "consequence": "Uninformed opinions don't help, can lead to poor decisions, team recognizes futility"
+                },
+                {
+                  "mistake": "Consensus as Excuse for Indecision",
+                  "description": "Never making final decision",
+                  "consequence": "Endless debate, analysis paralysis"
+                },
+                {
+                  "mistake": "Not Deciding After Getting Input",
+                  "description": "Gathering input but never deciding",
+                  "consequence": "Team frustration, wasted time and effort, reduces future participation"
+                }
+              ],
               "impact_on_performance": "Positive for engagement and quality decisions, but can slow execution",
               "best_practices": [
-                "Be clear about decision-making boundaries",
-                "Set time limits for consultation",
-                "Synthesize input into clear direction",
-                "Explain how input influenced decision",
-                "Don't use as excuse for indecision",
-                "Know when to shift to more directive approach"
+                "Be clear about decision-making process",
+                "Set time limits for discussion",
+                "Explain how input will be used",
+                "Make decision after gathering input",
+                "Thank people for their input",
+                "Communicate the decision and rationale"
               ]
             },
             {
               "style": "Pacesetting",
-              "description": "Do as I do, now. The leader sets high standards and models them, expecting team members to follow the example. Fast-paced, achievement-oriented.",
-              "when_to_use": [
-                "Performing stage - Highly competent, motivated team",
-                "Technical work - When leading by example is effective",
-                "Quick results needed - Short-term push for deliverables",
-                "Expert team - Members who understand standards and can self-direct",
-                "Crisis recovery - After initial crisis response, driving toward recovery"
-              ],
+              "tagline": "Do as I do, now",
+              "description": "Do as I do, now. The leader sets extremely high standards, models them personally, and expects team to follow the example.",
+              "when_to_use": {
+                "short_term_push": [
+                  "Critical deadline approaching",
+                  "Demo or presentation imminent",
+                  "Emergency response after crisis",
+                  "Sprint to finish line"
+                ],
+                "highly_competent_team": [
+                  "Team can meet high standards",
+                  "Members are self-motivated",
+                  "Technical experts who thrive on challenge",
+                  "Results-oriented culture"
+                ],
+                "leading_by_example": [
+                  "New process being introduced",
+                  "Demonstrating commitment",
+                  "Technical skill transfer"
+                ]
+              },
+              "characteristics": {
+                "how_it_looks": [
+                  "Leader works intensely",
+                  "High standards, often implicit",
+                  "Little patience for poor performance",
+                  "Leader often does work themselves",
+                  "Fast pace",
+                  "Achievement-focused",
+                  "Impatience with those who can't keep up"
+                ],
+                "impact_on_team_climate": [
+                  "Can damage climate if overused",
+                  "May overwhelm team members",
+                  "Reduces flexibility (one way to do it)",
+                  "Can decrease morale",
+                  "May increase turnover",
+                  "Short-term performance boost"
+                ],
+                "when_it_works_well": [
+                  "Team has capabilities to meet standards",
+                  "Used temporarily",
+                  "Team is motivated by challenge",
+                  "Leader's example is inspiring not intimidating",
+                  "Clear endpoint exists"
+                ]
+              },
               "strengths": [
                 "Drives high performance and results",
                 "Demonstrates competence and commitment",
@@ -1470,27 +2398,92 @@
                 "Can make team members feel inadequate",
                 "Leader becomes bottleneck"
               ],
+              "common_mistakes": [
+                {
+                  "mistake": "Using as Default Style",
+                  "description": "Using pacesetting as primary approach long-term",
+                  "consequence": "Burns out team, creates unsustainable pace, reduces morale over time, limits development of others"
+                },
+                {
+                  "mistake": "With Mixed-Ability Team",
+                  "description": "Setting same high pace for everyone",
+                  "consequence": "Some can't keep up, creates class system, demoralizes lower performers, may lose good people"
+                },
+                {
+                  "mistake": "Not Providing Coaching",
+                  "description": "Just setting high bar without support",
+                  "consequence": "Team doesn't develop, only leader can do it right"
+                },
+                {
+                  "mistake": "Continuing Too Long",
+                  "description": "Using pacesetting for extended periods",
+                  "consequence": "Burnout inevitable, diminishing returns, health and relationship impacts"
+                }
+              ],
               "impact_on_performance": "Can boost short-term performance but damages climate if overused",
               "best_practices": [
-                "Use for short bursts, not sustained periods",
-                "Ensure team has skills to meet standards",
-                "Provide coaching and support alongside high expectations",
-                "Recognize effort and progress, not just results",
-                "Monitor team stress and burnout",
-                "Balance with Coaching and Affiliative styles"
+                "Use for short bursts only",
+                "Ensure team has capability",
+                "Combine with Coaching",
+                "Monitor for burnout signs",
+                "Celebrate achievements",
+                "Transition to sustainable pace quickly"
               ]
             },
             {
               "style": "Coaching (Developmental)",
-              "description": "Try this. The leader focuses on developing team members for the future. Provides feedback, guidance, and opportunities for growth.",
-              "when_to_use": [
-                "Developing talent - Building long-term capabilities",
-                "Norming/Performing stages - Team ready to stretch and grow",
-                "Non-urgent situations - Time available for learning",
-                "Motivated learners - Team members eager to develop",
-                "Succession planning - Preparing future leaders",
-                "Building new skills - Team needs capability development"
-              ],
+              "tagline": "Try this",
+              "description": "Try this. The leader focuses on developing team members for the future, providing feedback and growth opportunities.",
+              "when_to_use": {
+                "developing_talent": [
+                  "Building long-term capabilities",
+                  "Career development",
+                  "Skill gaps identified",
+                  "Succession planning"
+                ],
+                "team_member_motivated_to_learn": [
+                  "Requests for growth opportunities",
+                  "Career discussions",
+                  "New challenges needed",
+                  "Aspirational goals expressed"
+                ],
+                "time_available": [
+                  "Not under crisis pressure",
+                  "Can invest in development",
+                  "Learning is priority",
+                  "Can accept learning mistakes"
+                ],
+                "building_organizational_capability": [
+                  "Knowledge transfer needed",
+                  "Institutional knowledge at risk",
+                  "Capability gaps identified"
+                ]
+              },
+              "characteristics": {
+                "how_it_looks": [
+                  "Regular development conversations",
+                  "Delegating stretch assignments",
+                  "Providing detailed feedback",
+                  "Creating learning opportunities",
+                  "Tolerating mistakes as learning",
+                  "Future-focused discussions",
+                  "Investment in growth"
+                ],
+                "impact_on_team_climate": [
+                  "Highly positive long-term",
+                  "Builds capability",
+                  "Increases engagement",
+                  "Improves retention",
+                  "Creates learning culture"
+                ],
+                "when_it_works_well": [
+                  "Team member is receptive",
+                  "Time available for development",
+                  "Leader has coaching skills",
+                  "Development opportunities exist",
+                  "Performance is adequate"
+                ]
+              },
               "strengths": [
                 "Develops long-term team capabilities",
                 "Increases motivation through growth opportunities",
@@ -1507,15 +2500,37 @@
                 "May fail during crises",
                 "Requires strong coaching skills"
               ],
+              "common_mistakes": [
+                {
+                  "mistake": "Using During Crisis",
+                  "description": "Coaching when immediate results needed",
+                  "consequence": "Immediate results needed, no time for development, learning mistakes unacceptable"
+                },
+                {
+                  "mistake": "With Unmotivated Individuals",
+                  "description": "Coaching someone who doesn't want to learn",
+                  "consequence": "Coaching requires willingness, can't force development, wastes effort"
+                },
+                {
+                  "mistake": "Coaching Without Follow-Up",
+                  "description": "Development discussions but no action",
+                  "consequence": "No accountability for growth, seen as empty promises"
+                },
+                {
+                  "mistake": "Only Teaching, Not Learning",
+                  "description": "Not adapting to individual needs",
+                  "consequence": "One approach for everyone, not learning from mentee"
+                }
+              ],
               "impact_on_performance": "Highly positive long-term impact on capabilities and morale",
               "best_practices": [
-                "Balance development with delivery needs",
-                "Set clear learning goals",
-                "Provide regular, constructive feedback",
-                "Allow room for mistakes and learning",
-                "Celebrate growth and progress",
-                "Match challenges to capabilities",
-                "Be patient with learning curves"
+                "Ensure individual wants development",
+                "Set clear development goals",
+                "Provide regular feedback",
+                "Create learning opportunities",
+                "Celebrate progress",
+                "Balance development with delivery",
+                "Follow up consistently"
               ]
             }
           ],
@@ -1527,17 +2542,7 @@
               {"stage": "Norming", "primary": "Democratic", "supporting": "Authoritative"},
               {"stage": "Performing", "primary": "Delegating/Democratic", "supporting": "Coaching"},
               {"stage": "Adjourning", "primary": "Coaching", "supporting": "Affiliative"}
-            ],
-            "by_urgency": {
-              "high": ["Commanding", "Authoritative", "Pacesetting"],
-              "medium": ["Authoritative", "Democratic", "Coaching"],
-              "low": ["Democratic", "Coaching", "Affiliative"]
-            },
-            "by_complexity": {
-              "high": "Democratic (need diverse input) + Coaching",
-              "medium": "Authoritative + Coaching",
-              "low": "Delegating + Pacesetting"
-            }
+            ]
           },
           "style_combinations": [
             {
