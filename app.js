@@ -644,13 +644,13 @@ const PMPApp = () => {
                     <span className="text-white flex-1">{option.text}</span>
                   </div>
                 </button>
-              )          )}
+              ))}
+            </div>
+          )}
         </div>
+        <GlobalNavFooter />
       </div>
-      <GlobalNavFooter />
-    </div>
-  );
-  }
+    );
   }
 
   // Lightning Round Activity View
