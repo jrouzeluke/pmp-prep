@@ -3248,8 +3248,11 @@ const PMPApp = () => {
     return <div className="prose prose-invert max-w-none" dangerouslySetInnerHTML={{ __html: html }} />;
   };
 
-  // Batch 1 Learn Hub View
+  // Batch 1 Learn Hub View - matches Manage Conflict format exactly
   if (view === 'batch1-learn-hub') {
+    // Use "Lead a Team" data from taskDatabase
+    const leadTeamTask = taskDatabase?.['Lead a Team'] || { learn: {}, practice: {} };
+    
     return (
       <div className="max-w-6xl w-full p-10 animate-fadeIn text-left">
         {/* Header with Back Button */}
@@ -3262,10 +3265,10 @@ const PMPApp = () => {
               ← Back
             </button>
           </div>
-          <h1 className="executive-font text-5xl font-bold text-white tracking-tight mb-6">BATCH 1: Lead a Team</h1>
+          <h1 className="executive-font text-5xl font-bold text-white tracking-tight mb-6">Lead a Team</h1>
           
-          {/* Tab Navigation */}
-          <div className="flex gap-8 border-b border-white/10 flex-wrap">
+          {/* Tab Navigation - matches Manage Conflict exactly */}
+          <div className="flex gap-8 border-b border-white/10">
             <button 
               onClick={() => setBatch1SubView('overview')} 
               className={`px-4 py-3 executive-font text-xs font-semibold uppercase transition-all relative ${
@@ -3277,107 +3280,296 @@ const PMPApp = () => {
               Overview
             </button>
             <button 
-              onClick={() => setBatch1SubView('pmp-connection')} 
+              onClick={() => setBatch1SubView('pmp-application')} 
               className={`px-4 py-3 executive-font text-xs font-semibold uppercase transition-all relative ${
-                batch1SubView === 'pmp-connection' 
+                batch1SubView === 'pmp-application' 
                   ? 'text-white border-b-2 border-cyan-400' 
                   : 'text-slate-500 hover:text-slate-300'
               }`}
             >
-              PMP Connection
+              PMP Application
             </button>
             <button 
-              onClick={() => setBatch1SubView('tuckmans-model')} 
+              onClick={() => setBatch1SubView('deep-dive')} 
               className={`px-4 py-3 executive-font text-xs font-semibold uppercase transition-all relative ${
-                batch1SubView === 'tuckmans-model' 
+                batch1SubView === 'deep-dive' 
                   ? 'text-white border-b-2 border-cyan-400' 
                   : 'text-slate-500 hover:text-slate-300'
               }`}
             >
-              Deep Dive: Tuckman's Model
-            </button>
-            <button 
-              onClick={() => setBatch1SubView('leadership-styles')} 
-              className={`px-4 py-3 executive-font text-xs font-semibold uppercase transition-all relative ${
-                batch1SubView === 'leadership-styles' 
-                  ? 'text-white border-b-2 border-cyan-400' 
-                  : 'text-slate-500 hover:text-slate-300'
-              }`}
-            >
-              Deep Dive: Leadership Styles
-            </button>
-            <button 
-              onClick={() => setBatch1SubView('activities')} 
-              className={`px-4 py-3 executive-font text-xs font-semibold uppercase transition-all relative ${
-                batch1SubView === 'activities' 
-                  ? 'text-white border-b-2 border-cyan-400' 
-                  : 'text-slate-500 hover:text-slate-300'
-              }`}
-            >
-              Activities Menu
+              Deep Dive
             </button>
           </div>
         </header>
 
-        {/* Content Area with Smooth Transitions */}
+        {/* Content Area with Smooth Transitions - matches Manage Conflict format */}
         <div className="min-h-[400px] max-h-[70vh] overflow-y-auto custom-scrollbar">
           {batch1SubView === 'overview' && (
             <div className="space-y-6 animate-fadeIn">
-              <div className="glass-card p-8">
-                {renderMarkdown(batch1Content.overview)}
-              </div>
-            </div>
-          )}
-
-          {batch1SubView === 'pmp-connection' && (
-            <div className="space-y-6 animate-fadeIn">
-              <div className="glass-card p-8">
-                {renderMarkdown(batch1Content.pmpConnection)}
-              </div>
-            </div>
-          )}
-
-          {batch1SubView === 'tuckmans-model' && (
-            <div className="space-y-6 animate-fadeIn">
-              <div className="glass-card p-8">
-                {renderMarkdown(batch1Content.tuckmansModel)}
-              </div>
-            </div>
-          )}
-
-          {batch1SubView === 'leadership-styles' && (
-            <div className="space-y-6 animate-fadeIn">
-              <div className="glass-card p-8">
-                {renderMarkdown(batch1Content.leadershipStyles)}
-              </div>
-            </div>
-          )}
-
-          {batch1SubView === 'activities' && (
-            <div className="space-y-6 animate-fadeIn">
-              <div className="glass-card p-8">
-                <h2 className="executive-font text-2xl font-bold text-white mb-6">Available Activities</h2>
-                <p className="text-slate-300 mb-6 leading-relaxed">
-                  Choose from the following hands-on activities to practice and apply what you've learned:
-                </p>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {batch1Content.activities.map((activity, idx) => (
-                    <div key={idx} className="glass-card p-6 bg-slate-800/30 hover:bg-slate-800/50 transition-colors border-l-4 border-cyan-500">
-                      <h3 className="executive-font text-lg font-semibold text-white mb-2">{activity.name}</h3>
-                      <p className="text-slate-400 text-sm mb-4">Duration: {activity.duration}</p>
-                      <button
-                        onClick={() => {
-                          // For now, open the markdown file in a new tab
-                          window.open(`./contentbatch1-lead_team/${activity.file}`, '_blank');
-                        }}
-                        className="text-sm px-4 py-2 bg-cyan-600 hover:bg-cyan-700 text-white rounded transition-colors"
-                      >
-                        View Activity →
-                      </button>
-                    </div>
-                  ))}
+              {leadTeamTask.learn?.overview?.definition && (
+                <div className="glass-card p-10 border-l-4 border-blue-500 bg-white/[0.02]">
+                  <h3 className="executive-font text-xl font-semibold text-white mb-4 uppercase tracking-wide">Definition</h3>
+                  <p className="text-3xl text-white font-light italic leading-tight">"{leadTeamTask.learn.overview.definition}"</p>
                 </div>
-              </div>
+              )}
+
+              {leadTeamTask.learn?.overview?.module_introduction && (
+                <div className="glass-card p-6 border-l-4 border-blue-500">
+                  <h3 className="executive-font text-xl font-semibold text-white mb-4 uppercase tracking-wide">Module Introduction</h3>
+                  <p className="text-slate-300 leading-relaxed">{leadTeamTask.learn.overview.module_introduction}</p>
+                </div>
+              )}
+
+              {leadTeamTask.learn?.overview?.what_youll_learn && leadTeamTask.learn.overview.what_youll_learn.length > 0 && (
+                <div className="glass-card p-6 border-l-4 border-purple-500">
+                  <h3 className="executive-font text-lg font-semibold text-white mb-4 uppercase tracking-wide">What You'll Learn</h3>
+                  <ul className="space-y-3">
+                    {leadTeamTask.learn.overview.what_youll_learn.map((item, idx) => (
+                      <li key={idx} className="text-slate-300 flex items-start gap-3">
+                        <span className="text-purple-400 mt-1">•</span>
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {leadTeamTask.learn?.overview?.key_learning_objectives && leadTeamTask.learn.overview.key_learning_objectives.length > 0 && (
+                <div className="glass-card p-6 border-l-4 border-emerald-500">
+                  <h3 className="executive-font text-lg font-semibold text-white mb-4 uppercase tracking-wide">Key Learning Objectives</h3>
+                  <ol className="space-y-2 list-decimal list-inside">
+                    {leadTeamTask.learn.overview.key_learning_objectives.map((objective, idx) => (
+                      <li key={idx} className="text-slate-300">{objective}</li>
+                    ))}
+                  </ol>
+                </div>
+              )}
+
+              {leadTeamTask.learn?.overview?.why_this_matters && (
+                <div className="glass-card p-6 border-l-4 border-cyan-500">
+                  <h3 className="executive-font text-lg font-semibold text-white mb-4 uppercase tracking-wide">Why This Matters</h3>
+                  <p className="text-slate-300 leading-relaxed">{leadTeamTask.learn.overview.why_this_matters}</p>
+                </div>
+              )}
+              
+              {leadTeamTask.learn?.overview?.exam_triggers && leadTeamTask.learn.overview.exam_triggers.length > 0 && (
+                <div className="glass-card p-6 border-l-4 border-purple-500">
+                  <h3 className="executive-font text-lg font-semibold text-white mb-4 uppercase tracking-wide">Exam Triggers</h3>
+                  <ul className="space-y-2">
+                    {leadTeamTask.learn.overview.exam_triggers.map((trigger, idx) => (
+                      <li key={idx} className="text-slate-300 flex items-start gap-2">
+                        <span className="text-purple-400 mt-1">•</span>
+                        <span>{trigger}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {leadTeamTask.learn?.overview?.quick_scenarios && leadTeamTask.learn.overview.quick_scenarios.length > 0 && (
+                <div className="glass-card p-6 border-l-4 border-cyan-500">
+                  <h3 className="executive-font text-lg font-semibold text-white mb-4 uppercase tracking-wide">Quick Scenarios</h3>
+                  <div className="space-y-4">
+                    {leadTeamTask.learn.overview.quick_scenarios.map((scenario, idx) => (
+                      <div key={idx} className="border-l-2 border-cyan-500/50 pl-4">
+                        <p className="text-white font-semibold mb-2">{scenario.scenario}</p>
+                        <p className="text-sm text-red-400 mb-1"><span className="font-semibold">Wrong:</span> {scenario.wrong_answer}</p>
+                        <p className="text-sm text-emerald-400 mb-1"><span className="font-semibold">Right:</span> {scenario.right_answer}</p>
+                        <p className="text-sm text-slate-400 italic">{scenario.why}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {!leadTeamTask.learn?.overview && !leadTeamTask.learn?.definition && (
+                <div className="glass-card p-10 border-l-4 border-blue-500 bg-white/[0.02]">
+                  <p className="text-3xl text-white font-light italic leading-tight">"Briefing Locked."</p>
+                </div>
+              )}
+            </div>
+          )}
+
+          {batch1SubView === 'pmp-application' && (
+            <div className="space-y-6 animate-fadeIn">
+              {leadTeamTask.learn?.pmp_application?.connection_to_pmp && (
+                <div className="glass-card p-6 border-l-4 border-purple-500">
+                  <h3 className="executive-font text-xl font-semibold text-white mb-4 uppercase tracking-wide">Connection to PMP Certification</h3>
+                  <p className="text-slate-300 mb-4">{leadTeamTask.learn.pmp_application.connection_to_pmp}</p>
+                  {leadTeamTask.learn.pmp_application.domain && (
+                    <p className="text-emerald-400 font-semibold">Domain: {leadTeamTask.learn.pmp_application.domain}</p>
+                  )}
+                </div>
+              )}
+
+              {leadTeamTask.learn?.pmp_application?.related_tasks && leadTeamTask.learn.pmp_application.related_tasks.length > 0 && (
+                <div className="glass-card p-6 border-l-4 border-blue-500">
+                  <h3 className="executive-font text-xl font-semibold text-white mb-4 uppercase tracking-wide">Related PMP Tasks</h3>
+                  <div className="space-y-6">
+                    {leadTeamTask.learn.pmp_application.related_tasks.map((task, idx) => (
+                      <div key={idx} className="border-l-2 border-blue-500/50 pl-4">
+                        <h4 className="font-semibold text-white text-lg mb-2">{task.task}</h4>
+                        <p className="text-sm text-slate-300 mb-3">{task.description}</p>
+                        {task.knowledge_and_skills && task.knowledge_and_skills.length > 0 && (
+                          <div className="mb-3">
+                            <p className="text-xs text-slate-400 uppercase mb-2">Knowledge and Skills:</p>
+                            <ul className="list-disc list-inside space-y-1 text-sm text-slate-300">
+                              {task.knowledge_and_skills.map((skill, skillIdx) => (
+                                <li key={skillIdx}>{skill}</li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+                        {task.what_youll_learn && task.what_youll_learn.length > 0 && (
+                          <div>
+                            <p className="text-xs text-slate-400 uppercase mb-2">What You'll Learn:</p>
+                            <ul className="list-disc list-inside space-y-1 text-sm text-slate-300">
+                              {task.what_youll_learn.map((item, itemIdx) => (
+                                <li key={itemIdx}>{item}</li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {leadTeamTask.learn?.pmp_application?.how_module_supports_pmp_application && leadTeamTask.learn.pmp_application.how_module_supports_pmp_application.length > 0 && (
+                <div className="glass-card p-6 border-l-4 border-emerald-500">
+                  <h3 className="executive-font text-lg font-semibold text-white mb-4 uppercase tracking-wide">How This Module Supports Your PMP Application</h3>
+                  <p className="text-slate-300 mb-3">When documenting your project experience for the PMP application, you'll need to describe situations where you demonstrated these competencies. This module provides:</p>
+                  <ol className="space-y-2 list-decimal list-inside text-slate-300">
+                    {leadTeamTask.learn.pmp_application.how_module_supports_pmp_application.map((item, idx) => (
+                      <li key={idx}>{item}</li>
+                    ))}
+                  </ol>
+                </div>
+              )}
+
+              {leadTeamTask.learn?.pmp_application?.application_tips && leadTeamTask.learn.pmp_application.application_tips.length > 0 && (
+                <div className="glass-card p-6 border-l-4 border-orange-500">
+                  <h3 className="executive-font text-lg font-semibold text-white mb-4 uppercase tracking-wide">Application Tips</h3>
+                  <p className="text-slate-300 mb-3">When writing your PMP application experience descriptions:</p>
+                  <ul className="space-y-2 text-slate-300">
+                    {leadTeamTask.learn.pmp_application.application_tips.map((tip, idx) => (
+                      <li key={idx} className="flex items-start gap-2">
+                        <span className="text-orange-400 mt-1">•</span>
+                        <span>{tip}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
+          )}
+
+          {batch1SubView === 'deep-dive' && (
+            <div className="space-y-6 animate-fadeIn">
+              {leadTeamTask.learn?.deep_dive?.foundational_concept && (
+                <div className="glass-card p-6 border-l-4 border-blue-500">
+                  <h3 className="executive-font text-xl font-semibold text-white mb-4 uppercase tracking-wide">Foundational Concept</h3>
+                  <div className="text-slate-300 space-y-3">
+                    <p>{leadTeamTask.learn.deep_dive.foundational_concept}</p>
+                  </div>
+                </div>
+              )}
+
+              {leadTeamTask.learn?.deep_dive?.tuckmans_model && (
+                <div className="glass-card p-6 border-l-4 border-purple-500">
+                  <h3 className="executive-font text-xl font-semibold text-white mb-4 uppercase tracking-wide">{leadTeamTask.learn.deep_dive.tuckmans_model.title || "Tuckman's Stages of Team Development"}</h3>
+                  {leadTeamTask.learn.deep_dive.tuckmans_model.introduction && (
+                    <p className="text-slate-300 mb-6">{leadTeamTask.learn.deep_dive.tuckmans_model.introduction}</p>
+                  )}
+                  {leadTeamTask.learn.deep_dive.tuckmans_model.stages && leadTeamTask.learn.deep_dive.tuckmans_model.stages.length > 0 && (
+                    <div className="space-y-6">
+                      {leadTeamTask.learn.deep_dive.tuckmans_model.stages.map((stage, idx) => (
+                        <div key={idx} className="border-l-2 border-purple-500/50 pl-4">
+                          <h4 className="font-semibold text-white text-lg mb-3">Stage {idx + 1}: {stage.stage}</h4>
+                          {stage.characteristics && stage.characteristics.length > 0 && (
+                            <div className="mb-3">
+                              <p className="text-xs text-slate-400 uppercase mb-2">Characteristics:</p>
+                              <ul className="list-disc list-inside space-y-1 text-sm text-slate-300">
+                                {stage.characteristics.map((char, charIdx) => (
+                                  <li key={charIdx}>{char}</li>
+                                ))}
+                              </ul>
+                            </div>
+                          )}
+                          {stage.pm_leadership_style && (
+                            <p className="text-sm text-cyan-400 mb-2"><span className="font-semibold">PM Leadership Style:</span> {stage.pm_leadership_style}</p>
+                          )}
+                          {stage.pm_key_activities && stage.pm_key_activities.length > 0 && (
+                            <div className="mb-3">
+                              <p className="text-xs text-slate-400 uppercase mb-2">PM Key Activities:</p>
+                              <ul className="list-disc list-inside space-y-1 text-sm text-slate-300">
+                                {stage.pm_key_activities.map((activity, actIdx) => (
+                                  <li key={actIdx}>{activity}</li>
+                                ))}
+                              </ul>
+                            </div>
+                          )}
+                          {stage.duration && (
+                            <p className="text-xs text-slate-500 italic">{stage.duration}</p>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {leadTeamTask.learn?.deep_dive?.leadership_styles && (
+                <div className="glass-card p-6 border-l-4 border-emerald-500">
+                  <h3 className="executive-font text-xl font-semibold text-white mb-4 uppercase tracking-wide">{leadTeamTask.learn.deep_dive.leadership_styles.title || "Leadership Styles"}</h3>
+                  {leadTeamTask.learn.deep_dive.leadership_styles.introduction && (
+                    <p className="text-slate-300 mb-6">{leadTeamTask.learn.deep_dive.leadership_styles.introduction}</p>
+                  )}
+                  {leadTeamTask.learn.deep_dive.leadership_styles.styles && leadTeamTask.learn.deep_dive.leadership_styles.styles.length > 0 && (
+                    <div className="space-y-6">
+                      {leadTeamTask.learn.deep_dive.leadership_styles.styles.map((style, idx) => (
+                        <div key={idx} className="border-l-2 border-emerald-500/50 pl-4">
+                          <h4 className="font-semibold text-white text-lg mb-2">{style.style}</h4>
+                          {style.description && (
+                            <p className="text-sm text-slate-300 mb-2 italic">"{style.description}"</p>
+                          )}
+                          {style.when_to_use && style.when_to_use.length > 0 && (
+                            <div className="mb-3">
+                              <p className="text-xs text-slate-400 uppercase mb-2">When to Use:</p>
+                              <ul className="list-disc list-inside space-y-1 text-sm text-slate-300">
+                                {style.when_to_use.map((when, whenIdx) => (
+                                  <li key={whenIdx}>{when}</li>
+                                ))}
+                              </ul>
+                            </div>
+                          )}
+                          {style.strengths && style.strengths.length > 0 && (
+                            <div className="mb-2">
+                              <p className="text-xs text-emerald-400 uppercase mb-1">Strengths:</p>
+                              <ul className="list-disc list-inside space-y-1 text-sm text-slate-300">
+                                {style.strengths.map((strength, strIdx) => (
+                                  <li key={strIdx}>{strength}</li>
+                                ))}
+                              </ul>
+                            </div>
+                          )}
+                          {style.weaknesses && style.weaknesses.length > 0 && (
+                            <div className="mb-2">
+                              <p className="text-xs text-red-400 uppercase mb-1">Weaknesses:</p>
+                              <ul className="list-disc list-inside space-y-1 text-sm text-slate-300">
+                                {style.weaknesses.map((weakness, weakIdx) => (
+                                  <li key={weakIdx}>{weakness}</li>
+                                ))}
+                              </ul>
+                            </div>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           )}
         </div>
