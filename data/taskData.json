@@ -796,7 +796,46 @@
           "Coach and develop team members to enhance their capabilities and engagement",
           "Build high-performing teams that deliver exceptional results"
         ],
-        "why_this_matters": "Effective team leadership is consistently identified as one of the top success factors in project management. Research shows that teams with strong leadership are 2.5x more likely to complete projects on time and within budget, projects with engaged team members have 21% higher profitability, and high-performing teams spend 50% more time in collaborative problem-solving than low-performing teams. Your ability to lead teams effectively will differentiate you as a project manager and directly contribute to your organization's success."
+        "why_this_matters": "Effective team leadership is consistently identified as one of the top success factors in project management. Research shows that teams with strong leadership are 2.5x more likely to complete projects on time and within budget, projects with engaged team members have 21% higher profitability, and high-performing teams spend 50% more time in collaborative problem-solving than low-performing teams. Your ability to lead teams effectively will differentiate you as a project manager and directly contribute to your organization's success.",
+        "exam_triggers": [
+          "New team formation",
+          "Team not performing",
+          "Leadership style question",
+          "Team development stage",
+          "Motivation/engagement issue"
+        ],
+        "quick_scenarios": [
+          {
+            "scenario": "Team is new and members don't know each other or their roles",
+            "wrong_answer": "Let them self-organize immediately (Delegating too early)",
+            "right_answer": "Provide clear structure, facilitate introductions, establish ground rules (Authoritative)",
+            "why": "New teams need PM guidance and structure"
+          },
+          {
+            "scenario": "Two senior developers publicly arguing about technical approach in team meeting",
+            "wrong_answer": "Force a decision to end argument quickly (Commanding)",
+            "right_answer": "Acknowledge both views, facilitate problem-solving discussion (Coaching)",
+            "why": "Conflict in Storming is normal and needs facilitation, not suppression"
+          },
+          {
+            "scenario": "High-performing team consistently delivering excellent results",
+            "wrong_answer": "Continue making all decisions to maintain control (Commanding)",
+            "right_answer": "Delegate authority, remove obstacles, focus on strategic issues (Delegating)",
+            "why": "High performers need trust and empowerment, not micromanagement"
+          },
+          {
+            "scenario": "Team just completed intense 3-month death march and morale is low",
+            "wrong_answer": "Immediately start next high-pressure project (Pacesetting)",
+            "right_answer": "Acknowledge effort, provide recovery time, rebuild relationships (Affiliative)",
+            "why": "Burned-out teams need care and relationship repair"
+          },
+          {
+            "scenario": "Major organizational change affecting team, high anxiety",
+            "wrong_answer": "Focus only on deliverables and ignore emotions (Pacesetting)",
+            "right_answer": "Provide vision, address concerns, offer support (Authoritative + Affiliative)",
+            "why": "Change requires clear direction combined with emotional support"
+          }
+        ]
       },
       "pmp_application": {
         "connection_to_pmp": "For those pursuing PMP certification, this module aligns with several key areas of the PMP Examination Content Outline.",
@@ -880,7 +919,158 @@
           "Include outcomes: Connect your leadership actions to project results",
           "Reference frameworks: Mention Tuckman's model, leadership styles, or conflict resolution approaches when relevant",
           "Demonstrate range: Show you've used different leadership approaches in different situations"
-        ]
+        ],
+        "exam_focus": {
+          "how_task_appears": "The PMP exam tests your ability to select appropriate leadership styles and guide teams through development stages. Questions focus on situational judgment rather than memorization.",
+          "question_patterns": [
+            {
+              "pattern": "Team Development Stage Recognition",
+              "format": "Scenario describes team behaviors, asks what stage they're in or what PM should do",
+              "key_words": "Team members are competing for influence = Storming",
+              "example": "Team is arguing about approaches. What should the PM do FIRST?"
+            },
+            {
+              "pattern": "Leadership Style Selection",
+              "format": "Situation given, asks which leadership style is most appropriate",
+              "key_words": "Crisis, new direction, high-performing team, low morale",
+              "example": "Team is burned out after intense deadline. Best leadership approach?"
+            },
+            {
+              "pattern": "Servant Leadership Application",
+              "format": "PM must choose between controlling and enabling approaches",
+              "key_words": "Remove obstacles, empower, support team needs",
+              "example": "Team blocked by process. What should PM do?"
+            },
+            {
+              "pattern": "Adapting Leadership Style",
+              "format": "Team circumstances change, PM must adjust approach",
+              "key_words": "Team was performing but now..., new team member joined",
+              "example": "High performer added to struggling team. How should PM lead?"
+            }
+          ],
+          "sample_questions": [
+            {
+              "question": "Your project team has been working together for 3 weeks. Two senior team members are openly disagreeing about the technical approach. Other team members are choosing sides. Productivity has decreased. What should you do FIRST?",
+              "options": [
+                "Remove one of the disagreeing members from the project",
+                "Make the technical decision yourself to end the conflict",
+                "Facilitate a discussion to help the team work through the disagreement",
+                "Ignore it and let them work it out themselves"
+              ],
+              "correct": 2,
+              "explanation": "Team is in Storming stage. PM should facilitate conflict resolution (Coaching style), not avoid it, force it, or overreact. Conflict is normal in Storming and needs facilitation.",
+              "why_others_wrong": {
+                "A": "Overreaction, removes valuable team member, doesn't address root cause",
+                "B": "Commanding style inappropriate here, team needs to work through conflict",
+                "D": "Avoiding conflict in Storming prolongs the stage and damages team"
+              }
+            },
+            {
+              "question": "Your team has been consistently delivering high-quality work on time for the past 6 months. They self-organize effectively and rarely need your intervention. A new complex feature needs to be implemented. What is the BEST leadership approach?",
+              "options": [
+                "Provide detailed instructions on how to implement the feature",
+                "Let the team determine the approach and offer support if needed",
+                "Work alongside them to set the pace and demonstrate your expertise",
+                "Hold daily check-ins to monitor their progress closely"
+              ],
+              "correct": 1,
+              "explanation": "High-performing team (Performing stage) needs Delegating leadership style. Trust their capability, provide autonomy, offer support when requested.",
+              "why_others_wrong": {
+                "A": "Micromanaging a high-performing team (Commanding style inappropriate)",
+                "C": "Pacesetting can be demotivating for capable team, implies they need you to lead",
+                "D": "Over-monitoring shows lack of trust, inappropriate for Performing stage"
+              }
+            },
+            {
+              "question": "Your team reports they cannot access the test environment needed to complete their work. The IT department says it will take 2 weeks to provision. What should you do?",
+              "options": [
+                "Tell the team to work on other tasks while waiting",
+                "Escalate to your sponsor to expedite the request",
+                "Have the team create a workaround solution",
+                "Contact IT immediately to expedite, escalate if necessary"
+              ],
+              "correct": 3,
+              "explanation": "Servant leadership means removing obstacles for the team. PM should act immediately to remove this impediment, escalating if IT cannot expedite.",
+              "why_others_wrong": {
+                "A": "Accepts the obstacle without trying to remove it (not servant leadership)",
+                "B": "Escalating first is unnecessary, try to resolve at appropriate level first",
+                "C": "Workarounds may not fully address the need and waste team time"
+              }
+            },
+            {
+              "question": "Your team was performing well but two key members just left. The remaining team seems uncertain and is asking for more direction. What should you do?",
+              "options": [
+                "Continue delegating as before since the team was performing well",
+                "Provide more structure and direction as the team reforms",
+                "Let the new team dynamics settle naturally",
+                "Bring in consultants to fill the gaps"
+              ],
+              "correct": 1,
+              "explanation": "Team has regressed from Performing back to Forming due to membership changes. PM must adapt style from Delegating back to Authoritative/Commanding to provide needed structure.",
+              "why_others_wrong": {
+                "A": "Ignores that team stage changed, inappropriate leadership style now",
+                "C": "Team needs active leadership during transition, not passive approach",
+                "D": "May be needed eventually but doesn't address immediate leadership need"
+              }
+            }
+          ],
+          "common_exam_traps": [
+            {
+              "trap": "Servant Leadership ≠ Weak Leadership",
+              "wrong_thinking": "Servant leadership means letting team decide everything",
+              "right_thinking": "Remove obstacles, provide support, but still provide direction when needed",
+              "example": "Team is blocked → PM actively removes obstacle (not passive)"
+            },
+            {
+              "trap": "One Leadership Style for All Situations",
+              "wrong_thinking": "Democratic style is always best because it's collaborative",
+              "right_thinking": "Match style to situation - crisis needs Commanding, high performers need Delegating",
+              "example": "Crisis occurs → Commanding temporarily appropriate despite being 'negative' style"
+            },
+            {
+              "trap": "Avoiding Conflict in Storming",
+              "wrong_thinking": "Conflict is bad, should be eliminated immediately",
+              "right_thinking": "Conflict in Storming is normal and healthy, needs facilitation not elimination",
+              "example": "Team arguing → Facilitate discussion (not force decision or avoid)"
+            },
+            {
+              "trap": "Micromanaging = Good Leadership",
+              "wrong_thinking": "PM should make all decisions to ensure quality",
+              "right_thinking": "Empower team to decide based on their capability level",
+              "example": "Experienced team → Delegate decisions (not control everything)"
+            },
+            {
+              "trap": "Ignoring Emotional Needs",
+              "wrong_thinking": "Focus only on tasks and deliverables",
+              "right_thinking": "Team morale and relationships affect performance",
+              "example": "Burned out team → Affiliative style to rebuild relationships (not more pressure)"
+            }
+          ],
+          "study_tips": {
+            "focus_areas": [
+              "Memorize Tuckman's 5 Stages - Characteristics of each stage, typical behaviors, appropriate PM actions, what triggers regression",
+              "Know All 6 Leadership Styles - When to use each, effects (positive and negative), what each looks like in practice, how to recognize in scenarios",
+              "Practice Situational Judgment - Read scenario carefully, identify team stage first, then select appropriate style, watch for trap answers",
+              "Understand Servant Leadership - Not passive or weak, active obstacle removal, empowerment with support, team needs over PM ego"
+            ],
+            "quick_reference": {
+              "team_stage_to_style": {
+                "Forming": "Authoritative (provide structure)",
+                "Storming": "Coaching (facilitate through conflict)",
+                "Norming": "Democratic (involve team)",
+                "Performing": "Delegating (trust and empower)",
+                "Adjourning": "Coaching/Affiliative (support transition)"
+              },
+              "red_flag_words": {
+                "Crisis": "Commanding (temporarily)",
+                "Burned out": "Affiliative (relationships first)",
+                "Experienced team": "Democratic or Delegating",
+                "New team": "Authoritative or Commanding",
+                "Blocked/Stuck": "Remove obstacle (servant leadership)"
+              }
+            }
+          }
+        }
       },
       "deep_dive": {
         "foundational_concept": "Effective team leadership requires understanding how teams develop over time and adapting your leadership style to match the team's current stage and the situation. Two foundational frameworks guide this: Tuckman's stages of team development and Goleman's six leadership styles.",
@@ -1421,8 +1611,445 @@
     "practice": { 
       "agile_mindset": "Act as a servant leader and shield the team from outside interference.", 
       "checklist": ["Project Vision", "Team Charter"],
-      "reflex_prompts": [],
-      "stress_test": [],
+      "reflex_prompts": [
+        {
+          "id": 1,
+          "question": "Team members are polite but ask many questions about roles and processes. Productivity is low as everyone is getting oriented. What stage is this team in?",
+          "options": ["Storming", "Forming", "Norming", "Performing"],
+          "correct": 1,
+          "explanation": "Polite behavior = Forming characteristic. Questions about roles/processes = need for structure. Low productivity during orientation = Forming pattern. Key Indicator: 'Polite' is the giveaway - Forming teams are tentative and polite. Storming teams are not polite!"
+        },
+        {
+          "id": 2,
+          "question": "Team argues frequently about approaches. Members form coalitions. Some challenge your authority. Energy goes to conflict rather than work. What stage is this team in?",
+          "options": ["Forming", "Storming", "Norming", "Performing"],
+          "correct": 1,
+          "explanation": "Arguing frequently = conflict characteristic. Coalitions forming = power struggles. Challenging authority = testing boundaries. Energy to conflict = classic Storming. Key Indicator: Frequent conflict and power struggles are definitive Storming signs."
+        },
+        {
+          "id": 3,
+          "question": "Team uses 'we' language. Members help each other without being asked. Processes are working smoothly. Team identity is emerging. What stage is this team in?",
+          "options": ["Forming", "Storming", "Norming", "Performing"],
+          "correct": 2,
+          "explanation": "'We' language = team identity forming. Helping without being asked = cooperation. Smooth processes = established norms. Team identity emerging = Norming hallmark. Key Indicator: The shift from 'I' to 'we' language signals Norming."
+        },
+        {
+          "id": 4,
+          "question": "Team makes decisions autonomously. High quality outputs consistently. Minimal PM intervention needed. Team self-corrects issues. What stage is this team in?",
+          "options": ["Norming", "Performing", "Adjourning", "Forming"],
+          "correct": 1,
+          "explanation": "Autonomous decisions = high maturity. Consistent quality = sustained excellence. Minimal PM intervention = self-managing. Self-correction = peak performance. Key Indicator: Autonomy + consistently high performance = Performing."
+        },
+        {
+          "id": 5,
+          "question": "Project ending in 2 weeks. Team reflecting on accomplishments. Some anxiety about next assignments. Productivity slightly declining. What stage is this team in?",
+          "options": ["Forming", "Storming", "Norming", "Adjourning"],
+          "correct": 3,
+          "explanation": "Project ending = closure phase. Reflecting on accomplishments = looking back. Anxiety about future = transition concerns. Productivity declining = focus shifting. Key Indicator: Project ending + reflection + future anxiety = Adjourning."
+        },
+        {
+          "id": 6,
+          "question": "Production system crashed. Customers affected. Team waiting for direction. Need immediate action. Best leadership style?",
+          "options": ["Democratic", "Commanding", "Coaching", "Affiliative"],
+          "correct": 1,
+          "explanation": "Crisis situation = need immediate action. Customers affected = urgency. Waiting for direction = want clear orders. No time for discussion. When to Use Commanding: Emergency, safety issue, crisis requiring immediate response. After Crisis: Transition to other styles quickly."
+        },
+        {
+          "id": 7,
+          "question": "Team lacks clarity on project direction. Multiple competing priorities. Need alignment and motivation. Best leadership style?",
+          "options": ["Commanding", "Authoritative", "Pacesetting", "Coaching"],
+          "correct": 1,
+          "explanation": "Lacks clarity = need vision. Competing priorities = need direction. Need alignment = unified goal. Need motivation = inspiring leadership. When to Use Authoritative: New direction needed, team lacks clarity, building consensus."
+        },
+        {
+          "id": 8,
+          "question": "Team completed intense 3-month crunch. Exhausted and irritable. Morale very low. Relationships strained. Best leadership style?",
+          "options": ["Pacesetting", "Commanding", "Affiliative", "Democratic"],
+          "correct": 2,
+          "explanation": "Exhausted = need recovery. Low morale = need emotional support. Relationships strained = need repair. People first, then tasks. When to Use Affiliative: After stress, broken trust, team needs emotional support, morale crisis."
+        },
+        {
+          "id": 9,
+          "question": "Complex technical decision. Team has relevant expertise. Need buy-in for implementation. Time available for discussion. Best leadership style?",
+          "options": ["Commanding", "Democratic", "Pacesetting", "Affiliative"],
+          "correct": 1,
+          "explanation": "Complex decision = need multiple perspectives. Team has expertise = leverage their knowledge. Need buy-in = participation creates commitment. Time available = can discuss. When to Use Democratic: Team expertise, need buy-in, complex problem, time available."
+        },
+        {
+          "id": 10,
+          "question": "Quick push needed for demo next week. Capable team. Need to demonstrate commitment and set pace. Best leadership style?",
+          "options": ["Commanding", "Democratic", "Pacesetting", "Coaching"],
+          "correct": 2,
+          "explanation": "Quick push = short-term intensity. Capable team = can meet high standards. Demo next week = clear deadline. Lead by example. When to Use Pacesetting: Short-term push, capable team, lead by example, temporary intensity. Warning: Don't use long-term or team will burn out."
+        },
+        {
+          "id": 11,
+          "question": "Team member wants to develop project management skills. Time available. Motivated learner. Building for future. Best leadership style?",
+          "options": ["Commanding", "Affiliative", "Coaching", "Democratic"],
+          "correct": 2,
+          "explanation": "Wants to develop = growth opportunity. Time available = can invest. Motivated learner = receptive. Building for future = long-term focus. When to Use Coaching: Development opportunity, motivated learner, time available, future focus."
+        },
+        {
+          "id": 12,
+          "question": "New team, first meeting. What style should PM primarily use?",
+          "options": ["Democratic", "Authoritative/Commanding", "Delegating", "Affiliative"],
+          "correct": 1,
+          "explanation": "Forming stage = need structure. New team = can't self-organize. PM must provide direction. Establish foundation. Stage-Style Match: Forming → Authoritative/Commanding."
+        },
+        {
+          "id": 13,
+          "question": "Team arguing about technical approach. Power struggles evident. What style should PM use?",
+          "options": ["Commanding", "Coaching", "Pacesetting", "Delegating"],
+          "correct": 1,
+          "explanation": "Storming stage = conflict. Arguing = need facilitation. Power struggles = can't just force. Facilitate through conflict. Stage-Style Match: Storming → Coaching/Affiliative."
+        },
+        {
+          "id": 14,
+          "question": "Team collaborating well. Processes working. 'We' language emerging. What style should PM use?",
+          "options": ["Commanding", "Authoritative", "Democratic", "Pacesetting"],
+          "correct": 2,
+          "explanation": "Norming stage = ready to participate. Collaborating well = capable of input. Processes working = foundation solid. Involve in decisions. Stage-Style Match: Norming → Democratic."
+        },
+        {
+          "id": 15,
+          "question": "Team self-organizing. High performance. Minimal PM intervention needed. What style should PM use?",
+          "options": ["Commanding", "Coaching", "Democratic", "Delegating"],
+          "correct": 3,
+          "explanation": "Performing stage = high autonomy. Self-organizing = don't need direction. High performance = trust earned. Empower fully. Stage-Style Match: Performing → Delegating."
+        },
+        {
+          "id": 16,
+          "question": "Project ending. Team reflective. Some anxiety about future. What style should PM use?",
+          "options": ["Commanding", "Affiliative/Coaching", "Pacesetting", "Democratic"],
+          "correct": 1,
+          "explanation": "Adjourning stage = transition. Reflective = capture lessons. Anxiety = emotional support needed. Closure and learning. Stage-Style Match: Adjourning → Affiliative/Coaching."
+        },
+        {
+          "id": 17,
+          "question": "PM lets new team self-organize immediately without providing structure. What's the problem?",
+          "options": ["Nothing, empowerment is good", "Team can't self-organize in Forming stage", "Should use Pacesetting instead", "Should use Affiliative instead"],
+          "correct": 1,
+          "explanation": "Forming teams need structure. Can't self-organize without foundation. Creates confusion and anxiety. Appropriate for Performing, not Forming. Common Mistake: Delegating too early with immature teams."
+        },
+        {
+          "id": 18,
+          "question": "PM forces decision to quickly end team argument. What's the problem?",
+          "options": ["Nothing, decisiveness is good", "Suppresses Storming, prolongs conflict", "Should use Democratic instead", "Should use Affiliative instead"],
+          "correct": 1,
+          "explanation": "Storming conflict needs facilitation. Forcing decision drives conflict underground. Team doesn't learn to resolve issues. Prolongs Storming stage. Common Mistake: Using Commanding to suppress Storming stage conflict."
+        },
+        {
+          "id": 19,
+          "question": "PM micromanages high-performing team during challenge. What's the problem?",
+          "options": ["Nothing, challenges need oversight", "Shows lack of trust, demotivates team", "Should use Affiliative instead", "Should use Pacesetting instead"],
+          "correct": 1,
+          "explanation": "Performing teams earned autonomy. Micromanaging withdraws trust. Demotivates and reduces performance. PM should support, not direct. Common Mistake: Reverting to directive style with Performing teams under pressure."
+        },
+        {
+          "id": 20,
+          "question": "PM uses Pacesetting style continuously for 6 months. What's the problem?",
+          "options": ["Nothing, high standards are good", "Causes burnout, unsustainable", "Should use Commanding instead", "Should use Democratic instead"],
+          "correct": 1,
+          "explanation": "Pacesetting is for short bursts only. Continuous intensity causes burnout. Morale declines over time. Damages climate long-term. Common Mistake: Using Pacesetting as default instead of temporary boost."
+        },
+        {
+          "id": 21,
+          "question": "Team member consistently misses deadlines. Coaching hasn't helped. What style now?",
+          "options": ["Affiliative", "Democratic", "Commanding", "Coaching"],
+          "correct": 2,
+          "explanation": "Coaching tried and failed. Need clear expectations and accountability. Appropriate use of directive style. Individual performance issue. Key Point: Commanding appropriate for problem employees after coaching fails."
+        },
+        {
+          "id": 22,
+          "question": "Two senior team members disagree on architecture. Both have valid points. What should PM do FIRST?",
+          "options": ["Decide yourself immediately", "Let them work it out alone", "Facilitate structured discussion", "Side with one approach"],
+          "correct": 2,
+          "explanation": "Storming behavior (power struggle). Both have expertise (need their input). PM facilitates, doesn't dictate. Coaching style appropriate. Key Point: Facilitate technical debates, don't force or avoid."
+        },
+        {
+          "id": 23,
+          "question": "High-performing team faces unfamiliar challenge. They're concerned but engaged. What should PM do?",
+          "options": ["Research solution and provide instructions", "Trust team, offer support", "Bring in expert to lead", "Work alongside them hands-on"],
+          "correct": 1,
+          "explanation": "Performing stage = trust earned. Engaged = taking ownership. PM supports, doesn't take over. Delegating style appropriate. Key Point: Don't regress to directive style with Performing teams facing challenges."
+        },
+        {
+          "id": 24,
+          "question": "Team member shares personal crisis affecting work. What should PM do FIRST?",
+          "options": ["Reassign their work immediately", "Express empathy, ask what they need", "Maintain professional distance", "Tell them to take time off"],
+          "correct": 1,
+          "explanation": "Lead with empathy (emotional intelligence). Ask what THEY need (respect autonomy). Offer support and flexibility. Affiliative style appropriate. Key Point: Don't make decisions for people in crisis - ask what they need."
+        },
+        {
+          "id": 25,
+          "question": "New member joins well-established team. What stage might team revert to temporarily?",
+          "options": ["Forming", "Storming", "Norming", "Won't revert"],
+          "correct": 1,
+          "explanation": "Team composition changed. May trigger conflict or power struggles. Existing members may resist change. Temporary regression common. Key Point: Major changes (new members, scope changes, leadership changes) can cause temporary regression."
+        },
+        {
+          "id": 26,
+          "question": "Team blocked waiting for IT to provision environment. What should PM do?",
+          "options": ["Tell team to work on other tasks", "Contact IT immediately to expedite", "Have team create workaround", "Wait the normal timeframe"],
+          "correct": 1,
+          "explanation": "Servant leadership = remove obstacles. Team is blocked (impediment). PM acts immediately. Escalate if necessary. Key Point: Servant leaders actively remove impediments, don't accept them passively."
+        },
+        {
+          "id": 27,
+          "question": "Team wants to change their process. It's working but they have improvement ideas. What should PM do?",
+          "options": ["Keep existing process (it's working)", "Make them prove it will be better first", "Support their experiment with new process", "Decide the changes yourself"],
+          "correct": 2,
+          "explanation": "Self-organizing teams own processes. Empowerment = letting them improve. Servant leadership = support their needs. Continuous improvement mindset. Key Point: Empower team to optimize their own processes."
+        },
+        {
+          "id": 28,
+          "question": "Stakeholder demands meeting with entire team immediately. Team is in deep focus work. What should PM do?",
+          "options": ["Pull team from work for meeting", "Shield team, meet stakeholder yourself", "Schedule meeting for later", "Let team decide"],
+          "correct": 1,
+          "explanation": "Servant leadership = protect team. Shield from unnecessary interruptions. PM handles stakeholder. Team stays focused. Key Point: Servant leaders protect team's focus time and productivity."
+        },
+        {
+          "id": 29,
+          "question": "Team needs tool that costs $5,000. Process requires 3 levels of approval. What should PM do?",
+          "options": ["Tell team it's too complicated to get", "Navigate approval process for team", "Have team request it themselves", "Find free alternative instead"],
+          "correct": 1,
+          "explanation": "Servant leadership = remove bureaucratic obstacles. PM has authority to navigate process. Frees team to focus on work. Advocates for team needs. Key Point: Servant leaders navigate organizational barriers for their teams."
+        },
+        {
+          "id": 30,
+          "question": "Who gets credit when team succeeds?",
+          "options": ["Project Manager", "Sponsor", "Team", "Everyone equally"],
+          "correct": 2,
+          "explanation": "Servant leadership = team success over personal recognition. PM amplifies team accomplishments. Give credit generously. Build team's reputation. Key Point: Servant leaders give credit to team, take responsibility for failures themselves."
+        },
+        {
+          "id": 31,
+          "question": "Identify the leadership style: 'Do what I tell you, now.'",
+          "options": ["Commanding", "Authoritative", "Affiliative", "Democratic"],
+          "correct": 0,
+          "explanation": "Commanding style - Direct orders, immediate compliance expected."
+        },
+        {
+          "id": 32,
+          "question": "Identify the leadership style: 'Come with me - here's our vision.'",
+          "options": ["Commanding", "Authoritative", "Pacesetting", "Coaching"],
+          "correct": 1,
+          "explanation": "Authoritative style - Provides vision and direction while allowing team autonomy in execution."
+        },
+        {
+          "id": 33,
+          "question": "Identify the leadership style: 'People come first.'",
+          "options": ["Commanding", "Affiliative", "Democratic", "Pacesetting"],
+          "correct": 1,
+          "explanation": "Affiliative style - Prioritizes relationships and emotional well-being over tasks."
+        },
+        {
+          "id": 34,
+          "question": "Identify the leadership style: 'What do you think we should do?'",
+          "options": ["Commanding", "Authoritative", "Democratic", "Pacesetting"],
+          "correct": 2,
+          "explanation": "Democratic style - Seeks input and builds consensus before deciding."
+        },
+        {
+          "id": 35,
+          "question": "Identify the leadership style: 'Do as I do - follow my example.'",
+          "options": ["Commanding", "Democratic", "Pacesetting", "Coaching"],
+          "correct": 2,
+          "explanation": "Pacesetting style - Sets high standards and models them, expects team to follow."
+        },
+        {
+          "id": 36,
+          "question": "Identify the leadership style: 'Try this approach, let me give you feedback.'",
+          "options": ["Commanding", "Affiliative", "Coaching", "Democratic"],
+          "correct": 2,
+          "explanation": "Coaching style - Focuses on developing team members through feedback and guidance."
+        },
+        {
+          "id": 37,
+          "question": "Which leadership style has the most positive long-term impact on team climate?",
+          "options": ["Commanding", "Authoritative", "Pacesetting", "Coaching"],
+          "correct": 1,
+          "explanation": "Authoritative style has the most positive overall impact on team climate - builds confidence, clarity, and enthusiasm."
+        },
+        {
+          "id": 38,
+          "question": "Which leadership style has the most negative long-term impact on team climate?",
+          "options": ["Commanding", "Authoritative", "Affiliative", "Democratic"],
+          "correct": 0,
+          "explanation": "Commanding style has the most negative long-term impact - reduces flexibility, damages responsibility, lowers commitment, stifles innovation."
+        },
+        {
+          "id": 39,
+          "question": "Which leadership style is best for short-term results with a capable team?",
+          "options": ["Commanding", "Democratic", "Pacesetting", "Coaching"],
+          "correct": 2,
+          "explanation": "Pacesetting style works well for short-term results with capable teams - sets high standards and leads by example. Warning: Don't use long-term or team will burn out."
+        },
+        {
+          "id": 40,
+          "question": "Which leadership style is best for building long-term capabilities?",
+          "options": ["Commanding", "Affiliative", "Coaching", "Democratic"],
+          "correct": 2,
+          "explanation": "Coaching style is best for building long-term capabilities - develops team members for the future through feedback, guidance, and growth opportunities."
+        }
+      ],
+      "stress_test": [
+        {
+          "id": 1,
+          "title": "The New Project Team",
+          "scenario": "You've just been assigned as PM for a new mobile app development project. The team of 7 people met for the first time yesterday at the kickoff meeting. Team members include: 3 developers who have never worked together, 1 UX designer new to the company, 1 QA engineer who knows some team members, 1 business analyst from another department, and 1 technical writer (contractor). During the meeting, everyone was polite and took notes. Several people asked questions about their specific roles and responsibilities. The technical writer asked 'What's the process for getting documents reviewed?' The business analyst asked 'Who do I report to - you or my functional manager?' People seemed uncertain but eager. After the meeting, two developers approached you separately to ask similar questions about the development environment and tools.",
+          "options": [
+            {
+              "text": "Let the team self-organize and figure out their working relationships naturally over the next few weeks",
+              "analysis": "Forming teams CANNOT self-organize effectively. Will cause confusion, anxiety, and wasted time. Abdicates PM responsibility to provide structure. Leads to prolonged Forming or early Storming.",
+              "outcome": "Team members remain uncertain. Different people make conflicting assumptions. Gaps and overlaps in responsibilities. Frustration builds. Project start delayed.",
+              "next_scenario": 2
+            },
+            {
+              "text": "Schedule individual meetings with each team member to understand their concerns and preferences",
+              "analysis": "While 1-on-1s are valuable, team needs collective clarity first. Addresses concerns individually but not team formation. Time-consuming before establishing basics. Doesn't provide team-wide structure.",
+              "outcome": "You'd hear similar questions 7 separate times. Team still wouldn't know how to work together. Information shared individually may not be consistent. Team formation delayed.",
+              "next_scenario": 2
+            },
+            {
+              "text": "Create and share a detailed RACI matrix, establish ground rules, and set up regular team meetings",
+              "analysis": "Appropriate response for Forming stage. Provides structure (RACI matrix), direction (ground rules), regular touchpoints (meetings), and PM leadership. Addresses specific needs: RACI answers 'who does what', ground rules answer 'how do we work together', meetings create forum for questions. Shows PM taking charge (appropriate for Forming). Leadership Style: Authoritative/Commanding.",
+              "outcome": "SUCCESS: Team has clear structure and direction. Roles are defined. Processes are established. Team knows how to work together. Foundation set for moving to Storming stage. Team feels supported and confident.",
+              "next_scenario": 2
+            },
+            {
+              "text": "Assign the first set of tasks and let people start working while relationships develop",
+              "analysis": "Jumping to execution before establishing foundation. Team doesn't know processes for completing tasks. Likely to cause rework and confusion. Ignores relationship-building needs.",
+              "outcome": "People work in isolation. Different approaches to same problems. Rework when incompatibilities discovered. Relationships don't form. Quality issues.",
+              "next_scenario": 2
+            }
+          ]
+        },
+        {
+          "id": 2,
+          "title": "The Technical Debate",
+          "scenario": "Your software project team has been working together for 4 weeks. Today's planning meeting became heated when two senior developers (Alex and Jordan) started arguing about the technical architecture approach. Alex advocates for microservices: 'This is the modern approach. It's scalable, maintainable, and aligns with industry best practices.' Jordan pushes back: 'Microservices are overkill for our use case. A monolithic approach will get us to market faster.' The argument has become tense: both are talking over each other, other team members have gone silent, the UX designer tried to change the subject, the QA engineer quietly left the room, and two junior developers are looking uncomfortable. It's now 30 minutes into what should be a one-hour meeting. Neither Alex nor Jordan is backing down, and both keep looking at you to support their position.",
+          "options": [
+            {
+              "text": "Make the technical decision yourself immediately to end the argument and move on",
+              "analysis": "Uses Commanding style inappropriately. Doesn't help team learn to resolve conflicts. Loses valuable technical input. One person will feel shut down. Misses opportunity to work through Storming. May make suboptimal decision without full discussion.",
+              "outcome": "Conflict goes underground. Loser of argument resents decision. Team learns PM will force decisions under pressure. Future conflicts escalate to PM prematurely. Prolongs Storming stage.",
+              "next_scenario": 3
+            },
+            {
+              "text": "Take a break, then facilitate a structured discussion where both present their cases with objective criteria",
+              "analysis": "Appropriate Coaching leadership style for Storming stage. Acknowledges conflict (taking break), structures discussion (framework for productive debate), facilitates doesn't dictate (PM guides process), respects both perspectives, uses objective criteria (moves from positions to interests), teaches team (models how to handle future disagreements).",
+              "outcome": "SUCCESS: Team works through conflict constructively. Both perspectives heard. Decision made based on objective criteria. Team learns conflict resolution process. Moves toward Norming stage. Trust in leadership increases.",
+              "next_scenario": 3
+            },
+            {
+              "text": "Tell Alex and Jordan to work it out between themselves offline and report back tomorrow",
+              "analysis": "Avoids PM's responsibility to facilitate. Leaves two people in power struggle. Rest of team excluded from important decision. No structure for resolution. May not resolve at all.",
+              "outcome": "Alex and Jordan continue arguing without resolution. Relationship damage between them. Tomorrow's report may be 'we still disagree'. Team loses confidence in PM leadership. Decision delayed indefinitely.",
+              "next_scenario": 3
+            },
+            {
+              "text": "Side with the approach you think is better and explain your reasoning",
+              "analysis": "Takes side in power struggle. Alienates whoever you don't support. Decision made without full technical analysis. Doesn't teach team how to resolve conflicts. May be wrong (you might not have all information).",
+              "outcome": "One person feels supported, other feels undermined. Conflict becomes 'PM vs. Jordan' (or Alex). Future disagreements become about winning PM support. Technical merit becomes secondary to politics. Damages team dynamics.",
+              "next_scenario": 3
+            }
+          ]
+        },
+        {
+          "id": 3,
+          "title": "The High-Performing Team Faces a Challenge",
+          "scenario": "Your project team has been together for 7 months and is consistently exceeding expectations. They've delivered the last three sprints ahead of schedule with high quality. The team self-organizes effectively, resolves conflicts quickly without your involvement, makes good technical decisions autonomously, supports each other proactively, and demonstrates high morale and engagement. You have daily standups but mostly just listen. The team runs sprint planning and retrospectives themselves. You focus on stakeholder management and removing organizational obstacles. Today, a new requirement came down from the executive team: the product must integrate with a complex legacy system that no one on your team has experience with. This integration is critical and must be completed in the next sprint. The team is visibly concerned - several members have worked with this legacy system at previous companies and know it's notoriously difficult. In today's standup, the tech lead said, 'This legacy integration is going to be really challenging. None of us have done this specific integration before. We're going to need to figure out the approach.'",
+          "options": [
+            {
+              "text": "Research the integration yourself, design the approach, and provide the team with detailed implementation instructions",
+              "analysis": "Regresses to Forming stage leadership. Micromanages high-performing team. Undermines their confidence. You likely don't have better technical knowledge. Wastes your time on wrong priorities. Damages trust and autonomy.",
+              "outcome": "Team feels you don't trust them. Motivation decreases. They become dependent on you again. Your solution may not be best (they know more). Future challenges escalate to you unnecessarily. Team regresses in maturity.",
+              "next_scenario": 4
+            },
+            {
+              "text": "Tell the team you trust them to figure it out and offer support if they need help",
+              "analysis": "Appropriate Delegating leadership style for Performing stage. Maintains trust (doesn't regress to directive style), preserves autonomy (team keeps decision-making authority), shows confidence (your belief supports their confidence), offers support (available but not imposing), respects capability (acknowledges their track record).",
+              "outcome": "SUCCESS: Team feels trusted and empowered. They take ownership of the challenge. Your support available when needed. Team maintains high performance. Integration completed successfully. Team confidence grows.",
+              "next_scenario": 4
+            },
+            {
+              "text": "Bring in a consultant who has done this integration before to lead the technical work",
+              "analysis": "'Lead' takes authority from team. Assumes team can't handle it (unsupported). External person leading undermines team. Consultant doesn't know team's codebase. Creates dependency on external expert.",
+              "outcome": "Team feels sidelined. Resentment at being replaced. Integration may not fit team's architecture. Expensive and probably unnecessary. Team doesn't develop capability.",
+              "next_scenario": 4
+            },
+            {
+              "text": "Work alongside the team hands-on, demonstrating the pace and commitment needed to meet the deadline",
+              "analysis": "This is Pacesetting style. Team doesn't need you to set pace. They already demonstrate commitment. Your presence may feel like micromanagement. Takes you away from PM responsibilities.",
+              "outcome": "Team interprets as lack of trust. Your 'help' may slow them down. You're not doing PM work (stakeholder management, obstacle removal). Sets bad precedent (PM jumps in whenever hard). Can be demotivating ('PM doesn't think we can do it').",
+              "next_scenario": 4
+            }
+          ]
+        },
+        {
+          "id": 4,
+          "title": "The Burned-Out Team",
+          "scenario": "Your team has just completed a brutal 3-month push to meet a regulatory deadline. For the past 12 weeks: team worked 60+ hour weeks, weekends were common, several family events were missed, stress was extremely high, quality concerns were raised but set aside, and two team members cried at their desks. The deadline was met successfully yesterday. The regulatory submission was approved. Senior leadership sent congratulatory emails. Your sponsor is very pleased. However, today you notice: three team members called in sick, two others look exhausted, someone snapped at a colleague over a minor issue, the usually collaborative team seems irritable, people are working at individual desks instead of collaborating, and one team member updated their LinkedIn profile (you saw their screen). Your sponsor just emailed: 'Great work on the regulatory deadline! Now we need to start the Phase 2 build immediately. The CEO wants to see progress by next week. Can your team start sprint planning today?'",
+          "options": [
+            {
+              "text": "Schedule sprint planning for today and start Phase 2 immediately as requested",
+              "analysis": "Ignores team's exhausted state. Risks burnout becoming permanent. Shows no appreciation for sacrifice. Likely to trigger resignations. Quality will suffer. Unsustainable long-term.",
+              "outcome": "At least one resignation (probably more). Dramatically reduced productivity. Quality problems in Phase 2. Team resentment ('We're just resources'). Long-term motivation damage. Potential project failure.",
+              "next_scenario": 5
+            },
+            {
+              "text": "Request a 1-2 week recovery period before starting Phase 2, arrange team celebration, and check in individually with team members",
+              "analysis": "Appropriate Affiliative leadership style for team crisis. Prioritizes people (recognizes team needs recovery), acknowledges sacrifice (celebration shows appreciation), repairs relationships (addresses interpersonal strain), prevents bigger problems (stops burnout from becoming resignations), manages sponsor (educates sponsor on team needs), shows you care (individual check-ins demonstrate concern).",
+              "outcome": "SUCCESS: Team recovers physically and emotionally. Relationships repaired. Morale improves. Team ready for Phase 2 with sustainable pace. Retention maintained. Quality and productivity restored. Team feels valued and supported.",
+              "next_scenario": 5
+            },
+            {
+              "text": "Start Phase 2 but with reduced hours (40-hour weeks instead of 60)",
+              "analysis": "Still doesn't provide recovery time. 40 hours on top of exhaustion is still too much. Doesn't address relationship strain. No acknowledgment or appreciation. Assumes physical presence = productivity.",
+              "outcome": "Team physically present but not productive. Resentment continues. Quality suffers. Burnout deepens. Relationships continue deteriorating. Job searching continues.",
+              "next_scenario": 5
+            },
+            {
+              "text": "Tell sponsor the team needs recovery time but start planning Phase 2 yourself to show progress",
+              "analysis": "Better than A or C, but still problematic. Planning without team loses their input. Sends message that you don't trust their recovery. PM burnout risk. Team may resent plans made without them. Defeats purpose of recovery time.",
+              "outcome": "Team recovers physically but not relationally. Return to plans they didn't create. Sense of being left out. May not align with what team needs. PM exhaustion.",
+              "next_scenario": 5
+            }
+          ]
+        },
+        {
+          "id": 5,
+          "title": "The Team Member Crisis",
+          "scenario": "Your team has been in the Norming stage for 6 weeks, working well together with good collaboration and mutual respect. This morning, Sarah (senior developer) pulls you aside privately: 'I need to tell you something that's affecting my work. My father was diagnosed with cancer last week. He's starting treatment next month. I'm going to need to take time off for appointments and may need to work from his city occasionally. I'm trying to keep it together, but I'm honestly struggling. I haven't told the team yet because I don't want them to think I can't handle my work.' Sarah is clearly emotional but trying to hold it together. She's been one of your most reliable team members and has strong relationships with everyone on the team.",
+          "options": [
+            {
+              "text": "Thank her for telling you, offer flexibility with schedule, suggest she tell the team when ready, and offer to help communicate if she wants",
+              "analysis": "Demonstrates emotional intelligence and appropriate Affiliative leadership. Shows empathy (acknowledges human situation), offers support (practical flexibility), respects autonomy (she decides about team), offers assistance (help if wanted), builds trust (creates psychological safety), balances needs (person and project).",
+              "outcome": "SUCCESS: Sarah feels supported and valued. Team can provide support when she's ready. Work coverage planned with her input. Trust in leadership increases. Team culture of care strengthens. Sarah remains engaged and productive within her capacity.",
+              "next_scenario": null
+            },
+            {
+              "text": "Give her time off immediately and reassign her work to other team members to reduce her stress",
+              "analysis": "Makes decision for her without consultation. May feel like being pushed out. Removes her agency. Might increase stress (feeling replaced). Doesn't ask what SHE wants. Work might be distraction she needs.",
+              "outcome": "Sarah might feel sidelined. Could feel like punishment. May want to stay engaged. Relationship with team disrupted abruptly. She loses sense of control. May resent the decision.",
+              "next_scenario": null
+            },
+            {
+              "text": "Express sympathy but explain that the project timeline is tight and you need her to maintain her commitments",
+              "analysis": "Puts project before person. Creates no-win situation for Sarah. Destroys psychological safety. Shows no empathy in action. Will damage trust permanently. Likely lose her eventually. Unethical.",
+              "outcome": "Sarah feels abandoned and betrayed. Tries to work through crisis, burns out. Performance suffers anyway. Rest of team finds out, loses respect for PM. Sarah likely leaves when father's treatment ends. Team morale damaged. Reputation as uncaring manager.",
+              "next_scenario": null
+            },
+            {
+              "text": "Suggest she keep it private from the team to maintain professional boundaries and avoid affecting team morale",
+              "analysis": "Isolates Sarah when she needs support. Team will notice she's struggling and worry. Prevents team from helping. 'Professional boundaries' used to avoid dealing with reality. People are human, not machines. Damages team culture.",
+              "outcome": "Sarah carries burden alone. Team notices something wrong, doesn't know why. Speculation and worry. Sarah can't explain schedule changes. Team feels shut out. Support system not activated. Sarah's stress increases.",
+              "next_scenario": null
+            }
+          ]
+        }
+      ],
       "activities_menu": {
         "title": "Practice Activities",
         "description": "Apply what you've learned through hands-on activities",
@@ -1501,6 +2128,231 @@
               "Recognize blind spots in leadership approach"
             ],
             "file": "contentbatch1-lead_team/9_activity_empathy_exercise.md"
+          }
+        ]
+      },
+      "document_detective": {
+        "title": "Document Detective: Team Development Analysis",
+        "description": "Analyze project artifacts to identify team development stages and leadership effectiveness",
+        "cases": [
+          {
+            "id": 1,
+            "title": "Project Kickoff Meeting Notes",
+            "document": "PROJECT: Customer Portal Redesign\nMEETING: Team Kickoff\nDATE: January 15, 2025\nATTENDEES: Sarah (PM), Alex (UX), Jordan (Dev Lead), Casey (QA), Morgan (BA), Taylor (Designer)\n\nNOTES:\n- Sarah welcomed everyone and thanked them for joining the project\n- Went through project charter and objectives\n- Q: Alex asked 'What's our timeline for this project?'\n- A: Sarah explained 6-month timeline with quarterly milestones\n- Q: Jordan asked 'Who has final say on technical architecture decisions?'\n- A: Sarah said 'We'll discuss that' but didn't provide clear answer\n- Q: Casey asked 'How often do we meet as a team?'\n- A: Sarah suggested 'Let's figure that out as we go'\n- Q: Morgan asked 'Do I report to you or my functional manager?'\n- A: Sarah said 'Good question - I'll get back to you on that'\n- Q: Taylor raised hand and quietly asked 'Sorry, what exactly is my role on this project?'\n- Everyone nodded politely during Sarah's overview\n- No one challenged any information presented\n- Several people took detailed notes\n- Meeting ended 10 minutes early\n- Alex and Jordan stayed after to ask Sarah similar questions privately\n\nACTION ITEMS:\n- Sarah to create meeting schedule (TBD)\n- Sarah to clarify reporting relationships (TBD)\n- Sarah to define roles more clearly (TBD)",
+            "questions": [
+              {
+                "question": "What team development stage is this team in?",
+                "correct": "Forming",
+                "explanation": "First meeting (kickoff), polite behavior ('nodded politely'), many questions about basic structure (timeline, meetings, roles, reporting), no one challenged information, uncertain about roles ('what exactly is my role?'), people staying after to ask questions privately (hesitant to speak up), need for clarity and structure evident."
+              },
+              {
+                "question": "What leadership issues do you see?",
+                "correct": "Lack of structure and clarity, missed opportunity to establish foundation, inappropriate leadership style (too hands-off for Forming), multiple people asking same questions separately",
+                "explanation": "Sarah didn't provide clear answers to fundamental questions. 'We'll figure that out as we go' = abdicating responsibility. Forming teams need directive leadership. Sarah being too hands-off, not providing the structure team clearly needs, expecting team to self-organize prematurely."
+              },
+              {
+                "question": "What should Sarah do immediately after this meeting?",
+                "correct": "Create and share RACI matrix, establish meeting schedule, clarify reporting relationships, define decision-making process, create ground rules, schedule individual check-ins",
+                "explanation": "Within 24 hours: Create RACI matrix to define roles explicitly, establish regular team meetings, clarify reporting relationships, define decision-making process, create ground rules with team, schedule individual check-ins. Leadership Style Needed: Authoritative - Provide clear vision and structure, be decisive and directive."
+              }
+            ],
+            "key_insights": [
+              "Forming teams need structure immediately - can't wait to 'figure it out as we go'",
+              "Polite behavior and many questions = classic Forming indicators",
+              "PM must provide direction in Forming stage, not delegate prematurely",
+              "Multiple people asking same questions separately = need for team-wide clarity"
+            ]
+          }
+        ]
+      },
+      "leadership_style_matcher": {
+        "title": "Leadership Style Matcher",
+        "description": "Match situations to appropriate leadership styles",
+        "scenarios": [
+          {
+            "id": 1,
+            "scenario": "New team, first meeting. Team members are polite but asking many questions about roles and processes.",
+            "correctStyle": "Authoritative/Commanding",
+            "explanation": "Forming stage requires structure and direction. PM must provide clear vision, establish processes, and make decisions. Team cannot self-organize yet.",
+            "whyNotOthers": {
+              "Democratic": "Team doesn't have foundation to participate in decisions yet",
+              "Delegating": "Too early - team needs structure first",
+              "Affiliative": "Relationships important but structure is priority in Forming"
+            }
+          },
+          {
+            "id": 2,
+            "scenario": "Team arguing about technical approach. Power struggles evident. Two senior members competing for influence.",
+            "correctStyle": "Coaching",
+            "explanation": "Storming stage requires facilitation. PM should coach team through conflict, help them work through disagreements, stay neutral, and teach conflict resolution.",
+            "whyNotOthers": {
+              "Commanding": "Forcing decision drives conflict underground, doesn't help team learn",
+              "Avoiding": "Conflict needs to be addressed, not ignored",
+              "Democratic": "Team is in conflict - need to resolve that first before making decisions together"
+            }
+          },
+          {
+            "id": 3,
+            "scenario": "High-performing team that self-organizes effectively. New complex challenge arises. Team is concerned but engaged.",
+            "correctStyle": "Delegating",
+            "explanation": "Performing stage team has earned trust. PM should maintain autonomy, offer support when requested, trust team's capability, and focus on removing obstacles.",
+            "whyNotOthers": {
+              "Commanding": "Would regress team to Forming, shows lack of trust",
+              "Pacesetting": "Team doesn't need PM to set pace - they're already performing",
+              "Coaching": "Team is already capable - don't need development, need empowerment"
+            }
+          },
+          {
+            "id": 4,
+            "scenario": "Team just completed brutal 3-month crunch. Exhausted, irritable, relationships strained. Morale very low.",
+            "correctStyle": "Affiliative",
+            "explanation": "Team crisis requires people-first approach. PM should acknowledge sacrifice, provide recovery time, repair relationships, show genuine care, and prioritize well-being over tasks.",
+            "whyNotOthers": {
+              "Pacesetting": "Would worsen burnout, team needs recovery not more pressure",
+              "Commanding": "Would damage relationships further, ignores emotional needs",
+              "Democratic": "Team needs emotional support first, not decision-making involvement"
+            }
+          },
+          {
+            "id": 5,
+            "scenario": "Production system crashed. Customers affected. Team waiting for direction. Need immediate action.",
+            "correctStyle": "Commanding",
+            "explanation": "Crisis situation requires immediate response. PM must provide clear orders, make decisions quickly, coordinate response, and ensure safety. Transition to other styles after crisis.",
+            "whyNotOthers": {
+              "Democratic": "No time for discussion in crisis",
+              "Coaching": "Crisis needs action, not development",
+              "Affiliative": "Relationships important but action is priority in emergency"
+            }
+          },
+          {
+            "id": 6,
+            "scenario": "Team lacks clarity on project direction. Multiple competing priorities. Need alignment and motivation.",
+            "correctStyle": "Authoritative",
+            "explanation": "Team needs vision and direction. PM should provide clear vision, explain the 'why', align team around goals, inspire confidence, and allow autonomy in execution.",
+            "whyNotOthers": {
+              "Commanding": "Too directive - team needs vision not just orders",
+              "Democratic": "Team lacks clarity to participate effectively yet",
+              "Pacesetting": "Team needs direction first, not pace-setting"
+            }
+          }
+        ]
+      },
+      "stage_detective": {
+        "title": "Team Development Stage Detective",
+        "description": "Arrange team development events in chronological order to understand how teams progress through stages",
+        "scenarios": [
+          {
+            "id": 1,
+            "title": "New Project Team Evolution",
+            "description": "Arrange these events in the order they typically occur as a new team develops",
+            "events": [
+              {
+                "id": 1,
+                "correctOrder": 1,
+                "text": "Team members meet for first time at kickoff meeting",
+                "details": "Polite behavior, many questions about roles and processes, uncertainty about how to work together, seeking direction from PM",
+                "whyThisOrder": "Every team starts with first meeting. This is the beginning of Forming stage.",
+                "commonMistake": "Thinking teams can skip Forming if they're experienced individuals"
+              },
+              {
+                "id": 2,
+                "correctOrder": 2,
+                "text": "PM provides structure: RACI matrix, ground rules, meeting schedule",
+                "details": "PM establishes roles, processes, and expectations. Team has clarity on how to work together.",
+                "whyThisOrder": "Forming teams need structure before they can function. PM must provide this foundation.",
+                "commonMistake": "Trying to let team self-organize before providing structure"
+              },
+              {
+                "id": 3,
+                "correctOrder": 3,
+                "text": "Team members start working on tasks and discover disagreements",
+                "details": "Different approaches emerge, people have different opinions, conflicts arise about how to do work",
+                "whyThisOrder": "As team starts working, differences become apparent. This triggers Storming stage.",
+                "commonMistake": "Thinking conflict means team is failing - it's normal in Storming"
+              },
+              {
+                "id": 4,
+                "correctOrder": 4,
+                "text": "PM facilitates conflict resolution discussions",
+                "details": "PM coaches team through disagreements, helps establish norms, teaches conflict resolution, stays neutral",
+                "whyThisOrder": "Storming requires facilitation. PM helps team work through conflict constructively.",
+                "commonMistake": "Forcing decisions to end conflict quickly - this prolongs Storming"
+              },
+              {
+                "id": 5,
+                "correctOrder": 5,
+                "text": "Team establishes working norms and 'we' language emerges",
+                "details": "Team develops shared understanding, processes become smoother, collaboration improves, team identity forms",
+                "whyThisOrder": "After working through conflict, team establishes norms. This is Norming stage.",
+                "commonMistake": "Expecting team to reach Norming without going through Storming"
+              },
+              {
+                "id": 6,
+                "correctOrder": 6,
+                "text": "Team self-organizes and makes decisions autonomously",
+                "details": "High performance, minimal PM intervention needed, team self-corrects issues, consistent quality",
+                "whyThisOrder": "After establishing norms, team reaches peak performance. This is Performing stage.",
+                "commonMistake": "Trying to reach Performing by skipping earlier stages"
+              }
+            ]
+          }
+        ]
+      },
+      "team_member_perspectives": {
+        "title": "Team Member Perspectives: Empathy Exercise",
+        "description": "Experience situations from multiple team member perspectives to develop empathetic leadership",
+        "scenarios": [
+          {
+            "id": 1,
+            "title": "The New Team Member",
+            "situation": "You're leading a team that's been together for 6 months and performing well. A new senior developer, Jamie, joins the team. The existing team members are close-knit and have established ways of working. Jamie is experienced but feels like an outsider.",
+            "perspectives": {
+              "personA": {
+                "role": "Existing Team Member",
+                "emoji": "👥",
+                "name": "Alex (Senior Developer)",
+                "thoughts": "We've got a great rhythm going. Jamie seems competent but keeps suggesting changes to our process. We've been working this way for months and it works. I don't want to disrupt what's working.",
+                "concerns": ["New person disrupting our flow", "Having to explain everything again", "Changes to processes we've refined"],
+                "fears": "That our team dynamic will change, and we'll lose our efficiency",
+                "wishesOthersKnew": "It's not that we're resistant - we've invested time in making this work. We want Jamie to fit in, not change everything."
+              },
+              "personB": {
+                "role": "New Team Member",
+                "emoji": "🆕",
+                "name": "Jamie (New Senior Developer)",
+                "thoughts": "I'm trying to contribute but feel like I'm on the outside. When I suggest improvements, people seem defensive. I have experience that could help, but I'm not sure how to share it without seeming critical.",
+                "concerns": ["Not being accepted by the team", "My ideas being dismissed", "Feeling like an outsider"],
+                "fears": "That I'll never fit in, or that my experience isn't valued",
+                "wishesOthersKnew": "I'm not trying to change things to prove myself - I genuinely think some improvements could help. I want to contribute, not disrupt."
+              },
+              "pm": {
+                "emoji": "🎯",
+                "observations": [
+                  "Existing team is protective of their process (normal)",
+                  "Jamie is trying to contribute but feels excluded",
+                  "Both sides have valid perspectives",
+                  "This is a common challenge when adding members to performing teams"
+                ],
+                "validPoints": {
+                  "existingTeam": "They've invested in their process and it works. Change is disruptive.",
+                  "newMember": "Jamie has valuable experience. Fresh perspective can improve things."
+                },
+                "realIssue": "Integration challenge - need to help Jamie fit in while also being open to improvements. Team may temporarily regress from Performing to Norming.",
+                "solution": "1. Acknowledge both perspectives. 2. Create structured integration (not just 'figure it out'). 3. Facilitate discussion about process improvements (don't dismiss Jamie's ideas, don't force changes). 4. Help team see Jamie's value. 5. Be patient - integration takes time."
+              }
+            },
+            "insight": {
+              "title": "Adding members to performing teams requires intentional integration",
+              "revelation": "Performing teams can regress when new members join. The real issue isn't the new person or the existing team - it's the lack of intentional integration process. Both sides need support: existing team needs reassurance their process is valued, new member needs pathway to contribute.",
+              "bestApproach": "Don't assume high-performing teams will automatically integrate new members. Create structured onboarding, facilitate discussions about improvements (not just accept or reject), acknowledge both perspectives, and be patient with temporary regression.",
+              "eiConnection": "Social awareness: Recognizing both the existing team's protective feelings and the new member's exclusion. Relationship management: Facilitating integration without taking sides.",
+              "examTip": "PMP exam scenarios often test whether you'll force integration or facilitate it. The answer is usually to facilitate discussion and create structure, not to pick a side."
+            },
+            "reflectionQuestions": [
+              "How would you help Jamie feel included while respecting the existing team's process?",
+              "What integration activities would you create for this situation?",
+              "How would you facilitate a discussion about process improvements without making either side defensive?"
+            ]
           }
         ]
       }
