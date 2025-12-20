@@ -3382,6 +3382,8 @@ const PMPApp = () => {
       </div>
     );
   }
+  }
+  }
 
   // Helper function to render markdown content as HTML
   const renderMarkdown = (markdown) => {
@@ -4113,14 +4115,13 @@ const PMPApp = () => {
     </div>
   );
 
+  // Fallback return - should never reach here if all views are properly handled
   return (
     <div className="p-20 text-center">
       <h1 className="executive-font text-4xl text-white animate-pulse font-semibold">Initializing PMP Prep Center...</h1>
       <GlobalNavFooter />
     </div>
   );
-  }
-  }
 };
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
