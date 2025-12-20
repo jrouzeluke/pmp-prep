@@ -177,10 +177,10 @@ const PMPApp = () => {
   if (taskDatabase === null) {
     console.log("taskDatabase is null, showing loading screen");
     return (
-      <div className="text-center p-20 animate-pulse">
+    <div className="text-center p-20 animate-pulse">
         <h1 className="executive-font text-4xl text-white font-semibold tracking-tight">Initializing PMP Prep Center...</h1>
-      </div>
-    );
+    </div>
+  );
   }
 
 
