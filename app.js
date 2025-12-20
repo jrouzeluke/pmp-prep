@@ -183,7 +183,11 @@ const PMPApp = () => {
     );
   }
 
-  console.log("Current view:", view, "taskDatabase keys:", Object.keys(taskDatabase || {}));
+  console.log("Current view:", view, "taskDatabase is null:", taskDatabase === null, "taskDatabase keys:", taskDatabase ? Object.keys(taskDatabase) : "N/A");
+  
+  // Get current task for views that need it
+  const currentTask = taskDatabase?.[selectedTask] || null;
+  console.log("Selected task:", selectedTask, "Current task exists:", !!currentTask);
 
   const currentTask = (taskDatabase && taskDatabase[selectedTask]) || { learn: {}, practice: { checklist: [], reflex_prompts: [], stress_test: [] } };
 
