@@ -183,12 +183,6 @@ const PMPApp = () => {
     );
   }
 
-  console.log("=== DEBUG INFO ===");
-  console.log("Current view:", view);
-  console.log("taskDatabase is null:", taskDatabase === null);
-  console.log("taskDatabase keys:", taskDatabase ? Object.keys(taskDatabase) : "N/A");
-  console.log("Selected task:", selectedTask);
-  console.log("About to check view conditions...");
 
   const currentTask = (taskDatabase && taskDatabase[selectedTask]) || { learn: {}, practice: { checklist: [], reflex_prompts: [], stress_test: [] } };
 
@@ -2919,7 +2913,6 @@ const PMPApp = () => {
     </div>
   );
 
-  console.log("Checking view:", view, "=== executive-hud?", view === 'executive-hud');
   if (view === 'executive-hud') return (
     <div className="max-w-7xl w-full p-10 animate-fadeIn">
       <div className="executive-header mb-12">
@@ -4120,12 +4113,9 @@ const PMPApp = () => {
     </div>
   );
 
-  console.log("FALLBACK: No view condition matched! Current view is:", view);
-  console.log("All view checks completed, showing fallback");
   return (
     <div className="p-20 text-center">
       <h1 className="executive-font text-4xl text-white animate-pulse font-semibold">Initializing PMP Prep Center...</h1>
-      <p className="text-red-400 mt-4">DEBUG: No view matched. View value: "{view}"</p>
       <GlobalNavFooter />
     </div>
   );
