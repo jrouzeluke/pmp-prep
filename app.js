@@ -643,9 +643,9 @@ const PMPApp = () => {
                     <span className="font-bold text-blue-400 text-xl">{String.fromCharCode(65 + idx)}.</span>
                     <span className="text-white flex-1">{option.text}</span>
                   </div>
-                </button>
-              ))}
-            </div>
+          </button>
+        ))}
+      </div>
           )}
         </div>
         <GlobalNavFooter />
@@ -3090,7 +3090,7 @@ const PMPApp = () => {
           >
             ← Back
           </button>
-        </div>
+          </div>
         <h1 className="executive-font text-5xl font-bold text-white mb-2 tracking-tight">Practice Hub: {selectedTask}</h1>
       </header>
       
@@ -3164,7 +3164,7 @@ const PMPApp = () => {
                 ) : (
                   <span className="w-3 h-3 rounded-full border-2 border-slate-400"></span>
                 )}
-              </div>
+            </div>
               
               {/* Tooltip */}
               <div className="absolute top-12 right-4 bg-slate-900 text-white text-xs px-3 py-2 rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10 whitespace-nowrap">
@@ -3181,8 +3181,8 @@ const PMPApp = () => {
                   )}
                   {lastAttempted && (
                     <p className="text-slate-500 text-xs">Last: {new Date(lastAttempted).toLocaleDateString()}</p>
-                  )}
-                </div>
+          )}
+      </div>
               )}
             </button>
           );
