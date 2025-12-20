@@ -1,5 +1,5 @@
 {
-  "Manage Conflict": {
+    "Manage Conflict": {
       "learn": {
         "overview": {
           "definition": "Apply emotional intelligence and interpersonal skills to navigate disagreements, reach consensus, and maintain team productivity while preserving relationships.",
@@ -777,9 +777,9 @@
       }
     },
   "Lead a Team": {
-    "learn": {
+    "learn": { 
       "overview": {
-        "definition": "Setting clear vision and supporting team members to achieve peak performance.",
+      "definition": "Setting clear vision and supporting team members to achieve peak performance.",
         "module_introduction": "Leading a team is one of the most critical and rewarding aspects of project management. Whether you're managing a small task force or a large, cross-functional team, your ability to guide, motivate, and develop your team members directly impacts project success.",
         "what_youll_learn": [
           "Understanding team development stages - How teams evolve from formation to high performance",
@@ -3533,66 +3533,444 @@
           }
         ]
       },
-      "stage_detective": {
-        "title": "Team Development Stage Detective",
-        "description": "Arrange team development events in chronological order to understand how teams progress through stages",
-        "scenarios": [
+      "timeline_reconstructor": {
+        "title": "Timeline Reconstructor",
+        "subtitle": "Sequence a Team's Journey Through Development Stages",
+        "description": "Arrange 15 scrambled events from an 8-month project into chronological order",
+        "introduction": {
+          "content": "In this activity, you will:\n- Arrange 15 scrambled events from an 8-month project into chronological order\n- Identify which Tuckman stage each event represents\n- Analyze the PM's leadership style in each event\n- Understand how teams progress (and regress) through stages over time",
+          "timeEstimate": "45-60 minutes",
+          "ecoAlignment": "This activity aligns with Task 2: Lead a Team ECO enablers including setting vision, applying appropriate leadership styles, determining leadership style based on context, and inspiring and motivating team members."
+        },
+        "howToUse": [
+          "Read all events first - Get familiar with what happened",
+          "Sequence the events - Arrange in chronological order (1-15)",
+          "Identify stages - Mark which Tuckman stage each event represents",
+          "Analyze leadership - Note the PM's leadership style in each event",
+          "Answer reflection questions - Deepen your understanding",
+          "Check your answers - Review the correct sequence and analysis"
+        ],
+        "scenario": {
+          "title": "The Scenario: Project Phoenix",
+          "projectOverview": {
+            "project": "Customer Portal Redesign (\"Project Phoenix\")",
+            "duration": "8 months (January - August)",
+            "teamSize": "7 people initially, 8 after mid-project addition",
+            "pm": "Sarah Chen"
+          },
+          "teamMembers": [
+            "Sarah (PM)",
+            "Jordan (Dev Lead, 10 years experience)",
+            "Alex (UX Designer, 5 years experience)",
+            "Casey (QA Engineer, 2 years experience)",
+            "Morgan (Business Analyst, 4 years experience)",
+            "Taylor (Developer, 6 years experience)",
+            "Robin (Developer, 3 years experience)",
+            "Sam (Developer, joins mid-project)"
+          ],
+          "taskDescription": "15 events are presented in SCRAMBLED order. You must:\n1. Arrange them in correct chronological sequence\n2. Identify which Tuckman stage each event represents\n3. Identify the leadership style Sarah used"
+        },
+        "events": [
+          {
+            "id": "A",
+            "correctOrder": 12,
+            "month": "Month 6-7",
+            "stage": "Performing",
+            "leadershipStyle": "Delegating",
+            "type": "Meeting Notes Excerpt",
+            "title": "SPRINT RETROSPECTIVE - Team-Facilitated",
+            "content": "WHAT WENT WELL:\n- \"We crushed the authentication module\" - Jordan\n- \"Love how Taylor helped me debug that issue without me even asking\" - Robin\n- \"Our velocity is the highest it's ever been\" - Casey\n\nWHAT TO IMPROVE:\n- \"Documentation still behind - I'll own that\" - Alex (volunteering)\n- \"Want to try mob programming on complex features\" - Jordan\n\nACTION ITEMS:\n- Team decided to implement documentation pairing\n- Jordan to set up mob programming pilot\n\nNOTE: Sarah observed but didn't facilitate. Team ran entire retrospective.",
+            "indicators": "Team self-facilitation, volunteering, continuous improvement, PM observing not directing",
+            "whyThisOrder": "Shows sustained Performing stage - team fully self-organized"
+          },
+          {
+            "id": "B",
+            "correctOrder": 5,
+            "month": "Month 2",
+            "stage": "Storming",
+            "leadershipStyle": "Commanding (brief)",
+            "type": "Slack Conversation",
+            "title": null,
+            "content": "[10:15 AM] Jordan: The API approach Alex suggested won't work with our framework. We've been over this.\n\n[10:16 AM] Alex: You keep dismissing my ideas without even trying them. Maybe YOUR framework is the problem.\n\n[10:17 AM] Jordan: My framework? I've been building this for 3 years. You've been here 3 weeks.\n\n[10:18 AM] Taylor: Guys, can we take this offline?\n\n[10:19 AM] Morgan: (has left the channel)\n\n[10:20 AM] Sarah: @Jordan @Alex - my office in 10 minutes please.",
+            "indicators": "Open conflict, personal attacks, withdrawal, PM intervention needed",
+            "whyThisOrder": "Shows conflict escalation in Storming stage, requires immediate PM intervention"
+          },
+          {
+            "id": "C",
+            "correctOrder": 1,
+            "month": "Month 1, Week 1",
+            "stage": "Pre-Forming",
+            "leadershipStyle": "Authoritative",
+            "type": "Email from Sarah",
+            "title": "Welcome to Project Phoenix!",
+            "content": "Team,\n\nI'm excited to kick off Project Phoenix tomorrow at 10am in Conference Room A.\n\nATTACHED:\n- Project Charter\n- Team Directory (with photos and backgrounds)\n- Initial Timeline\n\nPlease review before the meeting. Come prepared with questions about your role and our approach.\n\nLooking forward to building something great together!\n\nSarah",
+            "indicators": "Before team meets, PM preparing, setting up Forming stage",
+            "whyThisOrder": "First contact - before team has met, Pre-Forming stage"
+          },
+          {
+            "id": "D",
+            "correctOrder": 6,
+            "month": "Month 2",
+            "stage": "Storming (resolution)",
+            "leadershipStyle": "Coaching",
+            "type": "Meeting Notes Excerpt",
+            "title": "CONFLICT RESOLUTION SESSION - Sarah facilitating",
+            "content": "PARTICIPANTS: Jordan, Alex, Sarah\n\nGROUND RULES ESTABLISHED:\n- Listen to understand, not to respond\n- Focus on project needs, not personal preferences\n- Use \"I\" statements\n\nDISCUSSION:\n- Jordan explained framework constraints and timeline concerns\n- Alex explained UX patterns and user research findings\n- Both acknowledged valid points in other's perspective\n\nRESOLUTION:\n- Hybrid approach: Alex's UX patterns within Jordan's framework constraints\n- Jordan to document framework limitations for future reference\n- Alex to flag UX concerns earlier in design process\n\nFOLLOW-UP: Jordan and Alex to grab coffee and reset relationship\n\nSarah: \"This disagreement was actually healthy - you both care about quality. Now we have a better approach than either original idea.\"",
+            "indicators": "Facilitated resolution, PM using Coaching style, conflict becoming constructive",
+            "whyThisOrder": "Follows conflict event (B), shows PM facilitating resolution in Storming"
+          },
+          {
+            "id": "E",
+            "correctOrder": 13,
+            "month": "Month 7",
+            "stage": "Performing",
+            "leadershipStyle": "Delegating",
+            "type": "Project Status Update Email",
+            "title": null,
+            "content": "TO: Executive Sponsor\nFROM: Sarah Chen\nRE: Project Phoenix - Month 7 Status\n\nHIGHLIGHTS:\n- Team delivered payment integration 2 days ahead of schedule\n- Zero critical defects in last 3 sprints\n- Team handled Wednesday's server outage without my involvement - diagnosed and resolved in 47 minutes\n\nTEAM DYNAMICS:\nThe team is operating at peak performance. They self-organize daily work, make technical decisions autonomously, and support each other proactively.\n\nMY FOCUS THIS MONTH:\n- Removed procurement blocker for testing tools\n- Managed stakeholder expectations on Phase 2 scope\n- Shielded team from reorg discussions happening elsewhere\n\nThe team doesn't need me for day-to-day operations. I'm most valuable handling organizational obstacles and strategic issues.",
+            "indicators": "Sustained excellence, team autonomy, PM focused on external obstacles only",
+            "whyThisOrder": "Late in project timeline, sustained Performing stage"
+          },
+          {
+            "id": "F",
+            "correctOrder": 2,
+            "month": "Month 1, Week 1",
+            "stage": "Forming",
+            "leadershipStyle": "Authoritative/Commanding",
+            "type": "Kickoff Meeting Notes",
+            "title": "PROJECT PHOENIX KICKOFF",
+            "content": "PROJECT PHOENIX KICKOFF\nDATE: [First week of project]\nATTENDEES: Full team\n\nAGENDA:\n- Sarah presented project charter and vision\n- Reviewed timeline and milestones\n- Introduced team members\n\nOBSERVATIONS:\n- Everyone very polite and professional\n- Lots of note-taking\n- Questions asked:\n  * \"What's the code review process?\" - Jordan\n  * \"Who approves design decisions?\" - Alex\n  * \"How often do we meet as a team?\" - Casey\n  * \"Do I report to you or my functional manager?\" - Morgan\n- No one disagreed with anything\n- Robin asked privately after meeting about dev environment setup\n\nACTION ITEMS:\n- Sarah to send RACI matrix (today)\n- Sarah to schedule 1-on-1s with each team member (this week)\n- Sarah to distribute process documentation (tomorrow)",
+            "indicators": "Polite, many questions about process/roles, no disagreement, PM providing structure",
+            "whyThisOrder": "Follows welcome email, first team meeting - classic Forming stage"
+          },
+          {
+            "id": "G",
+            "correctOrder": 8,
+            "month": "Month 5",
+            "stage": "Performing",
+            "leadershipStyle": "Delegating",
+            "type": "Email from Sarah",
+            "title": "Introducing Sam - New Team Member",
+            "content": "Team,\n\nPlease welcome Sam to Project Phoenix starting Monday! Sam is a full-stack developer with 4 years of experience joining us from the Platform team.\n\nSam will be helping with the reporting module. I've asked Jordan to be Sam's onboarding buddy for the first two weeks.\n\nSam, the team will get you up to speed quickly. Don't hesitate to ask anyone for help.\n\nLooking forward to having you on board!\n\nSarah",
+            "indicators": "Team stable enough to absorb new member, PM delegating onboarding to team",
+            "whyThisOrder": "Shows team in Performing stage - stable enough to onboard new member"
+          },
+          {
+            "id": "H",
+            "correctOrder": 11,
+            "month": "Month 6",
+            "stage": "Performing",
+            "leadershipStyle": "Delegating",
+            "type": "Slack Conversation",
+            "title": null,
+            "content": "[9:15 AM] Casey: @team FYI the test environment is down. IT says 2 hours.\n\n[9:16 AM] Jordan: Okay, let's pivot. Who can work on documentation?\n\n[9:17 AM] Alex: I'll update the design specs.\n\n[9:18 AM] Taylor: I'll do API documentation.\n\n[9:19 AM] Robin: I can help Taylor - we can pair on it.\n\n[9:20 AM] Morgan: I'll review and update the requirements docs.\n\n[9:21 AM] Casey: And I'll document test scenarios for the new features.\n\n[9:22 AM] Jordan: Perfect. Let's sync at 11 to see where we are.\n\n[9:23 AM] Sarah: Great self-organization, team. Let me know if you need anything. I'll be in stakeholder meetings most of today.\n\n[9:24 AM] Jordan: 👍 We've got this.",
+            "indicators": "Complete self-organization, PM not needed, proactive problem-solving",
+            "whyThisOrder": "Shows Performing stage - team self-organizes without PM direction"
+          },
+          {
+            "id": "I",
+            "correctOrder": 4,
+            "month": "Month 1, Week 3",
+            "stage": "Early Storming",
+            "leadershipStyle": "Coaching",
+            "type": "Meeting Notes Excerpt",
+            "title": "TEAM MEETING - Week 3",
+            "content": "DISCUSSION:\nSarah asked for status updates. Several team members gave brief updates but seemed hesitant to share concerns.\n\nSARAH: \"I'm sensing some tension. What's going on?\"\n\n[Silence]\n\nTAYLOR: \"It's nothing. Just some... different opinions on the architecture.\"\n\nSARAH: \"Different opinions are good. Can you share more?\"\n\nJORDAN: \"Some people want to change things that are working fine.\"\n\nALEX: \"And some people are resistant to any new ideas.\"\n\n[Tension in room visible]\n\nSARAH: \"Okay, this is important. Let's schedule time tomorrow to work through this properly. For now, let's table the architecture discussion and focus on what we can move forward today.\"\n\nACTION: Architecture discussion scheduled for tomorrow, 2 hours blocked",
+            "indicators": "Tension surfacing, conflict emerging, PM sensing but not yet facilitating",
+            "whyThisOrder": "Early in project, tension emerging - beginning of Storming"
+          },
+          {
+            "id": "J",
+            "correctOrder": 7,
+            "month": "Month 3",
+            "stage": "Early Norming",
+            "leadershipStyle": "Democratic",
+            "type": "Sprint Retrospective Notes",
+            "title": "SPRINT 4 RETROSPECTIVE",
+            "content": "FACILITATOR: Sarah\n\nWHAT WENT WELL:\n- \"We're finding our rhythm\" - Morgan\n- \"Jordan helped me with that tricky bug\" - Casey\n- \"First sprint where we hit our commitment!\" - Taylor\n- \"Feels like we're actually a team now\" - Robin\n\nWHAT COULD IMPROVE:\n- \"Still figuring out code review timing\" - Jordan\n- \"Would like clearer priorities when things change\" - Alex\n\nTEAM DYNAMICS OBSERVATION:\n- More \"we\" language than previous retros\n- People finishing each other's sentences\n- Jordan and Alex joking together (!)\n- Team went for coffee together after meeting (first time)\n\nACTION ITEMS:\n- Team to create code review guidelines together\n- Sarah to communicate priority changes in standup\n\nSARAH'S NOTE: Real progress. The coffee outing was their idea, not mine.",
+            "indicators": "\"We\" language, mutual help, team identity forming, social bonding",
+            "whyThisOrder": "After conflict resolution, team establishing norms - Norming stage"
+          },
+          {
+            "id": "K",
+            "correctOrder": 9,
+            "month": "Month 5",
+            "stage": "Brief Regression",
+            "leadershipStyle": "Coaching/Authoritative",
+            "type": "Email Thread",
+            "title": null,
+            "content": "FROM: Sam\nTO: Sarah\nSUBJECT: Feeling a bit lost\n\nHi Sarah,\n\nI've been here a week and I'm still struggling to understand how things work. Jordan's been helpful but he's busy.\n\nI'm not sure about:\n- The deployment process\n- Who to ask about requirements\n- Whether I should attend all the meetings on my calendar\n\nI don't want to bother everyone with basic questions.\n\nThanks,\nSam\n\n---\n\nFROM: Sarah\nTO: Sam\nCC: Jordan, Morgan\nSUBJECT: RE: Feeling a bit lost\n\nSam,\n\nThank you for reaching out - these are exactly the right questions to ask.\n\nI'm scheduling a 1-hour session tomorrow with you, Jordan, and Morgan to walk through our processes. I should have set this up proactively.\n\nIn the meantime:\n- Deployment process: Jordan will walk you through tomorrow\n- Requirements questions: Morgan is your go-to\n- Meetings: Yes to standups and planning, optional on others for now\n\nPlease keep asking questions. That's how you'll get up to speed quickly.\n\nSarah",
+            "indicators": "New member causing temporary Forming-like needs, PM providing structure",
+            "whyThisOrder": "Regression after new member joins - shows teams can regress temporarily"
+          },
+          {
+            "id": "L",
+            "correctOrder": 3,
+            "month": "Month 1, Week 1",
+            "stage": "Forming",
+            "leadershipStyle": "Commanding",
+            "type": "Email from Sarah",
+            "title": "RACI Matrix and Process Documents",
+            "content": "Team,\n\nAs promised, here are the foundational documents for Project Phoenix:\n\nATTACHED:\n1. RACI Matrix - Who does what (and who decides what)\n2. Decision-Making Framework - How we make decisions as a team\n3. Communication Protocols - When to use email vs. Slack vs. meetings\n4. Escalation Process - What to do when blocked\n5. Code Review Guidelines - Initial process (we'll refine together)\n\nKEY POINTS:\n- Jordan is technical lead for architecture decisions\n- Alex is design lead for UX decisions\n- All major decisions involve team input before finalizing\n- I'm available for any questions - no question is too small\n\nPlease review by Wednesday. We'll discuss questions in Thursday's team meeting.\n\nSarah",
+            "indicators": "PM providing structure, documentation, role clarity - classic Forming support",
+            "whyThisOrder": "Follows kickoff meeting, providing structure in Forming stage"
+          },
+          {
+            "id": "M",
+            "correctOrder": 10,
+            "month": "Month 5-6",
+            "stage": "Return to Performing",
+            "leadershipStyle": "Delegating",
+            "type": "Slack Conversation",
+            "title": null,
+            "content": "[2:30 PM] Sam: Hey team, I'm confused about the branching strategy. The wiki says one thing but I see different patterns in the code.\n\n[2:31 PM] Taylor: Oh yeah, we updated our approach last month. Wiki's outdated.\n\n[2:32 PM] Jordan: Good catch Sam. Here's what we do now: [explanation]\n\n[2:33 PM] Robin: I can update the wiki if you want.\n\n[2:34 PM] Jordan: That would be great Robin, thanks.\n\n[2:35 PM] Sam: Thanks everyone! This team is really helpful.\n\n[2:36 PM] Alex: Welcome to Phoenix! 🔥 Ask anything anytime.\n\n[2:37 PM] Morgan: We were all new once. Happy to help.",
+            "indicators": "Team supporting new member, welcoming culture, self-organization",
+            "whyThisOrder": "After regression, team helps new member - returning to Performing"
+          },
+          {
+            "id": "N",
+            "correctOrder": 14,
+            "month": "Month 8",
+            "stage": "Adjourning",
+            "leadershipStyle": "Affiliative",
+            "type": "Email from Alex",
+            "title": "Can't believe it's almost over",
+            "content": "Sarah,\n\nI know the project officially ends Friday, but I wanted to thank you now before things get hectic.\n\nRemember February when Jordan and I were basically at war? I was ready to quit. Now he's one of my best work friends. That conflict resolution session you facilitated changed everything.\n\nThis team became something special. The way we handled Sam's onboarding, how we manage production issues without even needing you - I've never experienced a team like this.\n\nI'm sad it's ending. A few of us talked about doing a reunion dinner in a couple months. Would you come?\n\nThank you for leading us so well - especially for knowing when to step back and let us lead ourselves.\n\nAlex",
+            "indicators": "Reflection, gratitude, sadness, looking back on journey, relationship focus",
+            "whyThisOrder": "End of project, emotional processing - Adjourning stage"
+          },
+          {
+            "id": "O",
+            "correctOrder": 15,
+            "month": "Month 8",
+            "stage": "Adjourning",
+            "leadershipStyle": "Affiliative/Coaching",
+            "type": "Meeting Notes",
+            "title": "PROJECT PHOENIX - FINAL RETROSPECTIVE",
+            "content": "ATTENDEES: Full team + Sponsor (Lisa)\n\nJOURNEY REFLECTION:\n\nSARAH: \"Before we capture lessons, let's acknowledge our journey. We started as strangers, hit some real rough patches, and became one of the highest-performing teams I've ever led.\"\n\nTEAM SHARES:\n\nJORDAN: \"I owe Alex an apology for February. And thanks for not letting us stay stuck in that conflict.\"\n\nALEX: \"The conflict made us better. We wouldn't be this strong without working through it.\"\n\nCASEY: \"I learned so much from this team. My first real project and it set a high bar.\"\n\nROBIN: \"When I almost quit in month 2, I'm so glad I stayed.\"\n\nSAM: \"I've only been here 3 months but I felt welcomed from day 1. This team's culture is special.\"\n\nMORGAN: \"We proved that diverse perspectives make better products when we learn to work together.\"\n\nTAYLOR: \"Best team I've been on. Period.\"\n\n[Several people visibly emotional]\n\nLESSONS CAPTURED:\n1. Conflict is necessary but needs facilitation\n2. Trust builds through working through difficulty\n3. Teams need different leadership at different stages\n4. High-performing teams are built, not found\n5. Invest in relationships, not just tasks\n\nSPONSOR LISA: \"I'm recommending this team structure and approach as a model for other projects. What you built here matters beyond this project.\"",
+            "indicators": "Final closure, emotional processing, lessons learned, celebrating journey",
+            "whyThisOrder": "Final event - project closure, complete Adjourning stage"
+          }
+        ],
+        "reflectionQuestions": [
           {
             "id": 1,
-            "title": "New Project Team Evolution",
-            "description": "Arrange these events in the order they typically occur as a new team develops",
-            "events": [
-              {
-                "id": 1,
-                "correctOrder": 1,
-                "text": "Team members meet for first time at kickoff meeting",
-                "details": "Polite behavior, many questions about roles and processes, uncertainty about how to work together, seeking direction from PM",
-                "whyThisOrder": "Every team starts with first meeting. This is the beginning of Forming stage.",
-                "commonMistake": "Thinking teams can skip Forming if they're experienced individuals"
-              },
-              {
-                "id": 2,
-                "correctOrder": 2,
-                "text": "PM provides structure: RACI matrix, ground rules, meeting schedule",
-                "details": "PM establishes roles, processes, and expectations. Team has clarity on how to work together.",
-                "whyThisOrder": "Forming teams need structure before they can function. PM must provide this foundation.",
-                "commonMistake": "Trying to let team self-organize before providing structure"
-              },
-              {
-                "id": 3,
-                "correctOrder": 3,
-                "text": "Team members start working on tasks and discover disagreements",
-                "details": "Different approaches emerge, people have different opinions, conflicts arise about how to do work",
-                "whyThisOrder": "As team starts working, differences become apparent. This triggers Storming stage.",
-                "commonMistake": "Thinking conflict means team is failing - it's normal in Storming"
-              },
-              {
-                "id": 4,
-                "correctOrder": 4,
-                "text": "PM facilitates conflict resolution discussions",
-                "details": "PM coaches team through disagreements, helps establish norms, teaches conflict resolution, stays neutral",
-                "whyThisOrder": "Storming requires facilitation. PM helps team work through conflict constructively.",
-                "commonMistake": "Forcing decisions to end conflict quickly - this prolongs Storming"
-              },
-              {
-                "id": 5,
-                "correctOrder": 5,
-                "text": "Team establishes working norms and 'we' language emerges",
-                "details": "Team develops shared understanding, processes become smoother, collaboration improves, team identity forms",
-                "whyThisOrder": "After working through conflict, team establishes norms. This is Norming stage.",
-                "commonMistake": "Expecting team to reach Norming without going through Storming"
-              },
-              {
-                "id": 6,
-                "correctOrder": 6,
-                "text": "Team self-organizes and makes decisions autonomously",
-                "details": "High performance, minimal PM intervention needed, team self-corrects issues, consistent quality",
-                "whyThisOrder": "After establishing norms, team reaches peak performance. This is Performing stage.",
-                "commonMistake": "Trying to reach Performing by skipping earlier stages"
-              }
+            "question": "Where did the team transition from Forming to Storming?",
+            "subQuestions": [
+              "Between which events?",
+              "What triggered the transition?"
+            ]
+          },
+          {
+            "id": 2,
+            "question": "Where did the team transition from Storming to Norming?",
+            "subQuestions": [
+              "Between which events?",
+              "What enabled the transition?"
+            ]
+          },
+          {
+            "id": 3,
+            "question": "Where did the team transition from Norming to Performing?",
+            "subQuestions": [
+              "Between which events?",
+              "What evidence shows they reached Performing?"
+            ]
+          },
+          {
+            "id": 4,
+            "question": "Did the team experience any regression?",
+            "subQuestions": [
+              "When did it happen?",
+              "What caused it?",
+              "How severe was it?",
+              "How was it handled?"
+            ]
+          },
+          {
+            "id": 5,
+            "question": "How did Sarah's leadership style evolve?",
+            "subQuestions": [
+              "What style dominated in early stages?",
+              "What style dominated in later stages?",
+              "Was her adaptation appropriate?"
+            ]
+          },
+          {
+            "id": 6,
+            "question": "What would have happened if Sarah hadn't facilitated the Jordan-Alex conflict?",
+            "subQuestions": [
+              "How long might Storming have lasted?",
+              "What might have been the consequences?"
+            ]
+          },
+          {
+            "id": 7,
+            "question": "What ECO enablers did Sarah demonstrate?",
+            "subQuestions": [
+              "List specific examples from the events"
             ]
           }
-        ]
+        ],
+        "answers": {
+          "correctSequence": [
+            { "position": 1, "event": "C", "description": "Sarah's welcome email", "month": "Month 1, Week 1", "stage": "Pre-Forming" },
+            { "position": 2, "event": "F", "description": "Kickoff meeting", "month": "Month 1, Week 1", "stage": "Forming" },
+            { "position": 3, "event": "L", "description": "RACI matrix sent", "month": "Month 1, Week 1", "stage": "Forming" },
+            { "position": 4, "event": "I", "description": "Week 3 tension surfaces", "month": "Month 1, Week 3", "stage": "Early Storming" },
+            { "position": 5, "event": "B", "description": "Jordan-Alex Slack argument", "month": "Month 2", "stage": "Storming" },
+            { "position": 6, "event": "D", "description": "Conflict resolution session", "month": "Month 2", "stage": "Storming (resolution)" },
+            { "position": 7, "event": "J", "description": "Sprint 4 retro - \"finding rhythm\"", "month": "Month 3", "stage": "Early Norming" },
+            { "position": 8, "event": "G", "description": "Sam introduction email", "month": "Month 5", "stage": "Performing" },
+            { "position": 9, "event": "K", "description": "Sam feeling lost", "month": "Month 5", "stage": "Brief Regression" },
+            { "position": 10, "event": "M", "description": "Sam asks, team helps", "month": "Month 5-6", "stage": "Return to Performing" },
+            { "position": 11, "event": "H", "description": "Environment down - self-organize", "month": "Month 6", "stage": "Performing" },
+            { "position": 12, "event": "A", "description": "Team-run retrospective", "month": "Month 6-7", "stage": "Performing" },
+            { "position": 13, "event": "E", "description": "Month 7 status to sponsor", "month": "Month 7", "stage": "Performing" },
+            { "position": 14, "event": "N", "description": "Alex's thank you email", "month": "Month 8", "stage": "Adjourning" },
+            { "position": 15, "event": "O", "description": "Final lessons learned", "month": "Month 8", "stage": "Adjourning" }
+          ],
+          "stageAnalysis": [
+            { "event": "C", "stage": "Pre-Forming", "indicators": "Before team meets, PM preparing" },
+            { "event": "F", "stage": "Forming", "indicators": "Polite, questions about roles/process, no disagreement" },
+            { "event": "L", "stage": "Forming", "indicators": "PM providing structure, documentation" },
+            { "event": "I", "stage": "Early Storming", "indicators": "Tension visible, hesitance, conflict emerging" },
+            { "event": "B", "stage": "Storming", "indicators": "Open conflict, personal attacks, withdrawal" },
+            { "event": "D", "stage": "Storming (resolution)", "indicators": "Facilitated resolution, working through conflict" },
+            { "event": "J", "stage": "Early Norming", "indicators": "\"We\" language, mutual help, team identity, social bonding" },
+            { "event": "G", "stage": "Performing", "indicators": "Team stable, PM delegating onboarding" },
+            { "event": "K", "stage": "Brief Regression", "indicators": "New member needs Forming-like support" },
+            { "event": "M", "stage": "Return to Performing", "indicators": "Team self-supports new member" },
+            { "event": "H", "stage": "Performing", "indicators": "Complete self-organization, PM not needed" },
+            { "event": "A", "stage": "Performing", "indicators": "Team runs own retrospective, continuous improvement" },
+            { "event": "E", "stage": "Performing", "indicators": "Sustained excellence, PM external focus only" },
+            { "event": "N", "stage": "Adjourning", "indicators": "Reflection, gratitude, sadness, relationships" },
+            { "event": "O", "stage": "Adjourning", "indicators": "Final closure, lessons learned, emotional processing" }
+          ],
+          "leadershipStyleAnalysis": [
+            { "event": "C", "style": "Authoritative", "rationale": "Setting vision for project start" },
+            { "event": "F", "style": "Authoritative/Commanding", "rationale": "Providing structure, answering questions" },
+            { "event": "L", "style": "Commanding", "rationale": "Explicit structure (RACI, processes)" },
+            { "event": "I", "style": "Coaching", "rationale": "Sensing tension, probing, scheduling facilitation" },
+            { "event": "B", "style": "Commanding (brief)", "rationale": "Stopping destructive conflict immediately" },
+            { "event": "D", "style": "Coaching", "rationale": "Facilitating resolution, not taking sides" },
+            { "event": "J", "style": "Democratic", "rationale": "Facilitating retrospective, involving team" },
+            { "event": "G", "style": "Delegating", "rationale": "Trusting team to onboard Sam" },
+            { "event": "K", "style": "Coaching/Authoritative", "rationale": "Providing structure for new member" },
+            { "event": "M", "style": "Delegating", "rationale": "Not involved - team handles independently" },
+            { "event": "H", "style": "Delegating", "rationale": "Minimal involvement, trusts team" },
+            { "event": "A", "style": "Delegating", "rationale": "Observes, doesn't facilitate" },
+            { "event": "E", "style": "Delegating", "rationale": "External obstacles only" },
+            { "event": "N", "style": "Affiliative", "rationale": "Relationship-focused response" },
+            { "event": "O", "style": "Affiliative/Coaching", "rationale": "Emotional support, capturing lessons" }
+          ],
+          "stageTransitions": {
+            "formingToStorming": {
+              "betweenEvents": "Between L and I",
+              "trigger": "Initial politeness wore off, real work pressures emerged",
+              "evidence": "Tension surfaces in Week 3 meeting",
+              "timeline": "About 2-3 weeks into project"
+            },
+            "stormingToNorming": {
+              "betweenEvents": "Between D and J",
+              "trigger": "Successful conflict resolution facilitated by Sarah",
+              "evidence": "\"We\" language, mutual help, social bonding",
+              "timeline": "About 6-8 weeks into project"
+            },
+            "normingToPerforming": {
+              "betweenEvents": "Between J and G",
+              "trigger": "Sustained cooperation, established processes, growing autonomy",
+              "evidence": "Team stable enough to absorb new member",
+              "timeline": "About 4-5 months into project"
+            },
+            "regression": {
+              "event": "Event K",
+              "trigger": "New team member (Sam) joins",
+              "severity": "Mild - affected Sam more than team",
+              "duration": "About 1 week",
+              "resolution": "Sarah provided structure, team culture absorbed Sam quickly"
+            }
+          },
+          "ecoEnablerCoverage": [
+            { "enabler": "Set a clear vision and mission", "evidence": "Event C (welcome email), Event F (kickoff)" },
+            { "enabler": "Support diversity and inclusion", "evidence": "Event M (welcoming Sam), Event O (Morgan's comment)" },
+            { "enabler": "Value servant leadership", "evidence": "Event E (removing obstacles), Event H (supporting not directing)" },
+            { "enabler": "Apply appropriate leadership styles", "evidence": "Style evolution from Commanding to Delegating" },
+            { "enabler": "Determine appropriate leadership style", "evidence": "Adapted based on stage throughout project" },
+            { "enabler": "Inspire, motivate, influence team", "evidence": "Event D (reframing conflict), Event O (journey reflection)" },
+            { "enabler": "Analyze team members/stakeholders influence", "evidence": "Event I (sensing tension), Event K (recognizing Sam's needs)" },
+            { "enabler": "Distinguish options to lead various team members", "evidence": "Different approach with Jordan vs. Sam" }
+          ],
+          "whatIfAnalysis": {
+            "question": "If Sarah hadn't facilitated the Jordan-Alex conflict:",
+            "impact": [
+              "Storming would have lasted 2-4 additional months",
+              "Alex might have quit (mentioned in Event N they almost did)",
+              "Conflict would go underground",
+              "Team would never reach Performing",
+              "Project timeline and quality at risk"
+            ]
+          }
+        },
+        "scoringGuide": {
+          "part1": {
+            "title": "Part 1: Sequence (30 points)",
+            "scoring": [
+              { "condition": "Perfect sequence", "points": 30 },
+              { "condition": "1-2 events misplaced", "points": 25 },
+              { "condition": "3-4 events misplaced", "points": 20 },
+              { "condition": "5-6 events misplaced", "points": 15 },
+              { "condition": "7+ events misplaced", "points": 10 }
+            ],
+            "keySequences": [
+              "C before F (email before kickoff)",
+              "F before L (kickoff before RACI)",
+              "B before D (conflict before resolution)",
+              "D before J (resolution before Norming)",
+              "G before K (Sam intro before Sam struggling)",
+              "N before O (Alex email before final retro)"
+            ]
+          },
+          "part2": {
+            "title": "Part 2: Stage Identification (30 points)",
+            "scoring": "2 points per correct identification\n15 events × 2 = 30 points"
+          },
+          "part3": {
+            "title": "Part 3: Leadership Style (20 points)",
+            "scoring": "1-2 points per correct identification\nPartial credit for close answers"
+          },
+          "part4": {
+            "title": "Part 4: Reflection Questions (20 points)",
+            "scoring": [
+              "Transition identification: 3 points each (12 total)",
+              "Regression analysis: 4 points",
+              "Leadership evolution: 4 points"
+            ]
+          }
+        },
+        "performanceLevels": [
+          { "range": "90-100 points", "level": "Expert", "description": "Excellent understanding of team development progression. Strong grasp of leadership style evolution. Ready for PMP exam questions on this topic." },
+          { "range": "80-89 points", "level": "Proficient", "description": "Good understanding with minor gaps. Review events you missequenced. Solid foundation for exam." },
+          { "range": "70-79 points", "level": "Developing", "description": "Core concepts understood. Need more practice with stage recognition. Review Deep Dive content." },
+          { "range": "Below 70 points", "level": "Needs Review", "description": "Review all Tuckman stages thoroughly. Study leadership style characteristics. Complete Deep Dive before retrying." }
+        ],
+        "keyTakeaways": {
+          "timelinePatterns": [
+            { "stage": "Forming Duration", "detail": "1-4 weeks, polite/questions/structure-seeking" },
+            { "stage": "Storming Emergence", "detail": "Weeks 2-5, politeness fades, conflict about work becomes personal" },
+            { "stage": "Norming Timeline", "detail": "Emerges after successful conflict resolution, 4-8 weeks to stabilize" },
+            { "stage": "Performing Achievement", "detail": "Usually 3-6 months, requires progression through earlier stages" },
+            { "stage": "Regression Triggers", "detail": "New members, scope changes, leadership changes, crises" }
+          ],
+          "leadershipEvolution": [
+            { "phase": "Early (Forming)", "style": "Authoritative/Commanding", "pmFocus": "Structure, clarity, direction" },
+            { "phase": "Mid-Early (Storming)", "style": "Coaching", "pmFocus": "Facilitate conflict, don't avoid" },
+            { "phase": "Mid (Norming)", "style": "Democratic", "pmFocus": "Involve team, step back" },
+            { "phase": "Late (Performing)", "style": "Delegating", "pmFocus": "External obstacles, trust team" },
+            { "phase": "End (Adjourning)", "style": "Affiliative/Coaching", "pmFocus": "Support, closure, capture learning" }
+          ],
+          "closingStatement": "Remember: Teams don't magically become high-performing. They progress through predictable stages, and your leadership must evolve with them. This timeline shows what that journey looks like in practice."
+        }
       },
       "team_member_perspectives": {
         "title": "Team Member Perspectives: Empathy Exercise",

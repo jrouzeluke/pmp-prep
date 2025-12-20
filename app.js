@@ -11,6 +11,9 @@ const PMPApp = () => {
   const [selectedTask, setSelectedTask] = useState('Manage Conflict');
   const [taskDatabase, setTaskDatabase] = useState(null);
   const [subView, setSubView] = useState('overview');
+  // State for collapsible deep dive sections
+  const [expandedStages, setExpandedStages] = useState({});
+  const [expandedStyles, setExpandedStyles] = useState({});
   const [simulatorState, setSimulatorState] = useState({
     currentScene: 0,
     morale: 75,
@@ -67,6 +70,116 @@ const PMPApp = () => {
     completedActivities: {}, // { 'taskName': { 'activityName': { completed: true, completedAt: 'date', attempts: 1, bestScore: 0 } } }
     activityScores: {} // { 'taskName': { 'activityName': [{ attempt: 1, score: 0, date: 'date', ... }] } }
   });
+
+  // Comprehensive Score Persistence Utilities
+  const getOrCreateUserId = () => {
+    const stored = localStorage.getItem('pmp-hub-scores-v1');
+    if (stored) {
+      const data = JSON.parse(stored);
+      if (data.userId) return data.userId;
+    }
+    // Generate anonymous UUID
+    const userId = 'user-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
+    const initialData = {
+      userId,
+      scores: {},
+      totalActivitiesCompleted: 0,
+      totalTimeSpent: 0,
+      lastActive: new Date().toISOString()
+    };
+    localStorage.setItem('pmp-hub-scores-v1', JSON.stringify(initialData));
+    return userId;
+  };
+
+  const getScoreData = () => {
+    try {
+      const stored = localStorage.getItem('pmp-hub-scores-v1');
+      if (!stored) {
+        const userId = getOrCreateUserId();
+        return {
+          userId,
+          scores: {},
+          totalActivitiesCompleted: 0,
+          totalTimeSpent: 0,
+          lastActive: new Date().toISOString()
+        };
+      }
+      return JSON.parse(stored);
+    } catch (e) {
+      console.error('Error reading score data:', e);
+      const userId = getOrCreateUserId();
+      return {
+        userId,
+        scores: {},
+        totalActivitiesCompleted: 0,
+        totalTimeSpent: 0,
+        lastActive: new Date().toISOString()
+      };
+    }
+  };
+
+  const saveScoreData = (data) => {
+    try {
+      data.lastActive = new Date().toISOString();
+      localStorage.setItem('pmp-hub-scores-v1', JSON.stringify(data));
+    } catch (e) {
+      console.error('Error saving score data:', e);
+    }
+  };
+
+  const recordComprehensiveScore = (taskName, activityName, attemptData) => {
+    const scoreData = getScoreData();
+    
+    // Initialize structure if needed
+    if (!scoreData.scores[taskName]) scoreData.scores[taskName] = {};
+    if (!scoreData.scores[taskName][activityName]) {
+      scoreData.scores[taskName][activityName] = {
+        attempts: [],
+        bestScore: 0,
+        bestAccuracy: 0
+      };
+    }
+
+    const activity = scoreData.scores[taskName][activityName];
+    const attemptNumber = activity.attempts.length + 1;
+    
+    // Add attempt
+    const attempt = {
+      attemptNumber,
+      ...attemptData,
+      date: new Date().toISOString()
+    };
+    activity.attempts.push(attempt);
+
+    // Update best scores
+    if (attemptData.score && attemptData.score > activity.bestScore) {
+      activity.bestScore = attemptData.score;
+    }
+    if (attemptData.accuracy && attemptData.accuracy > activity.bestAccuracy) {
+      activity.bestAccuracy = attemptData.accuracy;
+    }
+
+    // Update totals
+    scoreData.totalActivitiesCompleted = Object.values(scoreData.scores)
+      .reduce((sum, task) => sum + Object.values(task).reduce((s, act) => s + act.attempts.length, 0), 0);
+    
+    if (attemptData.timeSpent) {
+      scoreData.totalTimeSpent = (scoreData.totalTimeSpent || 0) + attemptData.timeSpent;
+    }
+
+    saveScoreData(scoreData);
+    return attempt;
+  };
+
+  const getBestScore = (taskName, activityName) => {
+    const scoreData = getScoreData();
+    return scoreData.scores[taskName]?.[activityName]?.bestScore || 0;
+  };
+
+  const getActivityStats = (taskName, activityName) => {
+    const scoreData = getScoreData();
+    return scoreData.scores[taskName]?.[activityName] || null;
+  };
 
 
   useEffect(() => {
@@ -172,17 +285,25 @@ const PMPApp = () => {
     }
   }, [view, lightningRoundState.timeRemaining, lightningRoundState.quizStarted, lightningRoundState.showingFeedback, lightningRoundState.showEndScreen, selectedTask, taskDatabase]);
 
+  // Define GlobalNavFooter early so it can be used in early returns
+  const GlobalNavFooter = () => (
+    <div className="flex justify-center gap-8 mt-12 border-t border-white/10 pt-8">
+        <button onClick={() => setView('learn-hub')} className="text-xs text-slate-400 uppercase font-semibold hover:text-blue-400 transition-colors executive-font">Learn</button>
+        <button onClick={() => setView('practice-hub')} className="text-xs text-slate-400 uppercase font-semibold hover:text-purple-400 transition-colors executive-font">Practice</button>
+        <button onClick={() => setView('strategy-suite')} className="text-xs text-slate-400 uppercase font-semibold hover:text-emerald-400 transition-colors executive-font">Tasks</button>
+        <button onClick={() => setView('executive-hud')} className="text-xs text-slate-400 uppercase font-semibold hover:text-blue-400 transition-colors executive-font">Home</button>
+    </div>
+  );
 
   // Show loading only if taskDatabase hasn't been initialized yet (null, not empty object)
   if (taskDatabase === null) {
-    console.log("taskDatabase is null, showing loading screen");
     return (
     <div className="text-center p-20 animate-pulse">
         <h1 className="executive-font text-4xl text-white font-semibold tracking-tight">Initializing PMP Prep Center...</h1>
+        <GlobalNavFooter />
     </div>
   );
   }
-
 
   const currentTask = (taskDatabase && taskDatabase[selectedTask]) || { learn: {}, practice: { checklist: [], reflex_prompts: [], stress_test: [] } };
 
@@ -242,15 +363,6 @@ const PMPApp = () => {
     if (completed <= 5) return { level: 'advanced', completed, total: 6, label: 'Advanced', color: 'orange' };
     return { level: 'mastered', completed, total: 6, label: 'Mastered', color: 'emerald' };
   };
-
-  const GlobalNavFooter = () => (
-    <div className="flex justify-center gap-8 mt-12 border-t border-white/10 pt-8">
-        <button onClick={() => setView('learn-hub')} className="text-xs text-slate-400 uppercase font-semibold hover:text-blue-400 transition-colors executive-font">Learn</button>
-        <button onClick={() => setView('practice-hub')} className="text-xs text-slate-400 uppercase font-semibold hover:text-purple-400 transition-colors executive-font">Practice</button>
-        <button onClick={() => setView('strategy-suite')} className="text-xs text-slate-400 uppercase font-semibold hover:text-emerald-400 transition-colors executive-font">Tasks</button>
-        <button onClick={() => setView('executive-hud')} className="text-xs text-slate-400 uppercase font-semibold hover:text-blue-400 transition-colors executive-font">Home</button>
-    </div>
-  );
 
   // Keep old GlobalFooter for backward compatibility if needed
   const GlobalFooter = GlobalNavFooter;
@@ -361,6 +473,22 @@ const PMPApp = () => {
           showingFeedback: false
         });
       } else {
+        // Scenario complete - record comprehensive score
+        const finalScore = Math.round((simulatorState.morale + simulatorState.projectHealth + simulatorState.trust) / 3);
+        const choicesMade = simulatorState.choices.map(c => String.fromCharCode(65 + c.choiceIndex));
+        
+        recordComprehensiveScore(selectedTask, 'pm-simulator', {
+          score: finalScore,
+          finalMetrics: {
+            morale: simulatorState.morale,
+            projectHealth: simulatorState.projectHealth,
+            trust: simulatorState.trust
+          },
+          choicesMade,
+          outcome: finalScore >= 70 ? 'success' : 'needs_improvement',
+          timeSpent: simulatorState.choices.length * 60 // Estimate: 1 minute per choice
+        });
+
         setSimulatorState({
           ...simulatorState,
           showingFeedback: false,
@@ -395,8 +523,10 @@ const PMPApp = () => {
 
     // End Screen
     if (simulatorState.showEndScreen) {
-      const finalScore = (simulatorState.morale + simulatorState.projectHealth + simulatorState.trust) / 3;
+      const finalScore = Math.round((simulatorState.morale + simulatorState.projectHealth + simulatorState.trust) / 3);
       const missionStatus = finalScore >= 70 ? "Mission Complete" : "Mission Failed";
+      const bestScore = getBestScore(selectedTask, 'pm-simulator');
+      const isNewBest = finalScore > bestScore;
       
       return (
         <div className="max-w-6xl w-full p-10 animate-fadeIn text-left">
@@ -416,6 +546,18 @@ const PMPApp = () => {
           </header>
 
           <div className="glass-card p-8 mb-6">
+            <div className="text-center mb-6">
+              <h2 className="executive-font text-3xl font-bold text-white mb-2">Final Score: {finalScore}%</h2>
+              {isNewBest && (
+                <p className="text-emerald-400 text-xl font-bold animate-pulse mt-2">🏆 NEW HIGH SCORE! 🏆</p>
+              )}
+              <div className="flex justify-center items-center gap-4 mt-3 text-lg">
+                <span className="text-slate-400">Previous best: <span className="text-white font-semibold">{bestScore}%</span></span>
+                <span className="text-slate-500">|</span>
+                <span className="text-emerald-400 font-semibold">Today: {finalScore}%</span>
+                {isNewBest && <span className="text-emerald-400">🎉</span>}
+              </div>
+            </div>
             <h2 className="executive-font text-2xl font-bold text-white mb-6">Final Status</h2>
             <div className="space-y-4">
               <div>
@@ -579,10 +721,11 @@ const PMPApp = () => {
             <p className="text-slate-400">Loading scenario...</p>
             <GlobalNavFooter />
           </div>
-    </div>
-  );
+        </div>
+      );
+    }
 
-  return (
+    return (
       <div className="max-w-6xl w-full p-10 animate-fadeIn text-left">
         <header className="mb-8">
           <div className="flex items-center gap-4 mb-6">
@@ -655,8 +798,8 @@ const PMPApp = () => {
           )}
         </div>
         <GlobalNavFooter />
-      </div>
-    );
+    </div>
+  );
   }
 
   // Lightning Round Activity View
@@ -712,8 +855,40 @@ const PMPApp = () => {
           showingFeedback: false
         }));
       } else {
-        // Quiz complete
+        // Quiz complete - record comprehensive score
         const finalScore = lightningRoundState.score;
+        const correctCount = lightningRoundState.userAnswers.filter(a => a.correct).length;
+        const accuracy = totalQuestions > 0 ? Math.round((correctCount / totalQuestions) * 100) : 0;
+        const avgTime = lightningRoundState.userAnswers.length > 0 
+          ? lightningRoundState.userAnswers.reduce((sum, a) => sum + a.timeUsed, 0) / lightningRoundState.userAnswers.length 
+          : 0;
+        
+        // Calculate longest streak
+        let longestStreak = 0;
+        let currentStreak = 0;
+        lightningRoundState.userAnswers.forEach(a => {
+          if (a.correct) {
+            currentStreak++;
+            longestStreak = Math.max(longestStreak, currentStreak);
+          } else {
+            currentStreak = 0;
+          }
+        });
+
+        const questionsCorrect = lightningRoundState.userAnswers
+          .map((a, idx) => a.correct ? idx + 1 : null)
+          .filter(q => q !== null);
+
+        // Record comprehensive score
+        recordComprehensiveScore(selectedTask, 'lightning-round', {
+          score: finalScore,
+          accuracy,
+          averageTime: Math.round(avgTime),
+          longestStreak,
+          questionsCorrect,
+          timeSpent: 30 * totalQuestions - lightningRoundState.userAnswers.reduce((sum, a) => sum + a.timeUsed, 0)
+        });
+
         if (finalScore > bestScore) {
           localStorage.setItem(`lightning-round-best-${selectedTask}`, finalScore.toString());
         }
@@ -833,7 +1008,12 @@ const PMPApp = () => {
               {isNewBest && (
                 <p className="text-emerald-400 text-xl font-bold animate-pulse">🏆 NEW HIGH SCORE! 🏆</p>
               )}
-              <p className="text-slate-400 mt-2">Best Score: {Math.max(lightningRoundState.score, bestScore).toLocaleString()}</p>
+              <div className="flex justify-center items-center gap-4 mt-3 text-lg">
+                <span className="text-slate-400">Previous best: <span className="text-white font-semibold">{bestScore.toLocaleString()}</span></span>
+                <span className="text-slate-500">|</span>
+                <span className="text-emerald-400 font-semibold">Today: {lightningRoundState.score.toLocaleString()}</span>
+                {isNewBest && <span className="text-emerald-400">🎉</span>}
+              </div>
             </div>
 
             <div className="grid grid-cols-2 gap-6 mb-6">
@@ -1067,6 +1247,7 @@ const PMPApp = () => {
         }
       }
     ];
+    }
 
     const currentCaseData = documentDetectiveCases[documentDetectiveState.currentCase];
 
@@ -1089,6 +1270,16 @@ const PMPApp = () => {
       const correctCount = documentDetectiveState.selectedDocs.filter(doc => 
         currentCaseData.correctDocs.includes(doc)
       ).length;
+      const completionRate = Math.round((correctCount / 3) * 100);
+      
+      // Record comprehensive score
+      recordComprehensiveScore(selectedTask, 'document-detective', {
+        score: correctCount,
+        completionRate,
+        caseTitle: currentCaseData.title,
+        selectedDocs: documentDetectiveState.selectedDocs,
+        correctDocs: currentCaseData.correctDocs
+      });
       
       setDocumentDetectiveState(prev => ({
         ...prev,
@@ -1196,7 +1387,21 @@ const PMPApp = () => {
             <h2 className="executive-font text-3xl font-bold text-white mb-2">
               Score: {documentDetectiveState.score}/3
             </h2>
-            <p className="text-slate-400">You selected {documentDetectiveState.score} out of 3 correct documents</p>
+            <p className="text-slate-400 mb-2">You selected {documentDetectiveState.score} out of 3 correct documents</p>
+            {(() => {
+              const stats = getActivityStats(selectedTask, 'document-detective');
+              const bestCompletion = stats?.bestCompletion || 0;
+              const currentCompletion = Math.round((documentDetectiveState.score / 3) * 100);
+              const isNewBest = currentCompletion > bestCompletion;
+              return (
+                <div className="flex justify-center items-center gap-4 mt-3 text-sm">
+                  <span className="text-slate-400">Previous best: <span className="text-white font-semibold">{bestCompletion}%</span></span>
+                  <span className="text-slate-500">|</span>
+                  <span className="text-emerald-400 font-semibold">Today: {currentCompletion}%</span>
+                  {isNewBest && <span className="text-emerald-400">🎉 NEW HIGH SCORE!</span>}
+                </div>
+              );
+            })()}
           </div>
 
           {/* Correct Selections */}
@@ -1531,7 +1736,10 @@ const PMPApp = () => {
     // For Lead a Team, use leadership_style_matcher, otherwise conflict_matcher
     const dataKey = selectedTask === 'Lead a Team' ? 'leadership_style_matcher' : 'conflict_matcher';
     const activityTitle = selectedTask === 'Lead a Team' ? 'Leadership Style Matcher' : 'Conflict Mode Matcher';
-    const conflictMatcherScenarios = currentTask.practice?.[dataKey] || currentTask.practice?.conflict_matcher || [
+    
+    // Extract scenarios - handle both object with scenarios property and direct array
+    const rawData = currentTask.practice?.[dataKey] || currentTask.practice?.conflict_matcher;
+    const conflictMatcherScenarios = (rawData?.scenarios || (Array.isArray(rawData) ? rawData : null)) || [
       {
         id: 1,
         scenario: "Two developers disagree on API design during Sprint Planning. Both have valid technical arguments.",
@@ -1621,11 +1829,27 @@ const PMPApp = () => {
 
     const checkAnswers = () => {
       let correctCount = 0;
+      const startTime = Date.now();
       conflictMatcherScenarios.forEach(scenario => {
         const correctAnswer = scenario.correctStyle || scenario.correctMode;
-        if (conflictMatcherState.matches[scenario.id] === correctAnswer) {
+        const userAnswer = conflictMatcherState.matches[scenario.id];
+        // Handle combined answers like "Authoritative/Commanding" - check if user answer is in the combined string
+        const isCorrect = correctAnswer.includes('/') 
+          ? correctAnswer.split('/').some(style => style.trim() === userAnswer)
+          : userAnswer === correctAnswer;
+        if (isCorrect) {
           correctCount++;
         }
+      });
+
+      const isPerfect = correctCount === conflictMatcherScenarios.length;
+      
+      // Record comprehensive score
+      recordComprehensiveScore(selectedTask, selectedTask === 'Lead a Team' ? 'leadership-style-matcher' : 'conflict-matcher', {
+        score: correctCount,
+        totalScenarios: conflictMatcherScenarios.length,
+        isPerfect,
+        matches: conflictMatcherState.matches
       });
 
       setConflictMatcherState(prev => ({
@@ -1670,11 +1894,25 @@ const PMPApp = () => {
           {/* Score Display */}
           <div className="glass-card p-6 mb-6 text-center">
             <h2 className="executive-font text-3xl font-bold text-white mb-2">
-              Score: {conflictMatcherState.score}/6
+              Score: {conflictMatcherState.score}/{conflictMatcherScenarios.length}
             </h2>
-            {conflictMatcherState.score === 6 && (
+            {conflictMatcherState.score === conflictMatcherScenarios.length && (
               <p className="text-emerald-400 text-xl font-bold animate-pulse">🎉 Perfect! All matches correct! 🎉</p>
             )}
+            {(() => {
+              const activityKey = selectedTask === 'Lead a Team' ? 'leadership-style-matcher' : 'conflict-matcher';
+              const stats = getActivityStats(selectedTask, activityKey);
+              const bestScore = stats?.bestScore || 0;
+              const isNewBest = conflictMatcherState.score > bestScore;
+              return (
+                <div className="flex justify-center items-center gap-4 mt-3 text-sm">
+                  <span className="text-slate-400">Previous best: <span className="text-white font-semibold">{bestScore}/{conflictMatcherScenarios.length}</span></span>
+                  <span className="text-slate-500">|</span>
+                  <span className="text-emerald-400 font-semibold">Today: {conflictMatcherState.score}/{conflictMatcherScenarios.length}</span>
+                  {isNewBest && <span className="text-emerald-400">🎉 NEW HIGH SCORE!</span>}
+                </div>
+              );
+            })()}
           </div>
 
           {/* Feedback for each scenario */}
@@ -1682,7 +1920,10 @@ const PMPApp = () => {
             {conflictMatcherScenarios.map(scenario => {
               const userMatch = conflictMatcherState.matches[scenario.id];
               const correctAnswer = scenario.correctStyle || scenario.correctMode;
-              const isCorrect = userMatch === correctAnswer;
+              // Handle combined answers like "Authoritative/Commanding" - check if user answer is in the combined string
+              const isCorrect = correctAnswer.includes('/') 
+                ? correctAnswer.split('/').some(style => style.trim() === userMatch)
+                : userMatch === correctAnswer;
 
               return (
                 <div 
@@ -1897,8 +2138,8 @@ const PMPApp = () => {
     );
   }
 
-  // Timeline Reconstructor / Stage Detective Activity View
-  // Support both route names for Lead a Team
+  // Timeline Reconstructor Activity View
+  // Content adapted for Lead a Team (uses comprehensive timeline_reconstructor data)
   if (view === 'timeline-reconstructor' || view === 'stage-detective') {
     if (!currentTask) {
       return (
@@ -1910,16 +2151,26 @@ const PMPApp = () => {
         </div>
       );
     }
-    // For Lead a Team, use stage_detective, otherwise timeline_reconstructor
-    const dataKey = selectedTask === 'Lead a Team' ? 'stage_detective' : 'timeline_reconstructor';
-    const activityTitle = selectedTask === 'Lead a Team' ? 'Stage Detective' : 'Timeline Reconstructor';
-    const timelineData = currentTask.practice?.[dataKey] || currentTask.practice?.timeline_reconstructor;
+    // Use timeline_reconstructor for all tasks (Lead a Team now uses comprehensive structure)
+    const dataKey = 'timeline_reconstructor';
+    const activityTitle = 'Timeline Reconstructor'; // Keep name consistent for all tasks
+    const timelineData = currentTask.practice?.[dataKey];
+    
+    // Detect if this is the new comprehensive format (has events array) or old format (has steps)
+    const isComprehensiveFormat = timelineData?.events && Array.isArray(timelineData.events);
+    const isOldFormat = timelineData?.steps && Array.isArray(timelineData.steps);
+    const isLegacyFormat = timelineData?.scenarios?.[0]?.events && Array.isArray(timelineData.scenarios[0].events);
     
     // Initialize steps in random order if not already initialized
     const initializeSteps = () => {
-      const dataSource = selectedTask === 'Lead a Team' && timelineData?.scenarios?.[0]?.events
-        ? timelineData.scenarios[0].events
-        : timelineData?.steps;
+      let dataSource = null;
+      if (isComprehensiveFormat) {
+        dataSource = timelineData.events;
+      } else if (isLegacyFormat) {
+        dataSource = timelineData.scenarios[0].events;
+      } else if (isOldFormat) {
+        dataSource = timelineData.steps;
+      }
       if (!dataSource) return [];
       const steps = [...dataSource];
       // Shuffle array using Fisher-Yates
@@ -1931,9 +2182,14 @@ const PMPApp = () => {
     };
 
     // Initialize steps on first render if needed
-    const stepsData = selectedTask === 'Lead a Team' && timelineData?.scenarios?.[0]?.events
-      ? timelineData.scenarios[0].events
-      : timelineData?.steps;
+    let stepsData = null;
+    if (isComprehensiveFormat) {
+      stepsData = timelineData.events;
+    } else if (isLegacyFormat) {
+      stepsData = timelineData.scenarios[0].events;
+    } else if (isOldFormat) {
+      stepsData = timelineData.steps;
+    }
     if (timelineReconstructorState.steps.length === 0 && stepsData && stepsData.length > 0) {
       // Initialize with shuffled steps - this will run on component mount
       const shuffledSteps = initializeSteps();
@@ -1998,9 +2254,6 @@ const PMPApp = () => {
     };
 
     const checkOrder = () => {
-      const stepsData = selectedTask === 'Lead a Team' && timelineData?.scenarios?.[0]?.events
-        ? timelineData.scenarios[0].events
-        : timelineData?.steps;
       if (!stepsData) return;
       
       let correctCount = 0;
@@ -2008,6 +2261,16 @@ const PMPApp = () => {
         if (step.correctOrder === index + 1) {
           correctCount++;
         }
+      });
+
+      const isPerfect = correctCount === displaySteps.length;
+      
+      // Record comprehensive score
+      recordComprehensiveScore(selectedTask, 'timeline-reconstructor', {
+        score: correctCount,
+        totalSteps: displaySteps.length,
+        isPerfect,
+        attemptsToPerfect: isPerfect ? 1 : 0 // Could track this better with state
       });
 
       setTimelineReconstructorState(prev => ({
@@ -2018,9 +2281,6 @@ const PMPApp = () => {
     };
 
     const resetGame = () => {
-      const stepsData = selectedTask === 'Lead a Team' && timelineData?.scenarios?.[0]?.events
-        ? timelineData.scenarios[0].events
-        : timelineData?.steps;
       const newSteps = stepsData ? initializeSteps() : [];
       setTimelineReconstructorState({
         steps: newSteps,
@@ -2042,7 +2302,7 @@ const PMPApp = () => {
       setView('practice-hub');
     };
 
-    if (!timelineData || !timelineData.steps || timelineData.steps.length === 0) {
+    if (!timelineData || !stepsData || stepsData.length === 0) {
       return (
         <div className="max-w-6xl w-full p-10 animate-fadeIn text-left">
           <div className="glass-card p-10 text-center">
@@ -2059,7 +2319,17 @@ const PMPApp = () => {
         </div>
       );
     }
+    
+    // For comprehensive format, we'll render differently - check if we should use new renderer
+    const useComprehensiveRenderer = isComprehensiveFormat && selectedTask === 'Lead a Team';
 
+    // Comprehensive Format Renderer (for Lead a Team with new structure)
+    if (useComprehensiveRenderer && !timelineReconstructorState.showingFeedback) {
+      // This is a very comprehensive format - we'll need to build this out completely
+      // For now, let's handle the basic structure and note that full implementation is needed
+      // The comprehensive format requires rendering all the sections from the instructions
+    }
+    
     // Feedback Screen
     if (timelineReconstructorState.showingFeedback) {
       const stepsForFeedback = displaySteps;
@@ -2075,7 +2345,7 @@ const PMPApp = () => {
                 ← Back
               </button>
             </div>
-            <h1 className="executive-font text-5xl font-bold text-white tracking-tight">📋 {activityTitle}: {timelineData.title}</h1>
+            <h1 className="executive-font text-5xl font-bold text-white tracking-tight">📋 {activityTitle}: {timelineData.title || timelineData.subtitle || 'Timeline Reconstructor'}</h1>
           </header>
 
           {/* Score Display */}
@@ -2083,17 +2353,27 @@ const PMPApp = () => {
             <h2 className="executive-font text-3xl font-bold text-white mb-2">
               Score: {timelineReconstructorState.score}/{displaySteps.length}
             </h2>
-            <p className="text-slate-400">You got {timelineReconstructorState.score} steps in the correct order</p>
+            <p className="text-slate-400 mb-2">You got {timelineReconstructorState.score} steps in the correct order</p>
+            {(() => {
+              const stats = getActivityStats(selectedTask, 'timeline-reconstructor');
+              const bestScore = stats?.bestScore || 0;
+              const isNewBest = timelineReconstructorState.score > bestScore;
+              return (
+                <div className="flex justify-center items-center gap-4 mt-3 text-sm">
+                  <span className="text-slate-400">Previous best: <span className="text-white font-semibold">{bestScore}/{displaySteps.length}</span></span>
+                  <span className="text-slate-500">|</span>
+                  <span className="text-emerald-400 font-semibold">Today: {timelineReconstructorState.score}/{displaySteps.length}</span>
+                  {isNewBest && <span className="text-emerald-400">🎉 NEW HIGH SCORE!</span>}
+                </div>
+              );
+            })()}
           </div>
 
           {/* Feedback for each step */}
           <div className="space-y-4 mb-6">
             {stepsForFeedback.map((step, index) => {
               const isCorrect = step.correctOrder === index + 1;
-              const stepsDataForLookup = selectedTask === 'Lead a Team' && timelineData?.scenarios?.[0]?.events
-                ? timelineData.scenarios[0].events
-                : timelineData?.steps || [];
-              const correctStep = stepsDataForLookup.find(s => s.correctOrder === index + 1);
+              const correctStep = stepsData.find(s => s.correctOrder === index + 1);
 
               return (
                 <div 
@@ -2111,21 +2391,23 @@ const PMPApp = () => {
                     <div className="flex-1">
                       <div className="flex items-center gap-3 mb-2">
                         <span className="text-lg font-bold text-white">Step {index + 1}:</span>
-                        <span className="text-white font-semibold">{step.text}</span>
+                        <span className="text-white font-semibold">{step.text || step.title || `Event ${step.id}`}</span>
                         {isCorrect && <span className="text-emerald-400 font-bold text-sm">+50 points</span>}
                       </div>
                       {!isCorrect && (
                         <div className="mb-3">
                           <span className="text-sm text-slate-400">Correct position: Step {step.correctOrder}</span>
                           {correctStep && (
-                            <span className="text-sm text-emerald-400 ml-2">({correctStep.text})</span>
+                            <span className="text-sm text-emerald-400 ml-2">({correctStep.text || correctStep.title || `Event ${correctStep.id}`})</span>
                           )}
                         </div>
                       )}
-                      <div className="mt-3">
-                        <span className="text-sm font-semibold text-white">Why this order:</span>
-                        <p className="text-sm text-slate-300 mt-1">{step.whyThisOrder}</p>
-                      </div>
+                      {(step.whyThisOrder || step.indicators) && (
+                        <div className="mt-3">
+                          <span className="text-sm font-semibold text-white">Why this order:</span>
+                          <p className="text-sm text-slate-300 mt-1">{step.whyThisOrder || step.indicators}</p>
+                        </div>
+                      )}
                       {step.commonMistake && (
                         <div className="mt-2 bg-slate-800/50 p-3 rounded border-l-2 border-orange-500/50">
                           <p className="text-xs text-orange-400 italic">Common mistake: {step.commonMistake}</p>
@@ -2142,19 +2424,16 @@ const PMPApp = () => {
           <div className="glass-card p-6 mb-6">
             <h3 className="executive-font text-xl font-semibold text-white mb-4">Correct Sequence</h3>
             <div className="space-y-3">
-              {(() => {
-                const stepsData = selectedTask === 'Lead a Team' && timelineData?.scenarios?.[0]?.events
-                  ? timelineData.scenarios[0].events
-                  : timelineData?.steps || [];
-                return [...stepsData].sort((a, b) => a.correctOrder - b.correctOrder);
-              })().map((step) => (
+              {[...stepsData].sort((a, b) => a.correctOrder - b.correctOrder).map((step) => (
                 <div key={step.id} className="flex items-start gap-3">
                   <div className="w-8 h-8 rounded-full bg-emerald-500 text-white font-bold flex items-center justify-center flex-shrink-0">
                     {step.correctOrder}
                   </div>
                   <div className="flex-1">
-                    <p className="text-white font-semibold">{step.text}</p>
-                    <p className="text-sm text-slate-400 mt-1">{step.details}</p>
+                    <p className="text-white font-semibold">{step.text || step.title || `Event ${step.id}`}</p>
+                    {(step.details || step.content) && (
+                      <p className="text-sm text-slate-400 mt-1">{step.details || step.content.substring(0, 100) + '...'}</p>
+                    )}
                   </div>
                 </div>
               ))}
@@ -2187,7 +2466,493 @@ const PMPApp = () => {
       );
     }
 
-    // Game Display - displaySteps already defined above
+    // Comprehensive Format Renderer (for Lead a Team with new structure)
+    if (useComprehensiveRenderer) {
+      return (
+        <div className="max-w-6xl w-full p-10 animate-fadeIn text-left">
+          <header className="mb-8">
+            <div className="flex items-center gap-4 mb-6">
+              <button 
+                onClick={goToPracticeHub}
+                className="px-4 py-2 executive-font text-xs text-slate-400 hover:text-white uppercase font-semibold transition-colors flex items-center gap-2"
+              >
+                ← Back
+              </button>
+            </div>
+            <h1 className="executive-font text-5xl font-bold text-white tracking-tight mb-2">
+              {activityTitle}
+            </h1>
+            {timelineData.subtitle && (
+              <p className="text-xl text-slate-400">{timelineData.subtitle}</p>
+            )}
+          </header>
+
+          {/* Introduction Section */}
+          {timelineData.introduction && (
+            <div className="glass-card p-6 mb-6">
+              <div className="prose prose-invert max-w-none">
+                <p className="text-white whitespace-pre-line mb-4">{timelineData.introduction.content}</p>
+                {timelineData.introduction.timeEstimate && (
+                  <p className="text-slate-400 text-sm mb-2">⏱️ <strong>Time Estimate:</strong> {timelineData.introduction.timeEstimate}</p>
+                )}
+                {timelineData.introduction.ecoAlignment && (
+                  <p className="text-slate-400 text-sm">{timelineData.introduction.ecoAlignment}</p>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* How to Use Section */}
+          {timelineData.howToUse && Array.isArray(timelineData.howToUse) && (
+            <div className="glass-card p-6 mb-6">
+              <h2 className="executive-font text-2xl font-bold text-white mb-4">How to Use This Activity</h2>
+              <ol className="list-decimal list-inside space-y-2 text-white">
+                {timelineData.howToUse.map((item, idx) => (
+                  <li key={idx} className="text-slate-300">{item}</li>
+                ))}
+              </ol>
+            </div>
+          )}
+
+          {/* Scenario Section */}
+          {timelineData.scenario && (
+            <div className="glass-card p-6 mb-6 bg-blue-500/10 border-l-4 border-blue-500">
+              <h2 className="executive-font text-2xl font-bold text-white mb-4">{timelineData.scenario.title}</h2>
+              {timelineData.scenario.projectOverview && (
+                <div className="mb-4">
+                  <h3 className="text-lg font-semibold text-white mb-2">Project Overview:</h3>
+                  <ul className="list-disc list-inside space-y-1 text-slate-300 ml-4">
+                    <li><strong>Project:</strong> {timelineData.scenario.projectOverview.project}</li>
+                    <li><strong>Duration:</strong> {timelineData.scenario.projectOverview.duration}</li>
+                    <li><strong>Team Size:</strong> {timelineData.scenario.projectOverview.teamSize}</li>
+                    <li><strong>PM:</strong> {timelineData.scenario.projectOverview.pm}</li>
+                  </ul>
+                </div>
+              )}
+              {timelineData.scenario.teamMembers && (
+                <div className="mb-4">
+                  <h3 className="text-lg font-semibold text-white mb-2">Team Members:</h3>
+                  <ul className="list-disc list-inside space-y-1 text-slate-300 ml-4">
+                    {timelineData.scenario.teamMembers.map((member, idx) => (
+                      <li key={idx}>{member}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+              {timelineData.scenario.taskDescription && (
+                <div className="mt-4 p-4 bg-slate-800/50 rounded">
+                  <p className="text-white whitespace-pre-line">{timelineData.scenario.taskDescription}</p>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Events Section */}
+          <div className="glass-card p-6 mb-6">
+            <h2 className="executive-font text-2xl font-bold text-white mb-4">The Scrambled Events</h2>
+            <p className="text-slate-400 mb-4">Arrange these events in chronological order by dragging them:</p>
+            
+            <div className="space-y-4">
+              {displaySteps.map((event, index) => {
+                const isDragging = timelineReconstructorState.draggedStep === event.id;
+                const isDragOver = timelineReconstructorState.dragOverIndex === index;
+
+                return (
+                  <div
+                    key={event.id}
+                    draggable
+                    onDragStart={() => handleDragStart(event.id)}
+                    onDragOver={(e) => handleDragOver(e, index)}
+                    onDrop={(e) => handleDrop(e, index)}
+                    className={`glass-card p-6 border-l-4 border-cyan-500 cursor-move transition-all ${
+                      isDragging ? 'opacity-50 scale-95' : 'hover:scale-[1.01]'
+                    } ${isDragOver ? 'border-l-8 border-emerald-500' : ''}`}
+                  >
+                    <div className="flex items-start gap-4">
+                      {/* Drag Handle and Position */}
+                      <div className="flex flex-col items-center gap-2">
+                        <div className="text-slate-400 text-2xl cursor-grab active:cursor-grabbing">☰</div>
+                        <div className="w-10 h-10 rounded-full bg-cyan-500 text-white font-bold flex items-center justify-center flex-shrink-0">
+                          {index + 1}
+                        </div>
+                      </div>
+
+                      {/* Event Content */}
+                      <div className="flex-1">
+                        <div className="flex items-center gap-3 mb-2">
+                          <span className="text-lg font-bold text-cyan-400">Event {event.id}</span>
+                          {event.type && (
+                            <span className="text-sm text-slate-400 bg-slate-700 px-2 py-1 rounded">{event.type}</span>
+                          )}
+                        </div>
+                        {event.title && (
+                          <h3 className="text-xl font-bold text-white mb-3">{event.title}</h3>
+                        )}
+                        {event.content && (
+                          <div className="bg-slate-900/50 p-4 rounded border border-slate-700 mb-3">
+                            <pre className="text-slate-300 whitespace-pre-wrap font-mono text-sm">{event.content}</pre>
+                          </div>
+                        )}
+                        <div className="mt-4 flex gap-4 text-sm">
+                          <div className="flex-1">
+                            <label className="text-slate-400 block mb-1">Your Sequence Number:</label>
+                            <input type="number" className="w-full px-3 py-2 bg-slate-800 border border-slate-600 rounded text-white" placeholder="___" disabled />
+                          </div>
+                          <div className="flex-1">
+                            <label className="text-slate-400 block mb-1">Stage:</label>
+                            <input type="text" className="w-full px-3 py-2 bg-slate-800 border border-slate-600 rounded text-white" placeholder="___" disabled />
+                          </div>
+                          <div className="flex-1">
+                            <label className="text-slate-400 block mb-1">Sarah's Leadership Style:</label>
+                            <input type="text" className="w-full px-3 py-2 bg-slate-800 border border-slate-600 rounded text-white" placeholder="___" disabled />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Check Order Button */}
+          <div className="flex justify-center mb-6">
+            <button
+              onClick={checkOrder}
+              className="px-8 py-4 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-lg transition-colors executive-font text-lg"
+            >
+              Check Sequence
+            </button>
+          </div>
+
+          {/* Reflection Questions Section */}
+          {timelineData.reflectionQuestions && Array.isArray(timelineData.reflectionQuestions) && (
+            <div className="glass-card p-6 mb-6">
+              <h2 className="executive-font text-2xl font-bold text-white mb-4">Part 4: Reflection Questions</h2>
+              <div className="space-y-6">
+                {timelineData.reflectionQuestions.map((q, idx) => (
+                  <div key={q.id || idx} className="bg-slate-800/50 p-4 rounded">
+                    <h3 className="text-lg font-semibold text-white mb-2">{q.id || idx + 1}. {q.question}</h3>
+                    {q.subQuestions && Array.isArray(q.subQuestions) && (
+                      <ul className="list-disc list-inside ml-4 space-y-1 text-slate-300">
+                        {q.subQuestions.map((subQ, subIdx) => (
+                          <li key={subIdx}>{subQ}</li>
+                        ))}
+                      </ul>
+                    )}
+                    <textarea 
+                      className="w-full mt-3 px-4 py-2 bg-slate-900 border border-slate-600 rounded text-white" 
+                      rows="3" 
+                      placeholder="Your answer..."
+                      disabled
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Answers and Analysis Section (Collapsible) */}
+          {timelineData.answers && (
+            <details className="glass-card p-6 mb-6">
+              <summary className="executive-font text-2xl font-bold text-white cursor-pointer hover:text-cyan-400 transition-colors">
+                Answers and Analysis (Click to expand)
+              </summary>
+              
+              <div className="mt-6 space-y-6">
+                {/* Correct Sequence Table */}
+                {timelineData.answers.correctSequence && (
+                  <div>
+                    <h3 className="text-xl font-semibold text-white mb-4">Correct Chronological Sequence</h3>
+                    <div className="overflow-x-auto">
+                      <table className="w-full border-collapse">
+                        <thead>
+                          <tr className="bg-slate-800">
+                            <th className="border border-slate-600 px-4 py-2 text-left text-white font-semibold">Position</th>
+                            <th className="border border-slate-600 px-4 py-2 text-left text-white font-semibold">Event</th>
+                            <th className="border border-slate-600 px-4 py-2 text-left text-white font-semibold">Description</th>
+                            <th className="border border-slate-600 px-4 py-2 text-left text-white font-semibold">Month</th>
+                            <th className="border border-slate-600 px-4 py-2 text-left text-white font-semibold">Stage</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {timelineData.answers.correctSequence.map((seq, idx) => (
+                            <tr key={idx} className="hover:bg-slate-800/50">
+                              <td className="border border-slate-600 px-4 py-2 text-white font-bold">{seq.position}</td>
+                              <td className="border border-slate-600 px-4 py-2 text-cyan-400 font-semibold">{seq.event}</td>
+                              <td className="border border-slate-600 px-4 py-2 text-slate-300">{seq.description}</td>
+                              <td className="border border-slate-600 px-4 py-2 text-slate-400">{seq.month}</td>
+                              <td className="border border-slate-600 px-4 py-2 text-slate-300">{seq.stage}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                )}
+
+                {/* Stage Analysis */}
+                {timelineData.answers.stageAnalysis && (
+                  <div>
+                    <h3 className="text-xl font-semibold text-white mb-4">Stage Analysis</h3>
+                    <div className="overflow-x-auto">
+                      <table className="w-full border-collapse">
+                        <thead>
+                          <tr className="bg-slate-800">
+                            <th className="border border-slate-600 px-4 py-2 text-left text-white font-semibold">Event</th>
+                            <th className="border border-slate-600 px-4 py-2 text-left text-white font-semibold">Stage</th>
+                            <th className="border border-slate-600 px-4 py-2 text-left text-white font-semibold">Key Indicators</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {timelineData.answers.stageAnalysis.map((analysis, idx) => (
+                            <tr key={idx} className="hover:bg-slate-800/50">
+                              <td className="border border-slate-600 px-4 py-2 text-cyan-400 font-semibold">{analysis.event}</td>
+                              <td className="border border-slate-600 px-4 py-2 text-white">{analysis.stage}</td>
+                              <td className="border border-slate-600 px-4 py-2 text-slate-300">{analysis.indicators}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                )}
+
+                {/* Leadership Style Analysis */}
+                {timelineData.answers.leadershipStyleAnalysis && (
+                  <div>
+                    <h3 className="text-xl font-semibold text-white mb-4">Leadership Style Analysis</h3>
+                    <div className="overflow-x-auto">
+                      <table className="w-full border-collapse">
+                        <thead>
+                          <tr className="bg-slate-800">
+                            <th className="border border-slate-600 px-4 py-2 text-left text-white font-semibold">Event</th>
+                            <th className="border border-slate-600 px-4 py-2 text-left text-white font-semibold">Style</th>
+                            <th className="border border-slate-600 px-4 py-2 text-left text-white font-semibold">Rationale</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {timelineData.answers.leadershipStyleAnalysis.map((analysis, idx) => (
+                            <tr key={idx} className="hover:bg-slate-800/50">
+                              <td className="border border-slate-600 px-4 py-2 text-cyan-400 font-semibold">{analysis.event}</td>
+                              <td className="border border-slate-600 px-4 py-2 text-white">{analysis.style}</td>
+                              <td className="border border-slate-600 px-4 py-2 text-slate-300">{analysis.rationale}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                )}
+
+                {/* Stage Transitions */}
+                {timelineData.answers.stageTransitions && (
+                  <div>
+                    <h3 className="text-xl font-semibold text-white mb-4">Stage Transitions Analysis</h3>
+                    <div className="space-y-4 text-slate-300">
+                      {timelineData.answers.stageTransitions.formingToStorming && (
+                        <div className="bg-slate-800/50 p-4 rounded">
+                          <h4 className="text-white font-semibold mb-2">Forming → Storming</h4>
+                          <p><strong>Between:</strong> {timelineData.answers.stageTransitions.formingToStorming.betweenEvents}</p>
+                          <p><strong>Trigger:</strong> {timelineData.answers.stageTransitions.formingToStorming.trigger}</p>
+                          <p><strong>Evidence:</strong> {timelineData.answers.stageTransitions.formingToStorming.evidence}</p>
+                          <p><strong>Timeline:</strong> {timelineData.answers.stageTransitions.formingToStorming.timeline}</p>
+                        </div>
+                      )}
+                      {timelineData.answers.stageTransitions.stormingToNorming && (
+                        <div className="bg-slate-800/50 p-4 rounded">
+                          <h4 className="text-white font-semibold mb-2">Storming → Norming</h4>
+                          <p><strong>Between:</strong> {timelineData.answers.stageTransitions.stormingToNorming.betweenEvents}</p>
+                          <p><strong>Trigger:</strong> {timelineData.answers.stageTransitions.stormingToNorming.trigger}</p>
+                          <p><strong>Evidence:</strong> {timelineData.answers.stageTransitions.stormingToNorming.evidence}</p>
+                          <p><strong>Timeline:</strong> {timelineData.answers.stageTransitions.stormingToNorming.timeline}</p>
+                        </div>
+                      )}
+                      {timelineData.answers.stageTransitions.normingToPerforming && (
+                        <div className="bg-slate-800/50 p-4 rounded">
+                          <h4 className="text-white font-semibold mb-2">Norming → Performing</h4>
+                          <p><strong>Between:</strong> {timelineData.answers.stageTransitions.normingToPerforming.betweenEvents}</p>
+                          <p><strong>Trigger:</strong> {timelineData.answers.stageTransitions.normingToPerforming.trigger}</p>
+                          <p><strong>Evidence:</strong> {timelineData.answers.stageTransitions.normingToPerforming.evidence}</p>
+                          <p><strong>Timeline:</strong> {timelineData.answers.stageTransitions.normingToPerforming.timeline}</p>
+                        </div>
+                      )}
+                      {timelineData.answers.stageTransitions.regression && (
+                        <div className="bg-slate-800/50 p-4 rounded border-l-4 border-orange-500">
+                          <h4 className="text-white font-semibold mb-2">Regression Analysis</h4>
+                          <p><strong>Event:</strong> {timelineData.answers.stageTransitions.regression.event}</p>
+                          <p><strong>Trigger:</strong> {timelineData.answers.stageTransitions.regression.trigger}</p>
+                          <p><strong>Severity:</strong> {timelineData.answers.stageTransitions.regression.severity}</p>
+                          <p><strong>Duration:</strong> {timelineData.answers.stageTransitions.regression.duration}</p>
+                          <p><strong>Resolution:</strong> {timelineData.answers.stageTransitions.regression.resolution}</p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                {/* ECO Enabler Coverage */}
+                {timelineData.answers.ecoEnablerCoverage && (
+                  <div>
+                    <h3 className="text-xl font-semibold text-white mb-4">ECO Enabler Coverage</h3>
+                    <div className="overflow-x-auto">
+                      <table className="w-full border-collapse">
+                        <thead>
+                          <tr className="bg-slate-800">
+                            <th className="border border-slate-600 px-4 py-2 text-left text-white font-semibold">ECO Enabler</th>
+                            <th className="border border-slate-600 px-4 py-2 text-left text-white font-semibold">Evidence</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {timelineData.answers.ecoEnablerCoverage.map((eco, idx) => (
+                            <tr key={idx} className="hover:bg-slate-800/50">
+                              <td className="border border-slate-600 px-4 py-2 text-white font-semibold">{eco.enabler}</td>
+                              <td className="border border-slate-600 px-4 py-2 text-slate-300">{eco.evidence}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                )}
+
+                {/* What If Analysis */}
+                {timelineData.answers.whatIfAnalysis && (
+                  <div className="bg-slate-800/50 p-4 rounded border-l-4 border-yellow-500">
+                    <h3 className="text-xl font-semibold text-white mb-4">What If Analysis</h3>
+                    <p className="text-white font-semibold mb-2">{timelineData.answers.whatIfAnalysis.question}</p>
+                    <ul className="list-disc list-inside space-y-1 text-slate-300 ml-4">
+                      {timelineData.answers.whatIfAnalysis.impact.map((impact, idx) => (
+                        <li key={idx}>{impact}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </div>
+            </details>
+          )}
+
+          {/* Scoring Guide */}
+          {timelineData.scoringGuide && (
+            <div className="glass-card p-6 mb-6">
+              <h2 className="executive-font text-2xl font-bold text-white mb-4">Scoring Guide</h2>
+              <div className="space-y-4">
+                {timelineData.scoringGuide.part1 && (
+                  <div>
+                    <h3 className="text-lg font-semibold text-white mb-2">{timelineData.scoringGuide.part1.title}</h3>
+                    <ul className="list-disc list-inside space-y-1 text-slate-300 ml-4">
+                      {timelineData.scoringGuide.part1.scoring.map((item, idx) => (
+                        <li key={idx}>{item.condition}: {item.points} points</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+                {timelineData.scoringGuide.part2 && (
+                  <div>
+                    <h3 className="text-lg font-semibold text-white mb-2">{timelineData.scoringGuide.part2.title}</h3>
+                    <p className="text-slate-300 whitespace-pre-line">{timelineData.scoringGuide.part2.scoring}</p>
+                  </div>
+                )}
+                {timelineData.scoringGuide.part3 && (
+                  <div>
+                    <h3 className="text-lg font-semibold text-white mb-2">{timelineData.scoringGuide.part3.title}</h3>
+                    <p className="text-slate-300 whitespace-pre-line">{timelineData.scoringGuide.part3.scoring}</p>
+                  </div>
+                )}
+                {timelineData.scoringGuide.part4 && (
+                  <div>
+                    <h3 className="text-lg font-semibold text-white mb-2">{timelineData.scoringGuide.part4.title}</h3>
+                    <ul className="list-disc list-inside space-y-1 text-slate-300 ml-4">
+                      {Array.isArray(timelineData.scoringGuide.part4.scoring) ? (
+                        timelineData.scoringGuide.part4.scoring.map((item, idx) => (
+                          <li key={idx}>{item}</li>
+                        ))
+                      ) : (
+                        <li>{timelineData.scoringGuide.part4.scoring}</li>
+                      )}
+                    </ul>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* Performance Levels */}
+          {timelineData.performanceLevels && (
+            <div className="glass-card p-6 mb-6">
+              <h2 className="executive-font text-2xl font-bold text-white mb-4">Performance Levels</h2>
+              <div className="space-y-3">
+                {timelineData.performanceLevels.map((level, idx) => (
+                  <div key={idx} className="bg-slate-800/50 p-4 rounded border-l-4 border-cyan-500">
+                    <div className="flex items-center gap-3 mb-2">
+                      <span className="text-white font-bold text-lg">{level.range}</span>
+                      <span className="text-cyan-400 font-semibold">{level.level}</span>
+                    </div>
+                    <p className="text-slate-300">{level.description}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Key Takeaways */}
+          {timelineData.keyTakeaways && (
+            <div className="glass-card p-6 mb-6">
+              <h2 className="executive-font text-2xl font-bold text-white mb-4">Key Takeaways</h2>
+              
+              {timelineData.keyTakeaways.timelinePatterns && (
+                <div className="mb-6">
+                  <h3 className="text-lg font-semibold text-white mb-3">Timeline Patterns to Remember</h3>
+                  <ul className="list-disc list-inside space-y-2 text-slate-300 ml-4">
+                    {timelineData.keyTakeaways.timelinePatterns.map((pattern, idx) => (
+                      <li key={idx}>
+                        <strong>{pattern.stage}:</strong> {pattern.detail}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {timelineData.keyTakeaways.leadershipEvolution && (
+                <div className="mb-6">
+                  <h3 className="text-lg font-semibold text-white mb-3">Leadership Evolution Pattern</h3>
+                  <div className="overflow-x-auto">
+                    <table className="w-full border-collapse">
+                      <thead>
+                        <tr className="bg-slate-800">
+                          <th className="border border-slate-600 px-4 py-2 text-left text-white font-semibold">Project Phase</th>
+                          <th className="border border-slate-600 px-4 py-2 text-left text-white font-semibold">Primary Style</th>
+                          <th className="border border-slate-600 px-4 py-2 text-left text-white font-semibold">PM Focus</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {timelineData.keyTakeaways.leadershipEvolution.map((phase, idx) => (
+                          <tr key={idx} className="hover:bg-slate-800/50">
+                            <td className="border border-slate-600 px-4 py-2 text-white">{phase.phase}</td>
+                            <td className="border border-slate-600 px-4 py-2 text-cyan-400">{phase.style}</td>
+                            <td className="border border-slate-600 px-4 py-2 text-slate-300">{phase.pmFocus}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              )}
+
+              {timelineData.keyTakeaways.closingStatement && (
+                <div className="bg-blue-500/10 p-4 rounded border-l-4 border-blue-500">
+                  <p className="text-white italic">{timelineData.keyTakeaways.closingStatement}</p>
+                </div>
+              )}
+            </div>
+          )}
+
+          <GlobalNavFooter />
+        </div>
+      );
+    }
+
+    // Game Display - displaySteps already defined above (for old format)
     
     return (
       <div className="max-w-6xl w-full p-10 animate-fadeIn text-left">
@@ -2200,7 +2965,7 @@ const PMPApp = () => {
               ← Back
             </button>
           </div>
-          <h1 className="executive-font text-5xl font-bold text-white tracking-tight">📋 {activityTitle}: {timelineData.title}</h1>
+            <h1 className="executive-font text-5xl font-bold text-white tracking-tight">📋 {activityTitle}: {timelineData.title || timelineData.subtitle || 'Timeline Reconstructor'}</h1>
         </header>
 
         {/* Instructions Card */}
@@ -2239,7 +3004,10 @@ const PMPApp = () => {
 
                   {/* Step Text */}
                   <div className="flex-1">
-                    <p className="text-white font-semibold">{step.text}</p>
+                    <p className="text-white font-semibold">{step.text || step.title || `Event ${step.id}`}</p>
+                    {step.type && (
+                      <p className="text-xs text-slate-400 mt-1">{step.type}</p>
+                    )}
                   </div>
 
                   {/* Up/Down Arrow Buttons (Accessibility) */}
@@ -2333,6 +3101,12 @@ const PMPApp = () => {
             if (!prev.progressRecorded || prev.lastRecordedScenario !== scenarioId) {
               recordActivityCompletion(selectedTask, 'empathy-exercise', 100, {
                 scenarioCompleted: scenarioId
+              });
+              // Also record comprehensive score
+              recordComprehensiveScore(selectedTask, selectedTask === 'Lead a Team' ? 'team-member-perspectives' : 'empathy-exercise', {
+                score: 100,
+                scenarioCompleted: scenarioId,
+                scenariosCompleted: 1
               });
               newState.progressRecorded = true;
               newState.lastRecordedScenario = scenarioId;
@@ -2913,8 +3687,21 @@ const PMPApp = () => {
     </div>
   );
 
-  if (view === 'executive-hud') return (
+  if (view === 'executive-hud') {
+    return (
     <div className="max-w-7xl w-full p-10 animate-fadeIn">
+      {/* Privacy Disclaimer */}
+      <div className="glass-card p-4 mb-6 border-l-4 border-blue-500 bg-blue-500/10">
+        <div className="flex items-start gap-3">
+          <span className="text-2xl">🔒</span>
+          <div className="flex-1">
+            <p className="text-sm text-slate-300">
+              <span className="font-semibold text-white">Privacy First:</span> All your progress and scores are stored locally on your device. Nothing is shared or transmitted. Your data stays private and secure.
+            </p>
+          </div>
+        </div>
+      </div>
+
       <div className="executive-header mb-12">
         <h1 className="executive-font text-6xl font-bold text-white mb-3 tracking-tight">PMP Prep Center</h1>
         <p className="text-slate-400 text-xl">Executive Learning Platform</p>
@@ -3023,6 +3810,7 @@ const PMPApp = () => {
       <GlobalNavFooter />
     </div>
   );
+  }
 
   if (view === 'strategy-suite') return (
     <div className="max-w-[95%] w-full p-12 animate-fadeIn text-left">
@@ -3119,7 +3907,8 @@ const PMPApp = () => {
               if (activity.name === 'conflict-matcher') {
                 return { ...activity, title: 'Leadership Style Matcher', desc: 'Match scenarios to leadership styles' };
               } else if (activity.name === 'timeline-reconstructor') {
-                return { ...activity, title: 'Stage Detective', desc: 'Diagnose team development stages' };
+                // Keep name as Timeline Reconstructor (content is adapted, but name stays consistent)
+                return { ...activity, title: 'Timeline Reconstructor', desc: 'Order team development events' };
               } else if (activity.name === 'empathy-exercise') {
                 return { ...activity, title: 'Team Member Perspectives', desc: 'See team member viewpoints' };
               }
@@ -3195,13 +3984,19 @@ const PMPApp = () => {
         })}
       </div>
 
-      {/* Progress Stats Button */}
-      <div className="flex justify-center mb-8">
+      {/* Progress Stats Buttons */}
+      <div className="flex justify-center gap-4 mb-8">
         <button
           onClick={() => setView('progress-stats')}
           className="px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-lg transition-colors executive-font"
         >
           View Progress Stats →
+        </button>
+        <button
+          onClick={() => setView('personal-stats')}
+          className="px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-lg transition-colors executive-font"
+        >
+          📊 Personal Stats →
         </button>
       </div>
 
@@ -3271,6 +4066,13 @@ const PMPApp = () => {
             </button>
           </div>
           <h1 className="executive-font text-5xl font-bold text-white tracking-tight">📊 Progress Statistics</h1>
+          <p className="text-slate-400 text-lg mt-2">Basic completion tracking and task mastery overview</p>
+          <div className="mt-4 glass-card p-4 bg-purple-500/10 border-l-4 border-purple-500">
+            <p className="text-sm text-slate-300">
+              <span className="font-semibold text-white">Note:</span> This view shows basic completion status. 
+              For detailed analytics with scores, times, and trends, see <button onClick={() => setView('personal-stats')} className="text-purple-400 hover:text-purple-300 underline ml-1">Personal Statistics</button>.
+            </p>
+          </div>
         </header>
 
         {/* Overall Stats */}
@@ -3383,6 +4185,519 @@ const PMPApp = () => {
     );
   }
 
+  // Personal Stats View with Comprehensive Analytics
+  if (view === 'personal-stats') {
+    let scoreData;
+    try {
+      scoreData = getScoreData();
+      // Ensure scoreData has required structure
+      if (!scoreData || typeof scoreData !== 'object') {
+        scoreData = {
+          scores: {},
+          totalActivitiesCompleted: 0,
+          totalTimeSpent: 0,
+          lastActive: new Date().toISOString()
+        };
+      }
+      if (!scoreData.scores || typeof scoreData.scores !== 'object') {
+        scoreData.scores = {};
+      }
+    } catch (e) {
+      console.error('Error initializing score data:', e);
+      scoreData = {
+        scores: {},
+        totalActivitiesCompleted: 0,
+        totalTimeSpent: 0,
+        lastActive: new Date().toISOString()
+      };
+    }
+    
+    const allTasks = Object.values(domainMap).flat();
+    
+    // Calculate study streak
+    const calculateStreak = () => {
+      if (!scoreData.lastActive) return 0;
+      const lastActive = new Date(scoreData.lastActive);
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      lastActive.setHours(0, 0, 0, 0);
+      const diffDays = Math.floor((today - lastActive) / (1000 * 60 * 60 * 24));
+      return diffDays === 0 ? 1 : 0; // Simple: 1 if active today, 0 otherwise
+    };
+
+    const studyStreak = calculateStreak();
+    const totalTimeHours = Math.floor((scoreData.totalTimeSpent || 0) / 3600);
+    const totalTimeMinutes = Math.floor(((scoreData.totalTimeSpent || 0) % 3600) / 60);
+
+    // Activity type statistics
+    const activityStats = {
+      'lightning-round': { attempts: [], bestScore: 0, bestAccuracy: 0, avgTime: 0 },
+      'pm-simulator': { attempts: [], bestScore: 0, successRate: 0 },
+      'document-detective': { attempts: [], bestCompletion: 0 },
+      'conflict-matcher': { attempts: [], avgScore: 0, perfectMatches: 0 },
+      'leadership-style-matcher': { attempts: [], avgScore: 0, perfectMatches: 0 },
+      'timeline-reconstructor': { attempts: [], bestScore: 0, avgAttempts: 0 },
+      'empathy-exercise': { scenariosCompleted: 0 },
+      'team-member-perspectives': { scenariosCompleted: 0 }
+    };
+
+    // Collect stats from all tasks
+    try {
+      Object.keys(scoreData.scores || {}).forEach(taskName => {
+        const taskScores = scoreData.scores[taskName];
+        if (!taskScores || typeof taskScores !== 'object') return;
+        
+        Object.keys(taskScores).forEach(activityName => {
+          const activity = taskScores[activityName];
+          if (!activity || typeof activity !== 'object') return;
+          
+          // Map activity names for stats aggregation
+          let statsKey = activityName;
+          if (activityName === 'leadership-style-matcher') {
+            statsKey = 'leadership-style-matcher';
+          } else if (activityName === 'team-member-perspectives') {
+            statsKey = 'team-member-perspectives';
+          }
+          
+          if (activityStats[statsKey] || activityStats[activityName]) {
+            const targetKey = activityStats[statsKey] ? statsKey : activityName;
+            if (activityStats[targetKey]) {
+              // Safely add attempts
+              if (Array.isArray(activity.attempts)) {
+                activityStats[targetKey].attempts.push(...activity.attempts);
+              }
+              if (activity.bestScore && activity.bestScore > activityStats[targetKey].bestScore) {
+                activityStats[targetKey].bestScore = activity.bestScore;
+              }
+              if (activity.bestAccuracy && activity.bestAccuracy > activityStats[targetKey].bestAccuracy) {
+                activityStats[targetKey].bestAccuracy = activity.bestAccuracy;
+              }
+              if (activity.bestCompletion && activity.bestCompletion > activityStats[targetKey].bestCompletion) {
+                activityStats[targetKey].bestCompletion = activity.bestCompletion;
+              }
+            }
+          }
+        });
+      });
+    } catch (e) {
+      console.error('Error collecting activity stats:', e);
+      // Continue with empty stats
+    }
+
+    // Calculate Lightning Round stats
+    const lrAttempts = activityStats['lightning-round'].attempts;
+    if (lrAttempts.length > 0) {
+      const accuracies = lrAttempts.filter(a => a.accuracy).map(a => a.accuracy);
+      if (accuracies.length > 0) {
+        activityStats['lightning-round'].bestAccuracy = Math.max(...accuracies, activityStats['lightning-round'].bestAccuracy);
+      }
+      const times = lrAttempts.filter(a => a.averageTime).map(a => a.averageTime);
+      activityStats['lightning-round'].avgTime = times.length > 0 
+        ? Math.round(times.reduce((a, b) => a + b, 0) / times.length) 
+        : 0;
+    }
+
+    // Calculate PM Simulator stats
+    const pmAttempts = activityStats['pm-simulator'].attempts;
+    if (pmAttempts.length > 0) {
+      const successes = pmAttempts.filter(a => a.outcome === 'success' || a.outcome === 'Mission Complete').length;
+      activityStats['pm-simulator'].successRate = Math.round((successes / pmAttempts.length) * 100);
+    }
+
+    // Calculate Document Detective stats
+    const ddAttempts = activityStats['document-detective'].attempts;
+    if (ddAttempts.length > 0) {
+      const completions = ddAttempts.filter(a => a.completionRate).map(a => a.completionRate);
+      if (completions.length > 0) {
+        activityStats['document-detective'].bestCompletion = Math.max(...completions, activityStats['document-detective'].bestCompletion);
+      }
+    }
+
+    // Calculate Conflict Matcher / Leadership Style Matcher stats
+    const cmAttempts = [...activityStats['conflict-matcher'].attempts, ...activityStats['leadership-style-matcher'].attempts];
+    if (cmAttempts.length > 0) {
+      const avgScore = cmAttempts.reduce((sum, a) => sum + (a.score || 0), 0) / cmAttempts.length;
+      const perfectMatches = cmAttempts.filter(a => a.isPerfect).length;
+      activityStats['conflict-matcher'].avgScore = Math.round(avgScore);
+      activityStats['conflict-matcher'].perfectMatches = perfectMatches;
+      activityStats['leadership-style-matcher'].avgScore = Math.round(avgScore);
+      activityStats['leadership-style-matcher'].perfectMatches = perfectMatches;
+    }
+
+    // Calculate Timeline Reconstructor stats
+    const trAttempts = activityStats['timeline-reconstructor'].attempts;
+    if (trAttempts.length > 0) {
+      const avgAttempts = trAttempts.filter(a => a.attemptsToPerfect).map(a => a.attemptsToPerfect);
+      if (avgAttempts.length > 0) {
+        activityStats['timeline-reconstructor'].avgAttempts = avgAttempts.reduce((a, b) => a + b, 0) / avgAttempts.length;
+      }
+    }
+
+    // Calculate Empathy Exercise / Team Member Perspectives stats
+    const eeAttempts = [...activityStats['empathy-exercise'].attempts, ...activityStats['team-member-perspectives'].attempts];
+    if (eeAttempts.length > 0) {
+      const scenariosCompleted = eeAttempts.filter(a => a.scenarioCompleted).length;
+      activityStats['empathy-exercise'].scenariosCompleted = scenariosCompleted;
+      activityStats['team-member-perspectives'].scenariosCompleted = scenariosCompleted;
+    }
+
+    // Task-level statistics - optimized to only process tasks with data
+    const taskStats = [];
+    
+    // Only process tasks that have score data
+    try {
+      Object.keys(scoreData.scores || {}).forEach(taskName => {
+        const taskData = scoreData.scores[taskName];
+        if (!taskData || typeof taskData !== 'object') return;
+        
+        const activities = Object.keys(taskData);
+        const totalAttempts = activities.reduce((sum, act) => {
+          const actData = taskData[act];
+          if (actData && Array.isArray(actData.attempts)) {
+            return sum + actData.attempts.length;
+          }
+          return sum;
+        }, 0);
+        
+        if (totalAttempts === 0) return; // Skip tasks with no attempts
+      
+        // Calculate mastery from scoreData instead of progressData
+        const completedActivities = activities.filter(actName => {
+          const act = taskData[actName];
+          return act && Array.isArray(act.attempts) && act.attempts.length > 0;
+        }).length;
+        
+        let mastery;
+        if (completedActivities === 0) {
+          mastery = { level: 'not-started', completed: 0, total: 6, label: 'Not Started', color: 'slate' };
+        } else if (completedActivities <= 3) {
+          mastery = { level: 'in-progress', completed: completedActivities, total: 6, label: 'In Progress', color: 'yellow' };
+        } else if (completedActivities <= 5) {
+          mastery = { level: 'advanced', completed: completedActivities, total: 6, label: 'Advanced', color: 'orange' };
+        } else {
+          mastery = { level: 'mastered', completed: completedActivities, total: 6, label: 'Mastered', color: 'emerald' };
+        }
+        
+        // Find strongest/weakest activity
+        let strongest = null, weakest = null;
+        activities.forEach(actName => {
+          const act = taskData[actName];
+          if (act && Array.isArray(act.attempts) && act.attempts.length > 0) {
+            const avgScore = act.attempts.reduce((s, a) => s + (a.score || 0), 0) / act.attempts.length;
+            if (!strongest || avgScore > strongest.avg) {
+              strongest = { name: actName, avg: avgScore };
+            }
+            if (!weakest || avgScore < weakest.avg) {
+              weakest = { name: actName, avg: avgScore };
+            }
+          }
+        });
+
+        // Last practiced date
+        let lastPracticed = null;
+        activities.forEach(actName => {
+          const act = taskData[actName];
+          if (act && Array.isArray(act.attempts) && act.attempts.length > 0) {
+            const lastAttempt = act.attempts[act.attempts.length - 1];
+            if (lastAttempt && lastAttempt.date) {
+              try {
+                const attemptDate = new Date(lastAttempt.date);
+                if (!isNaN(attemptDate.getTime()) && (!lastPracticed || attemptDate > lastPracticed)) {
+                  lastPracticed = attemptDate;
+                }
+              } catch (e) {
+                // Invalid date, skip
+              }
+            }
+          }
+        });
+
+        taskStats.push({
+          taskName,
+          totalAttempts,
+          mastery,
+          strongest,
+          weakest,
+          lastPracticed
+        });
+      });
+    } catch (e) {
+      console.error('Error processing task stats:', e);
+      // Continue with empty taskStats
+    }
+
+    // Recommendations
+    const recommendations = [];
+    const now = new Date();
+    taskStats.forEach(task => {
+      if (task.lastPracticed) {
+        const daysSince = Math.floor((now - task.lastPracticed) / (1000 * 60 * 60 * 24));
+        if (daysSince >= 5) {
+          recommendations.push(`You haven't practiced ${task.taskName} in ${daysSince} days`);
+        }
+      }
+    });
+
+    // Export function
+    const exportProgress = () => {
+      const dataStr = JSON.stringify(scoreData, null, 2);
+      const dataBlob = new Blob([dataStr], { type: 'application/json' });
+      const url = URL.createObjectURL(dataBlob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `pmp-prep-progress-${new Date().toISOString().split('T')[0]}.json`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    };
+
+    return (
+      <div className="max-w-7xl w-full p-10 animate-fadeIn text-left">
+        <header className="mb-8">
+          <div className="flex items-center justify-between mb-6">
+            <button 
+              onClick={() => setView('practice-hub')}
+              className="px-4 py-2 executive-font text-xs text-slate-400 hover:text-white uppercase font-semibold transition-colors flex items-center gap-2"
+            >
+              ← Back
+            </button>
+            <button
+              onClick={exportProgress}
+              className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-lg transition-colors executive-font text-sm"
+            >
+              📥 Export Progress
+            </button>
+          </div>
+          <h1 className="executive-font text-5xl font-bold text-white tracking-tight mb-2">📊 Personal Statistics</h1>
+          <p className="text-slate-400 text-lg">Comprehensive performance analytics and insights</p>
+          <div className="mt-4 glass-card p-4 bg-blue-500/10 border-l-4 border-blue-500">
+            <p className="text-sm text-slate-300">
+              <span className="font-semibold text-white">Note:</span> This view shows detailed analytics from comprehensive score tracking (scores, times, accuracy, trends). 
+              For basic completion tracking, see <button onClick={() => setView('progress-stats')} className="text-blue-400 hover:text-blue-300 underline ml-1">Progress Statistics</button>.
+            </p>
+          </div>
+        </header>
+
+        {/* Overall Stats */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+          <div className="glass-card p-6 border-l-4 border-blue-500">
+            <div className="text-sm text-slate-400 uppercase mb-2">Total Time</div>
+            <div className="text-3xl font-bold text-white">
+              {totalTimeHours}h {totalTimeMinutes}m
+            </div>
+            <div className="text-xs text-slate-500 mt-2">Time invested</div>
+          </div>
+          <div className="glass-card p-6 border-l-4 border-purple-500">
+            <div className="text-sm text-slate-400 uppercase mb-2">Activities Completed</div>
+            <div className="text-3xl font-bold text-white">{scoreData.totalActivitiesCompleted || 0}</div>
+            <div className="text-xs text-slate-500 mt-2">Total attempts</div>
+          </div>
+          <div className="glass-card p-6 border-l-4 border-emerald-500">
+            <div className="text-sm text-slate-400 uppercase mb-2">Tasks Mastered</div>
+            <div className="text-3xl font-bold text-white">
+              {taskStats.filter(t => t.mastery.level === 'mastered').length}
+            </div>
+            <div className="text-xs text-slate-500 mt-2">All activities complete</div>
+          </div>
+          <div className="glass-card p-6 border-l-4 border-yellow-500">
+            <div className="text-sm text-slate-400 uppercase mb-2">Study Streak</div>
+            <div className="text-3xl font-bold text-white">{studyStreak}</div>
+            <div className="text-xs text-slate-500 mt-2">Days in a row</div>
+          </div>
+        </div>
+
+        {/* Per Activity Type Stats */}
+        <div className="glass-card p-6 mb-6">
+          <h2 className="executive-font text-2xl font-bold text-white mb-4">Activity Performance</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {/* Lightning Round */}
+            {activityStats['lightning-round'].attempts.length > 0 && (
+              <div className="glass-card p-4 bg-slate-800/30 border-l-4 border-yellow-500">
+                <h3 className="text-white font-semibold mb-3">⚡ Lightning Round</h3>
+                <div className="space-y-2 text-sm">
+                  <div className="flex justify-between">
+                    <span className="text-slate-400">Best Score:</span>
+                    <span className="text-white font-semibold">{activityStats['lightning-round'].bestScore.toLocaleString()}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-slate-400">Best Accuracy:</span>
+                    <span className="text-emerald-400 font-semibold">{activityStats['lightning-round'].bestAccuracy}%</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-slate-400">Avg Time:</span>
+                    <span className="text-white">{activityStats['lightning-round'].avgTime}s</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-slate-400">Attempts:</span>
+                    <span className="text-slate-300">{activityStats['lightning-round'].attempts.length}</span>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* PM Simulator */}
+            {activityStats['pm-simulator'].attempts.length > 0 && (
+              <div className="glass-card p-4 bg-slate-800/30 border-l-4 border-blue-500">
+                <h3 className="text-white font-semibold mb-3">🎯 PM Simulator</h3>
+                <div className="space-y-2 text-sm">
+                  <div className="flex justify-between">
+                    <span className="text-slate-400">Best Score:</span>
+                    <span className="text-white font-semibold">{activityStats['pm-simulator'].bestScore}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-slate-400">Success Rate:</span>
+                    <span className="text-emerald-400 font-semibold">{activityStats['pm-simulator'].successRate}%</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-slate-400">Attempts:</span>
+                    <span className="text-slate-300">{activityStats['pm-simulator'].attempts.length}</span>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Document Detective */}
+            {activityStats['document-detective'].attempts.length > 0 && (
+              <div className="glass-card p-4 bg-slate-800/30 border-l-4 border-purple-500">
+                <h3 className="text-white font-semibold mb-3">🕵️ Document Detective</h3>
+                <div className="space-y-2 text-sm">
+                  <div className="flex justify-between">
+                    <span className="text-slate-400">Best Completion:</span>
+                    <span className="text-white font-semibold">{activityStats['document-detective'].bestCompletion}%</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-slate-400">Attempts:</span>
+                    <span className="text-slate-300">{activityStats['document-detective'].attempts.length}</span>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Conflict Matcher */}
+            {activityStats['conflict-matcher'].attempts.length > 0 && (
+              <div className="glass-card p-4 bg-slate-800/30 border-l-4 border-emerald-500">
+                <h3 className="text-white font-semibold mb-3">🧩 Conflict Matcher</h3>
+                <div className="space-y-2 text-sm">
+                  <div className="flex justify-between">
+                    <span className="text-slate-400">Avg Score:</span>
+                    <span className="text-white font-semibold">{Math.round(activityStats['conflict-matcher'].avgScore)}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-slate-400">Perfect Matches:</span>
+                    <span className="text-emerald-400 font-semibold">{activityStats['conflict-matcher'].perfectMatches}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-slate-400">Attempts:</span>
+                    <span className="text-slate-300">{activityStats['conflict-matcher'].attempts.length}</span>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Timeline Reconstructor */}
+            {activityStats['timeline-reconstructor'].attempts.length > 0 && (
+              <div className="glass-card p-4 bg-slate-800/30 border-l-4 border-cyan-500">
+                <h3 className="text-white font-semibold mb-3">📋 Timeline Reconstructor</h3>
+                <div className="space-y-2 text-sm">
+                  <div className="flex justify-between">
+                    <span className="text-slate-400">Best Score:</span>
+                    <span className="text-white font-semibold">{activityStats['timeline-reconstructor'].bestScore}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-slate-400">Avg Attempts:</span>
+                    <span className="text-white">{activityStats['timeline-reconstructor'].avgAttempts.toFixed(1)}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-slate-400">Attempts:</span>
+                    <span className="text-slate-300">{activityStats['timeline-reconstructor'].attempts.length}</span>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Empathy Exercise / Team Member Perspectives */}
+            {(activityStats['empathy-exercise'].scenariosCompleted > 0 || activityStats['team-member-perspectives'].scenariosCompleted > 0) && (
+              <div className="glass-card p-4 bg-slate-800/30 border-l-4 border-rose-500">
+                <h3 className="text-white font-semibold mb-3">👥 Empathy/Team Perspectives</h3>
+                <div className="space-y-2 text-sm">
+                  <div className="flex justify-between">
+                    <span className="text-slate-400">Scenarios:</span>
+                    <span className="text-white font-semibold">{activityStats['empathy-exercise'].scenariosCompleted + activityStats['team-member-perspectives'].scenariosCompleted}</span>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Task-Level Statistics */}
+        {taskStats.length > 0 && (
+          <div className="glass-card p-6 mb-6">
+            <h2 className="executive-font text-2xl font-bold text-white mb-4">Task Performance</h2>
+            <div className="space-y-4 max-h-96 overflow-y-auto custom-scrollbar">
+              {taskStats.map(task => (
+                <div key={task.taskName} className="glass-card p-4 bg-slate-800/30 border-l-4 border-blue-500">
+                  <div className="flex items-start justify-between mb-3">
+                    <div>
+                      <h3 className="text-white font-semibold text-lg mb-1">{task.taskName}</h3>
+                      <div className="flex items-center gap-3 text-sm">
+                        <span className={`px-2 py-1 rounded text-xs ${
+                          task.mastery.color === 'slate' ? 'bg-slate-700 text-slate-300' :
+                          task.mastery.color === 'yellow' ? 'bg-yellow-500/20 text-yellow-400' :
+                          task.mastery.color === 'orange' ? 'bg-orange-500/20 text-orange-400' :
+                          'bg-emerald-500/20 text-emerald-400'
+                        }`}>
+                          {task.mastery.label}
+                        </span>
+                        <span className="text-slate-400">{task.totalAttempts} attempts</span>
+                      </div>
+                    </div>
+                    {task.lastPracticed && (
+                      <span className="text-xs text-slate-500">
+                        Last: {task.lastPracticed.toLocaleDateString()}
+                      </span>
+                    )}
+                  </div>
+                  <div className="grid grid-cols-2 gap-4 mt-3 text-sm">
+                    {task.strongest && (
+                      <div>
+                        <span className="text-slate-400">Strongest: </span>
+                        <span className="text-emerald-400 font-semibold">{task.strongest.name.replace(/-/g, ' ')}</span>
+                      </div>
+                    )}
+                    {task.weakest && (
+                      <div>
+                        <span className="text-slate-400">Needs Practice: </span>
+                        <span className="text-yellow-400 font-semibold">{task.weakest.name.replace(/-/g, ' ')}</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Recommendations */}
+        {recommendations.length > 0 && (
+          <div className="glass-card p-6 mb-6 border-l-4 border-orange-500">
+            <h2 className="executive-font text-2xl font-bold text-white mb-4">💡 Recommendations</h2>
+            <div className="space-y-2">
+              {recommendations.map((rec, idx) => (
+                <div key={idx} className="text-slate-300 p-3 bg-slate-800/30 rounded">
+                  {rec}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        <GlobalNavFooter />
+      </div>
+    );
+  }
+
   // Helper function to render markdown content as HTML
   const renderMarkdown = (markdown) => {
     if (!markdown) return <div className="text-slate-400">Loading content...</div>;
@@ -3417,7 +4732,6 @@ const PMPApp = () => {
     
     return <div className="prose prose-invert max-w-none" dangerouslySetInnerHTML={{ __html: html }} />;
   };
-
 
   if (view === 'learn-hub') return (
     <div className="max-w-6xl w-full p-10 animate-fadeIn text-left">
@@ -3472,6 +4786,14 @@ const PMPApp = () => {
       <div className="min-h-[400px] max-h-[70vh] overflow-y-auto custom-scrollbar">
         {subView === 'overview' && (
           <div className="space-y-6 animate-fadeIn">
+            <div className="flex justify-end mb-4">
+              <button
+                onClick={() => setView('practice-hub')}
+                className="px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-lg transition-colors executive-font flex items-center gap-2"
+              >
+                Go Practice →
+              </button>
+            </div>
             {currentTask.learn?.overview?.definition && (
               <div className="glass-card p-10 border-l-4 border-blue-500 bg-white/[0.02]">
                 <h3 className="executive-font text-xl font-semibold text-white mb-4 uppercase tracking-wide">Definition</h3>
@@ -3571,11 +4893,33 @@ const PMPApp = () => {
                 <p className="text-3xl text-white font-light italic leading-tight">"Briefing Locked."</p>
               </div>
             )}
+
+            {/* Navigation */}
+            <div className="flex justify-between items-center mt-8 pt-8 border-t border-white/10">
+              <div className="flex-1">
+                {/* No previous for Overview */}
+                <span className="text-slate-500 text-sm">Beginning of Content</span>
+              </div>
+              <button
+                onClick={() => setSubView('pmp-application')}
+                className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors executive-font flex items-center gap-2"
+              >
+                Next: PMP Application →
+              </button>
+            </div>
           </div>
         )}
 
         {subView === 'pmp-application' && (
             <div className="space-y-6 animate-fadeIn">
+              <div className="flex justify-end mb-4">
+                <button
+                  onClick={() => setView('practice-hub')}
+                  className="px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-lg transition-colors executive-font flex items-center gap-2"
+                >
+                  Go Practice →
+                </button>
+              </div>
               {currentTask.learn?.pmp_application?.connection_to_pmp && (
                 <div className="glass-card p-6 border-l-4 border-purple-500">
                   <h3 className="executive-font text-xl font-semibold text-white mb-4 uppercase tracking-wide">Connection to PMP Certification</h3>
@@ -3702,11 +5046,35 @@ const PMPApp = () => {
                   <p className="text-slate-300 font-mono text-sm">{currentTask.learn.pmp_application.decision_tree_visual}</p>
                 </div>
               )}
+
+              {/* Navigation */}
+              <div className="flex justify-between items-center mt-8 pt-8 border-t border-white/10">
+                <button
+                  onClick={() => setSubView('overview')}
+                  className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors executive-font flex items-center gap-2"
+                >
+                  ← Previous: Overview
+                </button>
+                <button
+                  onClick={() => setSubView('deep-dive')}
+                  className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors executive-font flex items-center gap-2"
+                >
+                  Next: Deep Dive →
+                </button>
+              </div>
             </div>
         )}
 
         {subView === 'deep-dive' && (
           <div className="space-y-6 animate-fadeIn">
+              <div className="flex justify-end mb-4">
+                <button
+                  onClick={() => setView('practice-hub')}
+                  className="px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-lg transition-colors executive-font flex items-center gap-2"
+                >
+                  Go Practice →
+                </button>
+              </div>
               {currentTask.learn?.deep_dive?.foundational_concept && (
                 <div className="glass-card p-6 border-l-4 border-blue-500">
                   <h3 className="executive-font text-xl font-semibold text-white mb-4 uppercase tracking-wide">Foundational Concept</h3>
@@ -3745,66 +5113,79 @@ const PMPApp = () => {
                   )}
 
                   {currentTask.learn.deep_dive.tuckmans_model.stages && (
-                    <div className="space-y-6 mt-6">
-                      {currentTask.learn.deep_dive.tuckmans_model.stages.map((stageData, idx) => (
-                        <div key={idx} className="border-l-4 border-purple-400/50 pl-4 bg-white/[0.02] p-4 rounded">
-                          <h3 className="executive-font text-xl font-semibold text-white mb-3">Stage {idx + 1}: {stageData.stage}</h3>
-                          
-                          {stageData.overview && (
-                            <p className="text-slate-300 mb-4 italic">{stageData.overview}</p>
-                          )}
+                    <div className="space-y-4 mt-6">
+                      {currentTask.learn.deep_dive.tuckmans_model.stages.map((stageData, idx) => {
+                        const isExpanded = expandedStages[idx] !== undefined ? expandedStages[idx] : idx === 0;
+                        return (
+                          <div key={idx} className="border-l-4 border-purple-400/50 bg-white/[0.02] rounded overflow-hidden">
+                            <button
+                              onClick={() => setExpandedStages(prev => ({ ...prev, [idx]: !isExpanded }))}
+                              className="w-full flex items-center justify-between p-4 hover:bg-white/[0.05] transition-colors text-left"
+                            >
+                              <h3 className="executive-font text-xl font-semibold text-white">Stage {idx + 1}: {stageData.stage}</h3>
+                              <span className="text-cyan-400 text-2xl">{isExpanded ? '−' : '+'}</span>
+                            </button>
+                            
+                            {isExpanded && (
+                              <div className="px-4 pb-4 space-y-4">
+                                {stageData.overview && (
+                                  <p className="text-slate-300 italic pt-2">{stageData.overview}</p>
+                                )}
 
-                          {stageData.detailed_characteristics && (
-                            <div className="mb-4">
-                              <h4 className="text-white font-semibold mb-2">Detailed Characteristics:</h4>
-                              {stageData.detailed_characteristics.team_member_behaviors && (
-                                <div className="mb-3">
-                                  <h5 className="text-cyan-400 text-sm font-semibold mb-1">Team Member Behaviors:</h5>
-                                  <ul className="list-disc list-inside text-slate-300 text-sm space-y-1 ml-4">
-                                    {stageData.detailed_characteristics.team_member_behaviors.map((behavior, bIdx) => (
-                                      <li key={bIdx}>{behavior}</li>
-                                    ))}
-                                  </ul>
-                                </div>
-                              )}
-                              {stageData.detailed_characteristics.team_dynamics && (
-                                <div className="mb-3">
-                                  <h5 className="text-cyan-400 text-sm font-semibold mb-1">Team Dynamics:</h5>
-                                  <ul className="list-disc list-inside text-slate-300 text-sm space-y-1 ml-4">
-                                    {stageData.detailed_characteristics.team_dynamics.map((dynamic, dIdx) => (
-                                      <li key={dIdx}>{dynamic}</li>
-                                    ))}
-                                  </ul>
-                                </div>
-                              )}
-                            </div>
-                          )}
+                                {stageData.detailed_characteristics && (
+                                  <div>
+                                    <h4 className="text-white font-semibold mb-2">Detailed Characteristics:</h4>
+                                    {stageData.detailed_characteristics.team_member_behaviors && (
+                                      <div className="mb-3">
+                                        <h5 className="text-cyan-400 text-sm font-semibold mb-1">Team Member Behaviors:</h5>
+                                        <ul className="list-disc list-inside text-slate-300 text-sm space-y-1 ml-4">
+                                          {stageData.detailed_characteristics.team_member_behaviors.map((behavior, bIdx) => (
+                                            <li key={bIdx}>{behavior}</li>
+                                          ))}
+                                        </ul>
+                                      </div>
+                                    )}
+                                    {stageData.detailed_characteristics.team_dynamics && (
+                                      <div className="mb-3">
+                                        <h5 className="text-cyan-400 text-sm font-semibold mb-1">Team Dynamics:</h5>
+                                        <ul className="list-disc list-inside text-slate-300 text-sm space-y-1 ml-4">
+                                          {stageData.detailed_characteristics.team_dynamics.map((dynamic, dIdx) => (
+                                            <li key={dIdx}>{dynamic}</li>
+                                          ))}
+                                        </ul>
+                                      </div>
+                                    )}
+                                  </div>
+                                )}
 
-                          {stageData.pm_leadership_actions && (
-                            <div className="mb-4">
-                              <h4 className="text-white font-semibold mb-2">PM Leadership Actions:</h4>
-                              <p className="text-slate-300 text-sm mb-2">{stageData.pm_leadership_actions.primary_style}</p>
-                              {stageData.pm_leadership_actions.specific_actions && Object.entries(stageData.pm_leadership_actions.specific_actions).map(([key, actions]) => (
-                                <div key={key} className="mb-3 ml-4">
-                                  <h5 className="text-cyan-400 text-sm font-semibold mb-1 capitalize">{key.replace(/_/g, ' ')}:</h5>
-                                  <ul className="list-disc list-inside text-slate-300 text-sm space-y-1">
-                                    {Array.isArray(actions) && actions.map((action, aIdx) => (
-                                      <li key={aIdx}>{action}</li>
+                                {stageData.pm_leadership_actions && (
+                                  <div>
+                                    <h4 className="text-white font-semibold mb-2">PM Leadership Actions:</h4>
+                                    <p className="text-slate-300 text-sm mb-2">{stageData.pm_leadership_actions.primary_style}</p>
+                                    {stageData.pm_leadership_actions.specific_actions && Object.entries(stageData.pm_leadership_actions.specific_actions).map(([key, actions]) => (
+                                      <div key={key} className="mb-3 ml-4">
+                                        <h5 className="text-cyan-400 text-sm font-semibold mb-1 capitalize">{key.replace(/_/g, ' ')}:</h5>
+                                        <ul className="list-disc list-inside text-slate-300 text-sm space-y-1">
+                                          {Array.isArray(actions) && actions.map((action, aIdx) => (
+                                            <li key={aIdx}>{action}</li>
+                                          ))}
+                                        </ul>
+                                      </div>
                                     ))}
-                                  </ul>
-                                </div>
-                              ))}
-                            </div>
-                          )}
+                                  </div>
+                                )}
 
-                          {stageData.duration_and_success_indicators && (
-                            <div className="mb-4">
-                              <h4 className="text-white font-semibold mb-2">Duration & Success Indicators:</h4>
-                              <p className="text-slate-300 text-sm"><span className="font-semibold text-cyan-400">Typical Duration:</span> {stageData.duration_and_success_indicators.typical_duration || stageData.duration_and_success_indicators.duration}</p>
-                            </div>
-                          )}
-                        </div>
-                      ))}
+                                {stageData.duration_and_success_indicators && (
+                                  <div>
+                                    <h4 className="text-white font-semibold mb-2">Duration & Success Indicators:</h4>
+                                    <p className="text-slate-300 text-sm"><span className="font-semibold text-cyan-400">Typical Duration:</span> {stageData.duration_and_success_indicators.typical_duration || stageData.duration_and_success_indicators.duration}</p>
+                                  </div>
+                                )}
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })}
                     </div>
                   )}
                 </div>
@@ -3833,76 +5214,95 @@ const PMPApp = () => {
                   )}
 
                   {currentTask.learn.deep_dive.leadership_styles.styles && (
-                    <div className="space-y-6 mt-6">
-                      {currentTask.learn.deep_dive.leadership_styles.styles.map((styleData, idx) => (
-                        <div key={idx} className="border-l-4 border-emerald-400/50 pl-4 bg-white/[0.02] p-4 rounded">
-                          <h3 className="executive-font text-xl font-semibold text-white mb-2">{styleData.style}</h3>
-                          {styleData.tagline && (
-                            <p className="text-cyan-400 text-sm italic mb-3">"{styleData.tagline}"</p>
-                          )}
-                          {styleData.description && (
-                            <p className="text-slate-300 mb-4">{styleData.description}</p>
-                          )}
+                    <div className="space-y-4 mt-6">
+                      {currentTask.learn.deep_dive.leadership_styles.styles.map((styleData, idx) => {
+                        const isExpanded = expandedStyles[idx] !== undefined ? expandedStyles[idx] : false;
+                        return (
+                          <div key={idx} className="border-l-4 border-emerald-400/50 bg-white/[0.02] rounded overflow-hidden">
+                            <button
+                              onClick={() => setExpandedStyles(prev => ({ ...prev, [idx]: !isExpanded }))}
+                              className="w-full flex items-center justify-between p-4 hover:bg-white/[0.05] transition-colors text-left"
+                            >
+                              <div>
+                                <h3 className="executive-font text-xl font-semibold text-white">{styleData.style}</h3>
+                                {styleData.tagline && !isExpanded && (
+                                  <p className="text-cyan-400 text-sm italic mt-1">"{styleData.tagline}"</p>
+                                )}
+                              </div>
+                              <span className="text-emerald-400 text-2xl ml-4">{isExpanded ? '−' : '+'}</span>
+                            </button>
+                            
+                            {isExpanded && (
+                              <div className="px-4 pb-4 space-y-4">
+                                {styleData.tagline && (
+                                  <p className="text-cyan-400 text-sm italic pt-2">"{styleData.tagline}"</p>
+                                )}
+                                {styleData.description && (
+                                  <p className="text-slate-300">{styleData.description}</p>
+                                )}
 
-                          {styleData.when_to_use && (
-                            <div className="mb-4">
-                              <h4 className="text-white font-semibold mb-2">When to Use:</h4>
-                              {Object.entries(styleData.when_to_use).map(([key, values]) => (
-                                <div key={key} className="mb-2">
-                                  <h5 className="text-cyan-400 text-sm font-semibold mb-1 capitalize">{key.replace(/_/g, ' ')}:</h5>
-                                  <ul className="list-disc list-inside text-slate-300 text-sm space-y-1 ml-4">
-                                    {Array.isArray(values) && values.map((value, vIdx) => (
-                                      <li key={vIdx}>{value}</li>
+                                {styleData.when_to_use && (
+                                  <div>
+                                    <h4 className="text-white font-semibold mb-2">When to Use:</h4>
+                                    {Object.entries(styleData.when_to_use).map(([key, values]) => (
+                                      <div key={key} className="mb-2">
+                                        <h5 className="text-cyan-400 text-sm font-semibold mb-1 capitalize">{key.replace(/_/g, ' ')}:</h5>
+                                        <ul className="list-disc list-inside text-slate-300 text-sm space-y-1 ml-4">
+                                          {Array.isArray(values) && values.map((value, vIdx) => (
+                                            <li key={vIdx}>{value}</li>
+                                          ))}
+                                        </ul>
+                                      </div>
                                     ))}
-                                  </ul>
-                                </div>
-                              ))}
-                            </div>
-                          )}
+                                  </div>
+                                )}
 
-                          {styleData.characteristics && (
-                            <div className="mb-4">
-                              <h4 className="text-white font-semibold mb-2">Characteristics:</h4>
-                              {styleData.characteristics.how_it_looks && (
-                                <div className="mb-3">
-                                  <h5 className="text-cyan-400 text-sm font-semibold mb-1">How It Looks:</h5>
-                                  <ul className="list-disc list-inside text-slate-300 text-sm space-y-1 ml-4">
-                                    {styleData.characteristics.how_it_looks.map((item, itemIdx) => (
-                                      <li key={itemIdx}>{item}</li>
+                                {styleData.characteristics && (
+                                  <div>
+                                    <h4 className="text-white font-semibold mb-2">Characteristics:</h4>
+                                    {styleData.characteristics.how_it_looks && (
+                                      <div className="mb-3">
+                                        <h5 className="text-cyan-400 text-sm font-semibold mb-1">How It Looks:</h5>
+                                        <ul className="list-disc list-inside text-slate-300 text-sm space-y-1 ml-4">
+                                          {styleData.characteristics.how_it_looks.map((item, itemIdx) => (
+                                            <li key={itemIdx}>{item}</li>
+                                          ))}
+                                        </ul>
+                                      </div>
+                                    )}
+                                  </div>
+                                )}
+
+                                {styleData.strengths && (
+                                  <div>
+                                    <h4 className="text-white font-semibold mb-2">Strengths:</h4>
+                                    <ul className="list-disc list-inside text-slate-300 text-sm space-y-1">
+                                      {styleData.strengths.map((strength, sIdx) => (
+                                        <li key={sIdx}>{strength}</li>
+                                      ))}
+                                    </ul>
+                                  </div>
+                                )}
+
+                                {styleData.common_mistakes && Array.isArray(styleData.common_mistakes) && styleData.common_mistakes.length > 0 && (
+                                  <div>
+                                    <h4 className="text-white font-semibold mb-2">Common Mistakes:</h4>
+                                    {styleData.common_mistakes.map((mistake, mIdx) => (
+                                      <div key={mIdx} className="mb-2 border-l-2 border-rose-500/50 pl-3">
+                                        <h5 className="text-rose-400 text-sm font-semibold">{mistake.mistake || mistake.mistake}:</h5>
+                                        <p className="text-slate-400 text-xs">{mistake.description || mistake.problem}</p>
+                                        {mistake.consequence && (
+                                          <p className="text-slate-400 text-xs mt-1"><span className="font-semibold">Consequence:</span> {mistake.consequence}</p>
+                                        )}
+                                      </div>
                                     ))}
-                                  </ul>
-                                </div>
-                              )}
-                            </div>
-                          )}
-
-                          {styleData.strengths && (
-                            <div className="mb-4">
-                              <h4 className="text-white font-semibold mb-2">Strengths:</h4>
-                              <ul className="list-disc list-inside text-slate-300 text-sm space-y-1">
-                                {styleData.strengths.map((strength, sIdx) => (
-                                  <li key={sIdx}>{strength}</li>
-                                ))}
-                              </ul>
-                            </div>
-                          )}
-
-                          {styleData.common_mistakes && Array.isArray(styleData.common_mistakes) && styleData.common_mistakes.length > 0 && (
-                            <div className="mb-4">
-                              <h4 className="text-white font-semibold mb-2">Common Mistakes:</h4>
-                              {styleData.common_mistakes.map((mistake, mIdx) => (
-                                <div key={mIdx} className="mb-2 border-l-2 border-rose-500/50 pl-3">
-                                  <h5 className="text-rose-400 text-sm font-semibold">{mistake.mistake || mistake.mistake}:</h5>
-                                  <p className="text-slate-400 text-xs">{mistake.description || mistake.problem}</p>
-                                  {mistake.consequence && (
-                                    <p className="text-slate-400 text-xs mt-1"><span className="font-semibold">Consequence:</span> {mistake.consequence}</p>
-                                  )}
-                                </div>
-                              ))}
-                            </div>
-                          )}
-                        </div>
-                      ))}
+                                  </div>
+                                )}
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })}
                     </div>
                   )}
                 </div>
@@ -4106,6 +5506,17 @@ const PMPApp = () => {
                   </div>
                 </div>
               )}
+
+              {/* Navigation */}
+              <div className="flex justify-between items-center mt-8 pt-8 border-t border-white/10">
+                <button
+                  onClick={() => setSubView('pmp-application')}
+                  className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors executive-font flex items-center gap-2"
+                >
+                  ← Previous: PMP Application
+                </button>
+                <span className="text-slate-500 text-sm">End of Content</span>
+              </div>
             </div>
           )}
       </div>
@@ -4113,15 +5524,13 @@ const PMPApp = () => {
     </div>
   );
 
-  // Fallback return - should never reach here if all views are properly handled  
+  // Fallback return - should never reach here if all views are properly handled
   return (
     <div className="p-20 text-center">
       <h1 className="executive-font text-4xl text-white animate-pulse font-semibold">Initializing PMP Prep Center...</h1>
       <GlobalNavFooter />
     </div>
   );
-  }
-  }
 };
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
