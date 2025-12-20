@@ -4115,6 +4115,8 @@ const PMPApp = () => {
       <GlobalNavFooter />
     </div>
   );
+  }
+  }
 };
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
