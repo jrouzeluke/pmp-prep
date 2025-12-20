@@ -4108,6 +4108,7 @@ const PMPApp = () => {
       <GlobalNavFooter />
     </div>
   );
+  }
 
   return (
     <div className="p-20 text-center">
