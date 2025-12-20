@@ -90,6 +90,7 @@ const PMPApp = () => {
         }
         
         const data = await response.json();
+        console.log("Task data loaded successfully", Object.keys(data));
         setTaskDatabase(data);
       } catch (err) {
         if (timeoutId) clearTimeout(timeoutId);
@@ -97,6 +98,7 @@ const PMPApp = () => {
           console.error("Data Load Failure", err);
         }
         // Don't block the app - set empty database so app can still render
+        console.log("Setting empty database due to error");
         setTaskDatabase({});
       }
     };
@@ -4106,8 +4108,6 @@ const PMPApp = () => {
       <GlobalNavFooter />
     </div>
   );
-  }
-  }
 
   return (
     <div className="p-20 text-center">
