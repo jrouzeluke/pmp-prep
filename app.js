@@ -4119,10 +4119,9 @@ const PMPApp = () => {
       <GlobalNavFooter />
     </div>
   );
-  }
-  }
 
   console.log("FALLBACK: No view condition matched! Current view is:", view);
+  console.log("All view checks completed, showing fallback");
   return (
     <div className="p-20 text-center">
       <h1 className="executive-font text-4xl text-white animate-pulse font-semibold">Initializing PMP Prep Center...</h1>
@@ -4130,6 +4129,8 @@ const PMPApp = () => {
       <GlobalNavFooter />
     </div>
   );
+  }
+  }
 };
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
