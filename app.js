@@ -174,11 +174,16 @@ const PMPApp = () => {
 
 
   // Show loading only if taskDatabase hasn't been initialized yet (null, not empty object)
-  if (taskDatabase === null) return (
-    <div className="text-center p-20 animate-pulse">
-      <h1 className="executive-font text-4xl text-white font-semibold tracking-tight">Initializing PMP Prep Center...</h1>
-    </div>
-  );
+  if (taskDatabase === null) {
+    console.log("taskDatabase is null, showing loading screen");
+    return (
+      <div className="text-center p-20 animate-pulse">
+        <h1 className="executive-font text-4xl text-white font-semibold tracking-tight">Initializing PMP Prep Center...</h1>
+      </div>
+    );
+  }
+
+  console.log("Current view:", view, "taskDatabase keys:", Object.keys(taskDatabase || {}));
 
   const currentTask = (taskDatabase && taskDatabase[selectedTask]) || { learn: {}, practice: { checklist: [], reflex_prompts: [], stress_test: [] } };
 
@@ -4108,6 +4113,8 @@ const PMPApp = () => {
       <GlobalNavFooter />
     </div>
   );
+  }
+  }
 
   return (
     <div className="p-20 text-center">
@@ -4115,8 +4122,6 @@ const PMPApp = () => {
       <GlobalNavFooter />
     </div>
   );
-  }
-  }
 };
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
