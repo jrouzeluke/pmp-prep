@@ -4035,25 +4035,1361 @@
   "Support Performance": {
     "learn": {
       "overview": {
-        "definition": "Evaluating team performance against KPIs and providing necessary support.",
-        "module_introduction": "",
-        "what_youll_learn": [],
-        "key_learning_objectives": [],
-        "why_this_matters": "",
-        "exam_triggers": []
+        "definition": "Appraise team member performance against key performance indicators, support and recognize team member growth and development, determine appropriate feedback approach, and verify performance improvements.",
+        "module_introduction": "Performance support is continuous, not annual. Project managers create environments where feedback flows freely, recognition happens often, and development opportunities are provided regularly.",
+        "eco_enablers": [
+          "Appraise team member performance against key performance indicators",
+          "Support and recognize team member growth and development",
+          "Determine appropriate feedback approach",
+          "Verify performance improvements"
+        ],
+        "core_principle": "Performance support is continuous, not annual. Project managers create environments where feedback flows freely, recognition happens often, and development opportunities are provided regularly.",
+        "key_frameworks": {
+          "sbi_model": {
+            "title": "SBI Feedback Model",
+            "s": "Situation (When/Where)",
+            "b": "Behavior (Observable action)",
+            "i": "Impact (Effect on project/team)"
+          },
+          "recognition_types": {
+            "title": "Recognition Types",
+            "formal": "Awards, bonuses, promotions",
+            "informal": "Verbal praise, thank you notes",
+            "public": "Team meetings, announcements",
+            "private": "1-on-1 conversations, personal notes"
+          },
+          "performance_continuum": {
+            "title": "Performance Continuum",
+            "stages": "Coaching → Mentoring → Counseling → Corrective Action"
+          }
+        },
+        "exam_triggers": [
+          "Team member underperforming",
+          "Performance review needed",
+          "Recognition opportunity identified",
+          "Skill gap discovered",
+          "Team productivity declining",
+          "Feedback approach question",
+          "Development plan request"
+        ],
+        "performance_management_framework": {
+          "measure_performance": {
+            "when": "Throughout project lifecycle",
+            "action": "Track against clear, objective criteria",
+            "metrics": "Quality, timeliness, collaboration, technical skill",
+            "key": "Focus on outcomes, not just activities"
+          },
+          "provide_feedback": {
+            "when": "Continuously, not just at reviews",
+            "action": "Timely, specific, behavioral using SBI",
+            "approach": "Regular 1-on-1s, real-time coaching",
+            "key": "Balance positive and constructive"
+          },
+          "coach_and_develop": {
+            "when": "Skill gaps or growth opportunities identified",
+            "action": "Create development plans, provide resources",
+            "focus": "Building capabilities, not just fixing problems",
+            "key": "Match development to career aspirations"
+          },
+          "recognize_and_reward": {
+            "when": "Good performance, extra effort, improvement",
+            "action": "Public recognition, private appreciation",
+            "types": "Formal awards, informal thanks, opportunities",
+            "key": "Timely, specific, authentic"
+          },
+          "address_underperformance": {
+            "when": "Performance consistently below expectations",
+            "action": "Private conversation, improvement plan, follow-up",
+            "process": "Document, set clear expectations, monitor",
+            "key": "Seek root causes before assuming fault"
+          }
+        },
+        "sbi_examples": {
+          "good_example": {
+            "s": "In yesterday's sprint review...",
+            "b": "...you presented the demo without testing it first...",
+            "i": "...which caused the feature to fail in front of stakeholders, damaging their confidence in our team."
+          },
+          "bad_example": {
+            "text": "You're always unprepared for demos.",
+            "problem": "Vague, judgmental, not actionable"
+          },
+          "good_positive": {
+            "s": "During this morning's standup...",
+            "b": "...you proactively offered to help Alex with the API integration...",
+            "i": "...which allowed us to stay on track for the sprint goal. The team really appreciated your collaboration."
+          }
+        },
+        "recognition_best_practices": {
+          "make_timely": {
+            "when": "Immediately after good performance",
+            "why": "Reinforces behavior, shows attention",
+            "how": "Real-time praise in team meetings or Slack",
+            "avoid": "Waiting for formal reviews"
+          },
+          "be_specific": {
+            "when": "Always",
+            "why": "Shows you notice details, more meaningful",
+            "how": "Great job resolving that API issue in 2 hours vs Good work",
+            "avoid": "Generic praise without specifics"
+          },
+          "match_preference": {
+            "when": "Recognizing individuals",
+            "why": "Some prefer public, others private",
+            "how": "Ask team members their preference upfront",
+            "avoid": "Assuming everyone wants public recognition"
+          },
+          "recognize_effort": {
+            "when": "Team tries hard despite challenges",
+            "why": "Encourages continuous improvement",
+            "how": "Acknowledge problem-solving attempts, learning",
+            "avoid": "Only recognizing successful outcomes"
+          },
+          "use_multiple_forms": {
+            "when": "Ongoing",
+            "why": "Different people value different rewards",
+            "how": "Praise, bonuses, development opportunities, flexibility",
+            "avoid": "One-size-fits-all approach"
+          }
+        },
+        "quick_scenarios": [
+          {
+            "scenario": "Team member consistently delivers late, low-quality work",
+            "wrong_answer": "Immediately escalate to functional manager",
+            "right_answer": "Private 1-on-1 to understand root cause, create improvement plan",
+            "why": "PM should address performance issues directly before escalating"
+          },
+          {
+            "scenario": "Developer stays late to fix critical production bug",
+            "wrong_answer": "Say nothing, assume they know you appreciate it",
+            "right_answer": "Thank them immediately, recognize publicly in team meeting",
+            "why": "Good performance should be recognized promptly and specifically"
+          },
+          {
+            "scenario": "Team member asks for feedback on their performance",
+            "wrong_answer": "Everything's fine with no specifics",
+            "right_answer": "Specific examples of strengths and areas for growth using SBI",
+            "why": "Vague feedback provides no actionable information"
+          },
+          {
+            "scenario": "Junior developer improving rapidly but still has skill gaps",
+            "wrong_answer": "Focus only on what's still wrong",
+            "right_answer": "Recognize progress, create development plan for gaps",
+            "why": "Recognize improvement while supporting continued growth"
+          },
+          {
+            "scenario": "Team member's personal issue affecting work performance",
+            "wrong_answer": "Ignore it to respect privacy",
+            "right_answer": "Private conversation offering support and flexibility",
+            "why": "Show care while maintaining performance expectations"
+          }
+        ],
+        "key_exam_principles": {
+          "feedback_should_be": [
+            "Timely (immediate, not delayed)",
+            "Specific (concrete examples)",
+            "Behavioral (actions, not personality)",
+            "Balanced (strengths and gaps)",
+            "Actionable (clear next steps)"
+          ],
+          "recognition_principles": [
+            "Public praise for good work",
+            "Private criticism for problems",
+            "Match individual preferences",
+            "Be authentic and specific",
+            "Recognize effort AND results"
+          ],
+          "address_underperformance": [
+            "Start with private conversation",
+            "Seek to understand root causes",
+            "Create clear improvement plan",
+            "Document conversations",
+            "Escalate only after coaching attempts"
+          ],
+          "development_focus": [
+            "Identify skill gaps collaboratively",
+            "Create individualized development plans",
+            "Provide resources and opportunities",
+            "Regular check-ins on progress",
+            "Celebrate improvements"
+          ]
+        },
+        "common_wrong_answers": [
+          "Ignoring underperformance hoping it resolves",
+          "Generic, vague recognition",
+          "Public criticism of individuals",
+          "Focusing only on negatives",
+          "Escalating before coaching",
+          "Assuming people know you appreciate them",
+          "Waiting for annual reviews to give feedback",
+          "Making feedback about personality, not behavior"
+        ]
       },
       "pmp_application": {
-        "connection_to_pmp": "",
-        "domain": "People (42% of exam)",
-        "related_tasks": [],
-        "how_module_supports_pmp_application": [],
-        "application_tips": []
+        "how_this_task_appears_on_exam": "The PMP exam tests your ability to provide appropriate feedback, recognize performance, and address underperformance. Questions focus on situational judgment—choosing the RIGHT approach for the situation.",
+        "question_patterns": [
+          {
+            "pattern": "Feedback Approach Selection",
+            "format": "Scenario describes performance issue, asks what PM should do",
+            "key_words": "underperforming, quality issues, missed deadlines",
+            "example": "Team member has missed last 3 sprint commitments. What should PM do FIRST?"
+          },
+          {
+            "pattern": "Recognition Timing and Method",
+            "format": "Situation given, asks how to recognize performance",
+            "key_words": "went above and beyond, exceptional work, saved the project",
+            "example": "Developer worked weekend to fix critical bug. Best way to recognize?"
+          },
+          {
+            "pattern": "Performance Improvement",
+            "format": "Performance problem identified, asks how to address",
+            "key_words": "declining performance, skill gap, development needed",
+            "example": "Previously strong performer now struggling. What should PM do?"
+          },
+          {
+            "pattern": "Escalation Decisions",
+            "format": "Performance issue persists, asks about escalation",
+            "key_words": "improvement plan failed, continued underperformance, repeated issues",
+            "example": "After coaching, team member still underperforming. Next step?"
+          },
+          {
+            "pattern": "Metrics and Measurement",
+            "format": "How to measure or assess performance",
+            "key_words": "KPI, metrics, measure success, evaluate",
+            "example": "How should PM track team member performance?"
+          }
+        ],
+        "sample_questions": [
+          {
+            "question": "During a code review, you notice a developer made the same mistake they made last week despite your previous feedback. What should you do?",
+            "options": [
+              "Document the issue and add it to their annual review",
+              "Discuss with their functional manager about the recurring problem",
+              "Have a private conversation immediately to understand why the issue recurred",
+              "Send an email detailing the mistake for documentation purposes"
+            ],
+            "correct": "C",
+            "why_correct": "Feedback should be timely and delivered privately for issues. Understanding why addresses root cause—maybe the previous feedback wasn't clear, they need training, or there's a systemic issue.",
+            "why_others_wrong": {
+              "A": "Waiting for annual review is too late; feedback loses impact",
+              "B": "Escalating before direct conversation is premature",
+              "D": "Email is impersonal and doesn't allow for dialogue"
+            }
+          },
+          {
+            "question": "A team member volunteered to mentor a struggling colleague, spending extra hours helping them improve. The mentoring was successful—the struggling colleague is now performing well. How should you recognize the mentor?",
+            "options": [
+              "Include it in their next performance review",
+              "Thank them privately and ask if they'd like public recognition",
+              "Give them a bonus immediately",
+              "Publicly praise them in the next team meeting"
+            ],
+            "correct": "B",
+            "why_correct": "Recognition should be timely (not wait for review) and match the person's preference. Some people prefer public recognition; others find it uncomfortable. Asking respects their preference.",
+            "why_others_wrong": {
+              "A": "Too delayed; loses impact",
+              "C": "PM may not have authority for bonuses; assumes money is the motivator",
+              "D": "Doesn't consider their preference; may embarrass them"
+            }
+          },
+          {
+            "question": "A developer who was previously a strong performer has been missing deadlines and producing lower quality work for the past 3 weeks. What should the PM do FIRST?",
+            "options": [
+              "Place them on a formal performance improvement plan",
+              "Reassign their work to other team members to maintain project schedule",
+              "Have a private conversation to understand what's happening",
+              "Notify their functional manager about the performance decline"
+            ],
+            "correct": "C",
+            "why_correct": "Always investigate before acting. The decline could be due to personal issues, unclear requirements, skill gaps on new technology, or burnout. Understanding the cause determines the right solution.",
+            "why_others_wrong": {
+              "A": "PIP is premature without understanding the cause",
+              "B": "Doesn't address the issue; may demotivate them further",
+              "D": "Escalating before having a direct conversation is premature"
+            }
+          },
+          {
+            "question": "You need to give feedback to a team member whose code consistently has bugs that slip through to production. What's the BEST approach?",
+            "options": [
+              "You need to be more careful. Your bugs are causing problems.",
+              "In the last 3 sprints, we've had 12 bugs from your code reach production, which required 40 hours of emergency fixes and impacted customer trust. Let's discuss how we can improve quality.",
+              "Everyone makes mistakes, don't worry about it.",
+              "I'm putting you on a quality improvement plan effective immediately."
+            ],
+            "correct": "B",
+            "why_correct": "This uses SBI model—Situation (last 3 sprints), Behavior (12 bugs reached production), Impact (40 hours fixes, customer trust). It's specific, factual, and opens dialogue for improvement.",
+            "why_others_wrong": {
+              "A": "Vague, judgmental (more careful), not actionable",
+              "C": "Avoids the issue; doesn't help them improve",
+              "D": "Punitive without dialogue; doesn't seek understanding"
+            }
+          },
+          {
+            "question": "The project team just delivered a critical milestone ahead of schedule. The success was due to collaborative effort, though one team member contributed exceptionally. How should you handle recognition?",
+            "options": [
+              "Recognize only the exceptional individual to motivate others",
+              "Recognize the team as a whole, then separately acknowledge the exceptional contributor",
+              "Recognize only the team to avoid creating competition",
+              "Let the team self-select who should be recognized"
+            ],
+            "correct": "B",
+            "why_correct": "Both team and individual contributions deserve recognition. Recognizing only the team ignores exceptional effort; recognizing only the individual can damage team dynamics.",
+            "why_others_wrong": {
+              "A": "Undermines team collaboration; creates unhealthy competition",
+              "C": "Fails to recognize exceptional individual contribution",
+              "D": "May create awkwardness; PM responsibility to recognize"
+            }
+          }
+        ],
+        "exam_strategy": {
+          "do": [
+            "Investigate root causes before acting",
+            "Give feedback privately and promptly",
+            "Use specific, behavioral feedback (SBI)",
+            "Recognize both team and individual contributions",
+            "Match recognition to individual preferences",
+            "Address issues directly before escalating",
+            "Focus on development, not punishment"
+          ],
+          "dont": [
+            "Wait for annual reviews to give feedback",
+            "Make feedback personal or judgmental",
+            "Publicly criticize individuals",
+            "Escalate before direct conversation",
+            "Ignore underperformance",
+            "Use one-size-fits-all recognition",
+            "Assume everyone wants the same type of recognition"
+          ],
+          "key_phrases_correct": [
+            "Have a private conversation...",
+            "Understand the root cause...",
+            "Provide specific feedback...",
+            "Recognize promptly...",
+            "Create development plan...",
+            "Coach before escalating..."
+          ],
+          "key_phrases_wrong": [
+            "Ignore the issue...",
+            "Wait for formal review...",
+            "Escalate immediately...",
+            "Document for later...",
+            "Publicly address...",
+            "Assume they know..."
+          ]
+        }
       },
       "deep_dive": {
-        "foundational_concept": ""
+        "introduction": "Supporting team performance is one of the most nuanced competencies for project managers. Unlike functional managers who have formal authority over team members' careers, project managers must influence performance through feedback, coaching, recognition, and creating environments where people can excel. This deep dive explores the frameworks, techniques, and best practices that enable project managers to maximize team performance.",
+        "performance_support_framework": {
+          "understanding_your_role": "Project managers typically don't have formal authority over team members' performance reviews, compensation, or career progression. This creates a unique challenge: how do you improve performance without traditional management levers?",
+          "pm_performance_toolkit": [
+            "Feedback - Regular, specific, actionable input on performance",
+            "Recognition - Acknowledging and celebrating contributions",
+            "Development - Providing growth opportunities",
+            "Coaching - Helping team members improve",
+            "Environment - Creating conditions for success",
+            "Advocacy - Championing team members with functional managers"
+          ],
+          "performance_equation": {
+            "formula": "Performance = Ability × Motivation × Opportunity",
+            "ability": "Skills, knowledge, competencies",
+            "motivation": "Willingness, engagement, drive",
+            "opportunity": "Resources, environment, support",
+            "diagnosis_table": [
+              {
+                "factor": "Ability Gap",
+                "symptoms": "Makes mistakes, asks many questions",
+                "intervention": "Training, mentoring, pair work"
+              },
+              {
+                "factor": "Motivation Issue",
+                "symptoms": "Disengaged, minimal effort, late",
+                "intervention": "Recognition, meaningful work, address concerns"
+              },
+              {
+                "factor": "Opportunity Blocker",
+                "symptoms": "Complains about obstacles, waits often",
+                "intervention": "Remove impediments, provide resources"
+              }
+            ]
+          }
+        },
+        "sbi_feedback_model": {
+          "what_is_sbi": "SBI (Situation-Behavior-Impact) is the gold standard for delivering feedback. It keeps feedback objective, specific, and actionable.",
+          "s_situation": {
+            "description": "When and where did the behavior occur?",
+            "guidance": "Be specific about time and place. Creates shared context."
+          },
+          "b_behavior": {
+            "description": "What specific, observable behavior occurred?",
+            "guidance": "Focus on actions, not personality. Avoid interpretations or judgments."
+          },
+          "i_impact": {
+            "description": "What was the effect of the behavior?",
+            "guidance": "On the project, team, stakeholders, customer. Connect behavior to outcomes."
+          },
+          "examples": {
+            "constructive": {
+              "bad": "You're always unprepared for meetings.",
+              "good": {
+                "s": "In yesterday's client demo...",
+                "b": "...you presented the feature without testing it first, and it crashed twice...",
+                "i": "...which made the client question our quality practices and delayed their sign-off decision by a week."
+              }
+            },
+            "positive": {
+              "bad": "Great job on the project.",
+              "good": {
+                "s": "During last week's production incident...",
+                "b": "...you immediately took ownership, coordinated the response team, and communicated updates every 30 minutes to stakeholders...",
+                "i": "...which kept everyone calm, reduced resolution time by 2 hours, and the client specifically praised our incident response."
+              }
+            }
+          },
+          "delivery_tips": [
+            "Prepare: Write out your SBI before the conversation",
+            "Private Setting: Constructive feedback always in private",
+            "Timely: Deliver as close to the event as possible",
+            "Two-Way: After delivering SBI, ask for their perspective",
+            "Action-Oriented: End with What can we do differently next time?"
+          ]
+        },
+        "recognition_strategies": {
+          "why_recognition_matters": [
+            "69% of employees would work harder if better recognized",
+            "Recognition is the #1 driver of great work",
+            "Lack of recognition is a top reason people leave jobs"
+          ],
+          "types_of_recognition": {
+            "by_formality": [
+              {
+                "type": "Formal",
+                "examples": "Awards, bonuses, promotions, certificates",
+                "best_for": "Major achievements, milestone completions"
+              },
+              {
+                "type": "Informal",
+                "examples": "Verbal praise, thank-you notes, shout-outs",
+                "best_for": "Daily contributions, effort, improvement"
+              }
+            ],
+            "by_visibility": [
+              {
+                "type": "Public",
+                "examples": "Team meeting recognition, company announcements",
+                "best_for": "People who prefer visibility, team wins"
+              },
+              {
+                "type": "Private",
+                "examples": "1-on-1 praise, personal notes",
+                "best_for": "Introverts, personal achievements"
+              }
+            ]
+          },
+          "taps_model": {
+            "t": "Timely - Recognize as close to the event as possible",
+            "a": "Authentic - Be genuine; people detect fake praise",
+            "p": "Personal - Match recognition to individual preferences",
+            "s": "Specific - State exactly what they did and why it mattered"
+          },
+          "best_practices": {
+            "ask_about_preferences": [
+              "How do you prefer to receive recognition?",
+              "Are you comfortable with public recognition?",
+              "What types of recognition are most meaningful to you?"
+            ],
+            "recognize_different_things": [
+              "Results - Achieving goals, deliverables, outcomes",
+              "Effort - Hard work, extra hours, persistence",
+              "Improvement - Growth, learning, skill development",
+              "Behaviors - Collaboration, helping others, initiative",
+              "Ideas - Innovation, problem-solving, suggestions"
+            ],
+            "avoid_mistakes": [
+              "Generic praise (Good job) without specifics",
+              "Recognizing only top performers (demotivates others)",
+              "Public recognition for those who prefer private",
+              "Delayed recognition (loses impact)",
+              "Recognizing only results, not effort"
+            ]
+          }
+        },
+        "addressing_underperformance": {
+          "the_process": {
+            "step_1": {
+              "title": "Identify the Issue",
+              "questions": [
+                "What specific behaviors or outcomes are below expectations?",
+                "How does it compare to past performance or peers?",
+                "Is it consistent or situational?"
+              ]
+            },
+            "step_2": {
+              "title": "Investigate Root Causes",
+              "explore": [
+                "Personal issues (health, family, stress)",
+                "Work issues (unclear expectations, inadequate resources)",
+                "Skill gaps (new technology, changed requirements)",
+                "Motivation issues (disengagement, burnout, conflict)",
+                "Systemic issues (process problems, dependencies)"
+              ]
+            },
+            "step_3": {
+              "title": "Have the Conversation",
+              "structure": [
+                "Open: I want to discuss some observations and hear your perspective.",
+                "Share: Use SBI to describe specific performance gaps",
+                "Listen: What's been happening from your perspective?",
+                "Explore: What do you think is contributing to this?",
+                "Plan: What can we do to address this together?",
+                "Commit: Let's agree on specific actions and check in again on [date]."
+              ]
+            },
+            "step_4": {
+              "title": "Create Improvement Plan",
+              "components": [
+                "Specific, measurable goals",
+                "Timeline for improvement",
+                "Resources and support provided",
+                "Check-in frequency",
+                "Consequences if no improvement (be honest)"
+              ]
+            },
+            "step_5": {
+              "title": "Follow Up",
+              "actions": [
+                "Monitor progress against plan",
+                "Provide feedback during improvement period",
+                "Recognize improvements",
+                "Document conversations"
+              ]
+            },
+            "step_6": {
+              "title": "Escalate if Necessary",
+              "actions": [
+                "Document all coaching attempts",
+                "Involve functional manager",
+                "Consider reassignment or removal from project"
+              ]
+            }
+          },
+          "coaching_vs_corrective": {
+            "coaching": {
+              "when": "First Response",
+              "characteristics": [
+                "Collaborative approach",
+                "Focus on development",
+                "Future-oriented",
+                "Trust-building"
+              ]
+            },
+            "counseling": {
+              "when": "Escalation",
+              "characteristics": [
+                "More directive",
+                "Focus on specific issues",
+                "Sets clear expectations",
+                "Documents concerns"
+              ]
+            },
+            "corrective_action": {
+              "when": "Last Resort",
+              "characteristics": [
+                "Formal process",
+                "Clear consequences",
+                "Documentation required",
+                "HR involvement"
+              ]
+            }
+          },
+          "conversation_example": {
+            "what_to_say": "Alex, I want to have a candid conversation with you. Over the past three sprints, I've noticed that the features you've delivered have required significant rework—averaging about 40% revision after code review. This is causing delays for the team and extra work for reviewers. I want to understand what's happening from your perspective. Is there something going on that I should know about? Are there obstacles or gaps I can help address? What I'd like is for us to work together on a plan to get things back on track. I believe you can do great work—I've seen it before—and I want to support you in getting there.",
+            "what_not_to_say": "Your work has been terrible lately. You need to do better or there will be consequences. I don't know what's wrong with you."
+          }
+        },
+        "development_and_growth": {
+          "development_mindset": "Great project managers see performance issues as development opportunities, not character flaws. This mindset: Assumes people want to succeed, Focuses on capability building, Creates psychological safety, Improves long-term performance",
+          "creating_development_plans": {
+            "components": [
+              "Current State: Where are they now?",
+              "Desired State: Where do they need to be?",
+              "Gap Analysis: What's missing?",
+              "Development Activities: How will they get there?",
+              "Timeline: By when?",
+              "Support: What help will you provide?",
+              "Measurement: How will progress be tracked?"
+            ],
+            "development_activities": [
+              "Training courses",
+              "Mentoring relationships",
+              "Stretch assignments",
+              "Pair work with experts",
+              "Self-study resources",
+              "Conference attendance",
+              "Certification programs",
+              "Job shadowing"
+            ]
+          },
+          "herzberg_two_factor_theory": {
+            "hygiene_factors": [
+              "Salary",
+              "Job security",
+              "Working conditions",
+              "Company policies",
+              "Relationships with colleagues"
+            ],
+            "motivators": [
+              "Achievement",
+              "Recognition",
+              "The work itself",
+              "Responsibility",
+              "Advancement",
+              "Growth"
+            ],
+            "implication": "Fixing hygiene factors won't motivate—but ignoring them will demotivate. True motivation comes from meaningful work, recognition, and growth opportunities."
+          }
+        },
+        "performance_metrics": {
+          "what_to_measure": {
+            "output_metrics": [
+              "Deliverables completed",
+              "Features shipped",
+              "Bugs fixed",
+              "Stories closed"
+            ],
+            "quality_metrics": [
+              "Defect rates",
+              "Rework percentage",
+              "Customer satisfaction",
+              "Code review feedback"
+            ],
+            "process_metrics": [
+              "Velocity trends",
+              "Estimation accuracy",
+              "Meeting commitments",
+              "Response times"
+            ],
+            "collaboration_metrics": [
+              "Team member feedback",
+              "Cross-functional cooperation",
+              "Knowledge sharing",
+              "Helping others"
+            ]
+          },
+          "measurement_best_practices": {
+            "do": [
+              "Measure outcomes, not just activities",
+              "Use multiple metrics (avoid single-point failure)",
+              "Make metrics visible and transparent",
+              "Discuss metrics in context",
+              "Focus on trends, not single data points"
+            ],
+            "dont": [
+              "Use metrics punitively",
+              "Compare individuals publicly",
+              "Measure things people can't control",
+              "Create gaming behavior through bad metrics",
+              "Ignore context when interpreting metrics"
+            ]
+          }
+        },
+        "integration_with_other_tasks": {
+          "task_2_lead_team": [
+            "Leadership style affects how feedback is received",
+            "Tuckman stages influence performance patterns",
+            "Servant leadership means developing people"
+          ],
+          "task_4_empower_team": [
+            "Empowerment requires capability",
+            "Performance support builds capability",
+            "Recognition reinforces empowered behavior"
+          ],
+          "task_5_ensure_training": [
+            "Skill gaps identified through performance support",
+            "Training addresses ability component of performance equation",
+            "Development plans often include formal training"
+          ],
+          "task_7_remove_impediments": [
+            "Performance issues may be caused by impediments",
+            "Investigate before assuming individual fault",
+            "System problems require systemic solutions"
+          ]
+        },
+        "key_principles": [
+          "Performance = Ability × Motivation × Opportunity - Diagnose before prescribing",
+          "SBI - Situation, Behavior, Impact for all feedback",
+          "Timely - Feedback and recognition close to the event",
+          "Private for Problems - Constructive feedback always in private",
+          "Investigate First - Understand root causes before acting",
+          "Development Focus - Build capabilities, don't just fix problems",
+          "Recognition Matters - Specific, timely, matched to preferences",
+          "Document - Keep records of coaching conversations",
+          "Escalate Appropriately - After direct coaching attempts",
+          "Servant Leadership - Your job is to help them succeed"
+        ]
       }
     },
-    "practice": { "agile_mindset": "Focus on outcomes and value, not hours worked.", "checklist": ["KPI Dashboard", "Performance Reviews"], "reflex_prompts": [], "stress_test": [] }
+    "practice": {
+      "checklist": ["KPI Dashboard", "Performance Reviews", "1-on-1 Schedule", "Development Plans"],
+      "reflex_prompts": [
+        {
+          "question": "Team member's performance declined suddenly. First action?",
+          "options": [
+            "Investigate root cause with private conversation",
+            "Document for performance review",
+            "Escalate to functional manager",
+            "Reassign their work"
+          ],
+          "correct": 0,
+          "explanation": "Sudden decline signals something changed. Always investigate before acting—could be personal issues, skill gaps, or systemic problems."
+        },
+        {
+          "question": "Developer fixed critical production bug on weekend. Best recognition?",
+          "options": [
+            "Wait for annual review",
+            "Thank privately and ask about public recognition preference",
+            "Give immediate bonus",
+            "Publicly praise in next meeting without asking"
+          ],
+          "correct": 1,
+          "explanation": "Recognition should be timely and match individual preferences. Some prefer public, others private."
+        },
+        {
+          "question": "Team member asks 'How am I doing?' You haven't given feedback. Response?",
+          "options": [
+            "You're doing fine",
+            "Let me prepare specific feedback and discuss next week",
+            "Ask your functional manager",
+            "No feedback needed—no problems"
+          ],
+          "correct": 1,
+          "explanation": "Better to prepare specific SBI feedback than give vague response. Ideally, you should always have feedback ready."
+        },
+        {
+          "question": "Developer missed deadline due to unclear requirements. What type of issue?",
+          "options": [
+            "Ability gap",
+            "Motivation issue",
+            "Opportunity blocker"
+          ],
+          "correct": 2,
+          "explanation": "Unclear requirements is a systemic/opportunity issue, not individual fault."
+        },
+        {
+          "question": "Team member delivers on time but always minimum quality. What type of issue?",
+          "options": [
+            "Ability gap",
+            "Motivation issue",
+            "Opportunity blocker"
+          ],
+          "correct": 1,
+          "explanation": "Capable of quality (when pushed) but chooses minimum effort = motivation."
+        },
+        {
+          "question": "New technology introduced; veteran struggling. What type of issue?",
+          "options": [
+            "Ability gap",
+            "Motivation issue",
+            "Opportunity blocker"
+          ],
+          "correct": 0,
+          "explanation": "Skill/knowledge gap on new technology = ability."
+        },
+        {
+          "question": "High performer recently disengaged after being passed over for promotion. What type of issue?",
+          "options": [
+            "Ability gap",
+            "Motivation issue",
+            "Opportunity blocker"
+          ],
+          "correct": 1,
+          "explanation": "Capable but demotivated = motivation issue."
+        },
+        {
+          "question": "Team member can't complete work because waiting on another team's API. What type of issue?",
+          "options": [
+            "Ability gap",
+            "Motivation issue",
+            "Opportunity blocker"
+          ],
+          "correct": 2,
+          "explanation": "External dependency blocking progress = opportunity."
+        },
+        {
+          "question": "You need to communicate better - Is this SBI?",
+          "options": [
+            "Yes, it's specific",
+            "No, missing all SBI elements"
+          ],
+          "correct": 1,
+          "explanation": "No situation, no specific behavior, no impact. Vague and judgmental."
+        },
+        {
+          "question": "In yesterday's standup, you gave a status update without mentioning you were blocked, which caused the team to miss the blocker until it impacted the sprint goal. Is this SBI?",
+          "options": [
+            "Yes, complete SBI",
+            "No, missing elements"
+          ],
+          "correct": 0,
+          "explanation": "S: yesterday's standup, B: didn't mention blocker, I: missed blocker impacted sprint goal."
+        },
+        {
+          "question": "Great job on the project! Is this effective recognition?",
+          "options": [
+            "Yes, it's positive",
+            "No, too vague"
+          ],
+          "correct": 1,
+          "explanation": "No specifics = no impact. What project? What specifically was great?"
+        },
+        {
+          "question": "Your root cause analysis on the payment bug saved us 20 hours of debugging and prevented customer escalation. Is this effective recognition?",
+          "options": [
+            "Yes, specific and impactful",
+            "No, missing elements"
+          ],
+          "correct": 0,
+          "explanation": "Specific behavior (root cause analysis on payment bug) + specific impact (20 hours, prevented escalation)."
+        },
+        {
+          "question": "Team member makes mistake. Best feedback timing?",
+          "options": [
+            "Annual review",
+            "Immediately, in private",
+            "Next team meeting"
+          ],
+          "correct": 1,
+          "explanation": "Feedback should be timely and private for issues."
+        },
+        {
+          "question": "Whole team hit ambitious milestone. Best recognition?",
+          "options": [
+            "Recognize highest contributor only",
+            "Recognize entire team publicly",
+            "Say nothing—good work is expected"
+          ],
+          "correct": 1,
+          "explanation": "Team achievement = team recognition."
+        },
+        {
+          "question": "High performer doing excellent work, no issues. Feedback approach?",
+          "options": [
+            "No feedback needed—no problems",
+            "Proactive positive feedback + growth discussion",
+            "Wait until they ask"
+          ],
+          "correct": 1,
+          "explanation": "Solid performers deserve recognition too. Proactive feedback builds engagement."
+        },
+        {
+          "question": "Team member's quality declined suddenly after 6 months of good work. First action?",
+          "options": [
+            "Performance improvement plan",
+            "Private conversation to understand what's happening",
+            "Notify functional manager"
+          ],
+          "correct": 1,
+          "explanation": "Investigate root cause first. Sudden change signals something changed."
+        },
+        {
+          "question": "Recognizing introvert who did great work. Best approach?",
+          "options": [
+            "Public recognition in team meeting",
+            "Private appreciation with option to publicize",
+            "Company-wide announcement"
+          ],
+          "correct": 1,
+          "explanation": "Match recognition to preference. Ask introverts first."
+        },
+        {
+          "question": "Which is NEVER appropriate for performance issues?",
+          "options": [
+            "Private coaching conversation",
+            "Public criticism in team meeting",
+            "Formal improvement plan after coaching fails"
+          ],
+          "correct": 1,
+          "explanation": "Never publicly criticize individuals. Always private."
+        },
+        {
+          "question": "Which is NOT part of good feedback?",
+          "options": [
+            "Specific examples",
+            "Personality judgments",
+            "Clear impact statements"
+          ],
+          "correct": 1,
+          "explanation": "Feedback should be behavioral, not personal. 'You're lazy' vs 'You missed 3 deadlines.'"
+        },
+        {
+          "question": "When should you escalate to functional manager?",
+          "options": [
+            "First sign of performance issue",
+            "After coaching attempts have failed",
+            "When team member asks for help"
+          ],
+          "correct": 1,
+          "explanation": "Try direct coaching first. Escalate after exhausting your options."
+        },
+        {
+          "question": "What indicates you need to investigate before acting?",
+          "options": [
+            "Sudden change from good to poor performance",
+            "Consistent underperformance since day one",
+            "Missed deadline due to scope creep"
+          ],
+          "correct": 0,
+          "explanation": "Sudden change means something changed. Investigate what."
+        },
+        {
+          "question": "Which recognition mistake is most common?",
+          "options": [
+            "Too much recognition",
+            "Recognizing only top performers",
+            "Recognition too specific"
+          ],
+          "correct": 1,
+          "explanation": "Focusing only on stars demotivates solid contributors."
+        },
+        {
+          "question": "Team member cries during 1-on-1 after feedback. First action?",
+          "options": [
+            "Continue with feedback agenda",
+            "Pause, show empathy, ask if they want to continue",
+            "End the meeting immediately"
+          ],
+          "correct": 1,
+          "explanation": "Show empathy. Ask what they need. They're human."
+        },
+        {
+          "question": "Developer publicly blames QA for their bug. First action?",
+          "options": [
+            "Public correction in same channel",
+            "Private conversation about appropriate behavior",
+            "Ignore it"
+          ],
+          "correct": 1,
+          "explanation": "Address behavior privately. Don't escalate public conflict."
+        },
+        {
+          "question": "Team member's performance improves after coaching. First action?",
+          "options": [
+            "Note it for annual review",
+            "Recognize the improvement promptly",
+            "Wait to see if it continues"
+          ],
+          "correct": 1,
+          "explanation": "Recognize improvement to reinforce the positive change."
+        },
+        {
+          "question": "You realize you haven't recognized anyone in 3 weeks. First action?",
+          "options": [
+            "Mass email thanking everyone",
+            "Identify specific contributions and recognize them individually",
+            "Schedule recognition for next team meeting"
+          ],
+          "correct": 1,
+          "explanation": "Specific, individual recognition is more meaningful than generic mass thanks."
+        },
+        {
+          "question": "Team member resists feedback and gets defensive. First action?",
+          "options": [
+            "End the conversation",
+            "Push through and deliver all feedback",
+            "Acknowledge their reaction, listen to their perspective"
+          ],
+          "correct": 2,
+          "explanation": "Resistance often means they feel unheard or attacked. Listen first."
+        }
+      ],
+      "stress_test": [
+        {
+          "scenario": "Sarah has been on your agile development team for 8 months. For the first 6 months, she was a strong performer—consistently delivering quality work on time, actively participating in ceremonies, and helping teammates. Over the past 2 months, you've noticed: She's completed 40% fewer story points, Code quality has declined (defect rate doubled), She's quieter in meetings, She arrives late and leaves early several times per week, She declined to help a junior developer who asked for assistance. Her functional manager mentioned nothing during your last sync.",
+          "question": "What should you do FIRST?",
+          "options": [
+            {
+              "text": "Place Sarah on a formal performance improvement plan to document the issues",
+              "outcome": "PIP is premature without understanding the cause—it's punitive when she might need support"
+            },
+            {
+              "text": "Reassign her work to other team members to protect the project schedule",
+              "outcome": "Doesn't address the issue and may embarrass or further demotivate her"
+            },
+            {
+              "text": "Schedule a private 1-on-1 to express concern and understand what's happening",
+              "outcome": "SUCCESS: The sudden change from strong to declining performance signals something changed. Before taking any action, you need to understand the root cause. A private conversation allows you to express concern (not accusation), learn her perspective, and determine the right intervention."
+            },
+            {
+              "text": "Notify her functional manager about the performance decline",
+              "outcome": "Escalating before direct conversation is inappropriate—try coaching first"
+            },
+            {
+              "text": "Continue monitoring for another 2 weeks to gather more data",
+              "outcome": "Two months of decline is enough data; waiting further delays necessary support"
+            }
+          ]
+        },
+        {
+          "scenario": "During a 1-on-1, Marcus, a mid-level developer on your team, asks: 'I've been here for a year now. I feel like I'm doing well, but I never get any feedback. How am I actually performing? What should I be working on?' You realize you haven't given Marcus much feedback—he's a solid performer who doesn't create problems, so he's been easy to overlook.",
+          "question": "How should you respond?",
+          "options": [
+            {
+              "text": "You're doing great, Marcus. Keep up the good work!",
+              "outcome": "Vague and unhelpful; doesn't answer his question or help him grow"
+            },
+            {
+              "text": "Let me think about it and get back to you next week with specific feedback.",
+              "outcome": "Delays what should be ongoing; you should be prepared with feedback"
+            },
+            {
+              "text": "In [specific situation], I noticed [specific behavior], which had [specific impact]. That's an example of what you do well. For growth, I'd like to see [specific development area]. Let's discuss both.",
+              "outcome": "SUCCESS: Marcus deserves specific, actionable feedback using the SBI model. He asked because he wants to grow, not just hear 'you're doing fine.' Providing specific positive examples validates his strengths, while identifying a growth area shows you're invested in his development."
+            },
+            {
+              "text": "That's really your functional manager's job. You should ask them.",
+              "outcome": "Abdicates PM responsibility; you observe his work daily and owe him feedback"
+            }
+          ]
+        },
+        {
+          "scenario": "During the sprint demo with key stakeholders, Jamie (a developer) presented a feature. Midway through, a significant bug caused the demo to crash. Jamie tried to recover but became flustered. After two more attempts with failures, you stepped in and ended the demo early. The stakeholders were visibly frustrated. Jamie is clearly embarrassed and upset. The team is quiet. It's 3 PM on Friday.",
+          "question": "What should you do?",
+          "options": [
+            {
+              "text": "Send an email to the team analyzing what went wrong so it doesn't happen again",
+              "outcome": "Public analysis feels like blame; focuses on the failure, not the person"
+            },
+            {
+              "text": "Have a private conversation with Jamie acknowledging the difficulty, then work together to plan next steps",
+              "outcome": "SUCCESS: Jamie is embarrassed and upset. Immediate private support shows you care about them as a person, not just the failure. The conversation should acknowledge the difficulty ('That was tough, I know'), ask about their well-being, and collaboratively plan recovery (not blame)."
+            },
+            {
+              "text": "Call a team meeting to debrief and create new demo procedures",
+              "outcome": "Team meeting makes Jamie the center of attention for a failure; humiliating"
+            },
+            {
+              "text": "Wait until Monday—everyone needs the weekend to cool off",
+              "outcome": "Leaves Jamie anxious and embarrassed all weekend; shows you don't care"
+            }
+          ]
+        }
+      ],
+      "document_detective": {
+        "cases": [
+          {
+            "title": "Sprint Velocity Data",
+            "artifact": "VELOCITY CHART - TEAM ALPHA (Last 6 Sprints)\nSprint 12: 34 points\nSprint 13: 36 points\nSprint 14: 38 points\nSprint 15: 28 points\nSprint 16: 24 points\nSprint 17: 22 points\n\nTeam Roster (unchanged):\n- Maya (Senior Dev)\n- Jordan (Senior Dev) - on PTO Sprint 15\n- Alex (Mid-level Dev)\n- Sam (Junior Dev)\n- Taylor (QA)",
+            "questions": [
+              {
+                "question": "What patterns do you see?",
+                "answer": "Steady improvement (Sprints 12-14): +4 points over 3 sprints. Sharp decline starts Sprint 15: -10 points (26% drop). Continued decline: Sprint 16 (-4), Sprint 17 (-2). Correlation: Jordan's PTO aligns with initial decline."
+              },
+              {
+                "question": "What should the PM investigate?",
+                "answer": "Did something change at Sprint 15? (New technology? Requirements change? Team conflict?) Is Jordan's return masking something? (Maybe they returned disengaged) Are individual contributions visible? (Who specifically is declining?) Is this a burnout pattern after Sprint 14's peak?"
+              }
+            ],
+            "analysis": "Red Flags: Decline continued AFTER Jordan returned (Sprint 16, 17). Team composition unchanged = not a staffing issue. Pattern suggests systemic or team-wide issue, not individual. Appropriate Response: Don't assume Jordan's PTO is the cause (correlation ≠ causation). Have team retrospective focused on what changed. Look at individual-level data if available. Have 1-on-1s to check in on team member well-being."
+          },
+          {
+            "title": "Slack Message Thread",
+            "artifact": "#team-alpha channel\nMonday 9:15 AM - Sam: Hey team, stuck on the authentication module. Anyone available to pair?\nMonday 11:42 AM - Sam: Still stuck. @Maya @Jordan anyone?\nMonday 2:30 PM - Maya: Sorry Sam, swamped with the reporting feature. Maybe try Stack Overflow?\nMonday 4:45 PM - Sam: Figured it out after 6 hours. Moving on.\nTuesday 9:00 AM - PM (you): Great work getting unblocked Sam! 💪",
+            "questions": [
+              {
+                "question": "What performance signals do you see?",
+                "answer": "Sam: Showed initiative asking for help, Persisted and solved problem independently, Lost 6 hours that pair programming could have saved, May feel unsupported. Maya: Delayed response (5 hours to reply), Deflected rather than helped, 'Stack Overflow' suggestion feels dismissive, Is Maya actually swamped, or avoiding collaboration? Team Culture: Junior developer left struggling for 6 hours, Only one response from entire team, PM's response, while positive, missed the real issue"
+              },
+              {
+                "question": "What recognition or feedback is needed?",
+                "answer": "To Sam (Private, Positive + Developmental): 'I saw you spent 6 hours working through that auth issue. I appreciate your persistence in figuring it out. In the future, if you're blocked for more than an hour, please escalate to me—it's my job to help remove blockers. How can I better support you?' To Maya (Private, Curious Not Accusatory): 'I noticed Sam was blocked for most of Monday. I want to understand your workload—are you overloaded? How can we balance delivery with team support?' To Team (Retrospective Topic): Discuss team collaboration norms. How quickly should we respond to help requests? What's acceptable time-to-unblock?"
+              }
+            ]
+          }
+        ]
+      },
+      "timeline_reconstructor": {
+        "title": "Alex's Performance Journey",
+        "scenario": {
+          "project": "Customer portal modernization",
+          "duration": "12 months",
+          "teamSize": "6-person agile team",
+          "pm": "Learning servant leadership"
+        },
+        "events": [
+          {
+            "id": "E",
+            "description": "Alex joins the team. First sprint: completes all assigned stories, attends all ceremonies, asks good questions. PM thinks, 'Solid hire.'",
+            "month": 1,
+            "sequence": 1
+          },
+          {
+            "id": "L",
+            "description": "Three months in, PM realizes they've never had a 1-on-1 with Alex. 'They're doing fine, no fires to fight.'",
+            "month": 2,
+            "sequence": 2
+          },
+          {
+            "id": "I",
+            "description": "During planning, Alex suggests a better approach to the API integration. Senior dev dismisses it. PM doesn't intervene. Alex is quiet for the rest of the meeting.",
+            "month": 3,
+            "sequence": 3
+          },
+          {
+            "id": "G",
+            "description": "Alex's code review of junior developer's work catches a critical flaw that would have caused data loss. PM learns about it through Slack, not Alex.",
+            "month": 4,
+            "sequence": 4
+          },
+          {
+            "id": "D",
+            "description": "Sprint retrospective: Alex says 'I don't feel like my work matters here. I fix bugs nobody notices and my ideas get ignored.'",
+            "month": 5,
+            "sequence": 5
+          },
+          {
+            "id": "B",
+            "description": "PM notices Alex arrives late three times in one week and seems distracted in standups. PM thinks, 'Probably just a rough week.'",
+            "month": 6,
+            "sequence": 6
+          },
+          {
+            "id": "J",
+            "description": "Alex's velocity drops 30% from previous quarter. PM attributes it to 'harder stories' without investigating.",
+            "month": 7,
+            "sequence": 7
+          },
+          {
+            "id": "F",
+            "description": "PM finally has 1-on-1 with Alex after noticing 4 weeks of declining output. Alex reveals they've been interviewing elsewhere. 'I've felt invisible here for months.'",
+            "month": 8,
+            "sequence": 8
+          },
+          {
+            "id": "K",
+            "description": "PM recognizes Alex privately for code review catch: 'Your review prevented a major incident. That kind of vigilance is exactly what we need.' Alex seems surprised anyone noticed.",
+            "month": 9,
+            "sequence": 9
+          },
+          {
+            "id": "H",
+            "description": "PM creates development plan with Alex focused on technical leadership path. Includes leading code reviews, mentoring junior devs, and architecture involvement.",
+            "month": 9,
+            "sequence": 10
+          },
+          {
+            "id": "A",
+            "description": "Alex asks to lead the security module redesign—the most complex component. PM hesitates but agrees with extra check-ins.",
+            "month": 10,
+            "sequence": 11
+          },
+          {
+            "id": "M",
+            "description": "Alex considers declining the security module offer: 'Last time I suggested something, it got shot down.' PM asks what would make them comfortable taking it on.",
+            "month": 10,
+            "sequence": 12
+          },
+          {
+            "id": "C",
+            "description": "Alex delivers security module on time with zero critical bugs. QA praises the thoroughness. PM recognizes Alex publicly in sprint review.",
+            "month": 11,
+            "sequence": 13
+          },
+          {
+            "id": "N",
+            "description": "Alex becomes informal mentor to two junior developers. They specifically request Alex for code reviews.",
+            "month": 11,
+            "sequence": 14
+          },
+          {
+            "id": "O",
+            "description": "Alex turns down an external offer and commits to staying. 'This is the first time I've felt seen and developed here.'",
+            "month": 12,
+            "sequence": 15
+          }
+        ],
+        "analysis": {
+          "phase_1": {
+            "title": "Neglected Solid Performer (Months 1-5)",
+            "events": ["E", "L", "I", "G", "D"],
+            "pattern": "Alex performed well but received no attention. PM focused on 'fires' and neglected solid contributors.",
+            "pm_mistakes": [
+              "No 1-on-1s with performing team member",
+              "Didn't intervene when Alex's idea was dismissed",
+              "Missed opportunity to recognize code review catch",
+              "Allowed Alex's contribution to become invisible"
+            ],
+            "lesson": "Solid performers need attention too. Absence of problems ≠ presence of engagement."
+          },
+          "phase_2": {
+            "title": "Visible Decline (Months 6-8)",
+            "events": ["B", "J", "F"],
+            "pattern": "Classic disengagement spiral. Early warning signs ignored until performance declined significantly.",
+            "pm_mistakes": [
+              "Dismissed behavioral changes as 'rough week'",
+              "Attributed velocity decline to external factors without investigating",
+              "Waited 4+ weeks to have a conversation",
+              "By Month 8, Alex was interviewing elsewhere"
+            ],
+            "lesson": "Investigate changes promptly. Don't explain away warning signs."
+          },
+          "phase_3": {
+            "title": "Recovery and Development (Months 9-12)",
+            "events": ["K", "H", "A", "M", "C", "N", "O"],
+            "pattern": "Intentional investment in recognition, development, and growth transformed the relationship.",
+            "pm_actions_that_worked": [
+              "Private recognition for past contribution (K)",
+              "Collaborative development plan (H)",
+              "Stretch opportunity with support (A)",
+              "Addressed fear from past experience (M)",
+              "Public recognition for success (C)",
+              "Enabled mentoring role (N)"
+            ],
+            "lesson": "It's not too late to turn things around. Intentional investment in development and recognition rebuilds engagement."
+          }
+        }
+      },
+      "feedback_type_matcher": {
+        "title": "Feedback Type Matcher",
+        "description": "Match Situations to Appropriate Feedback Approaches",
+        "reference": {
+          "by_purpose": [
+            {
+              "type": "Positive/Reinforcing",
+              "when": "Behavior you want repeated",
+              "focus": "Strengths, successes"
+            },
+            {
+              "type": "Constructive/Developmental",
+              "when": "Behavior that needs to change",
+              "focus": "Growth, improvement"
+            },
+            {
+              "type": "Coaching",
+              "when": "Building capability",
+              "focus": "Skills, development"
+            },
+            {
+              "type": "Corrective",
+              "when": "Addressing problems",
+              "focus": "Issues, consequences"
+            }
+          ],
+          "by_timing": [
+            {
+              "type": "Immediate",
+              "when": "Right after event",
+              "advantage": "Highest impact, clear connection"
+            },
+            {
+              "type": "Scheduled",
+              "when": "Regular 1-on-1s",
+              "advantage": "Thoughtful, not reactive"
+            },
+            {
+              "type": "Periodic",
+              "when": "Monthly/quarterly reviews",
+              "advantage": "Patterns, progress"
+            },
+            {
+              "type": "Event-based",
+              "when": "After projects/milestones",
+              "advantage": "Context-specific"
+            }
+          ],
+          "by_delivery": [
+            {
+              "type": "Public",
+              "when": "Positive recognition",
+              "example": "Team meeting shout-out"
+            },
+            {
+              "type": "Private",
+              "when": "Constructive feedback",
+              "example": "1-on-1 conversation"
+            },
+            {
+              "type": "Written",
+              "when": "Documentation needed",
+              "example": "Email after verbal"
+            },
+            {
+              "type": "Verbal",
+              "when": "Most feedback",
+              "example": "Direct conversation"
+            }
+          ]
+        },
+        "scenarios": [
+          {
+            "situation": "Developer's code caused a production incident. They've already fixed it. This is the first time.",
+            "best_match": {
+              "purpose": "Constructive (not punitive—first incident)",
+              "timing": "Same day, after resolution (timely but not in crisis)",
+              "delivery": "Private verbal (then document if needed)"
+            },
+            "sbi_example": "After the release yesterday, your code change caused a 2-hour outage affecting 500 customers. I know you fixed it quickly. Let's discuss what we can do differently in testing to prevent this."
+          },
+          {
+            "situation": "Team member went above and beyond to help a colleague meet a deadline by staying late.",
+            "best_match": {
+              "purpose": "Positive/Reinforcing",
+              "timing": "Immediate (same or next day)",
+              "delivery": "Private first, ask about public (respect preference)"
+            },
+            "sbi_example": "Yesterday when Jordan was struggling to meet the deadline, you stayed late to help them finish. That collaboration allowed us to deliver on time and showed real team spirit. Would you be comfortable if I shared this in the sprint review?"
+          }
+        ]
+      },
+      "team_member_perspectives": {
+        "title": "Team Member Perspectives",
+        "description": "Experience Feedback from the Receiving End",
+        "scenarios": [
+          {
+            "title": "The Bug in Production",
+            "context": "You're a developer. Your code caused a production bug that affected customers for 2 hours. You've already fixed it. Your PM asks to speak with you.",
+            "version_a": {
+              "pm_says": "Your code broke production again. This is exactly the kind of carelessness I was worried about. We can't keep having these issues. I need you to be more careful. This affects the whole team's reputation. I'm documenting this conversation.",
+              "analysis": {
+                "approach": "Blaming, Judgmental, Past-focused, Threatening, PM as judge",
+                "impact": "Defensive, resentful, may hide future issues, updates resume"
+              }
+            },
+            "version_b": {
+              "pm_says": "I saw the production issue earlier—I know you already fixed it, thank you for the quick response. I wanted to check in: what happened from your perspective? [listens] What do you think we could do differently in our process to catch this earlier? [listens] I appreciate you owning the fix quickly. Let's implement those process improvements you mentioned.",
+              "analysis": {
+                "approach": "Factual, Curious, Future-focused, Collaborative, PM as partner",
+                "impact": "Accountable, engaged, suggests improvements, feels supported"
+              }
+            }
+          },
+          {
+            "title": "The Invisible Contribution",
+            "context": "You're a developer who spends significant time reviewing others' code, catching bugs, and helping junior team members. Your deliverables are average because of this work. Performance review time approaches.",
+            "version_a": {
+              "pm_says": "Looking at your velocity, you're below the team average. I need you to focus more on your own deliverables. The team needs everyone contributing at full capacity.",
+              "analysis": {
+                "approach": "Sees only metrics, Single measure, Criticism, Demands change, Makes you feel invisible",
+                "impact": "Stop helping others, feel punished for team contribution, disengage"
+              }
+            },
+            "version_b": {
+              "pm_says": "I've been looking at team data, and I noticed something. Your individual velocity is below average, but I also see that you've done 40% of all code reviews and junior team members consistently request your help. That mentoring work doesn't show up in sprint points, but it's hugely valuable. How can we make sure you're recognized for both your delivery AND your team contributions? Should we adjust how we capture this work?",
+              "analysis": {
+                "approach": "Sees full contribution, Multiple measures, Recognition + curiosity, Asks for input, Makes you feel seen",
+                "impact": "Continue team contribution, feel valued, engage more deeply"
+              }
+            }
+          }
+        ],
+        "key_lessons": [
+          "Be Seen - Notice my contributions—especially the invisible ones",
+          "Be Heard - Ask my perspective before judging my performance",
+          "Be Respected - Match recognition to my preferences, not yours",
+          "Be Developed - Invest in my growth, not just my output",
+          "Be Supported - When I struggle, assume context before assuming fault"
+        ]
+      }
+    }
   },
   "Empower Team": {
     "learn": {

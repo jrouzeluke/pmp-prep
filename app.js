@@ -1,4 +1,4 @@
-const { useState, useEffect } = React;
+const { useState, useEffect, useRef } = React;
 
 const PMPApp = () => {
   const domainMap = {
@@ -2062,7 +2062,15 @@ const PMPApp = () => {
       }
       
       // Record comprehensive score
-      recordComprehensiveScore(selectedTask, selectedTask === 'Lead a Team' ? 'leadership-style-matcher' : 'conflict-matcher', {
+      let activityName;
+      if (selectedTask === 'Lead a Team') {
+        activityName = 'leadership-style-matcher';
+      } else if (selectedTask === 'Support Performance') {
+        activityName = 'feedback-type-matcher';
+      } else {
+        activityName = 'conflict-matcher';
+      }
+      recordComprehensiveScore(selectedTask, activityName, {
         score: correctCount,
         totalScenarios: conflictMatcherScenarios.length,
         isPerfect,
@@ -2224,7 +2232,13 @@ const PMPApp = () => {
             </button>
           </div>
           <h1 className="executive-font text-5xl font-bold text-white tracking-tight">🧩 {activityTitle}</h1>
-          <p className="text-slate-400 mt-2">{selectedTask === 'Lead a Team' ? 'Drag each scenario to the correct leadership style, or click scenario then select style' : 'Drag each scenario to the correct conflict mode, or click scenario then select mode'}</p>
+          <p className="text-slate-400 mt-2">
+            {selectedTask === 'Lead a Team' 
+              ? 'Drag each scenario to the correct leadership style, or click scenario then select style'
+              : selectedTask === 'Support Performance'
+              ? 'Drag each situation to the correct feedback type, or click situation then select type'
+              : 'Drag each scenario to the correct conflict mode, or click scenario then select mode'}
+          </p>
         </header>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-6">
@@ -3419,9 +3433,9 @@ const PMPApp = () => {
   }
 
   // Empathy Exercise / Team Member Perspectives Activity View
-  // Support both route names for Lead a Team
-  // Team Member Perspectives - Special implementation for Lead a Team
-  if (view === 'team-member-perspectives' && selectedTask === 'Lead a Team') {
+  // Support both route names for Lead a Team and Support Performance
+  // Team Member Perspectives - Special implementation for Lead a Team and Support Performance
+  if (view === 'team-member-perspectives' && (selectedTask === 'Lead a Team' || selectedTask === 'Support Performance')) {
     return (
       <div className="max-w-6xl w-full p-10 animate-fadeIn text-left">
         <header className="mb-8">
@@ -3831,8 +3845,14 @@ const PMPApp = () => {
       );
     }
     // For Lead a Team, use team_member_perspectives, otherwise empathy_exercise
-    const dataKey = selectedTask === 'Lead a Team' ? 'team_member_perspectives' : 'empathy_exercise';
-    const activityTitle = selectedTask === 'Lead a Team' ? 'Team Member Perspectives' : 'Empathy Exercise';
+    let dataKey, activityTitle;
+    if (selectedTask === 'Lead a Team' || selectedTask === 'Support Performance') {
+      dataKey = 'team_member_perspectives';
+      activityTitle = 'Team Member Perspectives';
+    } else {
+      dataKey = 'empathy_exercise';
+      activityTitle = 'Empathy Exercise';
+    }
     const empathyScenarios = currentTask.practice?.[dataKey] || currentTask.practice?.empathy_exercise || [];
     const currentScenarioData = empathyScenarios[empathyExerciseState.currentScenario];
 
@@ -4877,7 +4897,7 @@ const PMPApp = () => {
             { name: 'document-detective', emoji: '🕵️', title: 'Document Detective', desc: 'Match documents to scenarios', color: 'purple', borderColor: 'border-purple-500', hoverColor: 'hover:bg-purple-500/10', shadowColor: 'hover:shadow-purple-500/20' },
             { name: 'conflict-matcher', emoji: '🧩', title: 'Conflict Mode Matcher', desc: 'Drag-drop conflict modes', color: 'emerald', borderColor: 'border-emerald-500', hoverColor: 'hover:bg-emerald-500/10', shadowColor: 'hover:shadow-emerald-500/20' },
             { name: 'timeline-reconstructor', emoji: '📋', title: 'Timeline Reconstructor', desc: 'Order resolution steps', color: 'cyan', borderColor: 'border-cyan-500', hoverColor: 'hover:bg-cyan-500/10', shadowColor: 'hover:shadow-cyan-500/20' },
-            { name: 'empathy-exercise', emoji: '👥', title: selectedTask === 'Lead a Team' ? 'Team Member Perspectives' : 'Empathy Exercise', desc: 'See all perspectives', color: 'rose', borderColor: 'border-rose-500', hoverColor: 'hover:bg-rose-500/10', shadowColor: 'hover:shadow-rose-500/20' }
+            { name: 'empathy-exercise', emoji: '👥', title: (selectedTask === 'Lead a Team' || selectedTask === 'Support Performance') ? 'Team Member Perspectives' : 'Empathy Exercise', desc: 'See all perspectives', color: 'rose', borderColor: 'border-rose-500', hoverColor: 'hover:bg-rose-500/10', shadowColor: 'hover:shadow-rose-500/20' }
           ];
           
           // For Lead a Team, rename specific activities
@@ -4894,6 +4914,19 @@ const PMPApp = () => {
               return activity;
             });
           }
+          
+          // For Support Performance, rename specific activities
+          if (selectedTask === 'Support Performance') {
+            return baseActivities.map(activity => {
+              if (activity.name === 'conflict-matcher') {
+                return { ...activity, title: 'Feedback Type Matcher', desc: 'Match situations to feedback approaches' };
+              } else if (activity.name === 'empathy-exercise') {
+                return { ...activity, title: 'Team Member Perspectives', desc: 'Experience feedback from receiving end' };
+              }
+              return activity;
+            });
+          }
+          
           return baseActivities;
         })().map(activity => {
           const progress = getActivityProgress(selectedTask, activity.name);
@@ -4969,9 +5002,36 @@ const PMPApp = () => {
 
   // Progress Stats View
   if (view === 'progress-stats') {
-    const allTasks = domainMap ? Object.values(domainMap).flat() : [];
+    const allTasks = domainMap ? Object.values(domainMap).flat().filter(Boolean) : [];
     const totalTasks = allTasks.length;
     const totalActivities = totalTasks * 6;
+    
+    // Intersection Observer for fade-in animation
+    const [masteryCardsVisible, setMasteryCardsVisible] = useState(false);
+    const masterySectionRef = useRef(null);
+    
+    useEffect(() => {
+      if (!masterySectionRef.current || masteryCardsVisible) return;
+      
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              setMasteryCardsVisible(true);
+            }
+          });
+        },
+        { threshold: 0.1 }
+      );
+      
+      observer.observe(masterySectionRef.current);
+      
+      return () => {
+        if (masterySectionRef.current) {
+          observer.unobserve(masterySectionRef.current);
+        }
+      };
+    }, [masteryCardsVisible]);
     
     // Calculate overall stats
     let tasksStarted = 0;
@@ -5070,7 +5130,7 @@ const PMPApp = () => {
                 'document-detective': 'Document Detective',
                 'conflict-matcher': 'Conflict Matcher',
                 'timeline-reconstructor': 'Timeline Reconstructor',
-                'empathy-exercise': selectedTask === 'Lead a Team' ? 'Team Member Perspectives' : 'Empathy Exercise'
+                'empathy-exercise': (selectedTask === 'Lead a Team' || selectedTask === 'Support Performance') ? 'Team Member Perspectives' : 'Empathy Exercise'
               };
               
               return (
@@ -5115,27 +5175,73 @@ const PMPApp = () => {
         )}
 
         {/* Task Mastery Overview */}
-        <div className="glass-card p-6">
+        <div className="glass-card p-6" ref={masterySectionRef}>
           <h2 className="executive-font text-2xl font-bold text-white mb-4">Task Mastery Overview</h2>
           <div className="space-y-3 max-h-96 overflow-y-auto custom-scrollbar">
-            {allTasks.map(taskName => {
+            {allTasks.map((taskName, index) => {
               const mastery = getTaskMastery(taskName);
               const progressBars = '■'.repeat(mastery.completed) + '□'.repeat(mastery.total - mastery.completed);
               const colorClass = mastery.color === 'slate' ? 'text-slate-500' : mastery.color === 'yellow' ? 'text-yellow-500' : mastery.color === 'orange' ? 'text-orange-500' : 'text-emerald-500';
               
+              // Get first activity name
+              const activities = ['pm-simulator', 'lightning-round', 'document-detective', 'conflict-matcher', 'timeline-reconstructor', 'empathy-exercise'];
+              const activityLabels = {
+                'pm-simulator': 'PM Simulator',
+                'lightning-round': 'Lightning Round',
+                'document-detective': 'Document Detective',
+                'conflict-matcher': taskName === 'Lead a Team' ? 'Leadership Style Matcher' : 'Conflict Mode Matcher',
+                'timeline-reconstructor': 'Timeline Reconstructor',
+                'empathy-exercise': taskName === 'Lead a Team' ? 'Team Member Perspectives' : 'Empathy Exercise'
+              };
+              const firstActivity = activityLabels[activities[0]] || 'PM Simulator';
+              
+              // Generate badge name
+              const badgeNames = {
+                'Manage Conflict': 'Conflict Navigator',
+                'Lead a Team': 'Team Leader',
+                'Support Performance': 'Performance Champion',
+                'Empower Team': 'Empowerment Expert',
+                'Train Team': 'Training Master',
+                'Build Team': 'Team Builder',
+                'Address Obstacles': 'Obstacle Remover',
+                'Negotiate Agreements': 'Negotiation Pro',
+                'Collaborate Stakeholders': 'Stakeholder Connector',
+                'Build Understanding': 'Understanding Builder',
+                'Support Virtual Teams': 'Virtual Team Expert',
+                'Define Team Ground Rules': 'Rules Architect',
+                'Mentor Stakeholders': 'Mentor Master',
+                'Promote Performance': 'Performance Promoter'
+              };
+              const badgeName = badgeNames[taskName] || taskName.split(' ')[0] + ' Master';
+              
               return (
-                <div key={taskName} className="flex items-center justify-between p-3 bg-slate-800/30 rounded">
-                  <span className="text-white">{taskName}</span>
-                  <div className="flex items-center gap-3">
-                    <span className={`text-sm font-mono ${colorClass}`}>{progressBars}</span>
-                    <span className={`text-xs px-2 py-1 rounded ${
-                      mastery.color === 'slate' ? 'bg-slate-700 text-slate-300' :
-                      mastery.color === 'yellow' ? 'bg-yellow-500/20 text-yellow-400' :
-                      mastery.color === 'orange' ? 'bg-orange-500/20 text-orange-400' :
-                      'bg-emerald-500/20 text-emerald-400'
-                    }`}>
-                      {mastery.label}
-                    </span>
+                <div 
+                  key={taskName} 
+                  className={`task-mastery-card task-mastery-card-fade-in flex flex-col items-start justify-between p-3 bg-slate-800/30 rounded relative ${masteryCardsVisible ? 'visible' : ''}`}
+                >
+                  <div className="flex items-center justify-between w-full">
+                    <span className="text-white relative z-10">{taskName}</span>
+                    <div className="flex items-center gap-3 relative z-10">
+                      <span className={`text-sm font-mono ${colorClass}`}>{progressBars}</span>
+                      <span className={`text-xs px-2 py-1 rounded ${
+                        mastery.color === 'slate' ? 'bg-slate-700 text-slate-300' :
+                        mastery.color === 'yellow' ? 'bg-yellow-500/20 text-yellow-400' :
+                        mastery.color === 'orange' ? 'bg-orange-500/20 text-orange-400' :
+                        'bg-emerald-500/20 text-emerald-400'
+                      }`}>
+                        {mastery.label}
+                      </span>
+                    </div>
+                  </div>
+                  
+                  {/* Hover Reveal Preview */}
+                  <div className="task-mastery-preview w-full">
+                    <div className="text-xs text-slate-400 mb-1">
+                      Start with: <span className="text-white font-semibold">{firstActivity}</span>
+                    </div>
+                    <div className="text-xs text-slate-400">
+                      🏆 Earn: <span className="text-amber-400 font-semibold">{badgeName} Badge</span>
+                    </div>
                   </div>
                 </div>
               );
@@ -5732,12 +5838,20 @@ const PMPApp = () => {
     if (subView === 'overview' && currentTask.learn.overview) {
       const overview = currentTask.learn.overview;
       if (overview.definition) sections.push({ key: 'definition', title: 'Definition', content: overview.definition, type: 'definition' });
+      if (overview.eco_enablers && overview.eco_enablers.length > 0) sections.push({ key: 'eco_enablers', title: 'ECO Enablers', content: overview.eco_enablers, type: 'list' });
+      if (overview.core_principle) sections.push({ key: 'core_principle', title: 'Core Principle', content: overview.core_principle, type: 'text' });
       if (overview.module_introduction) sections.push({ key: 'module_introduction', title: 'Module Introduction', content: overview.module_introduction, type: 'text' });
+      if (overview.key_frameworks) sections.push({ key: 'key_frameworks', title: 'Key Frameworks', content: overview.key_frameworks, type: 'key-frameworks' });
       if (overview.what_youll_learn && overview.what_youll_learn.length > 0) sections.push({ key: 'what_youll_learn', title: "What You'll Learn", content: overview.what_youll_learn, type: 'list' });
       if (overview.key_learning_objectives && overview.key_learning_objectives.length > 0) sections.push({ key: 'key_learning_objectives', title: 'Key Learning Objectives', content: overview.key_learning_objectives, type: 'numbered-list' });
       if (overview.why_this_matters) sections.push({ key: 'why_this_matters', title: 'Why This Matters', content: overview.why_this_matters, type: 'text' });
       if (overview.exam_triggers && overview.exam_triggers.length > 0) sections.push({ key: 'exam_triggers', title: 'Exam Triggers', content: overview.exam_triggers, type: 'list' });
+      if (overview.performance_management_framework) sections.push({ key: 'performance_management_framework', title: 'Performance Management Framework', content: overview.performance_management_framework, type: 'performance-framework' });
+      if (overview.sbi_examples) sections.push({ key: 'sbi_examples', title: 'SBI Feedback Examples', content: overview.sbi_examples, type: 'sbi-examples' });
+      if (overview.recognition_best_practices) sections.push({ key: 'recognition_best_practices', title: 'Recognition Best Practices', content: overview.recognition_best_practices, type: 'recognition-practices' });
       if (overview.quick_scenarios && overview.quick_scenarios.length > 0) sections.push({ key: 'quick_scenarios', title: 'Quick Scenarios', content: overview.quick_scenarios, type: 'scenarios' });
+      if (overview.key_exam_principles) sections.push({ key: 'key_exam_principles', title: 'Key Exam Principles', content: overview.key_exam_principles, type: 'exam-principles' });
+      if (overview.common_wrong_answers && overview.common_wrong_answers.length > 0) sections.push({ key: 'common_wrong_answers', title: 'Common Wrong Answers', content: overview.common_wrong_answers, type: 'list' });
       if (overview.pmi_hierarchy && overview.pmi_hierarchy.length > 0) sections.push({ key: 'pmi_hierarchy', title: 'PMI Hierarchy', content: overview.pmi_hierarchy, type: 'hierarchy' });
     } else if (subView === 'pmp-application' && currentTask.learn.pmp_application) {
       const pmp = currentTask.learn.pmp_application;
@@ -5751,8 +5865,16 @@ const PMPApp = () => {
       if (pmp.decision_tree_visual) sections.push({ key: 'decision_tree_visual', title: 'Decision Tree', content: pmp.decision_tree_visual, type: 'text' });
     } else if (subView === 'deep-dive' && currentTask.learn.deep_dive) {
       const deep = currentTask.learn.deep_dive;
-      if (deep.foundational_concept) sections.push({ key: 'foundational_concept', title: 'Foundational Concept', content: deep.foundational_concept, type: 'text' });
       if (deep.introduction) sections.push({ key: 'introduction', title: 'Introduction', content: deep.introduction, type: 'text' });
+      if (deep.foundational_concept) sections.push({ key: 'foundational_concept', title: 'Foundational Concept', content: deep.foundational_concept, type: 'text' });
+      if (deep.performance_support_framework) sections.push({ key: 'performance_support_framework', title: 'The Performance Support Framework', content: deep.performance_support_framework, type: 'performance-support-framework' });
+      if (deep.sbi_feedback_model) sections.push({ key: 'sbi_feedback_model', title: 'The SBI Feedback Model', content: deep.sbi_feedback_model, type: 'sbi-feedback-model' });
+      if (deep.recognition_strategies) sections.push({ key: 'recognition_strategies', title: 'Recognition Strategies', content: deep.recognition_strategies, type: 'recognition-strategies' });
+      if (deep.addressing_underperformance) sections.push({ key: 'addressing_underperformance', title: 'Addressing Underperformance', content: deep.addressing_underperformance, type: 'addressing-underperformance' });
+      if (deep.development_and_growth) sections.push({ key: 'development_and_growth', title: 'Development and Growth', content: deep.development_and_growth, type: 'development-growth' });
+      if (deep.performance_metrics) sections.push({ key: 'performance_metrics', title: 'Performance Metrics', content: deep.performance_metrics, type: 'performance-metrics' });
+      if (deep.integration_with_other_tasks) sections.push({ key: 'integration_with_other_tasks', title: 'Integration with Other Tasks', content: deep.integration_with_other_tasks, type: 'integration-tasks' });
+      if (deep.key_principles && deep.key_principles.length > 0) sections.push({ key: 'key_principles', title: 'Summary: Key Principles', content: deep.key_principles, type: 'numbered-list' });
       if (deep.tuckmans_model) sections.push({ key: 'tuckmans_model', title: "Tuckman's Model", content: deep.tuckmans_model, type: 'tuckman' });
       if (deep.leadership_styles) sections.push({ key: 'leadership_styles', title: 'Leadership Styles', content: deep.leadership_styles, type: 'leadership-styles' });
       if (deep.situational_leadership) sections.push({ key: 'situational_leadership', title: 'Situational Leadership', content: deep.situational_leadership, type: 'situational-leadership' });
@@ -6110,6 +6232,364 @@ const PMPApp = () => {
             <div><span className="font-semibold text-white">Self-Management:</span> {content.self_management}</div>
             <div><span className="font-semibold text-white">Social Awareness:</span> {content.social_awareness}</div>
             <div><span className="font-semibold text-white">Relationship Management:</span> {content.relationship_management}</div>
+          </div>
+        );
+      
+      case 'key-frameworks':
+        return (
+          <div className="space-y-6">
+            {content.sbi_model && (
+              <div className="border-l-4 border-blue-500/50 bg-blue-500/5 p-4 rounded">
+                <h4 className="executive-font text-lg font-semibold text-white mb-3">📊 {content.sbi_model.title}</h4>
+                <div className="space-y-2 text-sm">
+                  <p className="text-slate-300"><span className="font-semibold text-blue-400">S</span> = {content.sbi_model.s}</p>
+                  <p className="text-slate-300"><span className="font-semibold text-blue-400">B</span> = {content.sbi_model.b}</p>
+                  <p className="text-slate-300"><span className="font-semibold text-blue-400">I</span> = {content.sbi_model.i}</p>
+                </div>
+              </div>
+            )}
+            {content.recognition_types && (
+              <div className="border-l-4 border-purple-500/50 bg-purple-500/5 p-4 rounded">
+                <h4 className="executive-font text-lg font-semibold text-white mb-3">⭐ {content.recognition_types.title}</h4>
+                <div className="grid grid-cols-2 gap-4 text-sm">
+                  <div>
+                    <p className="text-slate-400 mb-1">Formal: {content.recognition_types.formal}</p>
+                    <p className="text-slate-400">Informal: {content.recognition_types.informal}</p>
+                  </div>
+                  <div>
+                    <p className="text-slate-400 mb-1">Public: {content.recognition_types.public}</p>
+                    <p className="text-slate-400">Private: {content.recognition_types.private}</p>
+                  </div>
+                </div>
+              </div>
+            )}
+            {content.performance_continuum && (
+              <div className="border-l-4 border-emerald-500/50 bg-emerald-500/5 p-4 rounded">
+                <h4 className="executive-font text-lg font-semibold text-white mb-3">📈 {content.performance_continuum.title}</h4>
+                <p className="text-slate-300">{content.performance_continuum.stages}</p>
+              </div>
+            )}
+          </div>
+        );
+      
+      case 'performance-framework':
+        return (
+          <div className="space-y-4">
+            {content.measure_performance && (
+              <div className="border-l-4 border-blue-500/50 bg-blue-500/5 p-4 rounded">
+                <h4 className="executive-font text-lg font-semibold text-white mb-2">📊 1. Measure Performance</h4>
+                <p className="text-sm text-slate-300 mb-1"><span className="font-semibold">When:</span> {content.measure_performance.when}</p>
+                <p className="text-sm text-slate-300 mb-1"><span className="font-semibold">Action:</span> {content.measure_performance.action}</p>
+                <p className="text-sm text-slate-300 mb-1"><span className="font-semibold">Metrics:</span> {content.measure_performance.metrics}</p>
+                <p className="text-sm text-emerald-400 italic"><span className="font-semibold">Key:</span> {content.measure_performance.key}</p>
+              </div>
+            )}
+            {content.provide_feedback && (
+              <div className="border-l-4 border-purple-500/50 bg-purple-500/5 p-4 rounded">
+                <h4 className="executive-font text-lg font-semibold text-white mb-2">📈 2. Provide Feedback</h4>
+                <p className="text-sm text-slate-300 mb-1"><span className="font-semibold">When:</span> {content.provide_feedback.when}</p>
+                <p className="text-sm text-slate-300 mb-1"><span className="font-semibold">Action:</span> {content.provide_feedback.action}</p>
+                <p className="text-sm text-slate-300 mb-1"><span className="font-semibold">Approach:</span> {content.provide_feedback.approach}</p>
+                <p className="text-sm text-emerald-400 italic"><span className="font-semibold">Key:</span> {content.provide_feedback.key}</p>
+              </div>
+            )}
+            {content.coach_and_develop && (
+              <div className="border-l-4 border-cyan-500/50 bg-cyan-500/5 p-4 rounded">
+                <h4 className="executive-font text-lg font-semibold text-white mb-2">🎯 3. Coach and Develop</h4>
+                <p className="text-sm text-slate-300 mb-1"><span className="font-semibold">When:</span> {content.coach_and_develop.when}</p>
+                <p className="text-sm text-slate-300 mb-1"><span className="font-semibold">Action:</span> {content.coach_and_develop.action}</p>
+                <p className="text-sm text-slate-300 mb-1"><span className="font-semibold">Focus:</span> {content.coach_and_develop.focus}</p>
+                <p className="text-sm text-emerald-400 italic"><span className="font-semibold">Key:</span> {content.coach_and_develop.key}</p>
+              </div>
+            )}
+            {content.recognize_and_reward && (
+              <div className="border-l-4 border-amber-500/50 bg-amber-500/5 p-4 rounded">
+                <h4 className="executive-font text-lg font-semibold text-white mb-2">🌟 4. Recognize and Reward</h4>
+                <p className="text-sm text-slate-300 mb-1"><span className="font-semibold">When:</span> {content.recognize_and_reward.when}</p>
+                <p className="text-sm text-slate-300 mb-1"><span className="font-semibold">Action:</span> {content.recognize_and_reward.action}</p>
+                <p className="text-sm text-slate-300 mb-1"><span className="font-semibold">Types:</span> {content.recognize_and_reward.types}</p>
+                <p className="text-sm text-emerald-400 italic"><span className="font-semibold">Key:</span> {content.recognize_and_reward.key}</p>
+              </div>
+            )}
+            {content.address_underperformance && (
+              <div className="border-l-4 border-red-500/50 bg-red-500/5 p-4 rounded">
+                <h4 className="executive-font text-lg font-semibold text-white mb-2">⚠️ 5. Address Underperformance</h4>
+                <p className="text-sm text-slate-300 mb-1"><span className="font-semibold">When:</span> {content.address_underperformance.when}</p>
+                <p className="text-sm text-slate-300 mb-1"><span className="font-semibold">Action:</span> {content.address_underperformance.action}</p>
+                <p className="text-sm text-slate-300 mb-1"><span className="font-semibold">Process:</span> {content.address_underperformance.process}</p>
+                <p className="text-sm text-emerald-400 italic"><span className="font-semibold">Key:</span> {content.address_underperformance.key}</p>
+              </div>
+            )}
+          </div>
+        );
+      
+      case 'sbi-examples':
+        return (
+          <div className="space-y-6">
+            {content.good_example && (
+              <div className="border-l-4 border-emerald-500/50 bg-emerald-500/5 p-4 rounded">
+                <h4 className="executive-font text-lg font-semibold text-emerald-400 mb-3">✅ Good SBI Example:</h4>
+                <div className="space-y-2 text-sm">
+                  <p className="text-slate-300"><span className="font-semibold text-blue-400">S:</span> "{content.good_example.s}"</p>
+                  <p className="text-slate-300"><span className="font-semibold text-blue-400">B:</span> "{content.good_example.b}"</p>
+                  <p className="text-slate-300"><span className="font-semibold text-blue-400">I:</span> "{content.good_example.i}"</p>
+                </div>
+              </div>
+            )}
+            {content.bad_example && (
+              <div className="border-l-4 border-red-500/50 bg-red-500/5 p-4 rounded">
+                <h4 className="executive-font text-lg font-semibold text-red-400 mb-3">❌ Bad Feedback (No SBI):</h4>
+                <p className="text-slate-300 mb-2">"{content.bad_example.text}"</p>
+                <p className="text-sm text-red-400 italic">Problem: {content.bad_example.problem}</p>
+              </div>
+            )}
+            {content.good_positive && (
+              <div className="border-l-4 border-cyan-500/50 bg-cyan-500/5 p-4 rounded">
+                <h4 className="executive-font text-lg font-semibold text-cyan-400 mb-3">✅ Good Positive SBI:</h4>
+                <div className="space-y-2 text-sm">
+                  <p className="text-slate-300"><span className="font-semibold text-blue-400">S:</span> "{content.good_positive.s}"</p>
+                  <p className="text-slate-300"><span className="font-semibold text-blue-400">B:</span> "{content.good_positive.b}"</p>
+                  <p className="text-slate-300"><span className="font-semibold text-blue-400">I:</span> "{content.good_positive.i}"</p>
+                </div>
+              </div>
+            )}
+          </div>
+        );
+      
+      case 'recognition-practices':
+        return (
+          <div className="space-y-4">
+            {content.make_timely && (
+              <div className="border-l-2 border-amber-500/50 pl-4">
+                <h4 className="executive-font text-base font-semibold text-white mb-2">⭐ 1. Make It Timely</h4>
+                <p className="text-sm text-slate-300 mb-1"><span className="font-semibold">When:</span> {content.make_timely.when}</p>
+                <p className="text-sm text-slate-300 mb-1"><span className="font-semibold">Why:</span> {content.make_timely.why}</p>
+                <p className="text-sm text-slate-300 mb-1"><span className="font-semibold">How:</span> {content.make_timely.how}</p>
+                <p className="text-sm text-red-400 italic"><span className="font-semibold">Avoid:</span> {content.make_timely.avoid}</p>
+              </div>
+            )}
+            {content.be_specific && (
+              <div className="border-l-2 border-amber-500/50 pl-4">
+                <h4 className="executive-font text-base font-semibold text-white mb-2">🎯 2. Be Specific</h4>
+                <p className="text-sm text-slate-300 mb-1"><span className="font-semibold">When:</span> {content.be_specific.when}</p>
+                <p className="text-sm text-slate-300 mb-1"><span className="font-semibold">Why:</span> {content.be_specific.why}</p>
+                <p className="text-sm text-slate-300 mb-1"><span className="font-semibold">How:</span> {content.be_specific.how}</p>
+                <p className="text-sm text-red-400 italic"><span className="font-semibold">Avoid:</span> {content.be_specific.avoid}</p>
+              </div>
+            )}
+            {content.match_preference && (
+              <div className="border-l-2 border-amber-500/50 pl-4">
+                <h4 className="executive-font text-base font-semibold text-white mb-2">👥 3. Match Preference</h4>
+                <p className="text-sm text-slate-300 mb-1"><span className="font-semibold">When:</span> {content.match_preference.when}</p>
+                <p className="text-sm text-slate-300 mb-1"><span className="font-semibold">Why:</span> {content.match_preference.why}</p>
+                <p className="text-sm text-slate-300 mb-1"><span className="font-semibold">How:</span> {content.match_preference.how}</p>
+                <p className="text-sm text-red-400 italic"><span className="font-semibold">Avoid:</span> {content.match_preference.avoid}</p>
+              </div>
+            )}
+            {content.recognize_effort && (
+              <div className="border-l-2 border-amber-500/50 pl-4">
+                <h4 className="executive-font text-base font-semibold text-white mb-2">🏆 4. Recognize Effort, Not Just Results</h4>
+                <p className="text-sm text-slate-300 mb-1"><span className="font-semibold">When:</span> {content.recognize_effort.when}</p>
+                <p className="text-sm text-slate-300 mb-1"><span className="font-semibold">Why:</span> {content.recognize_effort.why}</p>
+                <p className="text-sm text-slate-300 mb-1"><span className="font-semibold">How:</span> {content.recognize_effort.how}</p>
+                <p className="text-sm text-red-400 italic"><span className="font-semibold">Avoid:</span> {content.recognize_effort.avoid}</p>
+              </div>
+            )}
+            {content.use_multiple_forms && (
+              <div className="border-l-2 border-amber-500/50 pl-4">
+                <h4 className="executive-font text-base font-semibold text-white mb-2">🎁 5. Use Multiple Forms</h4>
+                <p className="text-sm text-slate-300 mb-1"><span className="font-semibold">When:</span> {content.use_multiple_forms.when}</p>
+                <p className="text-sm text-slate-300 mb-1"><span className="font-semibold">Why:</span> {content.use_multiple_forms.why}</p>
+                <p className="text-sm text-slate-300 mb-1"><span className="font-semibold">How:</span> {content.use_multiple_forms.how}</p>
+                <p className="text-sm text-red-400 italic"><span className="font-semibold">Avoid:</span> {content.use_multiple_forms.avoid}</p>
+              </div>
+            )}
+          </div>
+        );
+      
+      case 'exam-principles':
+        return (
+          <div className="space-y-4">
+            {content.feedback_should_be && content.feedback_should_be.length > 0 && (
+              <div className="border-l-4 border-blue-500/50 bg-blue-500/5 p-4 rounded mb-4">
+                <h4 className="executive-font text-lg font-semibold text-white mb-3">Feedback Should Be:</h4>
+                <ul className="space-y-1">
+                  {content.feedback_should_be.map((item, idx) => (
+                    <li key={idx} className="text-slate-300 flex items-start gap-2">
+                      <span className="text-blue-400 mt-1">•</span>
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+            {content.recognition_principles && content.recognition_principles.length > 0 && (
+              <div className="border-l-4 border-purple-500/50 bg-purple-500/5 p-4 rounded mb-4">
+                <h4 className="executive-font text-lg font-semibold text-white mb-3">Recognition Principles:</h4>
+                <ul className="space-y-1">
+                  {content.recognition_principles.map((item, idx) => (
+                    <li key={idx} className="text-slate-300 flex items-start gap-2">
+                      <span className="text-purple-400 mt-1">•</span>
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+            {content.address_underperformance && content.address_underperformance.length > 0 && (
+              <div className="border-l-4 border-red-500/50 bg-red-500/5 p-4 rounded mb-4">
+                <h4 className="executive-font text-lg font-semibold text-white mb-3">Address Underperformance:</h4>
+                <ul className="space-y-1">
+                  {content.address_underperformance.map((item, idx) => (
+                    <li key={idx} className="text-slate-300 flex items-start gap-2">
+                      <span className="text-red-400 mt-1">•</span>
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+            {content.development_focus && content.development_focus.length > 0 && (
+              <div className="border-l-4 border-emerald-500/50 bg-emerald-500/5 p-4 rounded">
+                <h4 className="executive-font text-lg font-semibold text-white mb-3">Development Focus:</h4>
+                <ul className="space-y-1">
+                  {content.development_focus.map((item, idx) => (
+                    <li key={idx} className="text-slate-300 flex items-start gap-2">
+                      <span className="text-emerald-400 mt-1">•</span>
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
+        );
+      
+      case 'sample-questions':
+        return (
+          <div className="space-y-6">
+            {content.map((q, idx) => (
+              <div key={idx} className="border-l-4 border-blue-500/50 bg-blue-500/5 p-5 rounded">
+                <h4 className="executive-font text-lg font-semibold text-white mb-3">Sample Question {idx + 1}</h4>
+                <p className="text-white font-medium mb-4">"{q.question}"</p>
+                <div className="space-y-2 mb-4">
+                  {q.options && q.options.map((opt, optIdx) => (
+                    <div key={optIdx} className={`p-2 rounded ${optIdx === parseInt(q.correct) ? 'bg-emerald-500/20 border border-emerald-500/50' : 'bg-slate-800/50'}`}>
+                      <span className="text-slate-400 mr-2">{String.fromCharCode(65 + optIdx)}:</span>
+                      <span className={optIdx === parseInt(q.correct) ? 'text-emerald-400 font-semibold' : 'text-slate-300'}>{opt}</span>
+                      {optIdx === parseInt(q.correct) && <span className="ml-2 text-emerald-400">✓ Correct</span>}
+                    </div>
+                  ))}
+                </div>
+                <div className="bg-emerald-500/10 p-3 rounded border border-emerald-500/30">
+                  <p className="text-emerald-400 font-semibold mb-2">Why Correct:</p>
+                  <p className="text-slate-300 text-sm">{q.why_correct}</p>
+                </div>
+                {q.why_others_wrong && (
+                  <div className="mt-3 bg-red-500/10 p-3 rounded border border-red-500/30">
+                    <p className="text-red-400 font-semibold mb-2">Why Others Are Wrong:</p>
+                    {Object.entries(q.why_others_wrong).map(([key, value]) => (
+                      <p key={key} className="text-slate-300 text-sm mb-1">
+                        <span className="font-semibold">{key}:</span> {value}
+                      </p>
+                    ))}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        );
+      
+      case 'exam-strategy':
+        return (
+          <div className="space-y-4">
+            {content.do && content.do.length > 0 && (
+              <div className="border-l-4 border-emerald-500/50 bg-emerald-500/5 p-4 rounded">
+                <h4 className="executive-font text-lg font-semibold text-emerald-400 mb-3">✓ Do:</h4>
+                <ul className="space-y-1">
+                  {content.do.map((item, idx) => (
+                    <li key={idx} className="text-slate-300 flex items-start gap-2">
+                      <span className="text-emerald-400 mt-1">•</span>
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+            {content.dont && content.dont.length > 0 && (
+              <div className="border-l-4 border-red-500/50 bg-red-500/5 p-4 rounded">
+                <h4 className="executive-font text-lg font-semibold text-red-400 mb-3">✗ Don't:</h4>
+                <ul className="space-y-1">
+                  {content.dont.map((item, idx) => (
+                    <li key={idx} className="text-slate-300 flex items-start gap-2">
+                      <span className="text-red-400 mt-1">•</span>
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+            {content.key_phrases_correct && content.key_phrases_correct.length > 0 && (
+              <div className="border-l-4 border-cyan-500/50 bg-cyan-500/5 p-4 rounded">
+                <h4 className="executive-font text-lg font-semibold text-cyan-400 mb-3">Key Phrases That Signal Correct Answers:</h4>
+                <ul className="space-y-1">
+                  {content.key_phrases_correct.map((item, idx) => (
+                    <li key={idx} className="text-slate-300 flex items-start gap-2">
+                      <span className="text-cyan-400 mt-1">•</span>
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+            {content.key_phrases_wrong && content.key_phrases_wrong.length > 0 && (
+              <div className="border-l-4 border-orange-500/50 bg-orange-500/5 p-4 rounded">
+                <h4 className="executive-font text-lg font-semibold text-orange-400 mb-3">Key Phrases That Signal Wrong Answers:</h4>
+                <ul className="space-y-1">
+                  {content.key_phrases_wrong.map((item, idx) => (
+                    <li key={idx} className="text-slate-300 flex items-start gap-2">
+                      <span className="text-orange-400 mt-1">•</span>
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
+        );
+      
+      case 'performance-support-framework':
+      case 'sbi-feedback-model':
+      case 'recognition-strategies':
+      case 'addressing-underperformance':
+      case 'development-growth':
+      case 'performance-metrics':
+      case 'integration-tasks':
+        // Render complex nested objects as formatted sections
+        return (
+          <div className="space-y-4 text-slate-300">
+            {typeof content === 'object' && content !== null ? (
+              <div className="space-y-4">
+                {Object.entries(content).map(([key, value]) => (
+                  <div key={key} className="border-l-2 border-slate-600/50 pl-4">
+                    <h5 className="text-white font-semibold mb-2 capitalize">{key.replace(/_/g, ' ')}</h5>
+                    {typeof value === 'string' ? (
+                      <p className="text-sm text-slate-300">{value}</p>
+                    ) : Array.isArray(value) ? (
+                      <ul className="list-disc list-inside space-y-1 text-sm text-slate-300">
+                        {value.map((item, idx) => (
+                          <li key={idx}>{typeof item === 'string' ? item : JSON.stringify(item)}</li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <pre className="whitespace-pre-wrap text-xs bg-slate-900/50 p-2 rounded">{JSON.stringify(value, null, 2)}</pre>
+                    )}
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p>{content}</p>
+            )}
           </div>
         );
       
