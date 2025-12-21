@@ -5215,8 +5215,8 @@ const PMPApp = () => {
       'conflict-matcher': { attempts: [], avgScore: 0, perfectMatches: 0 },
       'leadership-style-matcher': { attempts: [], avgScore: 0, perfectMatches: 0 },
       'timeline-reconstructor': { attempts: [], bestScore: 0, avgAttempts: 0 },
-      'empathy-exercise': { scenariosCompleted: 0 },
-      'team-member-perspectives': { scenariosCompleted: 0 }
+      'empathy-exercise': { attempts: [], scenariosCompleted: 0 },
+      'team-member-perspectives': { attempts: [], scenariosCompleted: 0 }
     };
 
     // Collect stats from all tasks
@@ -5312,7 +5312,10 @@ const PMPApp = () => {
     }
 
     // Calculate Empathy Exercise / Team Member Perspectives stats
-    const eeAttempts = [...activityStats['empathy-exercise'].attempts, ...activityStats['team-member-perspectives'].attempts];
+    const eeAttempts = [
+      ...(activityStats['empathy-exercise']?.attempts || []), 
+      ...(activityStats['team-member-perspectives']?.attempts || [])
+    ];
     if (eeAttempts.length > 0) {
       const scenariosCompleted = eeAttempts.filter(a => a.scenarioCompleted).length;
       activityStats['empathy-exercise'].scenariosCompleted = scenariosCompleted;
