@@ -78,6 +78,14 @@ const PMPApp = () => {
   const [viewTransition, setViewTransition] = useState({ isTransitioning: false, nextView: null });
   const [showConfetti, setShowConfetti] = useState(false);
   
+  // Collapsible learning tabs state - tracks which tasks are expanded for each tab
+  // Format: { 'overview': { 'Manage Conflict': true, 'Lead a Team': false }, ... }
+  const [expandedLearningTasks, setExpandedLearningTasks] = useState({
+    'overview': {},
+    'pmp-application': {},
+    'deep-dive': {}
+  });
+  
   // Progress Tracking State
   const [progressData, setProgressData] = useState({
     completedActivities: {}, // { 'taskName': { 'activityName': { completed: true, completedAt: 'date', attempts: 1, bestScore: 0 } } }
@@ -5462,57 +5470,231 @@ const PMPApp = () => {
     return <div className="prose prose-invert max-w-none" dangerouslySetInnerHTML={{ __html: html }} />;
   };
 
-  if (view === 'learn-hub') return (
-    <div className="max-w-6xl w-full p-10 animate-fadeIn text-left">
-      {/* Header with Back Button */}
-      <header className="mb-8">
-        <div className="flex items-center gap-4 mb-6">
-          <button 
-            onClick={() => setView('task-interstitial')}
-            className="px-4 py-2 executive-font text-xs text-slate-400 hover:text-white uppercase font-semibold transition-colors flex items-center gap-2"
-          >
-            ← Back
-          </button>
-        </div>
-        <h1 className="executive-font text-5xl font-bold text-white tracking-tight mb-6">{selectedTask}</h1>
-        
-        {/* Tab Navigation */}
-        <div className="flex gap-8 border-b border-white/10">
-          <button 
-            onClick={() => setSubView('overview')} 
-            className={`px-4 py-3 executive-font text-xs font-semibold uppercase transition-all relative ${
-              subView === 'overview' 
-                ? 'text-white border-b-2 border-cyan-400' 
-                : 'text-slate-500 hover:text-slate-300'
-            }`}
-          >
-            Overview
-          </button>
-          <button 
-            onClick={() => setSubView('pmp-application')} 
-            className={`px-4 py-3 executive-font text-xs font-semibold uppercase transition-all relative ${
-              subView === 'pmp-application' 
-                ? 'text-white border-b-2 border-cyan-400' 
-                : 'text-slate-500 hover:text-slate-300'
-            }`}
-          >
-            PMP Application
-          </button>
-          <button 
-            onClick={() => setSubView('deep-dive')} 
-            className={`px-4 py-3 executive-font text-xs font-semibold uppercase transition-all relative ${
-              subView === 'deep-dive' 
-                ? 'text-white border-b-2 border-cyan-400' 
-                : 'text-slate-500 hover:text-slate-300'
-            }`}
-          >
-            Deep Dive
-          </button>
-        </div>
-      </header>
+  // Helper function to get all 35 tasks
+  const getAllTasks = () => {
+    return [
+      ...domainMap["People Domain"],
+      ...domainMap["Process Domain"],
+      ...domainMap["Business Domain"]
+    ];
+  };
 
-      {/* Content Area with Smooth Transitions */}
-      <div className="min-h-[400px] max-h-[70vh] overflow-y-auto custom-scrollbar">
+  // Helper function to toggle task expansion
+  const toggleTaskExpansion = (taskName) => {
+    setExpandedLearningTasks(prev => ({
+      ...prev,
+      [subView]: {
+        ...prev[subView],
+        [taskName]: !prev[subView][taskName]
+      }
+    }));
+  };
+
+  // Helper function to render task content based on subView
+  const renderTaskContent = (taskName, taskData) => {
+    if (!taskData || !taskData.learn) return null;
+
+    if (subView === 'overview') {
+      return (
+        <div className="space-y-4">
+          {taskData.learn.overview?.definition && (
+            <div className="glass-card p-6 border-l-4 border-blue-500 bg-white/[0.02]">
+              <h3 className="executive-font text-lg font-semibold text-white mb-3 uppercase tracking-wide">Definition</h3>
+              <p className="text-xl text-white font-light italic leading-tight">"{taskData.learn.overview.definition}"</p>
+            </div>
+          )}
+          {taskData.learn.overview?.module_introduction && (
+            <div className="glass-card p-4 border-l-4 border-blue-500">
+              <h3 className="executive-font text-base font-semibold text-white mb-2 uppercase tracking-wide">Module Introduction</h3>
+              <p className="text-slate-300 text-sm leading-relaxed">{taskData.learn.overview.module_introduction}</p>
+            </div>
+          )}
+          {taskData.learn.overview?.what_youll_learn && taskData.learn.overview.what_youll_learn.length > 0 && (
+            <div className="glass-card p-4 border-l-4 border-purple-500">
+              <h3 className="executive-font text-base font-semibold text-white mb-2 uppercase tracking-wide">What You'll Learn</h3>
+              <ul className="space-y-2">
+                {taskData.learn.overview.what_youll_learn.map((item, idx) => (
+                  <li key={idx} className="text-slate-300 text-sm flex items-start gap-2">
+                    <span className="text-purple-400 mt-1">•</span>
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+          {taskData.learn.overview?.why_this_matters && (
+            <div className="glass-card p-4 border-l-4 border-cyan-500">
+              <h3 className="executive-font text-base font-semibold text-white mb-2 uppercase tracking-wide">Why This Matters</h3>
+              <p className="text-slate-300 text-sm leading-relaxed">{taskData.learn.overview.why_this_matters}</p>
+            </div>
+          )}
+        </div>
+      );
+    } else if (subView === 'pmp-application') {
+      return (
+        <div className="space-y-4">
+          {taskData.learn.pmp_application?.connection_to_pmp && (
+            <div className="glass-card p-4 border-l-4 border-purple-500">
+              <h3 className="executive-font text-base font-semibold text-white mb-2 uppercase tracking-wide">Connection to PMP</h3>
+              <p className="text-slate-300 text-sm mb-2">{taskData.learn.pmp_application.connection_to_pmp}</p>
+              {taskData.learn.pmp_application.domain && (
+                <p className="text-emerald-400 text-sm font-semibold">Domain: {taskData.learn.pmp_application.domain}</p>
+              )}
+            </div>
+          )}
+          {taskData.learn.pmp_application?.how_module_supports_pmp_application && taskData.learn.pmp_application.how_module_supports_pmp_application.length > 0 && (
+            <div className="glass-card p-4 border-l-4 border-emerald-500">
+              <h3 className="executive-font text-base font-semibold text-white mb-2 uppercase tracking-wide">How This Supports Your Application</h3>
+              <ol className="space-y-1 list-decimal list-inside text-slate-300 text-sm">
+                {taskData.learn.pmp_application.how_module_supports_pmp_application.map((item, idx) => (
+                  <li key={idx}>{item}</li>
+                ))}
+              </ol>
+            </div>
+          )}
+        </div>
+      );
+    } else if (subView === 'deep-dive') {
+      return (
+        <div className="space-y-4">
+          {taskData.learn.deep_dive?.foundational_concept && (
+            <div className="glass-card p-4 border-l-4 border-blue-500">
+              <h3 className="executive-font text-base font-semibold text-white mb-2 uppercase tracking-wide">Foundational Concept</h3>
+              <p className="text-slate-300 text-sm">{taskData.learn.deep_dive.foundational_concept}</p>
+            </div>
+          )}
+          {taskData.learn.deep_dive?.introduction && (
+            <div className="glass-card p-4 border-l-4 border-cyan-500">
+              <h3 className="executive-font text-base font-semibold text-white mb-2 uppercase tracking-wide">Introduction</h3>
+              <p className="text-slate-300 text-sm">{taskData.learn.deep_dive.introduction}</p>
+            </div>
+          )}
+        </div>
+      );
+    }
+    return null;
+  };
+
+  if (view === 'learn-hub') {
+    const allTasks = getAllTasks();
+    const isExpanded = (taskName) => expandedLearningTasks[subView]?.[taskName] || false;
+
+    return (
+      <div className="max-w-7xl w-full p-10 animate-fadeIn text-left">
+        {/* Header with Back Button */}
+        <header className="mb-8">
+          <div className="flex items-center gap-4 mb-6">
+            <button 
+              onClick={() => setView('task-interstitial')}
+              className="px-4 py-2 executive-font text-xs text-slate-400 hover:text-white uppercase font-semibold transition-colors flex items-center gap-2"
+            >
+              ← Back
+            </button>
+          </div>
+          <h1 className="executive-font text-5xl font-bold text-white tracking-tight mb-6">
+            {subView === 'overview' ? 'Overview' : subView === 'pmp-application' ? 'PMP Application' : 'Deep Dive'}
+          </h1>
+          
+          {/* Tab Navigation */}
+          <div className="flex gap-8 border-b border-white/10">
+            <button 
+              onClick={() => setSubView('overview')} 
+              className={`px-4 py-3 executive-font text-xs font-semibold uppercase transition-all relative ${
+                subView === 'overview' 
+                  ? 'text-white border-b-2 border-cyan-400' 
+                  : 'text-slate-500 hover:text-slate-300'
+              }`}
+            >
+              Overview
+            </button>
+            <button 
+              onClick={() => setSubView('pmp-application')} 
+              className={`px-4 py-3 executive-font text-xs font-semibold uppercase transition-all relative ${
+                subView === 'pmp-application' 
+                  ? 'text-white border-b-2 border-cyan-400' 
+                  : 'text-slate-500 hover:text-slate-300'
+              }`}
+            >
+              PMP Application
+            </button>
+            <button 
+              onClick={() => setSubView('deep-dive')} 
+              className={`px-4 py-3 executive-font text-xs font-semibold uppercase transition-all relative ${
+                subView === 'deep-dive' 
+                  ? 'text-white border-b-2 border-cyan-400' 
+                  : 'text-slate-500 hover:text-slate-300'
+              }`}
+            >
+              Deep Dive
+            </button>
+          </div>
+        </header>
+
+      {/* Content Area - Grid of Collapsible Task Boxes */}
+      <div className="min-h-[400px] max-h-[80vh] overflow-y-auto custom-scrollbar">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
+          {allTasks.map((taskName) => {
+            const taskData = taskDatabase?.[taskName] || {};
+            const expanded = isExpanded(taskName);
+            const hasContent = taskData.learn && (
+              (subView === 'overview' && taskData.learn.overview) ||
+              (subView === 'pmp-application' && taskData.learn.pmp_application) ||
+              (subView === 'deep-dive' && taskData.learn.deep_dive)
+            );
+
+            return (
+              <div key={taskName} className="relative">
+                {!expanded ? (
+                  <button
+                    onClick={() => toggleTaskExpansion(taskName)}
+                    disabled={!hasContent}
+                    className={`w-full glass-card p-4 text-left transition-all border-l-4 ${
+                      hasContent
+                        ? 'border-cyan-500 hover:border-cyan-400 hover:bg-cyan-500/10 hover:scale-105 cursor-pointer'
+                        : 'border-slate-600 opacity-50 cursor-not-allowed'
+                    }`}
+                  >
+                    <h3 className="executive-font text-sm font-semibold text-white mb-1 line-clamp-2">
+                      {taskName}
+                    </h3>
+                    {hasContent && (
+                      <p className="text-xs text-cyan-400 mt-2">Click to expand →</p>
+                    )}
+                    {!hasContent && (
+                      <p className="text-xs text-slate-500 mt-2">No content</p>
+                    )}
+                  </button>
+                ) : (
+                  <div className="glass-card p-4 border-l-4 border-cyan-500 bg-cyan-500/10">
+                    <div className="flex items-start justify-between mb-3">
+                      <h3 className="executive-font text-sm font-semibold text-white flex-1">
+                        {taskName}
+                      </h3>
+                      <button
+                        onClick={() => toggleTaskExpansion(taskName)}
+                        className="text-cyan-400 hover:text-cyan-300 text-lg font-bold ml-2"
+                        title="Close"
+                      >
+                        ×
+                      </button>
+                    </div>
+                    <div className="max-h-[60vh] overflow-y-auto custom-scrollbar">
+                      {renderTaskContent(taskName, taskData)}
+                    </div>
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+      <GlobalNavFooter />
+    </div>
+    );
+  }
+
+  // Old learn-hub content removed - now using grid layout above
+  if (false) {
         {subView === 'overview' && (
           <div className="space-y-6 animate-fadeIn">
             <div className="flex justify-end mb-4">
