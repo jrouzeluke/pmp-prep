@@ -40,34 +40,57 @@ body::before {
     letter-spacing: -0.02em;
 }
 
-/* Executive Glassmorphism */
+/* ============================================
+   GLASSMORPHISM CARD INTERACTIONS
+   ============================================ */
 .glass-card {
     background: rgba(255, 255, 255, 0.04);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 1.5rem;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    will-change: transform, box-shadow;
 }
 
 .glass-card:hover {
     background: rgba(255, 255, 255, 0.08);
     border: 1px solid rgba(255, 255, 255, 0.2);
-    box-shadow: 0 12px 48px rgba(59, 130, 246, 0.2);
-    transform: translateY(-2px);
+    box-shadow: 0 16px 48px rgba(59, 130, 246, 0.3);
+    transform: translateY(-4px) scale(1.02);
 }
 
-/* CEO Style Executive Button */
+.glass-card:active {
+    transform: translateY(-2px) scale(0.98);
+    box-shadow: 0 8px 24px rgba(59, 130, 246, 0.2);
+    transition: all 100ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-card:focus {
+    outline: 2px solid #06b6d4;
+    outline-offset: 2px;
+}
+
+.glass-card:focus:not(:focus-visible) {
+    outline: none;
+}
+
+/* ============================================
+   BUTTON ANIMATIONS
+   ============================================ */
+
+/* Executive Button */
 .executive-btn {
     background: linear-gradient(135deg, rgba(59, 130, 246, 0.15) 0%, rgba(147, 51, 234, 0.15) 100%);
     border: 1px solid rgba(255, 255, 255, 0.15);
     backdrop-filter: blur(12px);
     border-radius: 1rem;
     padding: 2rem;
-    transition: all 0.3s ease;
+    transition: all 150ms cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
     overflow: hidden;
+    will-change: transform, background;
 }
 
 .executive-btn::before {
@@ -88,8 +111,58 @@ body::before {
 .executive-btn:hover {
     background: linear-gradient(135deg, rgba(59, 130, 246, 0.25) 0%, rgba(147, 51, 234, 0.25) 100%);
     border-color: rgba(255, 255, 255, 0.3);
-    transform: translateY(-4px);
+    transform: translateY(-4px) scale(1.05);
     box-shadow: 0 16px 48px rgba(59, 130, 246, 0.3);
+}
+
+.executive-btn:active {
+    transform: translateY(-2px) scale(0.95);
+    transition: all 100ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Ripple Effect for Buttons */
+.btn-ripple {
+    position: relative;
+    overflow: hidden;
+}
+
+.ripple {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: scale(0);
+    animation: rippleAnimation 600ms cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: none;
+}
+
+@keyframes rippleAnimation {
+    to {
+        transform: scale(4);
+        opacity: 0;
+    }
+}
+
+/* Standard Button Animations */
+button:not(.executive-btn):not(.task-btn) {
+    transition: all 150ms cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    will-change: transform, background-color;
+}
+
+button:not(.executive-btn):not(.task-btn):hover {
+    transform: scale(1.05);
+    filter: brightness(1.1);
+}
+
+button:not(.executive-btn):not(.task-btn):active {
+    transform: scale(0.95);
+    transition: all 100ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+button:focus-visible {
+    outline: 2px solid #06b6d4;
+    outline-offset: 2px;
 }
 
 /* Navigation & Footer Metrics */
@@ -97,20 +170,143 @@ body::before {
 .metric-border-purple { border-left: 3px solid #a855f7; }
 .metric-border-rose { border-left: 3px solid #f43f5e; }
 
-/* Transition Animations */
-.animate-fadeIn {
-    animation: fadeIn 0.5s ease-out forwards;
+/* ============================================
+   TRANSITION UTILITIES & ANIMATIONS
+   ============================================ */
+
+/* Page Transition Wrapper */
+.view-transition-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.view-transition-enter {
+    animation: viewFadeIn 300ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.view-transition-exit {
+    animation: viewFadeOut 200ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes viewFadeOut {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+}
+
+@keyframes viewFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Reusable Transition Classes */
+.fade-in {
+    animation: fadeIn 300ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.slide-up {
+    animation: slideUp 300ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.scale-in {
+    animation: scaleIn 300ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.bounce {
+    animation: bounce 600ms cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+}
+
+.shake {
+    animation: shake 500ms cubic-bezier(0.36, 0.07, 0.19, 0.97) forwards;
+}
+
+.pulse {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
 @keyframes fadeIn {
-    from { 
-        opacity: 0; 
-        transform: translateY(12px); 
+    from {
+        opacity: 0;
     }
-    to { 
-        opacity: 1; 
-        transform: translateY(0); 
+    to {
+        opacity: 1;
     }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes scaleIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes bounce {
+    0%, 20%, 53%, 80%, 100% {
+        transform: translate3d(0, 0, 0);
+    }
+    40%, 43% {
+        transform: translate3d(0, -8px, 0);
+    }
+    70% {
+        transform: translate3d(0, -4px, 0);
+    }
+    90% {
+        transform: translate3d(0, -2px, 0);
+    }
+}
+
+@keyframes shake {
+    0%, 100% {
+        transform: translateX(0);
+    }
+    10%, 30%, 50%, 70%, 90% {
+        transform: translateX(-4px);
+    }
+    20%, 40%, 60%, 80% {
+        transform: translateX(4px);
+    }
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.8;
+        transform: scale(1.05);
+    }
+}
+
+/* Legacy fadeIn for backward compatibility */
+.animate-fadeIn {
+    animation: fadeIn 0.5s ease-out forwards;
 }
 
 /* Strategy Suite Custom Scrollbar */
@@ -181,7 +377,321 @@ body::before {
     50% { opacity: 0.5; }
 }
 
-/* Confetti Animation */
+/* ============================================
+   ACTIVITY-SPECIFIC ANIMATIONS
+   ============================================ */
+
+/* PM Simulator */
+.status-meter {
+    transition: width 500ms cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: width;
+}
+
+.choice-button {
+    animation: slideUp 300ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    opacity: 0;
+}
+
+.choice-button:nth-child(1) { animation-delay: 0ms; }
+.choice-button:nth-child(2) { animation-delay: 50ms; }
+.choice-button:nth-child(3) { animation-delay: 100ms; }
+.choice-button:nth-child(4) { animation-delay: 150ms; }
+
+.feedback-card {
+    animation: slideUpFromBottom 300ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes slideUpFromBottom {
+    from {
+        opacity: 0;
+        transform: translateY(40px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Lightning Round */
+.timer-bar {
+    transition: width 100ms linear;
+    will-change: width;
+}
+
+.streak-counter {
+    transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.streak-counter.pulse {
+    animation: streakPulse 400ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes streakPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+}
+
+.correct-flash {
+    animation: correctFlash 300ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes correctFlash {
+    0% { background-color: transparent; }
+    50% { background-color: rgba(16, 185, 129, 0.3); }
+    100% { background-color: transparent; }
+}
+
+.incorrect-flash {
+    animation: incorrectFlash 300ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes incorrectFlash {
+    0% { background-color: transparent; }
+    50% { background-color: rgba(239, 68, 68, 0.3); }
+    100% { background-color: transparent; }
+}
+
+.score-counter {
+    transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.score-counter.animate {
+    animation: scoreCount 500ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes scoreCount {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+/* Document Detective */
+.document-card {
+    transition: transform 300ms cubic-bezier(0.4, 0, 0.2, 1);
+    transform-style: preserve-3d;
+}
+
+.document-card.flip {
+    animation: cardFlip 600ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes cardFlip {
+    0% { transform: rotateY(0deg); }
+    50% { transform: rotateY(90deg); }
+    100% { transform: rotateY(0deg); }
+}
+
+.explanation-card {
+    animation: slideIn 400ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    opacity: 0;
+}
+
+.explanation-card:nth-child(1) { animation-delay: 0ms; }
+.explanation-card:nth-child(2) { animation-delay: 100ms; }
+.explanation-card:nth-child(3) { animation-delay: 200ms; }
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.checkmark {
+    stroke-dasharray: 100;
+    stroke-dashoffset: 100;
+    animation: checkmarkDraw 500ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes checkmarkDraw {
+    to {
+        stroke-dashoffset: 0;
+    }
+}
+
+/* Conflict Matcher */
+.draggable-card {
+    transition: transform 200ms cubic-bezier(0.4, 0, 0.2, 1), box-shadow 200ms cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: transform, box-shadow;
+}
+
+.draggable-card.dragging {
+    transform: scale(1.05) translateY(-8px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    z-index: 1000;
+}
+
+.draggable-card.drop-zone {
+    animation: dropZoneGlow 300ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes dropZoneGlow {
+    0%, 100% { box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3); }
+    50% { box-shadow: 0 8px 32px rgba(6, 182, 212, 0.5); }
+}
+
+.draggable-card.correct-match {
+    animation: correctMatchPulse 600ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes correctMatchPulse {
+    0%, 100% { box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3); }
+    50% { box-shadow: 0 8px 32px rgba(16, 185, 129, 0.6); }
+}
+
+.draggable-card.incorrect-match {
+    animation: incorrectMatchShake 500ms cubic-bezier(0.36, 0.07, 0.19, 0.97);
+}
+
+@keyframes incorrectMatchShake {
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-4px); }
+    20%, 40%, 60%, 80% { transform: translateX(4px); }
+}
+
+.draggable-card.drop-settle {
+    animation: dropSettle 400ms cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+@keyframes dropSettle {
+    0% { transform: scale(1.1) translateY(-10px); }
+    50% { transform: scale(0.95) translateY(5px); }
+    100% { transform: scale(1) translateY(0); }
+}
+
+/* Timeline Reconstructor */
+.timeline-card {
+    transition: transform 300ms cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: transform;
+}
+
+.timeline-card.drag-over {
+    animation: dragOverGlow 300ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes dragOverGlow {
+    0%, 100% { border-left-color: #06b6d4; }
+    50% { border-left-color: #10b981; box-shadow: 0 0 20px rgba(16, 185, 129, 0.5); }
+}
+
+.timeline-card.cascade-highlight {
+    animation: cascadeHighlight 300ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes cascadeHighlight {
+    0% { background-color: rgba(255, 255, 255, 0.04); }
+    50% { background-color: rgba(16, 185, 129, 0.2); }
+    100% { background-color: rgba(255, 255, 255, 0.04); }
+}
+
+/* Empathy Exercise / Team Member Perspectives */
+.perspective-tab {
+    transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+}
+
+.perspective-tab::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: currentColor;
+    transition: width 400ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.perspective-tab.active::after {
+    width: 100%;
+}
+
+.perspective-content {
+    animation: crossFade 400ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes crossFade {
+    from {
+        opacity: 0;
+        transform: translateX(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.insight-reveal {
+    animation: insightReveal 500ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes insightReveal {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* ============================================
+   LOADING STATES
+   ============================================ */
+
+.skeleton {
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0.05) 25%, rgba(255, 255, 255, 0.1) 50%, rgba(255, 255, 255, 0.05) 75%);
+    background-size: 200% 100%;
+    animation: skeletonPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes skeletonPulse {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+.spinner {
+    border: 3px solid rgba(255, 255, 255, 0.1);
+    border-top-color: #06b6d4;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* ============================================
+   SUCCESS CELEBRATIONS
+   ============================================ */
+
+.confetti-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 9999;
+}
+
+.confetti {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background: #fbbf24;
+    animation: confettiFall 3s ease-in forwards;
+}
+
+.confetti:nth-child(2n) { background: #3b82f6; }
+.confetti:nth-child(3n) { background: #10b981; }
+.confetti:nth-child(4n) { background: #f43f5e; }
+.confetti:nth-child(5n) { background: #a855f7; }
+
 @keyframes confettiFall {
     0% {
         transform: translateY(-100vh) rotate(0deg);
@@ -193,6 +703,98 @@ body::before {
     }
 }
 
-.animate-confetti {
-    animation: confettiFall 3s ease-in forwards;
+.success-modal {
+    animation: modalSlideDown 400ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes modalSlideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ============================================
+   MICRO-INTERACTIONS
+   ============================================ */
+
+/* Checkbox */
+input[type="checkbox"] {
+    transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+input[type="checkbox"]:checked {
+    animation: checkboxBounce 400ms cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+@keyframes checkboxBounce {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+}
+
+/* Radio */
+input[type="radio"]:checked {
+    animation: radioRipple 400ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes radioRipple {
+    0% { box-shadow: 0 0 0 0 rgba(6, 182, 212, 0.7); }
+    100% { box-shadow: 0 0 0 10px rgba(6, 182, 212, 0); }
+}
+
+/* Progress Bar */
+.progress-bar {
+    transition: width 500ms cubic-bezier(0.4, 0, 0.2, 1);
+    background: linear-gradient(90deg, #3b82f6, #9333ea);
+    will-change: width;
+}
+
+/* Tooltip */
+.tooltip {
+    animation: tooltipFadeIn 200ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    opacity: 0;
+}
+
+@keyframes tooltipFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(5px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ============================================
+   ACCESSIBILITY
+   ============================================ */
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+/* ============================================
+   PERFORMANCE OPTIMIZATIONS
+   ============================================ */
+
+.will-animate {
+    will-change: transform, opacity;
+}
+
+.gpu-accelerated {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    perspective: 1000px;
 }

@@ -11,6 +11,7 @@ const PMPApp = () => {
   const [selectedTask, setSelectedTask] = useState('Manage Conflict');
   const [taskDatabase, setTaskDatabase] = useState(null);
   const [subView, setSubView] = useState('overview');
+  const [error, setError] = useState(null);
   // State for collapsible deep dive sections
   const [expandedStages, setExpandedStages] = useState({});
   const [expandedStyles, setExpandedStyles] = useState({});
@@ -55,13 +56,21 @@ const PMPApp = () => {
     showingFeedback: false,
     score: 0,
     draggedStep: null,
-    dragOverIndex: null
+    dragOverIndex: null,
+    expandedCards: {} // Track which cards are expanded: { eventId: true/false }
   });
   const [empathyExerciseState, setEmpathyExerciseState] = useState({
     currentScenario: 0,
     currentPerspective: 'personA',
     viewedPerspectives: {},
     showingInsight: false,
+    reflections: {}
+  });
+  const [teamMemberPerspectivesState, setTeamMemberPerspectivesState] = useState({
+    currentPart: 1, // 1 = Alex's Journey, 2 = Crisis Perspectives, 3 = Sarah's Perspective
+    currentScenario: '1A', // 1A-1E for Part 1, 2A-2D for Part 2, 3 for Part 3
+    viewedScenarios: {},
+    showingAnalysis: {},
     reflections: {}
   });
   
@@ -209,6 +218,14 @@ const PMPApp = () => {
         if (timeoutId) clearTimeout(timeoutId);
         if (err.name !== 'AbortError') {
           console.error("Data Load Failure", err);
+          // Set user-friendly error message
+          const errorMessage = err.message || 'Failed to load task data';
+          setError({
+            type: 'data_load_error',
+            message: errorMessage,
+            details: `Unable to load task data from './data/taskData.json'. Please ensure the file exists and is accessible.`,
+            timestamp: new Date().toISOString()
+          });
         }
         // Don't block the app - set empty database so app can still render
         console.log("Setting empty database due to error");
@@ -285,13 +302,67 @@ const PMPApp = () => {
     }
   }, [view, lightningRoundState.timeRemaining, lightningRoundState.quizStarted, lightningRoundState.showingFeedback, lightningRoundState.showEndScreen, selectedTask, taskDatabase]);
 
+  // View Transition Handler - wraps setView with animation
+  const handleViewChange = (newView, e = null) => {
+    if (view === newView) return;
+    if (e) createRipple(e);
+    
+    setViewTransition({ isTransitioning: true, nextView: newView });
+    
+    setTimeout(() => {
+      setView(newView);
+      setTimeout(() => {
+        setViewTransition({ isTransitioning: false, nextView: null });
+      }, 50);
+    }, 200);
+  };
+
+  // Wrapper for setView that maintains backward compatibility
+  const setViewWithTransition = (newView, useTransition = true) => {
+    if (useTransition) {
+      handleViewChange(newView);
+    } else {
+      setView(newView);
+    }
+  };
+
+  // Ripple Effect Handler
+  const createRipple = (event) => {
+    const button = event.currentTarget;
+    const circle = document.createElement('span');
+    const diameter = Math.max(button.clientWidth, button.clientHeight);
+    const radius = diameter / 2;
+
+    circle.style.width = circle.style.height = `${diameter}px`;
+    circle.style.left = `${event.clientX - button.offsetLeft - radius}px`;
+    circle.style.top = `${event.clientY - button.offsetTop - radius}px`;
+    circle.classList.add('ripple');
+
+    const ripple = button.getElementsByClassName('ripple')[0];
+    if (ripple) {
+      ripple.remove();
+    }
+
+    button.appendChild(circle);
+    
+    setTimeout(() => {
+      circle.remove();
+    }, 600);
+  };
+
+  // Confetti Effect
+  const triggerConfetti = () => {
+    setShowConfetti(true);
+    setTimeout(() => setShowConfetti(false), 2000);
+  };
+
   // Define GlobalNavFooter early so it can be used in early returns
   const GlobalNavFooter = () => (
     <div className="flex justify-center gap-8 mt-12 border-t border-white/10 pt-8">
-        <button onClick={() => setView('learn-hub')} className="text-xs text-slate-400 uppercase font-semibold hover:text-blue-400 transition-colors executive-font">Learn</button>
-        <button onClick={() => setView('practice-hub')} className="text-xs text-slate-400 uppercase font-semibold hover:text-purple-400 transition-colors executive-font">Practice</button>
-        <button onClick={() => setView('strategy-suite')} className="text-xs text-slate-400 uppercase font-semibold hover:text-emerald-400 transition-colors executive-font">Tasks</button>
-        <button onClick={() => setView('executive-hud')} className="text-xs text-slate-400 uppercase font-semibold hover:text-blue-400 transition-colors executive-font">Home</button>
+        <button onClick={(e) => { createRipple(e); handleViewChange('learn-hub'); }} className="text-xs text-slate-400 uppercase font-semibold hover:text-blue-400 transition-colors executive-font btn-ripple">Learn</button>
+        <button onClick={(e) => { createRipple(e); handleViewChange('practice-hub'); }} className="text-xs text-slate-400 uppercase font-semibold hover:text-purple-400 transition-colors executive-font btn-ripple">Practice</button>
+        <button onClick={(e) => { createRipple(e); handleViewChange('strategy-suite'); }} className="text-xs text-slate-400 uppercase font-semibold hover:text-emerald-400 transition-colors executive-font btn-ripple">Tasks</button>
+        <button onClick={(e) => { createRipple(e); handleViewChange('executive-hud'); }} className="text-xs text-slate-400 uppercase font-semibold hover:text-blue-400 transition-colors executive-font btn-ripple">Home</button>
     </div>
   );
 
@@ -304,6 +375,42 @@ const PMPApp = () => {
     </div>
   );
   }
+
+  // Error Display Component
+  const ErrorBanner = () => {
+    if (!error) return null;
+    
+    return (
+      <div className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50 max-w-2xl w-full mx-4">
+        <div className="glass-card p-4 border-l-4 border-red-500 bg-red-500/10">
+          <div className="flex items-start justify-between gap-4">
+            <div className="flex-1">
+              <div className="flex items-center gap-2 mb-2">
+                <span className="text-red-400 text-xl">⚠️</span>
+                <h3 className="executive-font text-lg font-semibold text-red-400">Error</h3>
+              </div>
+              <p className="text-white mb-1">{error.message}</p>
+              {error.details && (
+                <p className="text-slate-400 text-sm">{error.details}</p>
+              )}
+              {error.timestamp && (
+                <p className="text-slate-500 text-xs mt-2">
+                  {new Date(error.timestamp).toLocaleString()}
+                </p>
+              )}
+            </div>
+            <button
+              onClick={() => setError(null)}
+              className="text-slate-400 hover:text-white transition-colors px-2 py-1"
+              aria-label="Dismiss error"
+            >
+              ✕
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  };
 
   const currentTask = (taskDatabase && taskDatabase[selectedTask]) || { learn: {}, practice: { checklist: [], reflex_prompts: [], stress_test: [] } };
 
@@ -505,13 +612,13 @@ const PMPApp = () => {
 
     if (!stressTests || stressTests.length === 0) {
       return (
-        <div className="max-w-6xl w-full p-10 animate-fadeIn text-left">
+        <div className={`max-w-6xl w-full p-10 animate-fadeIn text-left view-transition-wrapper ${viewTransition.isTransitioning && viewTransition.nextView !== 'pm-simulator' ? 'view-transition-exit' : 'view-transition-enter'}`}>
           <div className="glass-card p-10 text-center">
             <h1 className="executive-font text-3xl font-bold text-white mb-4">PM Simulator</h1>
             <p className="text-slate-400">No scenarios available for this task.</p>
             <button 
-              onClick={() => setView('practice-hub')}
-              className="mt-6 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors executive-font"
+              onClick={(e) => { createRipple(e); handleViewChange('practice-hub'); }}
+              className="mt-6 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors executive-font btn-ripple"
             >
               ← Back to Practice Hub
             </button>
@@ -528,9 +635,16 @@ const PMPApp = () => {
       const bestScore = getBestScore(selectedTask, 'pm-simulator');
       const isNewBest = finalScore > bestScore;
       
+      // Trigger confetti on success
+      if (finalScore >= 70 && !showConfetti) {
+        setTimeout(() => triggerConfetti(), 300);
+      }
+      
       return (
-        <div className="max-w-6xl w-full p-10 animate-fadeIn text-left">
-          <header className="mb-8">
+        <>
+          <Confetti />
+          <div className="max-w-6xl w-full p-10 animate-fadeIn text-left success-modal">
+            <header className="mb-8">
             <div className="flex items-center gap-4 mb-6">
               <button 
                 onClick={() => {
@@ -566,7 +680,7 @@ const PMPApp = () => {
                   <span className="text-white font-bold">{simulatorState.morale}%</span>
                 </div>
                 <div className="w-full bg-slate-800 rounded-full h-4">
-                  <div className={`${getBarColor(simulatorState.morale)} h-4 rounded-full transition-all duration-500`} style={{width: `${simulatorState.morale}%`}}></div>
+                  <div className={`${getBarColor(simulatorState.morale)} h-4 rounded-full status-meter`} style={{width: `${simulatorState.morale}%`}}></div>
                 </div>
               </div>
               <div>
@@ -575,7 +689,7 @@ const PMPApp = () => {
                   <span className="text-white font-bold">{simulatorState.projectHealth}%</span>
                 </div>
                 <div className="w-full bg-slate-800 rounded-full h-4">
-                  <div className={`${getBarColor(simulatorState.projectHealth)} h-4 rounded-full transition-all duration-500`} style={{width: `${simulatorState.projectHealth}%`}}></div>
+                  <div className={`${getBarColor(simulatorState.projectHealth)} h-4 rounded-full status-meter`} style={{width: `${simulatorState.projectHealth}%`}}></div>
                 </div>
               </div>
               <div>
@@ -584,7 +698,7 @@ const PMPApp = () => {
                   <span className="text-white font-bold">{simulatorState.trust}%</span>
                 </div>
                 <div className="w-full bg-slate-800 rounded-full h-4">
-                  <div className={`${getBarColor(simulatorState.trust)} h-4 rounded-full transition-all duration-500`} style={{width: `${simulatorState.trust}%`}}></div>
+                  <div className={`${getBarColor(simulatorState.trust)} h-4 rounded-full status-meter`} style={{width: `${simulatorState.trust}%`}}></div>
                 </div>
               </div>
             </div>
@@ -628,6 +742,7 @@ const PMPApp = () => {
           </div>
           <GlobalNavFooter />
         </div>
+        </>
       );
     }
 
@@ -637,7 +752,7 @@ const PMPApp = () => {
       const isGoodChoice = (simulatorState.moraleChange || 0) + (simulatorState.projectHealthChange || 0) + (simulatorState.trustChange || 0) > 0;
       
       return (
-        <div className="max-w-6xl w-full p-10 animate-fadeIn text-left">
+        <div className="max-w-6xl w-full p-10 animate-fadeIn text-left view-transition-wrapper">
           <header className="mb-8">
             <div className="flex items-center gap-4 mb-6">
               <button 
@@ -662,7 +777,7 @@ const PMPApp = () => {
                   <span className="text-white font-bold">{simulatorState.morale}% {simulatorState.moraleChange > 0 ? '↗️' : simulatorState.moraleChange < 0 ? '↘️' : ''} {simulatorState.moraleChange !== 0 && `${simulatorState.moraleChange > 0 ? '+' : ''}${simulatorState.moraleChange}%`}</span>
                 </div>
                 <div className="w-full bg-slate-800 rounded-full h-4">
-                  <div className={`${getBarColor(simulatorState.morale)} h-4 rounded-full transition-all duration-500`} style={{width: `${simulatorState.morale}%`}}></div>
+                  <div className={`${getBarColor(simulatorState.morale)} h-4 rounded-full status-meter`} style={{width: `${simulatorState.morale}%`}}></div>
                 </div>
               </div>
               <div>
@@ -671,7 +786,7 @@ const PMPApp = () => {
                   <span className="text-white font-bold">{simulatorState.projectHealth}% {simulatorState.projectHealthChange > 0 ? '↗️' : simulatorState.projectHealthChange < 0 ? '↘️' : ''} {simulatorState.projectHealthChange !== 0 && `${simulatorState.projectHealthChange > 0 ? '+' : ''}${simulatorState.projectHealthChange}%`}</span>
                 </div>
                 <div className="w-full bg-slate-800 rounded-full h-4">
-                  <div className={`${getBarColor(simulatorState.projectHealth)} h-4 rounded-full transition-all duration-500`} style={{width: `${simulatorState.projectHealth}%`}}></div>
+                  <div className={`${getBarColor(simulatorState.projectHealth)} h-4 rounded-full status-meter`} style={{width: `${simulatorState.projectHealth}%`}}></div>
                 </div>
               </div>
               <div>
@@ -680,14 +795,14 @@ const PMPApp = () => {
                   <span className="text-white font-bold">{simulatorState.trust}% {simulatorState.trustChange > 0 ? '↗️' : simulatorState.trustChange < 0 ? '↘️' : ''} {simulatorState.trustChange !== 0 && `${simulatorState.trustChange > 0 ? '+' : ''}${simulatorState.trustChange}%`}</span>
                 </div>
                 <div className="w-full bg-slate-800 rounded-full h-4">
-                  <div className={`${getBarColor(simulatorState.trust)} h-4 rounded-full transition-all duration-500`} style={{width: `${simulatorState.trust}%`}}></div>
+                  <div className={`${getBarColor(simulatorState.trust)} h-4 rounded-full status-meter`} style={{width: `${simulatorState.trust}%`}}></div>
                 </div>
               </div>
             </div>
           </div>
 
           {/* Feedback Card */}
-          <div className="glass-card p-8 mb-6">
+          <div className="glass-card p-8 mb-6 feedback-card">
             <div className={`text-4xl mb-4 ${isGoodChoice ? 'text-emerald-400' : 'text-yellow-400'}`}>
               {isGoodChoice ? '✅ EXCELLENT CHOICE!' : '⚠️ NOT IDEAL'}
             </div>
@@ -702,8 +817,8 @@ const PMPApp = () => {
           </div>
 
           <button 
-            onClick={continueToNextScene}
-            className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors executive-font"
+            onClick={(e) => { createRipple(e); continueToNextScene(); }}
+            className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors executive-font btn-ripple"
           >
             {simulatorState.currentScene < totalScenes - 1 ? `Continue to Scene ${simulatorState.currentScene + 2}` : 'View Results'}
           </button>
@@ -751,7 +866,7 @@ const PMPApp = () => {
                 <span className="text-white font-bold">{simulatorState.morale}%</span>
               </div>
               <div className="w-full bg-slate-800 rounded-full h-4">
-                <div className={`${getBarColor(simulatorState.morale)} h-4 rounded-full transition-all duration-500`} style={{width: `${simulatorState.morale}%`}}></div>
+                <div className={`${getBarColor(simulatorState.morale)} h-4 rounded-full status-meter`} style={{width: `${simulatorState.morale}%`}}></div>
               </div>
             </div>
             <div>
@@ -760,7 +875,7 @@ const PMPApp = () => {
                 <span className="text-white font-bold">{simulatorState.projectHealth}%</span>
               </div>
               <div className="w-full bg-slate-800 rounded-full h-4">
-                <div className={`${getBarColor(simulatorState.projectHealth)} h-4 rounded-full transition-all duration-500`} style={{width: `${simulatorState.projectHealth}%`}}></div>
+                <div className={`${getBarColor(simulatorState.projectHealth)} h-4 rounded-full status-meter`} style={{width: `${simulatorState.projectHealth}%`}}></div>
               </div>
             </div>
             <div>
@@ -769,7 +884,7 @@ const PMPApp = () => {
                 <span className="text-white font-bold">{simulatorState.trust}%</span>
               </div>
               <div className="w-full bg-slate-800 rounded-full h-4">
-                <div className={`${getBarColor(simulatorState.trust)} h-4 rounded-full transition-all duration-500`} style={{width: `${simulatorState.trust}%`}}></div>
+                <div className={`${getBarColor(simulatorState.trust)} h-4 rounded-full status-meter`} style={{width: `${simulatorState.trust}%`}}></div>
               </div>
             </div>
           </div>
@@ -785,16 +900,17 @@ const PMPApp = () => {
               {currentScenario.options.map((option, idx) => (
                 <button
                   key={idx}
-                  onClick={() => handleChoice(idx)}
-                  className="w-full glass-card p-4 text-left hover:bg-blue-500/10 transition-all border-l-4 border-blue-500/50 hover:border-blue-500"
+                  onClick={(e) => { createRipple(e); handleChoice(idx); }}
+                  className={`w-full glass-card p-4 text-left hover:bg-blue-500/10 transition-all border-l-4 border-blue-500/50 hover:border-blue-500 choice-button btn-ripple`}
+                  style={{ animationDelay: `${idx * 50}ms` }}
                 >
                   <div className="flex items-start gap-3">
                     <span className="font-bold text-blue-400 text-xl">{String.fromCharCode(65 + idx)}.</span>
                     <span className="text-white flex-1">{option.text}</span>
                   </div>
-          </button>
-        ))}
-      </div>
+                </button>
+              ))}
+            </div>
           )}
         </div>
         <GlobalNavFooter />
@@ -891,6 +1007,8 @@ const PMPApp = () => {
 
         if (finalScore > bestScore) {
           localStorage.setItem(`lightning-round-best-${selectedTask}`, finalScore.toString());
+          // Trigger confetti for new high score
+          setTimeout(() => triggerConfetti(), 300);
         }
         setLightningRoundState(prev => ({
           ...prev,
@@ -953,8 +1071,8 @@ const PMPApp = () => {
             <p className="text-slate-400 mb-6">Test your reflexes with 10 rapid-fire questions. 30 seconds per question!</p>
             <p className="text-slate-300 mb-8">Best Score: <span className="text-emerald-400 font-bold">{bestScore.toLocaleString()}</span> points</p>
             <button 
-              onClick={startQuiz}
-              className="px-8 py-4 bg-yellow-500 hover:bg-yellow-600 text-white font-bold rounded-lg transition-colors executive-font text-lg"
+              onClick={(e) => { createRipple(e); startQuiz(); }}
+              className="px-8 py-4 bg-yellow-500 hover:bg-yellow-600 text-white font-bold rounded-lg transition-colors executive-font text-lg btn-ripple"
             >
               Start Quiz ⚡
             </button>
@@ -986,21 +1104,20 @@ const PMPApp = () => {
       const isNewBest = lightningRoundState.score > bestScore;
       
       return (
-        <div className="max-w-6xl w-full p-10 animate-fadeIn text-left">
-          <header className="mb-8">
-            <div className="flex items-center gap-4 mb-6">
-              <button 
-                onClick={() => {
-                  resetQuiz();
-                  setView('practice-hub');
-                }}
-                className="px-4 py-2 executive-font text-xs text-slate-400 hover:text-white uppercase font-semibold transition-colors flex items-center gap-2"
-              >
-                ← Back
-              </button>
-            </div>
-            <h1 className="executive-font text-5xl font-bold text-white tracking-tight">🎉 Lightning Round Complete!</h1>
-          </header>
+        <>
+          <Confetti />
+          <div className={`max-w-6xl w-full p-10 animate-fadeIn text-left view-transition-wrapper success-modal ${viewTransition.isTransitioning && viewTransition.nextView !== 'lightning-round' ? 'view-transition-exit' : 'view-transition-enter'}`}>
+            <header className="mb-8">
+              <div className="flex items-center gap-4 mb-6">
+                <button 
+                  onClick={(e) => { createRipple(e); resetQuiz(); handleViewChange('practice-hub'); }}
+                  className="px-4 py-2 executive-font text-xs text-slate-400 hover:text-white uppercase font-semibold transition-colors flex items-center gap-2 btn-ripple"
+                >
+                  ← Back
+                </button>
+              </div>
+              <h1 className="executive-font text-5xl font-bold text-white tracking-tight">🎉 Lightning Round Complete!</h1>
+            </header>
 
           <div className="glass-card p-8 mb-6">
             <div className="text-center mb-6">
@@ -1028,7 +1145,7 @@ const PMPApp = () => {
               </div>
               <div className="glass-card p-4 border-l-4 border-emerald-500">
                 <div className="text-sm text-slate-400 uppercase mb-1">Longest Streak</div>
-                <div className="text-3xl font-bold text-white">{'🔥'.repeat(Math.min(longestStreak, 5))} {longestStreak}x</div>
+                <div className={`text-3xl font-bold text-white streak-counter ${longestStreak > 0 ? 'pulse' : ''}`}>{'🔥'.repeat(Math.min(longestStreak, 5))} {longestStreak}x</div>
               </div>
               <div className="glass-card p-4 border-l-4 border-yellow-500">
                 <div className="text-sm text-slate-400 uppercase mb-1">Fastest Answer</div>
@@ -1058,6 +1175,7 @@ const PMPApp = () => {
           </div>
           <GlobalNavFooter />
         </div>
+        </>
       );
     }
 
@@ -1093,12 +1211,12 @@ const PMPApp = () => {
             <h1 className="executive-font text-4xl font-bold text-white tracking-tight">⚡ Lightning Round</h1>
           </header>
 
-          <div className="glass-card p-8 text-center mb-6">
+          <div className={`glass-card p-8 text-center mb-6 ${isCorrect ? 'correct-flash' : 'incorrect-flash'}`}>
             <div className={`text-6xl mb-4 ${isCorrect ? 'text-emerald-400' : 'text-red-400'}`}>
               {isCorrect ? '✅' : '❌'}
             </div>
             {isCorrect && (
-              <div className="text-2xl font-bold text-emerald-400 mb-2">
+              <div className="text-2xl font-bold text-emerald-400 mb-2 score-counter animate">
                 +{lastAnswer.points.toLocaleString()} points
               </div>
             )}
@@ -1141,11 +1259,13 @@ const PMPApp = () => {
         <div className="glass-card p-4 mb-6">
           <div className="flex justify-between items-center mb-2">
             <div className="text-slate-400 text-sm">⏱️ {lightningRoundState.timeRemaining}s</div>
-            <div className="text-slate-400 text-sm">Streak: {streakFires} {lightningRoundState.streak}x</div>
+            <div className={`text-slate-400 text-sm streak-counter ${lightningRoundState.streak > 0 ? 'pulse' : ''}`}>
+              Streak: {streakFires} {lightningRoundState.streak}x
+            </div>
           </div>
           <div className="w-full bg-slate-800 rounded-full h-3">
             <div 
-              className={`${lightningRoundState.timeRemaining > 10 ? 'bg-yellow-500' : 'bg-red-500'} h-3 rounded-full transition-all duration-1000`}
+              className={`${lightningRoundState.timeRemaining > 10 ? 'bg-yellow-500' : 'bg-red-500'} h-3 rounded-full timer-bar`}
               style={{width: `${timeProgress}%`}}
             ></div>
           </div>
@@ -1155,7 +1275,7 @@ const PMPApp = () => {
         <div className="flex justify-between items-center mb-6">
           <div className="text-slate-400 text-sm uppercase tracking-wide">Question {lightningRoundState.currentQuestion + 1}/10</div>
           <div className="flex gap-4 text-sm">
-            <div className="text-white">Score: <span className="text-yellow-400 font-bold">{lightningRoundState.score.toLocaleString()}</span></div>
+            <div className="text-white">Score: <span className="text-yellow-400 font-bold score-counter">{lightningRoundState.score.toLocaleString()}</span></div>
             <div className="text-slate-400">Best: <span className="text-emerald-400">{bestScore.toLocaleString()}</span></div>
           </div>
         </div>
@@ -1446,7 +1566,7 @@ const PMPApp = () => {
                 {missedImportant.map((doc, idx) => {
                   const explanation = currentCaseData.explanations[doc];
                   return (
-                    <div key={idx} className="glass-card p-6 border-l-4 border-orange-500">
+                    <div key={idx} className="glass-card p-6 border-l-4 border-orange-500 explanation-card" style={{ animationDelay: `${(selectedCorrect.length + idx) * 100}ms` }}>
                       <h4 className="executive-font text-lg font-semibold text-white mb-3">You didn't pick {doc}</h4>
                       {explanation && (
                         <>
@@ -1686,11 +1806,11 @@ const PMPApp = () => {
                 return (
                   <button
                     key={idx}
-                    onClick={() => toggleDocument(doc)}
+                    onClick={(e) => { createRipple(e); toggleDocument(doc); }}
                     disabled={!isSelected && documentDetectiveState.selectedDocs.length >= 3}
-                    className={`glass-card p-4 text-left transition-all border-l-4 ${
+                    className={`glass-card p-4 text-left transition-all border-l-4 document-card btn-ripple ${
                       isSelected 
-                        ? 'border-cyan-500 bg-cyan-500/10' 
+                        ? 'border-cyan-500 bg-cyan-500/10 flip' 
                         : documentDetectiveState.selectedDocs.length >= 3
                           ? 'border-slate-600 opacity-50 cursor-not-allowed'
                           : 'border-slate-600 hover:border-cyan-500/50 hover:bg-cyan-500/5'
@@ -1714,9 +1834,9 @@ const PMPApp = () => {
         {/* Submit Button */}
         <div className="flex justify-center">
           <button
-            onClick={submitSelections}
+            onClick={(e) => { if (currentCaseData.allDocs && documentDetectiveState.selectedDocs.length === 3) { createRipple(e); submitSelections(); } }}
             disabled={!currentCaseData.allDocs || documentDetectiveState.selectedDocs.length !== 3}
-            className={`px-8 py-4 font-semibold rounded-lg transition-colors executive-font text-lg ${
+            className={`px-8 py-4 font-semibold rounded-lg transition-colors executive-font text-lg btn-ripple ${
               currentCaseData.allDocs && documentDetectiveState.selectedDocs.length === 3
                 ? 'bg-purple-600 hover:bg-purple-700 text-white'
                 : 'bg-slate-700 text-slate-400 cursor-not-allowed'
@@ -1807,16 +1927,44 @@ const PMPApp = () => {
 
     const handleDragOver = (e) => {
       e.preventDefault();
+      e.currentTarget.classList.add('drop-zone');
     };
 
-    const handleDrop = (modeName) => {
+    const handleDragLeave = (e) => {
+      e.currentTarget.classList.remove('drop-zone');
+    };
+
+    const handleDrop = (modeName, e) => {
+      if (e) {
+        e.preventDefault();
+        e.currentTarget.classList.remove('drop-zone');
+      }
       if (!conflictMatcherState.draggedScenario) return;
+      
+      const scenarioId = conflictMatcherState.draggedScenario;
+      const correctAnswer = conflictMatcherScenarios.find(s => s.id === scenarioId)?.correctStyle || 
+                            conflictMatcherScenarios.find(s => s.id === scenarioId)?.correctMode;
+      const isCorrect = correctAnswer && (correctAnswer.includes('/') 
+        ? correctAnswer.split('/').some(style => style.trim() === modeName)
+        : modeName === correctAnswer);
       
       setConflictMatcherState(prev => ({
         ...prev,
-        matches: { ...prev.matches, [prev.draggedScenario]: modeName },
+        matches: { ...prev.matches, [scenarioId]: modeName },
         draggedScenario: null
       }));
+      
+      // Add animation class to the dropped card
+      setTimeout(() => {
+        const card = document.querySelector(`[data-scenario-id="${scenarioId}"]`);
+        if (card) {
+          card.classList.add(isCorrect ? 'correct-match' : 'incorrect-match');
+          card.classList.add('drop-settle');
+          setTimeout(() => {
+            card.classList.remove('drop-settle');
+          }, 400);
+        }
+      }, 0);
     };
 
     const handleClickSelect = (scenarioId, modeName) => {
@@ -1843,6 +1991,11 @@ const PMPApp = () => {
       });
 
       const isPerfect = correctCount === conflictMatcherScenarios.length;
+      
+      // Trigger confetti on perfect score
+      if (isPerfect) {
+        setTimeout(() => triggerConfetti(), 300);
+      }
       
       // Record comprehensive score
       recordComprehensiveScore(selectedTask, selectedTask === 'Lead a Team' ? 'leadership-style-matcher' : 'conflict-matcher', {
@@ -1929,7 +2082,7 @@ const PMPApp = () => {
                 <div 
                   key={scenario.id} 
                   className={`glass-card p-6 border-l-4 ${
-                    isCorrect ? 'border-emerald-500' : 'border-red-500'
+                    isCorrect ? 'border-emerald-500 correct-match' : 'border-red-500 incorrect-match'
                   }`}
                 >
                   <div className="flex items-start gap-3 mb-4">
@@ -1977,14 +2130,14 @@ const PMPApp = () => {
           {/* Action Buttons */}
           <div className="flex gap-4">
             <button 
-              onClick={resetGame}
-              className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors executive-font"
+              onClick={(e) => { createRipple(e); resetGame(); }}
+              className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors executive-font btn-ripple"
             >
               Try Again
             </button>
             <button 
-              onClick={goToPracticeHub}
-              className="px-6 py-3 bg-slate-700 hover:bg-slate-600 text-white font-semibold rounded-lg transition-colors executive-font"
+              onClick={(e) => { createRipple(e); goToPracticeHub(); }}
+              className="px-6 py-3 bg-slate-700 hover:bg-slate-600 text-white font-semibold rounded-lg transition-colors executive-font btn-ripple"
             >
               Back to Practice Hub
             </button>
@@ -2024,13 +2177,13 @@ const PMPApp = () => {
                 return (
                   <div
                     key={scenario.id}
+                    data-scenario-id={scenario.id}
                     draggable
                     onDragStart={() => handleDragStart(scenario.id)}
                     onClick={() => setConflictMatcherState(prev => ({ ...prev, draggedScenario: scenario.id }))}
-                    className={`glass-card p-4 cursor-move transition-all ${
-                      isDragging ? 'opacity-50 scale-95' : 'hover:scale-105'
+                    className={`glass-card p-4 cursor-move draggable-card ${
+                      isDragging ? 'dragging' : ''
                     } ${!isMatched ? 'animate-pulse' : ''}`}
-                    style={{ boxShadow: isDragging ? '0 8px 16px rgba(0,0,0,0.3)' : 'none' }}
                   >
                     <p className="text-white text-sm">{scenario.scenario}</p>
                   </div>
@@ -2297,7 +2450,8 @@ const PMPApp = () => {
         showingFeedback: false,
         score: 0,
         draggedStep: null,
-        dragOverIndex: null
+        dragOverIndex: null,
+        expandedCards: {}
       });
       setView('practice-hub');
     };
@@ -2443,20 +2597,20 @@ const PMPApp = () => {
           {/* Action Buttons */}
           <div className="flex gap-4">
             <button 
-              onClick={resetGame}
-              className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors executive-font"
+              onClick={(e) => { createRipple(e); resetGame(); }}
+              className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors executive-font btn-ripple"
             >
               Try Again
             </button>
             <button 
-              onClick={resetGame}
-              className="px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-lg transition-colors executive-font"
+              onClick={(e) => { createRipple(e); resetGame(); }}
+              className="px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-lg transition-colors executive-font btn-ripple"
             >
               New Challenge
             </button>
             <button 
-              onClick={goToPracticeHub}
-              className="px-6 py-3 bg-slate-700 hover:bg-slate-600 text-white font-semibold rounded-lg transition-colors executive-font"
+              onClick={(e) => { createRipple(e); goToPracticeHub(); }}
+              className="px-6 py-3 bg-slate-700 hover:bg-slate-600 text-white font-semibold rounded-lg transition-colors executive-font btn-ripple"
             >
               Back to Practice Hub
             </button>
@@ -2547,15 +2701,55 @@ const PMPApp = () => {
             </div>
           )}
 
+          {/* Tuckman's Model Reference Section */}
+          <div className="glass-card p-6 mb-6 bg-purple-500/10 border-l-4 border-purple-500">
+            <h2 className="executive-font text-2xl font-bold text-white mb-4">📚 Tuckman's Model Reference</h2>
+            <p className="text-slate-300 mb-4">Use this quick reference to identify which Tuckman stage each event represents:</p>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+              <div className="bg-slate-800/50 p-4 rounded border-l-2 border-green-500">
+                <h3 className="text-green-400 font-bold text-lg mb-2">🌱 Forming</h3>
+                <p className="text-slate-300 text-sm">New team, polite, uncertain, dependent on PM, many questions about roles/process</p>
+              </div>
+              <div className="bg-slate-800/50 p-4 rounded border-l-2 border-red-500">
+                <h3 className="text-red-400 font-bold text-lg mb-2">⚡ Storming</h3>
+                <p className="text-slate-300 text-sm">Conflict, power struggles, challenging authority, competition, energy to disagreement</p>
+              </div>
+              <div className="bg-slate-800/50 p-4 rounded border-l-2 border-blue-500">
+                <h3 className="text-blue-400 font-bold text-lg mb-2">🤝 Norming</h3>
+                <p className="text-slate-300 text-sm">Cooperation, "we" language, processes working, team identity forming, mutual support</p>
+              </div>
+              <div className="bg-slate-800/50 p-4 rounded border-l-2 border-cyan-500">
+                <h3 className="text-cyan-400 font-bold text-lg mb-2">🚀 Performing</h3>
+                <p className="text-slate-300 text-sm">High autonomy, self-organizing, consistent excellence, minimal PM intervention</p>
+              </div>
+              <div className="bg-slate-800/50 p-4 rounded border-l-2 border-yellow-500">
+                <h3 className="text-yellow-400 font-bold text-lg mb-2">👋 Adjourning</h3>
+                <p className="text-slate-300 text-sm">Project ending, reflective, emotional about closure, transition planning</p>
+              </div>
+            </div>
+          </div>
+
           {/* Events Section */}
           <div className="glass-card p-6 mb-6">
             <h2 className="executive-font text-2xl font-bold text-white mb-4">The Scrambled Events</h2>
-            <p className="text-slate-400 mb-4">Arrange these events in chronological order by dragging them:</p>
+            <p className="text-slate-400 mb-4">Arrange these events in chronological order by dragging them. Click to expand/collapse each card:</p>
             
-            <div className="space-y-4">
+            <div className="space-y-2">
               {displaySteps.map((event, index) => {
                 const isDragging = timelineReconstructorState.draggedStep === event.id;
                 const isDragOver = timelineReconstructorState.dragOverIndex === index;
+                const isExpanded = timelineReconstructorState.expandedCards[event.id] || false;
+
+                const toggleCard = (e) => {
+                  e.stopPropagation();
+                  setTimelineReconstructorState(prev => ({
+                    ...prev,
+                    expandedCards: {
+                      ...prev.expandedCards,
+                      [event.id]: !prev.expandedCards[event.id]
+                    }
+                  }));
+                };
 
                 return (
                   <div
@@ -2564,51 +2758,75 @@ const PMPApp = () => {
                     onDragStart={() => handleDragStart(event.id)}
                     onDragOver={(e) => handleDragOver(e, index)}
                     onDrop={(e) => handleDrop(e, index)}
-                    className={`glass-card p-6 border-l-4 border-cyan-500 cursor-move transition-all ${
-                      isDragging ? 'opacity-50 scale-95' : 'hover:scale-[1.01]'
-                    } ${isDragOver ? 'border-l-8 border-emerald-500' : ''}`}
+                    className={`glass-card border-l-4 border-cyan-500 cursor-move transition-all ${
+                      isDragging ? 'opacity-50 scale-95 shadow-lg' : 'hover:border-cyan-400 hover:shadow-md'
+                    } ${isDragOver ? 'border-l-8 border-emerald-500 bg-emerald-500/10' : ''}`}
                   >
-                    <div className="flex items-start gap-4">
-                      {/* Drag Handle and Position */}
-                      <div className="flex flex-col items-center gap-2">
-                        <div className="text-slate-400 text-2xl cursor-grab active:cursor-grabbing">☰</div>
-                        <div className="w-10 h-10 rounded-full bg-cyan-500 text-white font-bold flex items-center justify-center flex-shrink-0">
-                          {index + 1}
-                        </div>
+                    {/* Card Header - Always Visible */}
+                    <div className="p-2.5 flex items-center gap-3">
+                      {/* Drag Handle - More Prominent */}
+                      <div 
+                        className="flex items-center justify-center w-8 h-8 rounded bg-cyan-500/20 hover:bg-cyan-500/40 cursor-grab active:cursor-grabbing transition-colors flex-shrink-0"
+                        title="Drag to reorder"
+                      >
+                        <div className="text-cyan-400 text-lg font-bold">☰</div>
+                      </div>
+                      
+                      {/* Position Number - Smaller */}
+                      <div className="w-7 h-7 rounded-full bg-cyan-500 text-white text-sm font-bold flex items-center justify-center flex-shrink-0">
+                        {index + 1}
                       </div>
 
-                      {/* Event Content */}
-                      <div className="flex-1">
-                        <div className="flex items-center gap-3 mb-2">
-                          <span className="text-lg font-bold text-cyan-400">Event {event.id}</span>
+                      {/* Event Header Content - Compact */}
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 mb-0.5">
+                          <span className="text-sm font-semibold text-cyan-400">Event {event.id}</span>
                           {event.type && (
-                            <span className="text-sm text-slate-400 bg-slate-700 px-2 py-1 rounded">{event.type}</span>
+                            <span className="text-xs text-slate-400 bg-slate-700 px-1.5 py-0.5 rounded">{event.type}</span>
                           )}
                         </div>
                         {event.title && (
-                          <h3 className="text-xl font-bold text-white mb-3">{event.title}</h3>
+                          <h3 className="text-sm font-semibold text-white line-clamp-1">{event.title}</h3>
                         )}
+                        {!isExpanded && event.content && (
+                          <p className="text-xs text-slate-400 line-clamp-1 mt-0.5">{event.content.substring(0, 80)}...</p>
+                        )}
+                      </div>
+
+                      {/* Expand/Collapse Button - Smaller */}
+                      <button
+                        onClick={toggleCard}
+                        className="flex-shrink-0 px-2 py-1 text-slate-400 hover:text-white transition-colors text-sm"
+                        title={isExpanded ? "Collapse" : "Expand"}
+                      >
+                        {isExpanded ? '▼' : '▶'}
+                      </button>
+                    </div>
+
+                    {/* Collapsible Content */}
+                    {isExpanded && (
+                      <div className="px-2.5 pb-2.5 border-t border-slate-700/50 pt-2.5">
                         {event.content && (
-                          <div className="bg-slate-900/50 p-4 rounded border border-slate-700 mb-3">
-                            <pre className="text-slate-300 whitespace-pre-wrap font-mono text-sm">{event.content}</pre>
+                          <div className="bg-slate-900/50 p-2.5 rounded border border-slate-700 mb-2">
+                            <pre className="text-slate-300 whitespace-pre-wrap font-mono text-xs">{event.content}</pre>
                           </div>
                         )}
-                        <div className="mt-4 flex gap-4 text-sm">
+                        <div className="mt-2 flex gap-2 text-xs">
                           <div className="flex-1">
-                            <label className="text-slate-400 block mb-1">Your Sequence Number:</label>
-                            <input type="number" className="w-full px-3 py-2 bg-slate-800 border border-slate-600 rounded text-white" placeholder="___" disabled />
+                            <label className="text-slate-400 block mb-0.5 text-xs">Sequence:</label>
+                            <input type="number" className="w-full px-2 py-1 bg-slate-800 border border-slate-600 rounded text-white text-xs" placeholder="___" disabled />
                           </div>
                           <div className="flex-1">
-                            <label className="text-slate-400 block mb-1">Stage:</label>
-                            <input type="text" className="w-full px-3 py-2 bg-slate-800 border border-slate-600 rounded text-white" placeholder="___" disabled />
+                            <label className="text-slate-400 block mb-0.5 text-xs">Stage:</label>
+                            <input type="text" className="w-full px-2 py-1 bg-slate-800 border border-slate-600 rounded text-white text-xs" placeholder="___" disabled />
                           </div>
                           <div className="flex-1">
-                            <label className="text-slate-400 block mb-1">Sarah's Leadership Style:</label>
-                            <input type="text" className="w-full px-3 py-2 bg-slate-800 border border-slate-600 rounded text-white" placeholder="___" disabled />
+                            <label className="text-slate-400 block mb-0.5 text-xs">Style:</label>
+                            <input type="text" className="w-full px-2 py-1 bg-slate-800 border border-slate-600 rounded text-white text-xs" placeholder="___" disabled />
                           </div>
                         </div>
                       </div>
-                    </div>
+                    )}
                   </div>
                 );
               })}
@@ -2618,8 +2836,8 @@ const PMPApp = () => {
           {/* Check Order Button */}
           <div className="flex justify-center mb-6">
             <button
-              onClick={checkOrder}
-              className="px-8 py-4 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-lg transition-colors executive-font text-lg"
+              onClick={(e) => { createRipple(e); checkOrder(); }}
+              className="px-8 py-4 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-lg transition-colors executive-font text-lg btn-ripple"
             >
               Check Sequence
             </button>
@@ -2973,12 +3191,54 @@ const PMPApp = () => {
           <p className="text-blue-400 font-semibold text-lg">{timelineData.description || "A conflict just occurred. Arrange these conflict resolution steps in the CORRECT order (drag to reorder)."}</p>
         </div>
 
+        {/* Tuckman's Model Reference Section */}
+        <div className="glass-card p-6 mb-6 bg-purple-500/10 border-l-4 border-purple-500">
+          <h2 className="executive-font text-2xl font-bold text-white mb-4">📚 Tuckman's Model Reference</h2>
+          <p className="text-slate-300 mb-4">Use this quick reference to identify which Tuckman stage each event represents:</p>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+            <div className="bg-slate-800/50 p-4 rounded border-l-2 border-green-500">
+              <h3 className="text-green-400 font-bold text-lg mb-2">🌱 Forming</h3>
+              <p className="text-slate-300 text-sm">New team, polite, uncertain, dependent on PM, many questions about roles/process</p>
+            </div>
+            <div className="bg-slate-800/50 p-4 rounded border-l-2 border-red-500">
+              <h3 className="text-red-400 font-bold text-lg mb-2">⚡ Storming</h3>
+              <p className="text-slate-300 text-sm">Conflict, power struggles, challenging authority, competition, energy to disagreement</p>
+            </div>
+            <div className="bg-slate-800/50 p-4 rounded border-l-2 border-blue-500">
+              <h3 className="text-blue-400 font-bold text-lg mb-2">🤝 Norming</h3>
+              <p className="text-slate-300 text-sm">Cooperation, "we" language, processes working, team identity forming, mutual support</p>
+            </div>
+            <div className="bg-slate-800/50 p-4 rounded border-l-2 border-cyan-500">
+              <h3 className="text-cyan-400 font-bold text-lg mb-2">🚀 Performing</h3>
+              <p className="text-slate-300 text-sm">High autonomy, self-organizing, consistent excellence, minimal PM intervention</p>
+            </div>
+            <div className="bg-slate-800/50 p-4 rounded border-l-2 border-yellow-500">
+              <h3 className="text-yellow-400 font-bold text-lg mb-2">👋 Adjourning</h3>
+              <p className="text-slate-300 text-sm">Project ending, reflective, emotional about closure, transition planning</p>
+            </div>
+          </div>
+        </div>
+
         {/* Steps Display */}
         <div className="glass-card p-6 mb-6">
-          <div className="space-y-3">
+          <h2 className="executive-font text-xl font-bold text-white mb-4">Arrange Steps in Order</h2>
+          <p className="text-slate-400 mb-4 text-sm">Click to expand/collapse each card for details:</p>
+          <div className="space-y-2">
             {displaySteps.map((step, index) => {
               const isDragging = timelineReconstructorState.draggedStep === step.id;
               const isDragOver = timelineReconstructorState.dragOverIndex === index;
+              const isExpanded = timelineReconstructorState.expandedCards[step.id] || false;
+
+              const toggleCard = (e) => {
+                e.stopPropagation();
+                setTimelineReconstructorState(prev => ({
+                  ...prev,
+                  expandedCards: {
+                    ...prev.expandedCards,
+                    [step.id]: !prev.expandedCards[step.id]
+                  }
+                }));
+              };
 
               return (
                 <div
@@ -2987,54 +3247,93 @@ const PMPApp = () => {
                   onDragStart={() => handleDragStart(step.id)}
                   onDragOver={(e) => handleDragOver(e, index)}
                   onDrop={(e) => handleDrop(e, index)}
-                  className={`glass-card p-4 flex items-center gap-4 cursor-move transition-all ${
-                    isDragging ? 'opacity-50 scale-95' : 'hover:scale-[1.02]'
-                  } ${isDragOver ? 'border-t-4 border-cyan-500' : ''}`}
-                  style={{ 
-                    boxShadow: isDragging ? '0 8px 16px rgba(0,0,0,0.4)' : 'none'
-                  }}
+                  className={`glass-card cursor-move timeline-card border-l-4 border-cyan-500 ${
+                    isDragging ? 'opacity-50 scale-95 shadow-lg' : 'hover:border-cyan-400 hover:shadow-md'
+                  } ${isDragOver ? 'drag-over' : ''}`}
                 >
-                  {/* Drag Handle */}
-                  <div className="text-slate-400 text-2xl cursor-grab active:cursor-grabbing">☰</div>
-                  
-                  {/* Step Number */}
-                  <div className="w-10 h-10 rounded-full bg-slate-700 text-white font-bold flex items-center justify-center flex-shrink-0">
-                    {index + 1}
+                  {/* Card Header - Always Visible */}
+                  <div className="p-2.5 flex items-center gap-3">
+                    {/* Drag Handle - More Prominent */}
+                    <div 
+                      className="flex items-center justify-center w-8 h-8 rounded bg-cyan-500/20 hover:bg-cyan-500/40 cursor-grab active:cursor-grabbing transition-colors flex-shrink-0"
+                      title="Drag to reorder"
+                    >
+                      <div className="text-cyan-400 text-lg font-bold">☰</div>
+                    </div>
+                    
+                    {/* Step Number - Smaller */}
+                    <div className="w-7 h-7 rounded-full bg-slate-700 text-white text-sm font-bold flex items-center justify-center flex-shrink-0">
+                      {index + 1}
+                    </div>
+
+                    {/* Step Text - Compact */}
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-semibold text-white line-clamp-1">{step.text || step.title || `Event ${step.id}`}</p>
+                      {step.type && (
+                        <p className="text-xs text-slate-400 mt-0.5">{step.type}</p>
+                      )}
+                      {!isExpanded && (step.details || step.content) && (
+                        <p className="text-xs text-slate-400 mt-0.5 line-clamp-1">
+                          {(step.details || step.content || '').substring(0, 80)}...
+                        </p>
+                      )}
+                    </div>
+
+                    {/* Expand/Collapse Button - Smaller */}
+                    <button
+                      onClick={toggleCard}
+                      className="flex-shrink-0 px-2 py-1 text-slate-400 hover:text-white transition-colors text-sm"
+                      title={isExpanded ? "Collapse" : "Expand"}
+                    >
+                      {isExpanded ? '▼' : '▶'}
+                    </button>
+
+                    {/* Up/Down Arrow Buttons (Accessibility) - Smaller */}
+                    <div className="flex flex-col gap-0.5">
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          moveStep(step.id, 'up');
+                        }}
+                        disabled={index === 0}
+                        className="px-1.5 py-0.5 text-xs glass-card hover:bg-blue-500/10 text-white disabled:opacity-30 disabled:cursor-not-allowed"
+                        title="Move up"
+                      >
+                        ↑
+                      </button>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          moveStep(step.id, 'down');
+                        }}
+                        disabled={index === displaySteps.length - 1}
+                        className="px-1.5 py-0.5 text-xs glass-card hover:bg-blue-500/10 text-white disabled:opacity-30 disabled:cursor-not-allowed"
+                        title="Move down"
+                      >
+                        ↓
+                      </button>
+                    </div>
                   </div>
 
-                  {/* Step Text */}
-                  <div className="flex-1">
-                    <p className="text-white font-semibold">{step.text || step.title || `Event ${step.id}`}</p>
-                    {step.type && (
-                      <p className="text-xs text-slate-400 mt-1">{step.type}</p>
-                    )}
-                  </div>
-
-                  {/* Up/Down Arrow Buttons (Accessibility) */}
-                  <div className="flex flex-col gap-1">
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        moveStep(step.id, 'up');
-                      }}
-                      disabled={index === 0}
-                      className="px-2 py-1 text-xs glass-card hover:bg-blue-500/10 text-white disabled:opacity-30 disabled:cursor-not-allowed"
-                      title="Move up"
-                    >
-                      ↑
-                    </button>
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        moveStep(step.id, 'down');
-                      }}
-                      disabled={index === displaySteps.length - 1}
-                      className="px-2 py-1 text-xs glass-card hover:bg-blue-500/10 text-white disabled:opacity-30 disabled:cursor-not-allowed"
-                      title="Move down"
-                    >
-                      ↓
-                    </button>
-                  </div>
+                  {/* Collapsible Content */}
+                  {isExpanded && (step.details || step.content || step.whyThisOrder) && (
+                    <div className="px-2.5 pb-2.5 border-t border-slate-700/50 pt-2.5">
+                      {step.details && (
+                        <p className="text-slate-300 text-xs mb-2">{step.details}</p>
+                      )}
+                      {step.content && (
+                        <div className="bg-slate-900/50 p-2 rounded border border-slate-700 mb-2">
+                          <pre className="text-slate-300 whitespace-pre-wrap text-xs">{step.content}</pre>
+                        </div>
+                      )}
+                      {step.whyThisOrder && (
+                        <div className="bg-blue-500/10 p-2 rounded border-l-2 border-blue-500">
+                          <p className="text-blue-400 text-xs font-semibold mb-0.5">Why this order:</p>
+                          <p className="text-slate-300 text-xs">{step.whyThisOrder}</p>
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </div>
               );
             })}
@@ -3057,6 +3356,405 @@ const PMPApp = () => {
 
   // Empathy Exercise / Team Member Perspectives Activity View
   // Support both route names for Lead a Team
+  // Team Member Perspectives - Special implementation for Lead a Team
+  if (view === 'team-member-perspectives' && selectedTask === 'Lead a Team') {
+    return (
+      <div className="max-w-6xl w-full p-10 animate-fadeIn text-left">
+        <header className="mb-8">
+          <div className="flex items-center gap-4 mb-6">
+            <button 
+              onClick={() => setView('practice-hub')}
+              className="px-4 py-2 executive-font text-xs text-slate-400 hover:text-white uppercase font-semibold transition-colors flex items-center gap-2"
+            >
+              ← Back
+            </button>
+          </div>
+          <h1 className="executive-font text-5xl font-bold text-white tracking-tight mb-2">Team Member Perspectives</h1>
+          <p className="text-slate-400 text-xl">Experience Team Leadership from Your Team Members' Point of View</p>
+        </header>
+
+        {/* Introduction Section */}
+        <div className="glass-card p-6 mb-6">
+          <p className="text-white text-lg leading-relaxed mb-4">
+            Step into the shoes of different team members and experience team development stages from their viewpoint. 
+            Understand how leadership styles impact different people and build the empathy essential for servant leadership.
+          </p>
+          <div className="bg-blue-500/10 p-4 rounded border-l-4 border-blue-500">
+            <p className="text-blue-400 text-sm">
+              <strong>ECO Alignment:</strong> This activity directly supports these Lead a Team ECO enablers: 
+              Value servant leadership, Inspire/motivate/influence team members, Analyze team members' influence, 
+              Distinguish options to lead various team members.
+            </p>
+          </div>
+        </div>
+
+        {/* Why This Matters */}
+        <div className="glass-card p-6 mb-6">
+          <h2 className="executive-font text-2xl font-bold text-white mb-4">Why This Matters</h2>
+          <div className="space-y-4">
+            <div>
+              <h3 className="text-lg font-semibold text-white mb-2">The Leadership Challenge</h3>
+              <p className="text-slate-300">
+                Most PM training shows leadership from the PM's perspective, but effective leadership requires 
+                understanding the <strong>IMPACT</strong> on team members.
+              </p>
+            </div>
+            <div className="bg-slate-800/50 p-4 rounded">
+              <p className="text-white font-semibold mb-2">Great leaders ask:</p>
+              <ul className="list-disc list-inside space-y-1 text-slate-300 ml-4">
+                <li>What does my team member experience when I lead this way?</li>
+                <li>What do they need that they're not telling me?</li>
+                <li>How does my leadership style affect different people differently?</li>
+                <li>What would help them perform their best?</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        {/* How to Use */}
+        <div className="glass-card p-6 mb-6">
+          <h2 className="executive-font text-2xl font-bold text-white mb-4">How to Use This Activity</h2>
+          <ol className="list-decimal list-inside space-y-2 text-slate-300 ml-4">
+            <li><strong>Read each scenario completely</strong> - Immerse yourself in the character</li>
+            <li><strong>Experience their perspective</strong> - What would YOU feel in this situation?</li>
+            <li><strong>Answer reflection questions</strong> - Think deeply about their needs</li>
+            <li><strong>Review the analysis</strong> - Understand the leadership implications</li>
+            <li><strong>Apply to your work</strong> - Remember these perspectives with your real teams</li>
+          </ol>
+          <p className="text-slate-400 mt-4">⏱️ <strong>Time Estimate:</strong> 45-60 minutes</p>
+        </div>
+
+        {/* Part Navigation */}
+        <div className="glass-card p-6 mb-6">
+          <h2 className="executive-font text-2xl font-bold text-white mb-4">Activity Parts</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <button
+              onClick={() => setTeamMemberPerspectivesState(prev => ({ ...prev, currentPart: 1, currentScenario: '1A' }))}
+              className={`glass-card p-6 text-left transition-all border-l-4 ${
+                teamMemberPerspectivesState.currentPart === 1 
+                  ? 'border-cyan-500 bg-cyan-500/10' 
+                  : 'border-slate-600 hover:border-cyan-500/50'
+              }`}
+            >
+              <h3 className="text-xl font-bold text-white mb-2">Part 1: Journey Through Stages</h3>
+              <p className="text-slate-400 text-sm">Follow Alex through all five Tuckman stages</p>
+            </button>
+            <button
+              onClick={() => setTeamMemberPerspectivesState(prev => ({ ...prev, currentPart: 2, currentScenario: '2A' }))}
+              className={`glass-card p-6 text-left transition-all border-l-4 ${
+                teamMemberPerspectivesState.currentPart === 2 
+                  ? 'border-purple-500 bg-purple-500/10' 
+                  : 'border-slate-600 hover:border-purple-500/50'
+              }`}
+            >
+              <h3 className="text-xl font-bold text-white mb-2">Part 2: Same Situation, Different People</h3>
+              <p className="text-slate-400 text-sm">See how the same leadership affects four different people</p>
+            </button>
+            <button
+              onClick={() => setTeamMemberPerspectivesState(prev => ({ ...prev, currentPart: 3, currentScenario: '3' }))}
+              className={`glass-card p-6 text-left transition-all border-l-4 ${
+                teamMemberPerspectivesState.currentPart === 3 
+                  ? 'border-rose-500 bg-rose-500/10' 
+                  : 'border-slate-600 hover:border-rose-500/50'
+              }`}
+            >
+              <h3 className="text-xl font-bold text-white mb-2">Part 3: The Leader's Perspective</h3>
+              <p className="text-slate-400 text-sm">Step into Sarah's shoes during conflict</p>
+            </button>
+          </div>
+        </div>
+
+        {/* Part 1: Alex's Journey Through Stages */}
+        {teamMemberPerspectivesState.currentPart === 1 && (
+          <div className="space-y-6">
+            <div className="glass-card p-6 mb-6">
+              <h2 className="executive-font text-2xl font-bold text-white mb-4">Part 1: Journey Through the Stages</h2>
+              <p className="text-slate-300 mb-4">
+                Follow one team member (Alex) through all five Tuckman stages, experiencing the emotional journey of team development.
+              </p>
+              
+              {/* Scenario Navigation */}
+              <div className="flex gap-2 mb-6 flex-wrap">
+                {['1A', '1B', '1C', '1D', '1E'].map(scenario => (
+                  <button
+                    key={scenario}
+                    onClick={() => setTeamMemberPerspectivesState(prev => ({ ...prev, currentScenario: scenario }))}
+                    className={`px-4 py-2 rounded transition-all ${
+                      teamMemberPerspectivesState.currentScenario === scenario
+                        ? 'bg-cyan-500 text-white'
+                        : 'bg-slate-700 text-slate-300 hover:bg-slate-600'
+                    }`}
+                  >
+                    {scenario === '1A' && 'Forming'}
+                    {scenario === '1B' && 'Storming'}
+                    {scenario === '1C' && 'Norming'}
+                    {scenario === '1D' && 'Performing'}
+                    {scenario === '1E' && 'Adjourning'}
+                  </button>
+                ))}
+              </div>
+
+              {/* Scenario Content */}
+              {teamMemberPerspectivesState.currentScenario === '1A' && (
+                <div className="space-y-6">
+                  <div className="glass-card p-6 border-l-4 border-green-500">
+                    <h3 className="executive-font text-xl font-bold text-white mb-4">Scenario 1A: Alex's First Day (Forming)</h3>
+                    <div className="bg-slate-800/50 p-4 rounded mb-4">
+                      <p className="text-white font-semibold mb-2">YOU ARE: Alex, UX Designer</p>
+                      <p className="text-slate-300 text-sm">
+                        <strong>Your Background:</strong> 5 years of UX design experience, new to this company (started 2 weeks ago), 
+                        this is your first project assignment here. You're confident in your skills but unfamiliar with company culture. 
+                        You tend to be thoughtful and observant before speaking up.
+                      </p>
+                    </div>
+                    
+                    <div className="mb-4">
+                      <h4 className="text-white font-semibold mb-2">THE SITUATION</h4>
+                      <p className="text-slate-300 leading-relaxed">
+                        You're observing your team's Monday morning standup, 7 weeks into the project. You arrive 5 minutes early, 
+                        taking a seat near the middle. Six other people filter in - you only recognize Jordan from orientation. 
+                        Sarah (PM) starts the meeting, everyone introduces themselves. Everyone is polite and professional.
+                      </p>
+                      <p className="text-slate-300 leading-relaxed mt-2">
+                        Sarah presents the project charter - 8-month timeline, ambitious scope. You have questions: When do I present 
+                        designs to the team? Who has final approval on UX decisions? What design system does this company use? Is there 
+                        a researcher I'll work with?
+                      </p>
+                      <p className="text-slate-300 leading-relaxed mt-2">
+                        Jordan raises their hand, asks about the code review process. Sarah says she'll send documentation this afternoon. 
+                        You consider asking your question but hesitate - Jordan's question was about development. Maybe design questions should wait? 
+                        You don't want to derail the meeting or seem uninformed. You stay quiet, decide to figure it out.
+                      </p>
+                    </div>
+
+                    <div className="mb-4">
+                      <h4 className="text-white font-semibold mb-2">YOUR INTERNAL EXPERIENCE</h4>
+                      <div className="bg-slate-800/50 p-4 rounded italic text-slate-300">
+                        <p className="mb-2">"That was... fine? Everyone seems nice."</p>
+                        <p className="mb-2">You have many questions but aren't sure who to ask or if you should ask.</p>
+                        <p className="mb-2">You'll wait for the documentation Sarah promised.</p>
+                        <p className="mb-2">You don't want to be "that annoying new person."</p>
+                        <p className="mb-2">You wish you knew who you'll work with closely.</p>
+                        <p>"I'm sure it'll get clearer."</p>
+                      </div>
+                    </div>
+
+                    <div className="mb-4">
+                      <h4 className="text-white font-semibold mb-2">Reflection Questions (1A)</h4>
+                      <ol className="list-decimal list-inside space-y-2 text-slate-300 ml-4">
+                        <li>What emotions is Alex experiencing? List at least 5 specific feelings.</li>
+                        <li>What does Alex need from Sarah right now? What would make Alex feel more confident?</li>
+                        <li>What assumptions is Alex making? Are these assumptions accurate?</li>
+                        <li>Why didn't Alex ask their question in the meeting? What does this tell you about Forming stage dynamics?</li>
+                        <li>If you were Sarah, what would you do in the next 24 hours?</li>
+                      </ol>
+                    </div>
+
+                    <details className="glass-card p-4 bg-slate-800/30">
+                      <summary className="text-white font-semibold cursor-pointer hover:text-cyan-400">
+                        Click for Analysis
+                      </summary>
+                      <div className="mt-4 space-y-4 text-slate-300 text-sm">
+                        <div>
+                          <h5 className="text-white font-semibold mb-2">Alex's Emotional State (Forming):</h5>
+                          <ul className="list-disc list-inside space-y-1 ml-4">
+                            <li><strong>Uncertain</strong> - Doesn't know processes, expectations, norms</li>
+                            <li><strong>Hesitant</strong> - Reluctant to speak up or ask questions</li>
+                            <li><strong>Self-conscious</strong> - Worried about appearing incompetent</li>
+                            <li><strong>Isolated</strong> - Doesn't know anyone well yet</li>
+                            <li><strong>Patient but anxious</strong> - Waiting for information while uncertainty builds</li>
+                          </ul>
+                          <p className="mt-2 italic">This is classic Forming stage experience.</p>
+                        </div>
+                        <div>
+                          <h5 className="text-white font-semibold mb-2">What Alex Needs:</h5>
+                          <p className="mb-2"><strong>Immediate Needs (within 24 hours):</strong></p>
+                          <ul className="list-disc list-inside space-y-1 ml-4">
+                            <li>Clear role definition - Who approves UX decisions? Who does Alex work with?</li>
+                            <li>Process clarity - Design review process, approval workflow, design system/tools</li>
+                            <li>Permission to ask questions - Explicit invitation, multiple channels, reassurance</li>
+                            <li>First task assignment - Concrete, achievable, clear success criteria</li>
+                            <li>Relationship building opportunity - Who to connect with first</li>
+                          </ul>
+                        </div>
+                        <div>
+                          <h5 className="text-white font-semibold mb-2">What Sarah Should Do:</h5>
+                          <p className="mb-2"><strong>Within 24 hours:</strong></p>
+                          <ul className="list-disc list-inside space-y-1 ml-4">
+                            <li>Send comprehensive documentation (as promised) with RACI matrix and design approval process</li>
+                            <li>Schedule 1-on-1 with Alex - ask questions, learn about background and style</li>
+                            <li>Send first task assignment with clear deadline and success criteria</li>
+                            <li>Explicit invitation for questions - "Please ask me anything - no question is too basic"</li>
+                            <li>Connect Alex with key collaborators</li>
+                          </ul>
+                          <p className="mt-2"><strong>Leadership Style:</strong> Authoritative/Commanding - Provide direction confidently</p>
+                        </div>
+                      </div>
+                    </details>
+                  </div>
+                </div>
+              )}
+
+              {/* Placeholder for other scenarios - structure is ready for expansion */}
+              {teamMemberPerspectivesState.currentScenario !== '1A' && (
+                <div className="glass-card p-8 text-center">
+                  <p className="text-slate-400 mb-4">
+                    Scenario {teamMemberPerspectivesState.currentScenario} content coming soon.
+                  </p>
+                  <p className="text-slate-500 text-sm">
+                    The full content for all 5 scenarios (1A-1E) will follow the same structure as Scenario 1A above.
+                  </p>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* Part 2: Same Situation, Different People */}
+        {teamMemberPerspectivesState.currentPart === 2 && (
+          <div className="space-y-6">
+            <div className="glass-card p-6 mb-6">
+              <h2 className="executive-font text-2xl font-bold text-white mb-4">Part 2: Same Situation, Different People</h2>
+              <p className="text-slate-300 mb-4">
+                Experience how the SAME leadership moment affects different team members differently.
+              </p>
+              
+              <div className="bg-red-500/10 p-4 rounded border-l-4 border-red-500 mb-6">
+                <h3 className="text-white font-semibold mb-2">THE SITUATION:</h3>
+                <p className="text-slate-300">
+                  Production system is down. Customers cannot log in. The PM (Chris) responds with a Commanding leadership style:
+                </p>
+                <p className="text-white font-mono mt-2 p-3 bg-slate-900/50 rounded">
+                  "Everyone stop what you're doing. Here's what we're doing. Casey - database logs. Jordan - API connections. 
+                  Morgan - customer communication. Taylor - monitoring. Robin - stand by for deployment. Go now."
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                {[
+                  { id: '2A', name: 'Casey', role: 'Junior Developer', emoji: '👨‍💻', color: 'green' },
+                  { id: '2B', name: 'Jordan', role: 'Senior Developer', emoji: '👩‍💻', color: 'blue' },
+                  { id: '2C', name: 'Morgan', role: 'Developer with Anxiety', emoji: '🧑‍💻', color: 'yellow' },
+                  { id: '2D', name: 'Taylor', role: 'Context-Seeking Developer', emoji: '👨‍💼', color: 'purple' }
+                ].map(perspective => (
+                  <button
+                    key={perspective.id}
+                    onClick={() => setTeamMemberPerspectivesState(prev => ({ ...prev, currentScenario: perspective.id }))}
+                    className={`glass-card p-4 text-left transition-all border-l-4 ${
+                      teamMemberPerspectivesState.currentScenario === perspective.id
+                        ? `border-${perspective.color}-500 bg-${perspective.color}-500/10`
+                        : 'border-slate-600 hover:border-slate-500'
+                    }`}
+                  >
+                    <div className="flex items-center gap-3">
+                      <span className="text-2xl">{perspective.emoji}</span>
+                      <div>
+                        <p className="text-white font-semibold">{perspective.name}</p>
+                        <p className="text-slate-400 text-sm">{perspective.role}</p>
+                      </div>
+                    </div>
+                  </button>
+                ))}
+              </div>
+
+              {/* Perspective Content */}
+              {teamMemberPerspectivesState.currentScenario.startsWith('2') && (
+                <div className="glass-card p-6">
+                  <p className="text-slate-400 text-center">
+                    Full perspective content for {teamMemberPerspectivesState.currentScenario} will be displayed here, 
+                    following the same structure as Part 1 scenarios with character background, situation, internal experience, 
+                    reflection questions, and collapsible analysis.
+                  </p>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* Part 3: The Leader's Perspective */}
+        {teamMemberPerspectivesState.currentPart === 3 && (
+          <div className="space-y-6">
+            <div className="glass-card p-6 mb-6">
+              <h2 className="executive-font text-2xl font-bold text-white mb-4">Part 3: The Leader's Perspective</h2>
+              <p className="text-slate-300 mb-4">
+                Now step into Sarah's shoes during the Month 2 conflict between Alex and Jordan.
+              </p>
+
+              <div className="glass-card p-6 border-l-4 border-rose-500">
+                <div className="bg-slate-800/50 p-4 rounded mb-4">
+                  <p className="text-white font-semibold mb-2">YOU ARE: Sarah, PM of Project Phoenix</p>
+                </div>
+                
+                <div className="mb-4">
+                  <h4 className="text-white font-semibold mb-2">THE SITUATION</h4>
+                  <p className="text-slate-300 leading-relaxed">
+                    You just watched Jordan publicly criticize Alex in the design review meeting. "Do you even understand 
+                    how our tech stack works?" The room went tense, Alex looked humiliated, others uncomfortable. 
+                    You said "Let's table this and move on." Now walking back to your desk, replaying what happened.
+                  </p>
+                </div>
+
+                <div className="mb-4">
+                  <h4 className="text-white font-semibold mb-2">YOUR INTERNAL EXPERIENCE</h4>
+                  <div className="bg-slate-800/50 p-4 rounded italic text-slate-300">
+                    <p className="mb-2">"That was bad. That was really bad."</p>
+                    <p className="mb-2">Jordan was out of line, but also had a valid point about the framework constraint.</p>
+                    <p className="mb-2">Why didn't I intervene? Should have said something. Instead just moved on.</p>
+                    <p className="mb-2">Froze. Didn't know what to say. If I defended Alex, would Jordan feel unsupported?</p>
+                    <p>"How do I know what's right?"</p>
+                  </div>
+                </div>
+
+                <div className="mb-4">
+                  <h4 className="text-white font-semibold mb-2">Reflection Questions</h4>
+                  <ol className="list-decimal list-inside space-y-2 text-slate-300 ml-4">
+                    <li>What's Sarah feeling? Are these feelings justified?</li>
+                    <li>What did Sarah do wrong? In the meeting? After the meeting?</li>
+                    <li>What does Sarah do RIGHT in her thinking?</li>
+                    <li>What should Sarah do in the next 2 hours? With Alex? With Jordan?</li>
+                    <li>What leadership style(s) does Sarah need now?</li>
+                  </ol>
+                </div>
+
+                <details className="glass-card p-4 bg-slate-800/30">
+                  <summary className="text-white font-semibold cursor-pointer hover:text-rose-400">
+                    Click for Analysis
+                  </summary>
+                  <div className="mt-4 space-y-4 text-slate-300 text-sm">
+                    <div>
+                      <h5 className="text-white font-semibold mb-2">What Sarah Did Wrong:</h5>
+                      <ul className="list-disc list-inside space-y-1 ml-4">
+                        <li><strong>In the Meeting:</strong> "Let's table this and move on" = avoidance. Didn't address Jordan's inappropriate comment.</li>
+                        <li><strong>After the Meeting:</strong> Walking to desk instead of finding Alex. Overthinking instead of acting.</li>
+                      </ul>
+                    </div>
+                    <div>
+                      <h5 className="text-white font-semibold mb-2">What Sarah Should Do NOW (within 30 minutes):</h5>
+                      <p className="mb-2"><strong>Step 1: Find Alex</strong></p>
+                      <p className="mb-2 ml-4">"I want to acknowledge what happened. Jordan's comment was inappropriate and I should have said so. 
+                      The framework constraint should have been communicated to you weeks ago. That's on me, not you."</p>
+                      <p className="mb-2"><strong>Step 2: Find Jordan</strong></p>
+                      <p className="mb-2 ml-4">"Your concern is legitimate, but the way you raised it wasn't okay. I need you to treat teammates with respect."</p>
+                      <p className="mb-2"><strong>Step 3: Schedule facilitated discussion</strong></p>
+                      <p className="ml-4">Book 90 minutes tomorrow with Alex, Jordan, and Sarah to find a solution.</p>
+                    </div>
+                    <div>
+                      <h5 className="text-white font-semibold mb-2">Leadership Style Needed:</h5>
+                      <p><strong>Coaching</strong> - Facilitate conflict resolution, help them understand each other, don't take sides.</p>
+                      <p><strong>Affiliative</strong> - Repair relationship with Alex, acknowledge emotions, rebuild trust.</p>
+                    </div>
+                  </div>
+                </details>
+              </div>
+            </div>
+          </div>
+        )}
+
+        <GlobalNavFooter />
+      </div>
+    );
+  }
+
   if (view === 'empathy-exercise' || view === 'team-member-perspectives') {
     if (!currentTask) {
       return (
@@ -3259,7 +3957,7 @@ const PMPApp = () => {
 
           {/* Person A Perspective */}
           {empathyExerciseState.currentPerspective === 'personA' && (
-            <div className="glass-card p-8 border-l-4 border-blue-500 bg-blue-500/5 animate-fadeIn">
+            <div className="glass-card p-8 border-l-4 border-blue-500 bg-blue-500/5 perspective-content">
               <div className="flex items-center gap-3 mb-6">
                 <span className="text-4xl">{currentScenarioData.perspectives.personA.emoji}</span>
                 <div>
@@ -3327,7 +4025,7 @@ const PMPApp = () => {
 
           {/* PM Perspective */}
           {empathyExerciseState.currentPerspective === 'pm' && (
-            <div className="glass-card p-8 border-l-4 border-purple-500 bg-purple-500/5 animate-fadeIn">
+            <div className="glass-card p-8 border-l-4 border-purple-500 bg-purple-500/5 perspective-content">
               <div className="flex items-center gap-3 mb-6">
                 <span className="text-4xl">{currentScenarioData.perspectives.pm.emoji}</span>
                 <h3 className="executive-font text-2xl font-bold text-white">Project Manager's View</h3>
@@ -3689,7 +4387,10 @@ const PMPApp = () => {
 
   if (view === 'executive-hud') {
     return (
-    <div className="max-w-7xl w-full p-10 animate-fadeIn">
+      <>
+        <Confetti />
+        <div className={`max-w-7xl w-full p-10 view-transition-wrapper ${viewTransition.isTransitioning && viewTransition.nextView !== 'executive-hud' ? 'view-transition-exit' : 'view-transition-enter'}`}>
+          <ErrorBanner />
       {/* Privacy Disclaimer */}
       <div className="glass-card p-4 mb-6 border-l-4 border-blue-500 bg-blue-500/10">
         <div className="flex items-start gap-3">
@@ -3808,8 +4509,9 @@ const PMPApp = () => {
           </button>
       </div>
       <GlobalNavFooter />
-    </div>
-  );
+        </div>
+      </>
+    );
   }
 
   if (view === 'strategy-suite') return (
@@ -3898,7 +4600,7 @@ const PMPApp = () => {
             { name: 'document-detective', emoji: '🕵️', title: 'Document Detective', desc: 'Match documents to scenarios', color: 'purple', borderColor: 'border-purple-500', hoverColor: 'hover:bg-purple-500/10', shadowColor: 'hover:shadow-purple-500/20' },
             { name: 'conflict-matcher', emoji: '🧩', title: 'Conflict Mode Matcher', desc: 'Drag-drop conflict modes', color: 'emerald', borderColor: 'border-emerald-500', hoverColor: 'hover:bg-emerald-500/10', shadowColor: 'hover:shadow-emerald-500/20' },
             { name: 'timeline-reconstructor', emoji: '📋', title: 'Timeline Reconstructor', desc: 'Order resolution steps', color: 'cyan', borderColor: 'border-cyan-500', hoverColor: 'hover:bg-cyan-500/10', shadowColor: 'hover:shadow-cyan-500/20' },
-            { name: 'empathy-exercise', emoji: '👥', title: 'Empathy Exercise', desc: 'See all perspectives', color: 'rose', borderColor: 'border-rose-500', hoverColor: 'hover:bg-rose-500/10', shadowColor: 'hover:shadow-rose-500/20' }
+            { name: 'empathy-exercise', emoji: '👥', title: selectedTask === 'Lead a Team' ? 'Team Member Perspectives' : 'Empathy Exercise', desc: 'See all perspectives', color: 'rose', borderColor: 'border-rose-500', hoverColor: 'hover:bg-rose-500/10', shadowColor: 'hover:shadow-rose-500/20' }
           ];
           
           // For Lead a Team, rename specific activities
@@ -4107,7 +4809,7 @@ const PMPApp = () => {
                 'document-detective': 'Document Detective',
                 'conflict-matcher': 'Conflict Matcher',
                 'timeline-reconstructor': 'Timeline Reconstructor',
-                'empathy-exercise': 'Empathy Exercise'
+                'empathy-exercise': selectedTask === 'Lead a Team' ? 'Team Member Perspectives' : 'Empathy Exercise'
               };
               
               return (
@@ -5524,11 +6226,65 @@ const PMPApp = () => {
     </div>
   );
 
+  // Confetti Component
+  const Confetti = () => {
+    if (!showConfetti) return null;
+    
+    const confettiPieces = Array.from({ length: 50 }, (_, i) => {
+      const colors = ['#fbbf24', '#3b82f6', '#10b981', '#f43f5e', '#a855f7'];
+      return (
+        <div
+          key={i}
+          className="confetti"
+          style={{
+            left: `${Math.random() * 100}%`,
+            background: colors[i % colors.length],
+            animationDelay: `${Math.random() * 3}s`,
+            animationDuration: `${2 + Math.random() * 2}s`
+          }}
+        />
+      );
+    });
+
+    return <div className="confetti-container">{confettiPieces}</div>;
+  };
+
   // Fallback return - should never reach here if all views are properly handled
   return (
-    <div className="p-20 text-center">
-      <h1 className="executive-font text-4xl text-white animate-pulse font-semibold">Initializing PMP Prep Center...</h1>
-      <GlobalNavFooter />
+    <>
+      <Confetti />
+      <div className={`p-20 text-center view-transition-wrapper ${viewTransition.isTransitioning ? 'view-transition-exit' : 'view-transition-enter'}`}>
+        <h1 className="executive-font text-4xl text-white animate-pulse font-semibold">Initializing PMP Prep Center...</h1>
+        <GlobalNavFooter />
+      </div>
+    </>
+  );
+};
+
+// Confetti Component
+const Confetti = ({ show }) => {
+  if (!show) return null;
+  
+  const confettiPieces = Array.from({ length: 50 }, (_, i) => (
+    <div
+      key={i}
+      className="confetti"
+      style={{
+        left: `${Math.random() * 100}%`,
+        animationDelay: `${Math.random() * 3}s`,
+        animationDuration: `${2 + Math.random() * 2}s`
+      }}
+    />
+  ));
+
+  return <div className="confetti-container">{confettiPieces}</div>;
+};
+
+// View Transition Wrapper
+const ViewTransitionWrapper = ({ children, isTransitioning }) => {
+  return (
+    <div className={`view-transition-wrapper ${isTransitioning ? 'view-transition-exit' : 'view-transition-enter'}`}>
+      {children}
     </div>
   );
 };
