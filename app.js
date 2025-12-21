@@ -78,9 +78,9 @@ const PMPApp = () => {
   const [viewTransition, setViewTransition] = useState({ isTransitioning: false, nextView: null });
   const [showConfetti, setShowConfetti] = useState(false);
   
-  // Collapsible learning tabs state - tracks which tasks are expanded for each tab
-  // Format: { 'overview': { 'Manage Conflict': true, 'Lead a Team': false }, ... }
-  const [expandedLearningTasks, setExpandedLearningTasks] = useState({
+  // Collapsible learning tabs state - tracks which content sections are expanded for each tab
+  // Format: { 'overview': { 'definition': true, 'module_introduction': false }, ... }
+  const [expandedLearningSections, setExpandedLearningSections] = useState({
     'overview': {},
     'pmp-application': {},
     'deep-dive': {}
@@ -91,6 +91,9 @@ const PMPApp = () => {
     completedActivities: {}, // { 'taskName': { 'activityName': { completed: true, completedAt: 'date', attempts: 1, bestScore: 0 } } }
     activityScores: {} // { 'taskName': { 'activityName': [{ attempt: 1, score: 0, date: 'date', ... }] } }
   });
+  
+  // Task Progress Modal State
+  const [showTaskProgressModal, setShowTaskProgressModal] = useState(false);
 
   // Comprehensive Score Persistence Utilities
   const getOrCreateUserId = () => {
@@ -255,6 +258,27 @@ const PMPApp = () => {
     };
   }, []);
 
+  // Track learn tab views
+  useEffect(() => {
+    if (view === 'learn-hub' && selectedTask) {
+      const key = `learn-viewed-${selectedTask}-${subView}`;
+      if (!localStorage.getItem(key)) {
+        localStorage.setItem(key, new Date().toISOString());
+      }
+    }
+  }, [view, selectedTask, subView]);
+  
+  // Track activity access
+  useEffect(() => {
+    const activityViews = ['pm-simulator', 'lightning-round', 'document-detective', 'conflict-matcher', 'timeline-reconstructor', 'empathy-exercise', 'team-member-perspectives'];
+    if (activityViews.includes(view) && selectedTask) {
+      const activityKey = `activity-accessed-${selectedTask}-${view}`;
+      if (!localStorage.getItem(activityKey)) {
+        localStorage.setItem(activityKey, new Date().toISOString());
+      }
+    }
+  }, [view, selectedTask]);
+
   // Lightning Round Timer Effect
   useEffect(() => {
     if (view !== 'lightning-round') return;
@@ -394,10 +418,12 @@ const PMPApp = () => {
   // Define GlobalNavFooter early so it can be used in early returns
   const GlobalNavFooter = () => (
     <div className="flex justify-center gap-8 mt-12 border-t border-white/10 pt-8">
-        <button onClick={(e) => { createRipple(e); handleViewChange('learn-hub'); }} className="text-xs text-slate-400 uppercase font-semibold hover:text-blue-400 transition-colors executive-font btn-ripple">Learn</button>
+        <button onClick={(e) => { createRipple(e); handleViewChange('strategy-suite'); }} className="text-xs text-slate-400 uppercase font-semibold hover:text-blue-400 transition-colors executive-font btn-ripple">Learn</button>
         <button onClick={(e) => { createRipple(e); handleViewChange('practice-hub'); }} className="text-xs text-slate-400 uppercase font-semibold hover:text-purple-400 transition-colors executive-font btn-ripple">Practice</button>
-        <button onClick={(e) => { createRipple(e); handleViewChange('strategy-suite'); }} className="text-xs text-slate-400 uppercase font-semibold hover:text-emerald-400 transition-colors executive-font btn-ripple">Tasks</button>
-        <button onClick={(e) => { createRipple(e); handleViewChange('executive-hud'); }} className="text-xs text-slate-400 uppercase font-semibold hover:text-blue-400 transition-colors executive-font btn-ripple">Home</button>
+        <button onClick={(e) => { createRipple(e); handleViewChange('practice-quizzes'); }} className="text-xs text-slate-400 uppercase font-semibold hover:text-emerald-400 transition-colors executive-font btn-ripple">Quizzes</button>
+        {view !== 'executive-hud' && (
+          <button onClick={(e) => { createRipple(e); handleViewChange('executive-hud'); }} className="text-xs text-slate-400 uppercase font-semibold hover:text-blue-400 transition-colors executive-font btn-ripple">Home</button>
+        )}
     </div>
   );
 
@@ -4438,34 +4464,124 @@ const PMPApp = () => {
         </div>
       </div>
 
-      <div className="executive-header mb-12">
-        <h1 className="executive-font text-6xl font-bold text-white mb-3 tracking-tight">PMP Prep Center</h1>
-        <p className="text-slate-400 text-xl">Executive Learning Platform</p>
+      <div className="executive-header mb-12 animate-fadeIn">
+        <h1 className="executive-font text-6xl font-bold text-white mb-3 tracking-tight animate-slideDown bg-gradient-to-r from-white via-cyan-200 to-blue-300 bg-clip-text text-transparent">
+          PMP Prep Center
+        </h1>
+        <p className="text-slate-400 text-xl animate-slideUp">Executive Learning Platform • Master the PMP Exam</p>
       </div>
 
-      {/* Progress Meters Section */}
-      <div className="mb-10">
-        <h2 className="executive-font text-2xl font-semibold text-white mb-6 tracking-wide">The Statistics</h2>
-        <div className="grid grid-cols-4 gap-6 mb-6">
-          <div className="stat-card">
-            <div className="text-sm text-slate-400 uppercase font-semibold mb-2 tracking-wide">Total Questions</div>
-            <div className="text-4xl font-bold text-white mb-1">0</div>
+      {/* Main Navigation Buttons - 3D Portfolio Style */}
+      <div className="mb-12 animate-fadeIn">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+          <button 
+            onClick={(e) => { createRipple(e); handleViewChange('strategy-suite'); }} 
+            className="group relative glass-card p-8 text-center hover:scale-105 hover:-translate-y-2 transition-all duration-300 border-l-4 border-blue-500 hover:border-blue-400 hover:bg-blue-500/10 hover:shadow-[0_20px_50px_rgba(59,130,246,0.4)] hover:shadow-blue-500/30 btn-ripple overflow-hidden transform perspective-1000 preserve-3d"
+            style={{transformStyle: 'preserve-3d'}}
+          >
+            <div className="absolute inset-0 bg-gradient-to-br from-blue-600/0 to-blue-600/0 group-hover:from-blue-600/10 group-hover:to-blue-600/5 transition-all duration-300"></div>
+            <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <div className="relative z-10 transform group-hover:translate-z-10 transition-transform duration-300">
+              <div className="text-4xl mb-3 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300" style={{transformStyle: 'preserve-3d'}}>📚</div>
+              <div className="executive-font text-lg font-bold text-white mb-2 group-hover:text-blue-300 transition-colors drop-shadow-lg">Learn</div>
+              <div className="text-xs text-slate-400 group-hover:text-slate-300 uppercase tracking-widest">35 PMP Tasks</div>
+            </div>
+          </button>
+          
+          <button 
+            onClick={(e) => { createRipple(e); handleViewChange('practice-hub'); }} 
+            className="group relative glass-card p-8 text-center hover:scale-105 hover:-translate-y-2 transition-all duration-300 border-l-4 border-purple-500 hover:border-purple-400 hover:bg-purple-500/10 hover:shadow-[0_20px_50px_rgba(168,85,247,0.4)] hover:shadow-purple-500/30 btn-ripple overflow-hidden transform perspective-1000 preserve-3d"
+            style={{transformStyle: 'preserve-3d'}}
+          >
+            <div className="absolute inset-0 bg-gradient-to-br from-purple-600/0 to-purple-600/0 group-hover:from-purple-600/10 group-hover:to-purple-600/5 transition-all duration-300"></div>
+            <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <div className="relative z-10 transform group-hover:translate-z-10 transition-transform duration-300">
+              <div className="text-4xl mb-3 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300" style={{transformStyle: 'preserve-3d'}}>⚡</div>
+              <div className="executive-font text-lg font-bold text-white mb-2 group-hover:text-purple-300 transition-colors drop-shadow-lg">Practice</div>
+              <div className="text-xs text-slate-400 group-hover:text-slate-300 uppercase tracking-widest">Skill Building</div>
+            </div>
+          </button>
+          
+          <button 
+            onClick={(e) => { createRipple(e); handleViewChange('practice-quizzes'); }} 
+            className="group relative glass-card p-8 text-center hover:scale-105 hover:-translate-y-2 transition-all duration-300 border-l-4 border-emerald-500 hover:border-emerald-400 hover:bg-emerald-500/10 hover:shadow-[0_20px_50px_rgba(16,185,129,0.4)] hover:shadow-emerald-500/30 btn-ripple overflow-hidden transform perspective-1000 preserve-3d"
+            style={{transformStyle: 'preserve-3d'}}
+          >
+            <div className="absolute inset-0 bg-gradient-to-br from-emerald-600/0 to-emerald-600/0 group-hover:from-emerald-600/10 group-hover:to-emerald-600/5 transition-all duration-300"></div>
+            <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <div className="relative z-10 transform group-hover:translate-z-10 transition-transform duration-300">
+              <div className="text-4xl mb-3 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300" style={{transformStyle: 'preserve-3d'}}>🎯</div>
+              <div className="executive-font text-lg font-bold text-white mb-2 group-hover:text-emerald-300 transition-colors drop-shadow-lg">Quizzes</div>
+              <div className="text-xs text-slate-400 group-hover:text-slate-300 uppercase tracking-widest">Test Knowledge</div>
+            </div>
+          </button>
+          
+          <button 
+            onClick={(e) => { createRipple(e); handleViewChange('practice-quizzes'); }} 
+            className="group relative glass-card p-8 text-center hover:scale-105 hover:-translate-y-2 transition-all duration-300 border-l-4 border-rose-500 hover:border-rose-400 hover:bg-rose-500/10 hover:shadow-[0_20px_50px_rgba(244,63,94,0.4)] hover:shadow-rose-500/30 btn-ripple overflow-hidden transform perspective-1000 preserve-3d"
+            style={{transformStyle: 'preserve-3d'}}
+          >
+            <div className="absolute inset-0 bg-gradient-to-br from-rose-600/0 to-rose-600/0 group-hover:from-rose-600/10 group-hover:to-rose-600/5 transition-all duration-300"></div>
+            <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <div className="relative z-10 transform group-hover:translate-z-10 transition-transform duration-300">
+              <div className="text-4xl mb-3 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300" style={{transformStyle: 'preserve-3d'}}>🎓</div>
+              <div className="executive-font text-lg font-bold text-white mb-2 group-hover:text-rose-300 transition-colors drop-shadow-lg">Full Exam</div>
+              <div className="text-xs text-slate-400 group-hover:text-slate-300 uppercase tracking-widest">180 Questions</div>
+            </div>
+          </button>
+        </div>
+      </div>
+
+      {/* Progress Meters Section - Enhanced Portfolio Style */}
+      <div className="mb-10 animate-fadeIn">
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="executive-font text-3xl font-semibold text-white tracking-wide">Performance Dashboard</h2>
+          <div className="text-xs text-slate-500 uppercase tracking-widest">Real-time Analytics</div>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+          <div className="stat-card group hover:scale-105 transition-all duration-300 hover:shadow-2xl hover:shadow-blue-500/20 border-l-4 border-blue-500">
+            <div className="flex items-center justify-between mb-3">
+              <div className="text-sm text-slate-400 uppercase font-semibold tracking-wide">Total Questions</div>
+              <div className="text-2xl">📊</div>
+            </div>
+            <div className="text-5xl font-bold text-white mb-2 bg-gradient-to-br from-blue-400 to-cyan-400 bg-clip-text text-transparent">0</div>
             <div className="text-xs text-slate-500">Practice sessions completed</div>
+            <div className="mt-3 h-1 bg-slate-800 rounded-full overflow-hidden">
+              <div className="h-full bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full transition-all duration-1000" style={{width: '0%'}}></div>
+            </div>
           </div>
-          <div className="stat-card">
-            <div className="text-sm text-slate-400 uppercase font-semibold mb-2 tracking-wide">Accuracy Rate</div>
-            <div className="text-4xl font-bold text-white mb-1">0%</div>
+          <div className="stat-card group hover:scale-105 transition-all duration-300 hover:shadow-2xl hover:shadow-purple-500/20 border-l-4 border-purple-500">
+            <div className="flex items-center justify-between mb-3">
+              <div className="text-sm text-slate-400 uppercase font-semibold tracking-wide">Accuracy Rate</div>
+              <div className="text-2xl">🎯</div>
+            </div>
+            <div className="text-5xl font-bold text-white mb-2 bg-gradient-to-br from-purple-400 to-pink-400 bg-clip-text text-transparent">0%</div>
             <div className="text-xs text-slate-500">Overall performance</div>
+            <div className="mt-3 h-1 bg-slate-800 rounded-full overflow-hidden">
+              <div className="h-full bg-gradient-to-r from-purple-500 to-pink-500 rounded-full transition-all duration-1000" style={{width: '0%'}}></div>
+            </div>
           </div>
-          <div className="stat-card">
-            <div className="text-sm text-slate-400 uppercase font-semibold mb-2 tracking-wide">Study Hours</div>
-            <div className="text-4xl font-bold text-white mb-1">0</div>
+          <div className="stat-card group hover:scale-105 transition-all duration-300 hover:shadow-2xl hover:shadow-emerald-500/20 border-l-4 border-emerald-500">
+            <div className="flex items-center justify-between mb-3">
+              <div className="text-sm text-slate-400 uppercase font-semibold tracking-wide">Study Hours</div>
+              <div className="text-2xl">⏱️</div>
+            </div>
+            <div className="text-5xl font-bold text-white mb-2 bg-gradient-to-br from-emerald-400 to-teal-400 bg-clip-text text-transparent">0</div>
             <div className="text-xs text-slate-500">Time invested</div>
+            <div className="mt-3 h-1 bg-slate-800 rounded-full overflow-hidden">
+              <div className="h-full bg-gradient-to-r from-emerald-500 to-teal-500 rounded-full transition-all duration-1000" style={{width: '0%'}}></div>
+            </div>
           </div>
-          <div className="stat-card">
-            <div className="text-sm text-slate-400 uppercase font-semibold mb-2 tracking-wide">Current Streak</div>
-            <div className="text-4xl font-bold text-white mb-1">0</div>
+          <div className="stat-card group hover:scale-105 transition-all duration-300 hover:shadow-2xl hover:shadow-amber-500/20 border-l-4 border-amber-500">
+            <div className="flex items-center justify-between mb-3">
+              <div className="text-sm text-slate-400 uppercase font-semibold tracking-wide">Current Streak</div>
+              <div className="text-2xl">🔥</div>
+            </div>
+            <div className="text-5xl font-bold text-white mb-2 bg-gradient-to-br from-amber-400 to-orange-400 bg-clip-text text-transparent">0</div>
             <div className="text-xs text-slate-500">Days in a row</div>
+            <div className="mt-3 h-1 bg-slate-800 rounded-full overflow-hidden">
+              <div className="h-full bg-gradient-to-r from-amber-500 to-orange-500 rounded-full transition-all duration-1000" style={{width: '0%'}}></div>
+            </div>
           </div>
         </div>
         
@@ -4503,47 +4619,250 @@ const PMPApp = () => {
         </div>
       </div>
       
-      {/* Main Action Buttons */}
-      <div className="grid grid-cols-2 gap-6 mb-6">
-        <button 
-          onClick={() => setView('strategy-suite')} 
-          className="executive-btn p-12 text-left group"
-        >
-          <div className="text-blue-400 text-sm uppercase font-semibold mb-3 tracking-widest executive-font">Learning Lab</div>
-          <div className="text-3xl font-bold text-white mb-2 executive-font">Interactive Study Hub</div>
-          <div className="text-slate-400 text-sm">Explore comprehensive PMP knowledge domains and tasks</div>
-        </button>
-        
-        <button 
-          onClick={() => setView('practice-quizzes')} 
-          className="executive-btn p-12 text-left group"
-        >
-          <div className="text-purple-400 text-sm uppercase font-semibold mb-3 tracking-widest executive-font">Practice Quizzes</div>
-          <div className="text-3xl font-bold text-white mb-2 executive-font">Test Your Knowledge</div>
-          <div className="text-slate-400 text-sm">Practice with targeted quizzes and assessments</div>
-        </button>
-      </div>
-
-      <div className="grid grid-cols-2 gap-6">
-        <button 
-          onClick={() => {/* Add Formula Lab navigation */}} 
-          className="executive-btn p-12 text-left group"
-        >
-          <div className="text-emerald-400 text-sm uppercase font-semibold mb-3 tracking-widest executive-font">Formula Lab</div>
-          <div className="text-3xl font-bold text-white mb-2 executive-font">Essential Formulas</div>
-          <div className="text-slate-400 text-sm">Master key PMP calculations and formulas</div>
-        </button>
-        
-        <button 
-          onClick={() => {/* Add Mock Exam navigation */}} 
-          className="executive-btn p-12 text-left group"
-        >
-          <div className="text-rose-400 text-sm uppercase font-semibold mb-3 tracking-widest executive-font">Full Mock Exam</div>
-          <div className="text-3xl font-bold text-white mb-2 executive-font">Complete Simulation</div>
-          <div className="text-slate-400 text-sm">Full-length 180-question practice exam</div>
+      {/* Feature Showcase - Portfolio Style */}
+      <div className="mb-10 animate-fadeIn">
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="executive-font text-3xl font-semibold text-white tracking-wide">Learning Modules</h2>
+          <div className="text-xs text-slate-500 uppercase tracking-widest">Comprehensive Training</div>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <button 
+            onClick={() => setView('strategy-suite')} 
+            className="executive-btn p-10 text-left group relative overflow-hidden hover:scale-[1.02] hover:-translate-y-1 transition-all duration-300 border-l-4 border-blue-500 hover:border-blue-400 hover:shadow-[0_20px_60px_rgba(59,130,246,0.3)] hover:shadow-blue-500/30 transform perspective-1000"
+            style={{transformStyle: 'preserve-3d'}}
+          >
+            <div className="absolute inset-0 bg-gradient-to-br from-blue-600/0 to-blue-600/0 group-hover:from-blue-600/10 group-hover:to-blue-600/5 transition-all duration-300"></div>
+            <div className="relative z-10">
+              <div className="text-blue-400 text-sm uppercase font-semibold mb-3 tracking-widest executive-font flex items-center gap-2">
+                <span className="text-xl">📚</span>
+                Learning Lab
+              </div>
+              <div className="text-3xl font-bold text-white mb-3 executive-font group-hover:text-blue-300 transition-colors">Interactive Study Hub</div>
+              <div className="text-slate-400 text-sm leading-relaxed">Explore comprehensive PMP knowledge domains and tasks with interactive learning modules</div>
+              <div className="mt-4 text-xs text-blue-400 uppercase tracking-widest font-semibold group-hover:text-blue-300 transition-colors">Explore →</div>
+            </div>
           </button>
+          
+          <button 
+            onClick={() => setView('practice-quizzes')} 
+            className="executive-btn p-10 text-left group relative overflow-hidden hover:scale-[1.02] transition-all duration-300 border-l-4 border-purple-500 hover:border-purple-400 hover:shadow-2xl hover:shadow-purple-500/20"
+          >
+            <div className="absolute inset-0 bg-gradient-to-br from-purple-600/0 to-purple-600/0 group-hover:from-purple-600/10 group-hover:to-purple-600/5 transition-all duration-300"></div>
+            <div className="relative z-10">
+              <div className="text-purple-400 text-sm uppercase font-semibold mb-3 tracking-widest executive-font flex items-center gap-2">
+                <span className="text-xl">⚡</span>
+                Practice Quizzes
+              </div>
+              <div className="text-3xl font-bold text-white mb-3 executive-font group-hover:text-purple-300 transition-colors">Test Your Knowledge</div>
+              <div className="text-slate-400 text-sm leading-relaxed">Practice with targeted quizzes and assessments to master PMP concepts</div>
+              <div className="mt-4 text-xs text-purple-400 uppercase tracking-widest font-semibold group-hover:text-purple-300 transition-colors">Practice →</div>
+            </div>
+          </button>
+        </div>
       </div>
-      <GlobalNavFooter />
+      
+      {/* Additional Features */}
+      <div className="mb-10 animate-fadeIn">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <button 
+            onClick={() => {/* Add Formula Lab navigation */}} 
+            className="executive-btn p-10 text-left group relative overflow-hidden hover:scale-[1.02] hover:-translate-y-1 transition-all duration-300 border-l-4 border-emerald-500 hover:border-emerald-400 hover:shadow-[0_20px_60px_rgba(16,185,129,0.3)] hover:shadow-emerald-500/30 transform perspective-1000"
+            style={{transformStyle: 'preserve-3d'}}
+          >
+            <div className="absolute inset-0 bg-gradient-to-br from-emerald-600/0 to-emerald-600/0 group-hover:from-emerald-600/10 group-hover:to-emerald-600/5 transition-all duration-300"></div>
+            <div className="relative z-10">
+              <div className="text-emerald-400 text-sm uppercase font-semibold mb-3 tracking-widest executive-font flex items-center gap-2">
+                <span className="text-xl">🧮</span>
+                Formula Lab
+              </div>
+              <div className="text-3xl font-bold text-white mb-3 executive-font group-hover:text-emerald-300 transition-colors">Essential Formulas</div>
+              <div className="text-slate-400 text-sm leading-relaxed">Master key PMP calculations and formulas with interactive practice</div>
+              <div className="mt-4 text-xs text-emerald-400 uppercase tracking-widest font-semibold group-hover:text-emerald-300 transition-colors">Learn →</div>
+            </div>
+          </button>
+          
+          <button 
+            onClick={() => {/* Add Mock Exam navigation */}} 
+            className="executive-btn p-10 text-left group relative overflow-hidden hover:scale-[1.02] transition-all duration-300 border-l-4 border-rose-500 hover:border-rose-400 hover:shadow-2xl hover:shadow-rose-500/20"
+          >
+            <div className="absolute inset-0 bg-gradient-to-br from-rose-600/0 to-rose-600/0 group-hover:from-rose-600/10 group-hover:to-rose-600/5 transition-all duration-300"></div>
+            <div className="relative z-10">
+              <div className="text-rose-400 text-sm uppercase font-semibold mb-3 tracking-widest executive-font flex items-center gap-2">
+                <span className="text-xl">🎓</span>
+                Full Mock Exam
+              </div>
+              <div className="text-3xl font-bold text-white mb-3 executive-font group-hover:text-rose-300 transition-colors">Complete Simulation</div>
+              <div className="text-slate-400 text-sm leading-relaxed">Full-length 180-question practice exam under real exam conditions</div>
+              <div className="mt-4 text-xs text-rose-400 uppercase tracking-widest font-semibold group-hover:text-rose-300 transition-colors">Start Exam →</div>
+            </div>
+          </button>
+        </div>
+      </div>
+      
+      {/* Task Progress Modal */}
+      {showTaskProgressModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-6 animate-fadeIn">
+          <div className="glass-card max-w-7xl w-full max-h-[90vh] overflow-hidden flex flex-col border-2 border-cyan-500/30 shadow-2xl">
+            {/* Modal Header */}
+            <div className="flex items-center justify-between p-6 border-b border-white/10">
+              <div>
+                <h2 className="executive-font text-3xl font-bold text-white mb-2">Learning Progress Tracker</h2>
+                <p className="text-slate-400 text-sm">Track your progress across all 35 PMP tasks</p>
+              </div>
+              <button
+                onClick={() => setShowTaskProgressModal(false)}
+                className="text-slate-400 hover:text-white text-3xl font-bold w-10 h-10 flex items-center justify-center rounded-full hover:bg-white/10 transition-colors"
+              >
+                ×
+              </button>
+            </div>
+            
+            {/* Modal Content - Two Column Layout */}
+            <div className="flex-1 overflow-hidden flex">
+              {/* Left Column - Task List */}
+              <div className="w-1/3 border-r border-white/10 overflow-y-auto custom-scrollbar bg-slate-900/30">
+                <div className="p-4">
+                  <h3 className="executive-font text-lg font-semibold text-white mb-4 uppercase tracking-wide">All Tasks</h3>
+                  <div className="space-y-2">
+                    {Object.entries(domainMap).map(([domain, tasks]) => (
+                      <div key={domain} className="mb-4">
+                        <div className="text-xs text-slate-500 uppercase font-semibold mb-2 tracking-widest">{domain}</div>
+                        {tasks.map(task => {
+                          const allTasks = Object.values(domainMap).flat();
+                          const totalItems = 9; // 3 learn tabs + 6 activities
+                          let completedItems = 0;
+                          const items = [];
+                          
+                          // Check learn tabs
+                          const learnTabs = ['overview', 'pmp-application', 'deep-dive'];
+                          learnTabs.forEach(tab => {
+                            const viewed = localStorage.getItem(`learn-viewed-${task}-${tab}`);
+                            items.push({ type: 'learn', name: tab, completed: !!viewed });
+                            if (viewed) completedItems++;
+                          });
+                          
+                          // Check activities
+                          const activities = [
+                            { key: 'pm-simulator', name: 'PM Simulator' },
+                            { key: 'lightning-round', name: 'Lightning Round' },
+                            { key: 'document-detective', name: 'Document Detective' },
+                            { key: 'conflict-matcher', name: 'Conflict Matcher' },
+                            { key: 'timeline-reconstructor', name: 'Timeline Reconstructor' },
+                            { key: 'empathy-exercise', name: 'Empathy Exercise' }
+                          ];
+                          activities.forEach(activity => {
+                            const activityKey = `${task}-${activity.key}`;
+                            const accessed = localStorage.getItem(`activity-accessed-${activityKey}`) || 
+                                           localStorage.getItem(`lightning-round-best-${task}`) ||
+                                           getActivityStats(task, activity.key);
+                            items.push({ type: 'activity', name: activity.name, key: activity.key, completed: !!accessed });
+                            if (accessed) completedItems++;
+                          });
+                          
+                          const percentage = Math.round((completedItems / totalItems) * 100);
+                          
+                          return (
+                            <button
+                              key={task}
+                              onClick={() => {
+                                setSelectedTask(task);
+                                setShowTaskProgressModal(false);
+                                handleViewChange('task-interstitial');
+                              }}
+                              className="w-full text-left p-3 rounded-lg hover:bg-white/5 transition-colors mb-1 border-l-2 border-transparent hover:border-blue-500"
+                            >
+                              <div className="flex items-center justify-between mb-1">
+                                <span className="text-sm text-white font-medium">{task}</span>
+                                <span className="text-xs font-bold text-blue-400">{percentage}%</span>
+                              </div>
+                              <div className="w-full bg-slate-800 rounded-full h-1.5 overflow-hidden">
+                                <div 
+                                  className="h-full bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full transition-all duration-500" 
+                                  style={{width: `${percentage}%`}}
+                                ></div>
+                              </div>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+              
+              {/* Right Column - Progress Grid */}
+              <div className="flex-1 overflow-y-auto custom-scrollbar p-6">
+                <h3 className="executive-font text-lg font-semibold text-white mb-4 uppercase tracking-wide">Progress Details</h3>
+                <div className="grid grid-cols-1 gap-4">
+                  {Object.entries(domainMap).map(([domain, tasks]) => (
+                    <div key={domain} className="mb-6">
+                      <div className="text-sm text-slate-400 uppercase font-semibold mb-3 tracking-widest">{domain}</div>
+                      <div className="space-y-3">
+                        {tasks.map(task => {
+                          const learnTabs = [
+                            { key: 'overview', name: 'Overview' },
+                            { key: 'pmp-application', name: 'PMP Application' },
+                            { key: 'deep-dive', name: 'Deep Dive' }
+                          ];
+                          const activities = [
+                            { key: 'pm-simulator', name: 'PM Simulator' },
+                            { key: 'lightning-round', name: 'Lightning Round' },
+                            { key: 'document-detective', name: 'Document Detective' },
+                            { key: 'conflict-matcher', name: 'Conflict Matcher' },
+                            { key: 'timeline-reconstructor', name: 'Timeline Reconstructor' },
+                            { key: 'empathy-exercise', name: 'Empathy Exercise' }
+                          ];
+                          
+                          return (
+                            <div key={task} className="glass-card p-4 border-l-4 border-blue-500/50">
+                              <h4 className="executive-font text-base font-semibold text-white mb-3">{task}</h4>
+                              <div className="grid grid-cols-3 gap-3 mb-3">
+                                {learnTabs.map(tab => {
+                                  const viewed = localStorage.getItem(`learn-viewed-${task}-${tab.key}`);
+                                  return (
+                                    <div key={tab.key} className="flex items-center gap-2">
+                                      <input 
+                                        type="checkbox" 
+                                        checked={!!viewed} 
+                                        readOnly
+                                        className="w-4 h-4 rounded border-2 border-slate-600 bg-slate-800 checked:bg-blue-500 checked:border-blue-500"
+                                      />
+                                      <span className="text-xs text-slate-300">{tab.name}</span>
+                                    </div>
+                                  );
+                                })}
+                              </div>
+                              <div className="grid grid-cols-3 gap-3">
+                                {activities.map(activity => {
+                                  const activityKey = `${task}-${activity.key}`;
+                                  const accessed = localStorage.getItem(`activity-accessed-${activityKey}`) || 
+                                                 localStorage.getItem(`lightning-round-best-${task}`) ||
+                                                 getActivityStats(task, activity.key);
+                                  return (
+                                    <div key={activity.key} className="flex items-center gap-2">
+                                      <input 
+                                        type="checkbox" 
+                                        checked={!!accessed} 
+                                        readOnly
+                                        className="w-4 h-4 rounded border-2 border-slate-600 bg-slate-800 checked:bg-purple-500 checked:border-purple-500"
+                                      />
+                                      <span className="text-xs text-slate-300">{activity.name}</span>
+                                    </div>
+                                  );
+                                })}
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
         </div>
       </>
     );
@@ -5479,217 +5798,638 @@ const PMPApp = () => {
     ];
   };
 
-  // Helper function to toggle task expansion
-  const toggleTaskExpansion = (taskName) => {
-    setExpandedLearningTasks(prev => ({
-      ...prev,
-      [subView]: {
-        ...prev[subView],
-        [taskName]: !prev[subView][taskName]
-      }
-    }));
+  // Helper function to toggle section expansion
+  const toggleSectionExpansion = (sectionKey) => {
+    setExpandedLearningSections(prev => {
+      const currentSubView = prev[subView] || {};
+      const currentValue = currentSubView[sectionKey] || false;
+      return {
+        ...prev,
+        [subView]: {
+          ...currentSubView,
+          [sectionKey]: !currentValue
+        }
+      };
+    });
   };
 
-  // Helper function to render task content based on subView
-  const renderTaskContent = (taskName, taskData) => {
-    if (!taskData || !taskData.learn) return null;
-
-    if (subView === 'overview') {
-      return (
-        <div className="space-y-4">
-          {taskData.learn.overview?.definition && (
-            <div className="glass-card p-6 border-l-4 border-blue-500 bg-white/[0.02]">
-              <h3 className="executive-font text-lg font-semibold text-white mb-3 uppercase tracking-wide">Definition</h3>
-              <p className="text-xl text-white font-light italic leading-tight">"{taskData.learn.overview.definition}"</p>
-            </div>
-          )}
-          {taskData.learn.overview?.module_introduction && (
-            <div className="glass-card p-4 border-l-4 border-blue-500">
-              <h3 className="executive-font text-base font-semibold text-white mb-2 uppercase tracking-wide">Module Introduction</h3>
-              <p className="text-slate-300 text-sm leading-relaxed">{taskData.learn.overview.module_introduction}</p>
-            </div>
-          )}
-          {taskData.learn.overview?.what_youll_learn && taskData.learn.overview.what_youll_learn.length > 0 && (
-            <div className="glass-card p-4 border-l-4 border-purple-500">
-              <h3 className="executive-font text-base font-semibold text-white mb-2 uppercase tracking-wide">What You'll Learn</h3>
-              <ul className="space-y-2">
-                {taskData.learn.overview.what_youll_learn.map((item, idx) => (
-                  <li key={idx} className="text-slate-300 text-sm flex items-start gap-2">
-                    <span className="text-purple-400 mt-1">•</span>
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-          {taskData.learn.overview?.why_this_matters && (
-            <div className="glass-card p-4 border-l-4 border-cyan-500">
-              <h3 className="executive-font text-base font-semibold text-white mb-2 uppercase tracking-wide">Why This Matters</h3>
-              <p className="text-slate-300 text-sm leading-relaxed">{taskData.learn.overview.why_this_matters}</p>
-            </div>
-          )}
-        </div>
-      );
-    } else if (subView === 'pmp-application') {
-      return (
-        <div className="space-y-4">
-          {taskData.learn.pmp_application?.connection_to_pmp && (
-            <div className="glass-card p-4 border-l-4 border-purple-500">
-              <h3 className="executive-font text-base font-semibold text-white mb-2 uppercase tracking-wide">Connection to PMP</h3>
-              <p className="text-slate-300 text-sm mb-2">{taskData.learn.pmp_application.connection_to_pmp}</p>
-              {taskData.learn.pmp_application.domain && (
-                <p className="text-emerald-400 text-sm font-semibold">Domain: {taskData.learn.pmp_application.domain}</p>
-              )}
-            </div>
-          )}
-          {taskData.learn.pmp_application?.how_module_supports_pmp_application && taskData.learn.pmp_application.how_module_supports_pmp_application.length > 0 && (
-            <div className="glass-card p-4 border-l-4 border-emerald-500">
-              <h3 className="executive-font text-base font-semibold text-white mb-2 uppercase tracking-wide">How This Supports Your Application</h3>
-              <ol className="space-y-1 list-decimal list-inside text-slate-300 text-sm">
-                {taskData.learn.pmp_application.how_module_supports_pmp_application.map((item, idx) => (
-                  <li key={idx}>{item}</li>
-                ))}
-              </ol>
-            </div>
-          )}
-        </div>
-      );
-    } else if (subView === 'deep-dive') {
-      return (
-        <div className="space-y-4">
-          {taskData.learn.deep_dive?.foundational_concept && (
-            <div className="glass-card p-4 border-l-4 border-blue-500">
-              <h3 className="executive-font text-base font-semibold text-white mb-2 uppercase tracking-wide">Foundational Concept</h3>
-              <p className="text-slate-300 text-sm">{taskData.learn.deep_dive.foundational_concept}</p>
-            </div>
-          )}
-          {taskData.learn.deep_dive?.introduction && (
-            <div className="glass-card p-4 border-l-4 border-cyan-500">
-              <h3 className="executive-font text-base font-semibold text-white mb-2 uppercase tracking-wide">Introduction</h3>
-              <p className="text-slate-300 text-sm">{taskData.learn.deep_dive.introduction}</p>
-            </div>
-          )}
-        </div>
-      );
+  // Helper function to get all content sections for current task and subView
+  const getContentSections = () => {
+    if (!currentTask || !currentTask.learn) return [];
+    
+    const sections = [];
+    
+    if (subView === 'overview' && currentTask.learn.overview) {
+      const overview = currentTask.learn.overview;
+      if (overview.definition) sections.push({ key: 'definition', title: 'Definition', content: overview.definition, type: 'definition' });
+      if (overview.module_introduction) sections.push({ key: 'module_introduction', title: 'Module Introduction', content: overview.module_introduction, type: 'text' });
+      if (overview.what_youll_learn && overview.what_youll_learn.length > 0) sections.push({ key: 'what_youll_learn', title: "What You'll Learn", content: overview.what_youll_learn, type: 'list' });
+      if (overview.key_learning_objectives && overview.key_learning_objectives.length > 0) sections.push({ key: 'key_learning_objectives', title: 'Key Learning Objectives', content: overview.key_learning_objectives, type: 'numbered-list' });
+      if (overview.why_this_matters) sections.push({ key: 'why_this_matters', title: 'Why This Matters', content: overview.why_this_matters, type: 'text' });
+      if (overview.exam_triggers && overview.exam_triggers.length > 0) sections.push({ key: 'exam_triggers', title: 'Exam Triggers', content: overview.exam_triggers, type: 'list' });
+      if (overview.quick_scenarios && overview.quick_scenarios.length > 0) sections.push({ key: 'quick_scenarios', title: 'Quick Scenarios', content: overview.quick_scenarios, type: 'scenarios' });
+      if (overview.pmi_hierarchy && overview.pmi_hierarchy.length > 0) sections.push({ key: 'pmi_hierarchy', title: 'PMI Hierarchy', content: overview.pmi_hierarchy, type: 'hierarchy' });
+    } else if (subView === 'pmp-application' && currentTask.learn.pmp_application) {
+      const pmp = currentTask.learn.pmp_application;
+      if (pmp.connection_to_pmp) sections.push({ key: 'connection_to_pmp', title: 'Connection to PMP Certification', content: pmp.connection_to_pmp, domain: pmp.domain, type: 'text' });
+      if (pmp.related_tasks && pmp.related_tasks.length > 0) sections.push({ key: 'related_tasks', title: 'Related PMP Tasks', content: pmp.related_tasks, type: 'related-tasks' });
+      if (pmp.exam_strategy) sections.push({ key: 'exam_strategy', title: 'Exam Strategy', content: pmp.exam_strategy, type: 'text' });
+      if (pmp.how_module_supports_pmp_application && pmp.how_module_supports_pmp_application.length > 0) sections.push({ key: 'how_module_supports_pmp_application', title: 'How This Module Supports Your PMP Application', content: pmp.how_module_supports_pmp_application, type: 'numbered-list' });
+      if (pmp.application_tips && pmp.application_tips.length > 0) sections.push({ key: 'application_tips', title: 'Application Tips', content: pmp.application_tips, type: 'list' });
+      if (pmp.question_patterns && pmp.question_patterns.length > 0) sections.push({ key: 'question_patterns', title: 'Question Patterns', content: pmp.question_patterns, type: 'question-patterns' });
+      if (pmp.agile_vs_traditional) sections.push({ key: 'agile_vs_traditional', title: 'Agile vs Traditional', content: pmp.agile_vs_traditional, type: 'agile-vs-traditional' });
+      if (pmp.decision_tree_visual) sections.push({ key: 'decision_tree_visual', title: 'Decision Tree', content: pmp.decision_tree_visual, type: 'text' });
+    } else if (subView === 'deep-dive' && currentTask.learn.deep_dive) {
+      const deep = currentTask.learn.deep_dive;
+      if (deep.foundational_concept) sections.push({ key: 'foundational_concept', title: 'Foundational Concept', content: deep.foundational_concept, type: 'text' });
+      if (deep.introduction) sections.push({ key: 'introduction', title: 'Introduction', content: deep.introduction, type: 'text' });
+      if (deep.tuckmans_model) sections.push({ key: 'tuckmans_model', title: "Tuckman's Model", content: deep.tuckmans_model, type: 'tuckman' });
+      if (deep.leadership_styles) sections.push({ key: 'leadership_styles', title: 'Leadership Styles', content: deep.leadership_styles, type: 'leadership-styles' });
+      if (deep.situational_leadership) sections.push({ key: 'situational_leadership', title: 'Situational Leadership', content: deep.situational_leadership, type: 'situational-leadership' });
+      if (deep.practical_application) sections.push({ key: 'practical_application', title: 'Practical Application', content: deep.practical_application, type: 'practical-application' });
+      if (deep.summary_and_key_takeaways) sections.push({ key: 'summary_and_key_takeaways', title: 'Summary and Key Takeaways', content: deep.summary_and_key_takeaways, type: 'summary' });
+      if (deep.additional_resources) sections.push({ key: 'additional_resources', title: 'Additional Resources', content: deep.additional_resources, type: 'resources' });
+      if (deep.thomas_kilmann_model) sections.push({ key: 'thomas_kilmann_model', title: 'Thomas-Kilmann Conflict Model', content: deep.thomas_kilmann_model, type: 'thomas-kilmann' });
+      if (deep.step_by_step_process && deep.step_by_step_process.length > 0) sections.push({ key: 'step_by_step_process', title: 'Step-by-Step Process', content: deep.step_by_step_process, type: 'step-by-step' });
+      if (deep.common_mistakes && deep.common_mistakes.length > 0) sections.push({ key: 'common_mistakes', title: 'Common Mistakes', content: deep.common_mistakes, type: 'common-mistakes' });
+      if (deep.emotional_intelligence_connection) sections.push({ key: 'emotional_intelligence_connection', title: 'Emotional Intelligence Connection', content: deep.emotional_intelligence_connection, type: 'emotional-intelligence' });
     }
-    return null;
+    
+    return sections;
   };
 
-  if (view === 'learn-hub') {
-    const allTasks = getAllTasks();
-    const isExpanded = (taskName) => expandedLearningTasks[subView]?.[taskName] || false;
-
-    return (
-      <div className="max-w-7xl w-full p-10 animate-fadeIn text-left">
-        {/* Header with Back Button */}
-        <header className="mb-8">
-          <div className="flex items-center gap-4 mb-6">
-            <button 
-              onClick={() => setView('task-interstitial')}
-              className="px-4 py-2 executive-font text-xs text-slate-400 hover:text-white uppercase font-semibold transition-colors flex items-center gap-2"
-            >
-              ← Back
-            </button>
+  // Helper function to render section content
+  const renderSectionContent = (section) => {
+    const { type, content, domain } = section;
+    
+    switch (type) {
+      case 'definition':
+        return <p className="text-xl text-white font-light italic leading-tight">"{content}"</p>;
+      
+      case 'text':
+        return <p className="text-slate-300 leading-relaxed">{content}</p>;
+      
+      case 'list':
+        return (
+          <ul className="space-y-2">
+            {content.map((item, idx) => (
+              <li key={idx} className="text-slate-300 flex items-start gap-2">
+                <span className="text-purple-400 mt-1">•</span>
+                <span>{item}</span>
+              </li>
+            ))}
+          </ul>
+        );
+      
+      case 'numbered-list':
+        return (
+          <ol className="space-y-2 list-decimal list-inside">
+            {content.map((item, idx) => (
+              <li key={idx} className="text-slate-300">{item}</li>
+            ))}
+          </ol>
+        );
+      
+      case 'scenarios':
+        return (
+          <div className="space-y-4">
+            {content.map((scenario, idx) => (
+              <div key={idx} className="border-l-2 border-cyan-500/50 pl-4">
+                <p className="text-white font-semibold mb-2">{scenario.scenario}</p>
+                <p className="text-sm text-red-400 mb-1"><span className="font-semibold">Wrong:</span> {scenario.wrong_answer}</p>
+                <p className="text-sm text-emerald-400 mb-1"><span className="font-semibold">Right:</span> {scenario.right_answer}</p>
+                <p className="text-sm text-slate-400 italic">{scenario.why}</p>
+              </div>
+            ))}
           </div>
-          <h1 className="executive-font text-5xl font-bold text-white tracking-tight mb-6">
-            {subView === 'overview' ? 'Overview' : subView === 'pmp-application' ? 'PMP Application' : 'Deep Dive'}
-          </h1>
-          
-          {/* Tab Navigation */}
-          <div className="flex gap-8 border-b border-white/10">
-            <button 
-              onClick={() => setSubView('overview')} 
-              className={`px-4 py-3 executive-font text-xs font-semibold uppercase transition-all relative ${
-                subView === 'overview' 
-                  ? 'text-white border-b-2 border-cyan-400' 
-                  : 'text-slate-500 hover:text-slate-300'
-              }`}
-            >
-              Overview
-            </button>
-            <button 
-              onClick={() => setSubView('pmp-application')} 
-              className={`px-4 py-3 executive-font text-xs font-semibold uppercase transition-all relative ${
-                subView === 'pmp-application' 
-                  ? 'text-white border-b-2 border-cyan-400' 
-                  : 'text-slate-500 hover:text-slate-300'
-              }`}
-            >
-              PMP Application
-            </button>
-            <button 
-              onClick={() => setSubView('deep-dive')} 
-              className={`px-4 py-3 executive-font text-xs font-semibold uppercase transition-all relative ${
-                subView === 'deep-dive' 
-                  ? 'text-white border-b-2 border-cyan-400' 
-                  : 'text-slate-500 hover:text-slate-300'
-              }`}
-            >
-              Deep Dive
-            </button>
+        );
+      
+      case 'hierarchy':
+        return (
+          <div className="space-y-3">
+            {content.map((item, idx) => (
+              <div key={idx} className="border-l-2 border-emerald-500/50 pl-4">
+                <div className="flex items-center gap-3 mb-1">
+                  <span className="text-2xl">{item.emoji}</span>
+                  <span className="font-semibold text-white">{item.rank}. {item.mode}</span>
+                </div>
+                <p className="text-sm text-slate-300 mb-1"><span className="font-semibold">When:</span> {item.when}</p>
+                <p className="text-sm text-emerald-400 italic">{item.exam_tip}</p>
+              </div>
+            ))}
           </div>
-        </header>
-
-      {/* Content Area - Grid of Collapsible Task Boxes */}
-      <div className="min-h-[400px] max-h-[80vh] overflow-y-auto custom-scrollbar">
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
-          {allTasks.map((taskName) => {
-            const taskData = taskDatabase?.[taskName] || {};
-            const expanded = isExpanded(taskName);
-            const hasContent = taskData.learn && (
-              (subView === 'overview' && taskData.learn.overview) ||
-              (subView === 'pmp-application' && taskData.learn.pmp_application) ||
-              (subView === 'deep-dive' && taskData.learn.deep_dive)
-            );
-
-            return (
-              <div key={taskName} className="relative">
-                {!expanded ? (
-                  <button
-                    onClick={() => toggleTaskExpansion(taskName)}
-                    disabled={!hasContent}
-                    className={`w-full glass-card p-4 text-left transition-all border-l-4 ${
-                      hasContent
-                        ? 'border-cyan-500 hover:border-cyan-400 hover:bg-cyan-500/10 hover:scale-105 cursor-pointer'
-                        : 'border-slate-600 opacity-50 cursor-not-allowed'
-                    }`}
-                  >
-                    <h3 className="executive-font text-sm font-semibold text-white mb-1 line-clamp-2">
-                      {taskName}
-                    </h3>
-                    {hasContent && (
-                      <p className="text-xs text-cyan-400 mt-2">Click to expand →</p>
-                    )}
-                    {!hasContent && (
-                      <p className="text-xs text-slate-500 mt-2">No content</p>
-                    )}
-                  </button>
-                ) : (
-                  <div className="glass-card p-4 border-l-4 border-cyan-500 bg-cyan-500/10">
-                    <div className="flex items-start justify-between mb-3">
-                      <h3 className="executive-font text-sm font-semibold text-white flex-1">
-                        {taskName}
-                      </h3>
-                      <button
-                        onClick={() => toggleTaskExpansion(taskName)}
-                        className="text-cyan-400 hover:text-cyan-300 text-lg font-bold ml-2"
-                        title="Close"
-                      >
-                        ×
-                      </button>
-                    </div>
-                    <div className="max-h-[60vh] overflow-y-auto custom-scrollbar">
-                      {renderTaskContent(taskName, taskData)}
-                    </div>
+        );
+      
+      case 'related-tasks':
+        return (
+          <div className="space-y-6">
+            {content.map((task, idx) => (
+              <div key={idx} className="border-l-2 border-blue-500/50 pl-4">
+                <h4 className="font-semibold text-white text-lg mb-2">{task.task}</h4>
+                <p className="text-sm text-slate-300 mb-3">{task.description}</p>
+                {task.knowledge_and_skills && task.knowledge_and_skills.length > 0 && (
+                  <div className="mb-3">
+                    <p className="text-xs text-slate-400 uppercase mb-2">Knowledge and Skills:</p>
+                    <ul className="list-disc list-inside space-y-1 text-sm text-slate-300">
+                      {task.knowledge_and_skills.map((skill, skillIdx) => (
+                        <li key={skillIdx}>{skill}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+                {task.what_youll_learn && task.what_youll_learn.length > 0 && (
+                  <div>
+                    <p className="text-xs text-slate-400 uppercase mb-2">What You'll Learn:</p>
+                    <ul className="list-disc list-inside space-y-1 text-sm text-slate-300">
+                      {task.what_youll_learn.map((item, itemIdx) => (
+                        <li key={itemIdx}>{item}</li>
+                      ))}
+                    </ul>
                   </div>
                 )}
               </div>
-            );
-          })}
+            ))}
+          </div>
+        );
+      
+      case 'question-patterns':
+        return (
+          <div className="space-y-4">
+            {content.map((pattern, idx) => (
+              <div key={idx} className="border-l-2 border-blue-500/50 pl-4">
+                <h4 className="font-semibold text-white mb-2">{pattern.pattern}</h4>
+                <p className="text-sm text-slate-300 mb-2">{pattern.setup}</p>
+                <div className="text-sm space-y-1 mb-2">
+                  <p className="text-red-400"><span className="font-semibold">Distractor 1:</span> {pattern.distractor_1} - {pattern.why_wrong_1}</p>
+                  <p className="text-red-400"><span className="font-semibold">Distractor 2:</span> {pattern.distractor_2} - {pattern.why_wrong_2}</p>
+                  <p className="text-red-400"><span className="font-semibold">Distractor 3:</span> {pattern.distractor_3} - {pattern.why_wrong_3}</p>
+                </div>
+                <p className="text-emerald-400 font-semibold"><span className="font-bold">Correct:</span> {pattern.correct}</p>
+                <p className="text-sm text-emerald-300 italic">{pattern.why_correct}</p>
+              </div>
+            ))}
+          </div>
+        );
+      
+      case 'agile-vs-traditional':
+        return (
+          <div className="grid grid-cols-2 gap-6">
+            <div className="border-l-4 border-orange-500 pl-4">
+              <h4 className="executive-font text-lg font-semibold text-white mb-3">Traditional Context</h4>
+              <div className="text-sm text-slate-300 space-y-2">
+                <p><span className="font-semibold">PM Role:</span> {content.traditional_context.pm_role}</p>
+                <p><span className="font-semibold">Approach:</span> {content.traditional_context.approach}</p>
+                <p><span className="font-semibold">Escalation:</span> {content.traditional_context.escalation}</p>
+              </div>
+            </div>
+            <div className="border-l-4 border-emerald-500 pl-4">
+              <h4 className="executive-font text-lg font-semibold text-white mb-3">Agile Context</h4>
+              <div className="text-sm text-slate-300 space-y-2">
+                <p><span className="font-semibold">PM Role:</span> {content.agile_context.pm_role}</p>
+                <p><span className="font-semibold">Approach:</span> {content.agile_context.approach}</p>
+                <p><span className="font-semibold">Escalation:</span> {content.agile_context.escalation}</p>
+              </div>
+            </div>
+          </div>
+        );
+      
+      case 'tuckman':
+        return (
+          <div className="space-y-4">
+            {content.title && <h4 className="executive-font text-xl font-bold text-white mb-4">{content.title}</h4>}
+            {content.stages && content.stages.map((stage, idx) => (
+              <div key={idx} className="border-l-4 border-purple-400/50 bg-white/[0.02] rounded p-4">
+                <h5 className="executive-font text-lg font-semibold text-white mb-2">Stage {idx + 1}: {stage.stage}</h5>
+                {stage.overview && <p className="text-slate-300 italic mb-2">{stage.overview}</p>}
+                {stage.detailed_characteristics && (
+                  <div className="mt-3">
+                    <h6 className="text-white font-semibold mb-2">Characteristics:</h6>
+                    {stage.detailed_characteristics.team_member_behaviors && (
+                      <div className="mb-2">
+                        <p className="text-cyan-400 text-sm font-semibold mb-1">Team Member Behaviors:</p>
+                        <ul className="list-disc list-inside text-slate-300 text-sm space-y-1 ml-4">
+                          {stage.detailed_characteristics.team_member_behaviors.map((behavior, bIdx) => (
+                            <li key={bIdx}>{behavior}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        );
+      
+      case 'leadership-styles':
+        return (
+          <div className="space-y-4">
+            {content.title && <h4 className="executive-font text-xl font-bold text-white mb-4">{content.title}</h4>}
+            {content.background_and_research && <p className="text-slate-300 mb-4">{content.background_and_research}</p>}
+            {content.styles && content.styles.map((style, idx) => (
+              <div key={idx} className="border-l-4 border-emerald-400/50 bg-white/[0.02] rounded p-4">
+                <h5 className="executive-font text-lg font-semibold text-white mb-2">{style.style}</h5>
+                {style.tagline && <p className="text-cyan-400 text-sm italic mb-2">"{style.tagline}"</p>}
+                {style.description && <p className="text-slate-300 text-sm mb-2">{style.description}</p>}
+              </div>
+            ))}
+          </div>
+        );
+      
+      case 'situational-leadership':
+        return (
+          <div className="space-y-4">
+            {content.title && <h4 className="executive-font text-xl font-bold text-white mb-4">{content.title}</h4>}
+            {content.integration_framework && <p className="text-slate-300 mb-4">{content.integration_framework}</p>}
+            {content.by_team_stage && Object.entries(content.by_team_stage).map(([stage, styleInfo]) => (
+              <div key={stage} className="border-l-2 border-yellow-400/50 pl-4">
+                <h5 className="text-white font-semibold capitalize mb-1">{stage}:</h5>
+                <p className="text-slate-300 text-sm"><span className="text-cyan-400">Primary:</span> {styleInfo.primary}</p>
+                <p className="text-slate-300 text-sm"><span className="text-cyan-400">Secondary:</span> {styleInfo.secondary}</p>
+              </div>
+            ))}
+          </div>
+        );
+      
+      case 'practical-application':
+        return (
+          <div className="space-y-4">
+            {content.title && <h4 className="executive-font text-xl font-bold text-white mb-4">{content.title}</h4>}
+            {content.self_assessment_questions && content.self_assessment_questions.diagnostic_questions && (
+              <div className="space-y-4">
+                {content.self_assessment_questions.diagnostic_questions.map((q, idx) => (
+                  <div key={idx} className="border-l-2 border-indigo-400/50 pl-4">
+                    <h5 className="text-white font-semibold mb-2">{q.question}</h5>
+                    {q.guidance && Array.isArray(q.guidance) && (
+                      <ul className="list-disc list-inside text-slate-300 text-sm space-y-1 ml-4">
+                        {q.guidance.map((guidance, gIdx) => (
+                          <li key={gIdx}>{guidance}</li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        );
+      
+      case 'summary':
+        return (
+          <div className="space-y-4">
+            {content.title && <h4 className="executive-font text-xl font-bold text-white mb-4">{content.title}</h4>}
+            {content.tuckman_stages_key_points && (
+              <div className="mb-4">
+                <h5 className="text-cyan-400 font-semibold mb-2">Tuckman's Stages - Key Points:</h5>
+                {content.tuckman_stages_key_points.map((point, idx) => (
+                  <div key={idx} className="mb-3 border-l-2 border-teal-400/50 pl-4">
+                    <h6 className="text-white font-semibold mb-1">{point.point}</h6>
+                    {point.details && Array.isArray(point.details) && (
+                      <ul className="list-disc list-inside text-slate-300 text-sm space-y-1 ml-4">
+                        {point.details.map((detail, dIdx) => (
+                          <li key={dIdx}>{detail}</li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+            {content.leadership_styles_key_points && (
+              <div>
+                <h5 className="text-cyan-400 font-semibold mb-2">Leadership Styles - Key Points:</h5>
+                {content.leadership_styles_key_points.map((point, idx) => (
+                  <div key={idx} className="mb-3 border-l-2 border-teal-400/50 pl-4">
+                    <h6 className="text-white font-semibold mb-1">{point.point}</h6>
+                    {point.details && Array.isArray(point.details) && (
+                      <ul className="list-disc list-inside text-slate-300 text-sm space-y-1 ml-4">
+                        {point.details.map((detail, dIdx) => (
+                          <li key={dIdx}>{detail}</li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        );
+      
+      case 'resources':
+        return (
+          <div className="space-y-4">
+            {content.books && (
+              <div className="mb-4">
+                <h5 className="text-cyan-400 font-semibold mb-2">Books:</h5>
+                <ul className="list-disc list-inside text-slate-300 space-y-2">
+                  {content.books.map((book, idx) => (
+                    <li key={idx}>
+                      <span className="font-semibold text-white">"{book.title}"</span> by {book.author}
+                      {book.focus && <span className="text-slate-400 text-sm"> - {book.focus}</span>}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+            {content.tools && (
+              <div>
+                <h5 className="text-cyan-400 font-semibold mb-2">Tools:</h5>
+                <ul className="list-disc list-inside text-slate-300 space-y-1">
+                  {content.tools.map((tool, idx) => (
+                    <li key={idx}>{tool}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
+        );
+      
+      case 'thomas-kilmann':
+        return (
+          <div className="space-y-4">
+            {content.description && <p className="text-slate-300 mb-4">{content.description}</p>}
+            {content.five_modes && content.five_modes.map((mode, idx) => (
+              <div key={idx} className="border-l-2 border-purple-500/50 pl-4">
+                <h5 className="font-semibold text-white mb-2">{mode.mode}</h5>
+                <p className="text-sm mb-2">{mode.description}</p>
+                <div className="text-xs text-slate-400">
+                  <div className="mb-1"><span className="font-semibold">Assertiveness:</span> {mode.assertiveness}</div>
+                  <div className="mb-1"><span className="font-semibold">Cooperativeness:</span> {mode.cooperativeness}</div>
+                  <div className="mb-1"><span className="font-semibold">Outcome:</span> {mode.outcome}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        );
+      
+      case 'step-by-step':
+        return (
+          <div className="space-y-4">
+            {content.map((step, idx) => (
+              <div key={idx} className="border-l-2 border-emerald-500/50 pl-4">
+                <h5 className="font-semibold text-white mb-2">Step {step.step}: {step.title}</h5>
+                {step.actions && (
+                  <ul className="list-disc list-inside space-y-1 text-sm">
+                    {step.actions.map((action, actionIdx) => (
+                      <li key={actionIdx} className="text-slate-300">{action}</li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            ))}
+          </div>
+        );
+      
+      case 'common-mistakes':
+        return (
+          <div className="space-y-3">
+            {content.map((mistake, idx) => (
+              <div key={idx} className="border-l-2 border-rose-500/50 pl-4">
+                <h5 className="font-semibold text-white mb-1">{mistake.mistake}</h5>
+                <p className="text-sm text-slate-400 mb-1"><span className="font-semibold">Consequence:</span> {mistake.consequence}</p>
+                <p className="text-sm text-emerald-400"><span className="font-semibold">Correction:</span> {mistake.correction}</p>
+              </div>
+            ))}
+          </div>
+        );
+      
+      case 'emotional-intelligence':
+        return (
+          <div className="space-y-3 text-sm">
+            <div><span className="font-semibold text-white">Self-Awareness:</span> {content.self_awareness}</div>
+            <div><span className="font-semibold text-white">Self-Management:</span> {content.self_management}</div>
+            <div><span className="font-semibold text-white">Social Awareness:</span> {content.social_awareness}</div>
+            <div><span className="font-semibold text-white">Relationship Management:</span> {content.relationship_management}</div>
+          </div>
+        );
+      
+      default:
+        return <p className="text-slate-300">{typeof content === 'string' ? content : JSON.stringify(content)}</p>;
+    }
+  };
+
+  if (view === 'learn-hub') {
+    const sections = getContentSections();
+    const isExpanded = (sectionKey) => {
+      const state = expandedLearningSections[subView];
+      return state && state[sectionKey] === true;
+    };
+    
+    // Jewel colors array for buttons
+    const jewelColors = [
+      { border: 'border-emerald-500', hover: 'hover:border-emerald-400', bg: 'hover:bg-emerald-500/10', text: 'text-emerald-400', close: 'text-emerald-400 hover:text-emerald-300' }, // Emerald
+      { border: 'border-sapphire-500', hover: 'hover:border-sapphire-400', bg: 'hover:bg-sapphire-500/10', text: 'text-sapphire-400', close: 'text-sapphire-400 hover:text-sapphire-300' }, // Sapphire (blue)
+      { border: 'border-ruby-500', hover: 'hover:border-ruby-400', bg: 'hover:bg-ruby-500/10', text: 'text-ruby-400', close: 'text-ruby-400 hover:text-ruby-300' }, // Ruby (red)
+      { border: 'border-amethyst-500', hover: 'hover:border-amethyst-400', bg: 'hover:bg-amethyst-500/10', text: 'text-amethyst-400', close: 'text-amethyst-400 hover:text-amethyst-300' }, // Amethyst (purple)
+      { border: 'border-amber-500', hover: 'hover:border-amber-400', bg: 'hover:bg-amber-500/10', text: 'text-amber-400', close: 'text-amber-400 hover:text-amber-300' }, // Amber
+      { border: 'border-turquoise-500', hover: 'hover:border-turquoise-400', bg: 'hover:bg-turquoise-500/10', text: 'text-turquoise-400', close: 'text-turquoise-400 hover:text-turquoise-300' }, // Turquoise
+      { border: 'border-topaz-500', hover: 'hover:border-topaz-400', bg: 'hover:bg-topaz-500/10', text: 'text-topaz-400', close: 'text-topaz-400 hover:text-topaz-300' }, // Topaz (yellow)
+      { border: 'border-garnet-500', hover: 'hover:border-garnet-400', bg: 'hover:bg-garnet-500/10', text: 'text-garnet-400', close: 'text-garnet-400 hover:text-garnet-300' }, // Garnet (deep red)
+    ];
+    
+    // Get jewel color for a section index
+    const getJewelColor = (index) => {
+      return jewelColors[index % jewelColors.length];
+    };
+    
+    // Grid: Always start with 2 columns, expand as needed
+    const getGridCols = () => {
+      const count = sections.length;
+      if (count <= 4) return 'grid-cols-2';
+      if (count <= 6) return 'grid-cols-2 md:grid-cols-3';
+      if (count <= 9) return 'grid-cols-2 md:grid-cols-3';
+      return 'grid-cols-2 md:grid-cols-3 lg:grid-cols-4';
+    };
+
+    return (
+      <>
+        <Confetti />
+        <div className={`max-w-7xl w-full p-10 animate-fadeIn text-left view-transition-wrapper ${viewTransition.isTransitioning ? 'view-transition-exit' : 'view-transition-enter'}`}>
+          {/* Header with Back Button */}
+          <header className="mb-8">
+            <div className="flex items-center justify-between gap-4 mb-6">
+              <button 
+                onClick={() => setView('task-interstitial')}
+                className="px-4 py-2 executive-font text-xs text-slate-400 hover:text-white uppercase font-semibold transition-colors flex items-center gap-2"
+              >
+                ← Back
+              </button>
+              <button
+                onClick={(e) => {
+                  createRipple(e);
+                  handleViewChange('practice-hub');
+                }}
+                className="px-6 py-2 executive-font text-sm font-semibold bg-purple-600 hover:bg-purple-500 text-white rounded-lg transition-all shadow-lg hover:shadow-xl hover:scale-105 btn-ripple"
+              >
+                Go Practice →
+              </button>
+            </div>
+            <h1 className="executive-font text-5xl font-bold text-white tracking-tight mb-2">
+              {selectedTask}
+            </h1>
+            <p className="text-slate-400 text-lg mb-6">
+              {subView === 'overview' ? 'Overview' : subView === 'pmp-application' ? 'PMP Application' : 'Deep Dive'}
+            </p>
+            
+            {/* Tab Navigation */}
+            <div className="flex gap-8 border-b border-white/10">
+              <button 
+                onClick={() => setSubView('overview')} 
+                className={`px-4 py-3 executive-font text-xs font-semibold uppercase transition-all relative ${
+                  subView === 'overview' 
+                    ? 'text-white border-b-2 border-cyan-400' 
+                    : 'text-slate-500 hover:text-slate-300'
+                }`}
+              >
+                Overview
+              </button>
+              <button 
+                onClick={() => setSubView('pmp-application')} 
+                className={`px-4 py-3 executive-font text-xs font-semibold uppercase transition-all relative ${
+                  subView === 'pmp-application' 
+                    ? 'text-white border-b-2 border-cyan-400' 
+                    : 'text-slate-500 hover:text-slate-300'
+                }`}
+              >
+                PMP Application
+              </button>
+              <button 
+                onClick={() => setSubView('deep-dive')} 
+                className={`px-4 py-3 executive-font text-xs font-semibold uppercase transition-all relative ${
+                  subView === 'deep-dive' 
+                    ? 'text-white border-b-2 border-cyan-400' 
+                    : 'text-slate-500 hover:text-slate-300'
+                }`}
+              >
+                Deep Dive
+              </button>
+            </div>
+          </header>
+
+          {/* Content Area - Two Column Layout: Buttons Left, Content Right */}
+          {sections.length === 0 ? (
+            <div className="glass-card p-10 text-center">
+              <p className="text-slate-400 text-lg">No content available for this section.</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 gap-6 min-h-[500px]">
+              {/* Left Column - Buttons */}
+              <div className="space-y-3">
+                {sections.map((section, index) => {
+                  const expanded = isExpanded(section.key);
+                  
+                  // Jewel tone color classes with full opacity for better visibility
+                  const jewelBgClasses = [
+                    { bg: 'bg-emerald-600', hover: 'hover:bg-emerald-500', active: 'bg-emerald-500', ring: 'ring-emerald-400' }, // Emerald
+                    { bg: 'bg-blue-600', hover: 'hover:bg-blue-500', active: 'bg-blue-500', ring: 'ring-blue-400' }, // Sapphire
+                    { bg: 'bg-red-600', hover: 'hover:bg-red-500', active: 'bg-red-500', ring: 'ring-red-400' }, // Ruby
+                    { bg: 'bg-purple-600', hover: 'hover:bg-purple-500', active: 'bg-purple-500', ring: 'ring-purple-400' }, // Amethyst
+                    { bg: 'bg-amber-600', hover: 'hover:bg-amber-500', active: 'bg-amber-500', ring: 'ring-amber-400' }, // Amber
+                    { bg: 'bg-cyan-600', hover: 'hover:bg-cyan-500', active: 'bg-cyan-500', ring: 'ring-cyan-400' }, // Turquoise
+                    { bg: 'bg-yellow-600', hover: 'hover:bg-yellow-500', active: 'bg-yellow-500', ring: 'ring-yellow-400' }, // Topaz
+                    { bg: 'bg-rose-600', hover: 'hover:bg-rose-500', active: 'bg-rose-500', ring: 'ring-rose-400' }, // Garnet
+                  ];
+                  const jewel = jewelBgClasses[index % jewelBgClasses.length];
+                  
+                  return (
+                    <button
+                      key={section.key}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        // Close all other sections and toggle this one
+                        const currentValue = expandedLearningSections[subView]?.[section.key] || false;
+                        const newState = { [section.key]: !currentValue };
+                        // Close all others
+                        sections.forEach(s => {
+                          if (s.key !== section.key) {
+                            newState[s.key] = false;
+                          }
+                        });
+                        setExpandedLearningSections(prev => ({
+                          ...prev,
+                          [subView]: {
+                            ...prev[subView],
+                            ...newState
+                          }
+                        }));
+                      }}
+                      className={`w-full p-4 text-left transition-all rounded-lg shadow-lg hover:shadow-xl hover:scale-[1.02] cursor-pointer ${
+                        expanded 
+                          ? `${jewel.active} ring-2 ${jewel.ring} ring-opacity-50` 
+                          : `${jewel.bg} ${jewel.hover}`
+                      }`}
+                    >
+                      <h3 className="executive-font text-sm font-semibold mb-1 text-white drop-shadow-md">
+                        {section.title}
+                      </h3>
+                      {!expanded && (
+                        <p className="text-xs text-white/90 mt-1">Click to view →</p>
+                      )}
+                      {expanded && (
+                        <p className="text-xs text-white font-semibold mt-1">● Active</p>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+
+              {/* Right Column - Content Display */}
+              <div className="glass-card p-6 border-l-4 border-cyan-500/50">
+                {(() => {
+                  const expandedSection = sections.find(s => isExpanded(s.key));
+                  if (!expandedSection) {
+                    return (
+                      <div className="flex items-center justify-center h-full min-h-[400px]">
+                        <div className="text-center">
+                          <p className="text-slate-400 text-lg mb-2">Select a section to view content</p>
+                          <p className="text-slate-500 text-sm">Click any button on the left to expand</p>
+                        </div>
+                      </div>
+                    );
+                  }
+                  
+                  const jewel = getJewelColor(sections.findIndex(s => s.key === expandedSection.key));
+                  
+                  return (
+                    <div className="h-full flex flex-col">
+                      <div className="flex items-start justify-between mb-4 pb-4 border-b border-white/10">
+                        <h3 className="executive-font text-2xl font-semibold text-white flex-1">
+                          {expandedSection.title}
+                        </h3>
+                        <button
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            // Close this section
+                            setExpandedLearningSections(prev => ({
+                              ...prev,
+                              [subView]: {
+                                ...prev[subView],
+                                [expandedSection.key]: false
+                              }
+                            }));
+                          }}
+                          className="text-slate-400 hover:text-white text-2xl font-bold ml-4 flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/10 transition-colors"
+                          title="Close"
+                        >
+                          ×
+                        </button>
+                      </div>
+                      <div className="flex-1 overflow-y-auto custom-scrollbar pr-2">
+                        {expandedSection.domain && (
+                          <p className="text-emerald-400 text-sm font-semibold mb-4">Domain: {expandedSection.domain}</p>
+                        )}
+                        {renderSectionContent(expandedSection)}
+                      </div>
+                    </div>
+                  );
+                })()}
+              </div>
+            </div>
+          )}
+          <GlobalNavFooter />
         </div>
-      </div>
-      <GlobalNavFooter />
-    </div>
+      </>
     );
   }
 
