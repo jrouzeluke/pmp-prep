@@ -423,6 +423,7 @@ const PMPApp = () => {
         <button onClick={(e) => { createRipple(e); handleViewChange('practice-quizzes'); }} className="text-xs text-slate-400 uppercase font-semibold hover:text-emerald-400 transition-colors executive-font btn-ripple">Quizzes</button>
         <button onClick={(e) => { createRipple(e); handleViewChange('strategy-suite'); }} className="text-xs text-slate-400 uppercase font-semibold hover:text-cyan-400 transition-colors executive-font btn-ripple">Task Areas</button>
         <button onClick={(e) => { createRipple(e); handleViewChange('progress-stats'); }} className="text-xs text-slate-400 uppercase font-semibold hover:text-amber-400 transition-colors executive-font btn-ripple">My Progress</button>
+        <button onClick={(e) => { createRipple(e); handleViewChange('personal-stats'); }} className="text-xs text-slate-400 uppercase font-semibold hover:text-rose-400 transition-colors executive-font btn-ripple">Personal Stats</button>
         {view !== 'executive-hud' && (
           <button onClick={(e) => { createRipple(e); handleViewChange('executive-hud'); }} className="text-xs text-slate-400 uppercase font-semibold hover:text-blue-400 transition-colors executive-font btn-ripple">Home</button>
         )}
@@ -4960,22 +4961,6 @@ const PMPApp = () => {
             </button>
           );
         })}
-      </div>
-
-      {/* Progress Stats Buttons */}
-      <div className="flex justify-center gap-4 mb-8">
-        <button
-          onClick={() => setView('progress-stats')}
-          className="px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-lg transition-colors executive-font"
-        >
-          View Progress Stats →
-        </button>
-        <button
-          onClick={() => setView('personal-stats')}
-          className="px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-lg transition-colors executive-font"
-        >
-          📊 Personal Stats →
-        </button>
       </div>
 
       <GlobalNavFooter />
