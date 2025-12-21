@@ -74,6 +74,10 @@ const PMPApp = () => {
     reflections: {}
   });
   
+  // View Transition and Animation States
+  const [viewTransition, setViewTransition] = useState({ isTransitioning: false, nextView: null });
+  const [showConfetti, setShowConfetti] = useState(false);
+  
   // Progress Tracking State
   const [progressData, setProgressData] = useState({
     completedActivities: {}, // { 'taskName': { 'activityName': { completed: true, completedAt: 'date', attempts: 1, bestScore: 0 } } }
@@ -354,6 +358,29 @@ const PMPApp = () => {
   const triggerConfetti = () => {
     setShowConfetti(true);
     setTimeout(() => setShowConfetti(false), 2000);
+  };
+
+  // Confetti Component - defined early so it can be used throughout
+  const Confetti = () => {
+    if (!showConfetti) return null;
+    
+    const confettiPieces = Array.from({ length: 50 }, (_, i) => {
+      const colors = ['#fbbf24', '#3b82f6', '#10b981', '#f43f5e', '#a855f7'];
+      return (
+        <div
+          key={i}
+          className="confetti"
+          style={{
+            left: `${Math.random() * 100}%`,
+            background: colors[i % colors.length],
+            animationDelay: `${Math.random() * 3}s`,
+            animationDuration: `${2 + Math.random() * 2}s`
+          }}
+        />
+      );
+    });
+
+    return <div className="confetti-container">{confettiPieces}</div>;
   };
 
   // Define GlobalNavFooter early so it can be used in early returns
@@ -6226,29 +6253,6 @@ const PMPApp = () => {
     </div>
   );
 
-  // Confetti Component
-  const Confetti = () => {
-    if (!showConfetti) return null;
-    
-    const confettiPieces = Array.from({ length: 50 }, (_, i) => {
-      const colors = ['#fbbf24', '#3b82f6', '#10b981', '#f43f5e', '#a855f7'];
-      return (
-        <div
-          key={i}
-          className="confetti"
-          style={{
-            left: `${Math.random() * 100}%`,
-            background: colors[i % colors.length],
-            animationDelay: `${Math.random() * 3}s`,
-            animationDuration: `${2 + Math.random() * 2}s`
-          }}
-        />
-      );
-    });
-
-    return <div className="confetti-container">{confettiPieces}</div>;
-  };
-
   // Fallback return - should never reach here if all views are properly handled
   return (
     <>
@@ -6259,25 +6263,6 @@ const PMPApp = () => {
       </div>
     </>
   );
-};
-
-// Confetti Component
-const Confetti = ({ show }) => {
-  if (!show) return null;
-  
-  const confettiPieces = Array.from({ length: 50 }, (_, i) => (
-    <div
-      key={i}
-      className="confetti"
-      style={{
-        left: `${Math.random() * 100}%`,
-        animationDelay: `${Math.random() * 3}s`,
-        animationDuration: `${2 + Math.random() * 2}s`
-      }}
-    />
-  ));
-
-  return <div className="confetti-container">{confettiPieces}</div>;
 };
 
 // View Transition Wrapper
