@@ -421,6 +421,8 @@ const PMPApp = () => {
         <button onClick={(e) => { createRipple(e); handleViewChange('strategy-suite'); }} className="text-xs text-slate-400 uppercase font-semibold hover:text-blue-400 transition-colors executive-font btn-ripple">Learn</button>
         <button onClick={(e) => { createRipple(e); handleViewChange('practice-hub'); }} className="text-xs text-slate-400 uppercase font-semibold hover:text-purple-400 transition-colors executive-font btn-ripple">Practice</button>
         <button onClick={(e) => { createRipple(e); handleViewChange('practice-quizzes'); }} className="text-xs text-slate-400 uppercase font-semibold hover:text-emerald-400 transition-colors executive-font btn-ripple">Quizzes</button>
+        <button onClick={(e) => { createRipple(e); handleViewChange('strategy-suite'); }} className="text-xs text-slate-400 uppercase font-semibold hover:text-cyan-400 transition-colors executive-font btn-ripple">Task Areas</button>
+        <button onClick={(e) => { createRipple(e); handleViewChange('progress-stats'); }} className="text-xs text-slate-400 uppercase font-semibold hover:text-amber-400 transition-colors executive-font btn-ripple">My Progress</button>
         {view !== 'executive-hud' && (
           <button onClick={(e) => { createRipple(e); handleViewChange('executive-hud'); }} className="text-xs text-slate-400 uppercase font-semibold hover:text-blue-400 transition-colors executive-font btn-ripple">Home</button>
         )}
@@ -4648,7 +4650,7 @@ const PMPApp = () => {
                       <div key={domain} className="mb-4">
                         <div className="text-xs text-slate-500 uppercase font-semibold mb-2 tracking-widest">{domain}</div>
                         {tasks.map(task => {
-                          const allTasks = Object.values(domainMap).flat();
+                          const allTasks = domainMap ? Object.values(domainMap).flat().filter(Boolean) : [];
                           const totalItems = 9; // 3 learn tabs + 6 activities
                           let completedItems = 0;
                           const items = [];
@@ -4714,11 +4716,11 @@ const PMPApp = () => {
               <div className="flex-1 overflow-y-auto custom-scrollbar p-6">
                 <h3 className="executive-font text-lg font-semibold text-white mb-4 uppercase tracking-wide">Progress Details</h3>
                 <div className="grid grid-cols-1 gap-4">
-                  {Object.entries(domainMap).map(([domain, tasks]) => (
+                  {domainMap && Object.entries(domainMap).map(([domain, tasks]) => (
                     <div key={domain} className="mb-6">
                       <div className="text-sm text-slate-400 uppercase font-semibold mb-3 tracking-widest">{domain}</div>
                       <div className="space-y-3">
-                        {tasks.map(task => {
+                        {tasks && Array.isArray(tasks) && tasks.map(task => {
                           const learnTabs = [
                             { key: 'overview', name: 'Overview' },
                             { key: 'pmp-application', name: 'PMP Application' },
@@ -4982,7 +4984,7 @@ const PMPApp = () => {
 
   // Progress Stats View
   if (view === 'progress-stats') {
-    const allTasks = Object.values(domainMap).flat();
+    const allTasks = domainMap ? Object.values(domainMap).flat() : [];
     const totalTasks = allTasks.length;
     const totalActivities = totalTasks * 6;
     
@@ -5188,7 +5190,7 @@ const PMPApp = () => {
       };
     }
     
-    const allTasks = Object.values(domainMap).flat();
+    const allTasks = domainMap ? Object.values(domainMap).flat().filter(Boolean) : [];
     
     // Calculate study streak
     const calculateStreak = () => {

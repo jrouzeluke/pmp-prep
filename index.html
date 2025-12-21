@@ -12,6 +12,23 @@
 </head>
 <body class="bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 text-white min-h-screen flex items-center justify-center overflow-x-hidden">
     <div id="root" class="w-full flex justify-center"></div>
+    <script>
+      // Suppress harmless browser extension errors
+      window.addEventListener('error', function(e) {
+        if (e.message && e.message.includes('message channel closed')) {
+          e.preventDefault();
+          return true;
+        }
+      }, true);
+      
+      // Suppress unhandled promise rejections from extensions
+      window.addEventListener('unhandledrejection', function(e) {
+        if (e.reason && e.reason.message && e.reason.message.includes('message channel closed')) {
+          e.preventDefault();
+          return true;
+        }
+      });
+    </script>
     <script type="text/babel" src="app.js"></script>
 </body>
 </html>
