@@ -94,6 +94,7 @@ const PMPApp = () => {
   
   // Task Progress Modal State
   const [showTaskProgressModal, setShowTaskProgressModal] = useState(false);
+  const [showTasksModal, setShowTasksModal] = useState(false);
   
   // Progress Stats Animation State (must be at top level - Rules of Hooks)
   const [masteryCardsVisible, setMasteryCardsVisible] = useState(false);
@@ -106,6 +107,7 @@ const PMPApp = () => {
   const [pulseRing, setPulseRing] = useState(0);
   const [animated, setAnimated] = useState(false);
   const [currentTime, setCurrentTime] = useState(new Date());
+  const [expandedTaskList, setExpandedTaskList] = useState(null);
 
   // Comprehensive Score Persistence Utilities
   const getOrCreateUserId = () => {
@@ -457,7 +459,6 @@ const PMPApp = () => {
         <button onClick={(e) => { createRipple(e); handleViewChange('practice-quizzes'); }} className="text-xs text-slate-400 uppercase font-semibold hover:text-emerald-400 transition-colors executive-font btn-ripple">Quizzes</button>
         <button onClick={(e) => { createRipple(e); handleViewChange('strategy-suite'); }} className="text-xs text-slate-400 uppercase font-semibold hover:text-cyan-400 transition-colors executive-font btn-ripple">Task Areas</button>
         <button onClick={(e) => { createRipple(e); handleViewChange('progress-stats'); }} className="text-xs text-slate-400 uppercase font-semibold hover:text-amber-400 transition-colors executive-font btn-ripple">My Progress</button>
-        <button onClick={(e) => { createRipple(e); handleViewChange('personal-stats'); }} className="text-xs text-slate-400 uppercase font-semibold hover:text-rose-400 transition-colors executive-font btn-ripple">Personal Stats</button>
         {view !== 'executive-hud' && (
           <button onClick={(e) => { createRipple(e); handleViewChange('executive-hud'); }} className="text-xs text-slate-400 uppercase font-semibold hover:text-blue-400 transition-colors executive-font btn-ripple">Home</button>
         )}
@@ -506,8 +507,8 @@ const PMPApp = () => {
             </button>
           </div>
         </div>
-      </div>
-    );
+    </div>
+  );
   };
 
   const currentTask = (taskDatabase && taskDatabase[selectedTask]) || { learn: {}, practice: { checklist: [], reflex_prompts: [], stress_test: [] } };
@@ -569,6 +570,133 @@ const PMPApp = () => {
     return { level: 'mastered', completed, total: 6, label: 'Mastered', color: 'emerald', progress: 100 };
   };
   
+  // Check if a task is truly mastered (all 3 learn pages opened AND all 6 activities attempted)
+  const isTaskMastered = (taskName) => {
+    // Check all 3 learn pages are opened
+    const learnTabs = ['overview', 'pmp-application', 'deep-dive'];
+    const allLearnPagesOpened = learnTabs.every(tab => {
+      return localStorage.getItem(`learn-viewed-${taskName}-${tab}`);
+    });
+    
+    // Check all 6 activities have been attempted (not necessarily completed)
+    const activities = ['pm-simulator', 'lightning-round', 'document-detective', 'conflict-matcher', 'timeline-reconstructor', 'empathy-exercise'];
+    const allActivitiesAttempted = activities.every(activity => {
+      // Check progressData first
+      const progress = progressData.completedActivities[taskName]?.[activity];
+      if (progress && (progress.attempts > 0 || progress.completed !== undefined)) {
+        return true;
+      }
+      
+      // Check localStorage for specific activities (e.g., lightning-round stores best score)
+      if (activity === 'lightning-round') {
+        const bestScore = localStorage.getItem(`lightning-round-best-${taskName}`);
+        if (bestScore !== null) return true;
+      }
+      
+      // Check for activity-accessed flag in localStorage
+      const accessed = localStorage.getItem(`activity-accessed-${taskName}-${activity}`);
+      if (accessed) return true;
+      
+      return false;
+    });
+    
+    return allLearnPagesOpened && allActivitiesAttempted;
+  };
+  
+  // Helper function to get task status
+  const getTaskStatus = (taskName) => {
+    const taskActivities = progressData.completedActivities[taskName] || {};
+    const mastery = getTaskMastery(taskName);
+    
+    if (mastery.level === 'mastered') return 'completed';
+    if (Object.keys(taskActivities).length > 0) return 'started';
+    return 'not-started';
+  };
+  
+  // Helper function to organize tasks by domain
+  const getTasksByDomain = () => {
+    const allTasks = domainMap ? Object.values(domainMap).flat().filter(Boolean) : [];
+    const tasksByDomain = {
+      'People Domain': [],
+      'Process Domain': [],
+      'Business Domain': []
+    };
+    
+    allTasks.forEach(taskName => {
+      const domain = Object.keys(domainMap).find(d => domainMap[d].includes(taskName));
+      if (domain) {
+        tasksByDomain[domain].push({
+          name: taskName,
+          status: getTaskStatus(taskName),
+          mastery: getTaskMastery(taskName)
+        });
+      }
+    });
+    
+    return tasksByDomain;
+  };
+  
+  // Reusable Page Wrapper Component with consistent styling
+  const PageWrapper = ({ children, title, subtitle, showBackButton = false, backAction = null, showProgress = false, progressValue = 0 }) => {
+    return (
+      <div className="min-h-screen w-full" style={{ background: 'linear-gradient(135deg, #0f172a 0%, #1e1b4b 30%, #172554 60%, #0f172a 100%)', color: '#fff', padding: '30px 40px' }}>
+        <div style={{ maxWidth: '1400px', margin: '0 auto' }}>
+          {/* Header */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '20px', marginBottom: '35px' }}>
+            {showBackButton && (
+              <button 
+                onClick={backAction || (() => setView('executive-hud'))}
+                style={{ display: 'flex', alignItems: 'center', gap: '6px', color: 'rgba(255,255,255,0.6)', fontSize: '0.85rem', cursor: 'pointer', transition: 'color 0.2s', background: 'none', border: 'none', padding: 0 }}
+                onMouseEnter={(e) => e.target.style.color = '#fff'}
+                onMouseLeave={(e) => e.target.style.color = 'rgba(255,255,255,0.6)'}
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+                </svg>
+                BACK
+              </button>
+            )}
+            
+            <div style={{ display: 'flex', gap: '3px', alignItems: 'flex-end', height: '44px' }}>
+              <div style={{ width: '10px', borderRadius: '3px', height: '55%', background: '#f97316' }}></div>
+              <div style={{ width: '10px', borderRadius: '3px', height: '100%', background: '#8b5cf6' }}></div>
+              <div style={{ width: '10px', borderRadius: '3px', height: '70%', background: '#ec4899' }}></div>
+            </div>
+            
+            <div>
+              <h1 style={{ fontSize: '1.75rem', fontWeight: 700, color: '#fff', margin: 0 }}>{title}</h1>
+              {subtitle && (
+                <p style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', letterSpacing: '1.5px', marginTop: '3px', margin: 0 }}>{subtitle}</p>
+              )}
+            </div>
+            
+            <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: '25px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', padding: '8px 16px', borderRadius: '25px', fontSize: '0.8rem' }}>
+                <div style={{ width: '8px', height: '8px', background: '#22c55e', borderRadius: '50%', animation: 'pulse 2s infinite', position: 'relative' }}>
+                  <div style={{ position: 'absolute', inset: 0, width: '8px', height: '8px', background: '#22c55e', borderRadius: '50%', animation: 'pulse 2s infinite' }}></div>
+                </div>
+                Live
+              </div>
+              <div style={{ textAlign: 'right' }}>
+                <div style={{ fontSize: '1.75rem', fontWeight: 600, letterSpacing: '-1px' }}>{currentTime.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false })}</div>
+                <div style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)' }}>{currentTime.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</div>
+              </div>
+              {showProgress && (
+                <div style={{ width: '56px', height: '56px', borderRadius: '50%', border: '3px solid rgba(255,255,255,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, fontSize: '1rem', position: 'relative' }}>
+                  {progressValue}%
+                  <div style={{ position: 'absolute', top: '-3px', left: '-3px', width: 'calc(100% + 6px)', height: 'calc(100% + 6px)', borderRadius: '50%', border: '3px solid transparent', borderTopColor: '#22c55e', transform: 'rotate(-90deg)' }}></div>
+                </div>
+              )}
+            </div>
+          </div>
+          
+          {/* Content */}
+          {children}
+        </div>
+      </div>
+    );
+  };
+
   // Condensed Dashboard Helper Components
   const OrbitalProgress = ({ progress, size = 80 }) => {
     const rings = [
@@ -636,16 +764,765 @@ const PMPApp = () => {
     );
   };
 
+  // Task List Two Column Component
+  const TaskListTwoColumn = () => {
+    const tasksByDomain = getTasksByDomain();
+    const domainColors = {
+      'People Domain': '#ff6b35',
+      'Process Domain': '#00d4ff',
+      'Business Domain': '#bf5af2'
+    };
+    
+    // Separate tasks into completed and not completed
+    const completedTasks = {
+      'People Domain': [],
+      'Process Domain': [],
+      'Business Domain': []
+    };
+    const notCompletedTasks = {
+      'People Domain': [],
+      'Process Domain': [],
+      'Business Domain': []
+    };
+    
+    Object.keys(tasksByDomain).forEach(domain => {
+      tasksByDomain[domain].forEach(task => {
+        if (task.status === 'completed') {
+          completedTasks[domain].push(task);
+        } else {
+          notCompletedTasks[domain].push(task);
+        }
+      });
+    });
+    
+    const renderTaskItem = (task, domain) => (
+      <div key={task.name} className="p-3 rounded-lg border border-white/5 bg-white/[0.02] hover:bg-white/[0.05] transition-colors mb-2">
+        <div className="flex items-center justify-between mb-2">
+          <div className="flex items-center gap-2 flex-1">
+            {task.status === 'completed' && (
+              <span className="text-emerald-400 text-sm">✓</span>
+            )}
+            <span className="text-sm text-white">{task.name}</span>
+            {task.status !== 'completed' && (
+              <span className="text-xs text-white/40">({task.status === 'started' ? 'started' : 'not started'})</span>
+            )}
+          </div>
+        </div>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => { setSelectedTask(task.name); setView('learn-hub'); }}
+            className="px-2 py-1 text-xs rounded border transition-colors hover:bg-white/10"
+            style={{ borderColor: `${domainColors[domain]}40`, color: domainColors[domain] }}
+          >
+            Learn
+          </button>
+          <button
+            onClick={() => { setSelectedTask(task.name); setView('practice-hub'); }}
+            className="px-2 py-1 text-xs rounded border transition-colors hover:bg-white/10"
+            style={{ borderColor: `${domainColors[domain]}40`, color: domainColors[domain] }}
+          >
+            Practice
+          </button>
+        </div>
+      </div>
+    );
+    
+    const renderDomainSection = (tasks, domain, title) => {
+      if (tasks[domain].length === 0) return null;
+      
+      return (
+        <div key={domain} className="mb-6">
+          <h3 
+            className="text-sm font-semibold uppercase tracking-wider mb-3 pb-2 border-b"
+            style={{ color: domainColors[domain], borderColor: `${domainColors[domain]}40` }}
+          >
+            {domain.replace(' Domain', '')}
+          </h3>
+          <div className="space-y-2">
+            {tasks[domain].map(task => renderTaskItem(task, domain))}
+          </div>
+        </div>
+      );
+    };
+    
+    return (
+      <div className="grid grid-cols-2 gap-6">
+        {/* Left Column: Completed Tasks */}
+        <div className="border rounded-lg p-4 overflow-y-auto max-h-[600px]" style={{ borderColor: 'rgba(0, 212, 255, 0.2)', backgroundColor: 'rgba(0,0,0,0.4)' }}>
+          <h2 className="text-lg font-bold text-white mb-4">Completed Tasks</h2>
+          {Object.keys(completedTasks).map(domain => renderDomainSection(completedTasks, domain, 'Completed'))}
+          {Object.values(completedTasks).every(tasks => tasks.length === 0) && (
+            <p className="text-sm text-white/40 text-center py-8">No completed tasks yet</p>
+          )}
+        </div>
+        
+        {/* Right Column: Not Completed Tasks */}
+        <div className="border rounded-lg p-4 overflow-y-auto max-h-[600px]" style={{ borderColor: 'rgba(0, 212, 255, 0.2)', backgroundColor: 'rgba(0,0,0,0.4)' }}>
+          <h2 className="text-lg font-bold text-white mb-4">Not Completed Tasks</h2>
+          {Object.keys(notCompletedTasks).map(domain => renderDomainSection(notCompletedTasks, domain, 'Not Completed'))}
+          {Object.values(notCompletedTasks).every(tasks => tasks.length === 0) && (
+            <p className="text-sm text-white/40 text-center py-8">All tasks completed!</p>
+          )}
+        </div>
+      </div>
+    );
+  };
+
+  // Activities List By Domain Component
+  const ActivitiesListByDomain = () => {
+    const [expandedDomains, setExpandedDomains] = useState({});
+    const [expandedTasks, setExpandedTasks] = useState({});
+    
+    const domainColors = {
+      'People Domain': '#ff6b35',
+      'Process Domain': '#00d4ff',
+      'Business Domain': '#bf5af2'
+    };
+    
+    const activityNames = {
+      'pm-simulator': 'PM Simulator',
+      'lightning-round': 'Lightning Round',
+      'document-detective': 'Document Detective',
+      'conflict-matcher': 'Conflict Matcher',
+      'timeline-reconstructor': 'Timeline Reconstructor',
+      'empathy-exercise': 'Empathy Exercise'
+    };
+    
+    const allActivities = ['pm-simulator', 'lightning-round', 'document-detective', 'conflict-matcher', 'timeline-reconstructor', 'empathy-exercise'];
+    
+    // Organize activities by domain > task
+    const activitiesByDomain = {};
+    Object.keys(domainMap).forEach(domain => {
+      activitiesByDomain[domain] = {};
+      domainMap[domain].forEach(taskName => {
+        activitiesByDomain[domain][taskName] = allActivities.map(activityKey => {
+          const progress = getActivityProgress(taskName, activityKey);
+          return {
+            key: activityKey,
+            name: activityNames[activityKey],
+            completed: progress?.completed || false,
+            attempts: progress?.attempts || 0,
+            bestScore: progress?.bestScore || 0
+          };
+        });
+      });
+    });
+    
+    const toggleDomain = (domain) => {
+      setExpandedDomains(prev => ({
+        ...prev,
+        [domain]: !prev[domain]
+      }));
+    };
+    
+    const toggleTask = (domain, task) => {
+      const key = `${domain}-${task}`;
+      setExpandedTasks(prev => ({
+        ...prev,
+        [key]: !prev[key]
+      }));
+    };
+    
+    const launchActivity = (taskName, activityKey) => {
+      setSelectedTask(taskName);
+      setView(activityKey);
+    };
+    
+    return (
+      <div className="border rounded-lg p-4 overflow-y-auto max-h-[600px]" style={{ borderColor: 'rgba(0, 212, 255, 0.2)', backgroundColor: 'rgba(0,0,0,0.4)' }}>
+        <h2 className="text-lg font-bold text-white mb-4">Activities by Domain</h2>
+        <div className="space-y-3">
+          {Object.keys(activitiesByDomain).map(domain => {
+            const isDomainExpanded = expandedDomains[domain];
+            const domainColor = domainColors[domain];
+            
+            return (
+              <div key={domain} className="border rounded-lg overflow-hidden" style={{ borderColor: `${domainColor}40` }}>
+                {/* Domain Header */}
+                <button
+                  onClick={() => toggleDomain(domain)}
+                  className="w-full p-3 flex items-center justify-between hover:bg-white/5 transition-colors"
+                  style={{ backgroundColor: isDomainExpanded ? `${domainColor}20` : 'rgba(0,0,0,0.2)' }}
+                >
+                  <div className="flex items-center gap-3">
+                    <svg 
+                      className={`w-4 h-4 transition-transform duration-300 ${isDomainExpanded ? 'rotate-90' : ''}`}
+                      style={{ color: domainColor }}
+                      fill="none" 
+                      viewBox="0 0 24 24" 
+                      stroke="currentColor"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                    <h3 
+                      className="text-sm font-semibold uppercase tracking-wider"
+                      style={{ color: domainColor }}
+                    >
+                      {domain.replace(' Domain', '')}
+                    </h3>
+                  </div>
+                  <span className="text-xs text-white/40">
+                    {domainMap[domain].length} tasks
+                  </span>
+                </button>
+                
+                {/* Tasks List */}
+                {isDomainExpanded && (
+                  <div className="border-t" style={{ borderColor: `${domainColor}30` }}>
+                    {Object.keys(activitiesByDomain[domain]).map(taskName => {
+                      const taskKey = `${domain}-${taskName}`;
+                      const isTaskExpanded = expandedTasks[taskKey];
+                      const taskActivities = activitiesByDomain[domain][taskName];
+                      const completedCount = taskActivities.filter(a => a.completed).length;
+                      
+                      return (
+                        <div key={taskName} className="border-b last:border-b-0" style={{ borderColor: `${domainColor}20` }}>
+                          {/* Task Header */}
+                          <button
+                            onClick={() => toggleTask(domain, taskName)}
+                            className="w-full p-2.5 pl-8 flex items-center justify-between hover:bg-white/5 transition-colors"
+                            style={{ backgroundColor: isTaskExpanded ? `${domainColor}10` : 'transparent' }}
+                          >
+                            <div className="flex items-center gap-2">
+                              <svg 
+                                className={`w-3 h-3 transition-transform duration-300 ${isTaskExpanded ? 'rotate-90' : ''}`}
+                                style={{ color: domainColor }}
+                                fill="none" 
+                                viewBox="0 0 24 24" 
+                                stroke="currentColor"
+                              >
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                              </svg>
+                              <span className="text-sm text-white">{taskName}</span>
+                            </div>
+                            <span className="text-xs text-white/40">
+                              {completedCount}/{taskActivities.length} completed
+                            </span>
+                          </button>
+                          
+                          {/* Activities List */}
+                          {isTaskExpanded && (
+                            <div className="pl-12 pr-2 py-2 space-y-2">
+                              {taskActivities.map(activity => (
+                                <div 
+                                  key={activity.key}
+                                  className="flex items-center justify-between p-2 rounded border border-white/5 bg-white/[0.02] hover:bg-white/[0.05] transition-colors"
+                                >
+                                  <div className="flex items-center gap-2 flex-1">
+                                    {activity.completed ? (
+                                      <span className="text-emerald-400 text-sm">✓</span>
+                                    ) : activity.attempts > 0 ? (
+                                      <span className="text-yellow-400 text-sm">–</span>
+                                    ) : (
+                                      <span className="text-white/30 text-sm">○</span>
+                                    )}
+                                    <span className="text-sm text-white">{activity.name}</span>
+                                    {activity.completed && activity.bestScore > 0 && (
+                                      <span className="text-xs text-white/40">({activity.bestScore}% best)</span>
+                                    )}
+                                  </div>
+                                  <button
+                                    onClick={() => launchActivity(taskName, activity.key)}
+                                    className="px-3 py-1 text-xs rounded border transition-colors hover:bg-white/10"
+                                    style={{ borderColor: `${domainColor}40`, color: domainColor }}
+                                  >
+                                    Launch
+                                  </button>
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    );
+  };
+
+  // Mastered Tasks List Component
+  const MasteredTasksList = () => {
+    const [expandedDomains, setExpandedDomains] = useState({});
+    const allTasks = domainMap ? Object.values(domainMap).flat().filter(Boolean) : [];
+    const masteredTasks = allTasks.filter(taskName => isTaskMastered(taskName));
+    const completeColor = '#00ff88';
+    
+    const domainColors = {
+      'People Domain': '#ff6b35',
+      'Process Domain': '#00d4ff',
+      'Business Domain': '#bf5af2'
+    };
+    
+    // Organize ALL tasks by domain (not just mastered)
+    const tasksByDomain = {
+      'People Domain': [],
+      'Process Domain': [],
+      'Business Domain': []
+    };
+    
+    allTasks.forEach(taskName => {
+      const domain = Object.keys(domainMap).find(d => domainMap[d].includes(taskName));
+      if (domain) {
+        tasksByDomain[domain].push(taskName);
+      }
+    });
+    
+    const toggleDomain = (domain) => {
+      setExpandedDomains(prev => ({
+        ...prev,
+        [domain]: !prev[domain]
+      }));
+    };
+    
+    return (
+      <div style={{ border: '1px solid rgba(0, 255, 136, 0.2)', borderRadius: '12px', padding: '16px', background: 'rgba(0,0,0,0.2)' }}>
+        <div style={{ marginBottom: '16px', paddingBottom: '12px', borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
+          <div style={{ fontSize: '0.875rem', fontWeight: 600, marginBottom: '6px', color: completeColor }}>What is Mastery?</div>
+          <div style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.6)', lineHeight: 1.5 }}>
+            A task is mastered when you've opened all 3 learn pages (Overview, PMP Application, Deep Dive) and attempted all 6 activities. 
+            <span style={{ fontStyle: 'italic', color: 'rgba(255,255,255,0.5)' }}> Mastery means exploration and attempt, not 100% scores.</span>
+          </div>
+          {masteredTasks.length > 0 && (
+            <div style={{ marginTop: '8px', fontSize: '0.7rem', color: completeColor, fontWeight: 600 }}>
+              {masteredTasks.length} task{masteredTasks.length !== 1 ? 's' : ''} mastered
+            </div>
+          )}
+        </div>
+        
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', maxHeight: '600px', overflowY: 'auto' }}>
+          {Object.keys(tasksByDomain).map(domain => {
+            if (tasksByDomain[domain].length === 0) return null;
+            const isExpanded = expandedDomains[domain];
+            const domainMasteredCount = tasksByDomain[domain].filter(t => isTaskMastered(t)).length;
+            const domainTotalCount = tasksByDomain[domain].length;
+            
+            return (
+              <div key={domain} style={{ border: `1px solid ${domainColors[domain]}30`, borderRadius: '8px', overflow: 'hidden', background: 'rgba(0,0,0,0.1)' }}>
+                <div 
+                  onClick={() => toggleDomain(domain)}
+                  style={{ 
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    padding: '12px 16px',
+                    cursor: 'pointer',
+                    background: isExpanded ? `rgba(${domain === 'People Domain' ? '255, 107, 53' : domain === 'Process Domain' ? '0, 212, 255' : '191, 90, 242'}, 0.1)` : 'transparent',
+                    transition: 'all 0.2s'
+                  }}
+                  onMouseEnter={(e) => {
+                    if (!isExpanded) {
+                      e.currentTarget.style.background = `rgba(${domain === 'People Domain' ? '255, 107, 53' : domain === 'Process Domain' ? '0, 212, 255' : '191, 90, 242'}, 0.05)`;
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!isExpanded) {
+                      e.currentTarget.style.background = 'transparent';
+                    }
+                  }}
+                >
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flex: 1 }}>
+                    <svg 
+                      style={{ 
+                        width: '16px', 
+                        height: '16px', 
+                        color: domainColors[domain], 
+                        transform: isExpanded ? 'rotate(90deg)' : 'rotate(0deg)', 
+                        transition: 'transform 0.3s' 
+                      }}
+                      fill="none" 
+                      viewBox="0 0 24 24" 
+                      stroke="currentColor"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                    <h3 
+                      style={{ 
+                        fontSize: '0.75rem', 
+                        fontWeight: 600, 
+                        textTransform: 'uppercase', 
+                        letterSpacing: '1px', 
+                        margin: 0,
+                        color: domainColors[domain]
+                      }}
+                    >
+                      {domain.replace(' Domain', '')}
+                    </h3>
+                    <span style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.5)', marginLeft: '8px' }}>
+                      ({domainMasteredCount}/{domainTotalCount} mastered)
+                    </span>
+                  </div>
+                </div>
+                
+                {isExpanded && (
+                  <div style={{ padding: '12px 16px', borderTop: `1px solid ${domainColors[domain]}20` }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  {tasksByDomain[domain].map(taskName => {
+                    const isMastered = isTaskMastered(taskName);
+                    // Get completed learn pages
+                    const learnTabs = ['overview', 'pmp-application', 'deep-dive'];
+                    const completedLearnPages = learnTabs.filter(tab => 
+                      localStorage.getItem(`learn-viewed-${taskName}-${tab}`)
+                    );
+                    
+                    // Get attempted/completed activities
+                    const activities = [
+                      { key: 'pm-simulator', name: 'PM Simulator' },
+                      { key: 'lightning-round', name: 'Lightning Round' },
+                      { key: 'document-detective', name: 'Document Detective' },
+                      { key: 'conflict-matcher', name: 'Conflict Matcher' },
+                      { key: 'timeline-reconstructor', name: 'Timeline Reconstructor' },
+                      { key: 'empathy-exercise', name: 'Empathy Exercise' }
+                    ];
+                    
+                    const completedActivities = activities.filter(activity => {
+                      const progress = progressData.completedActivities[taskName]?.[activity.key];
+                      if (progress && (progress.attempts > 0 || progress.completed !== undefined)) {
+                        return true;
+                      }
+                      if (activity.key === 'lightning-round') {
+                        const bestScore = localStorage.getItem(`lightning-round-best-${taskName}`);
+                        if (bestScore !== null) return true;
+                      }
+                      const accessed = localStorage.getItem(`activity-accessed-${taskName}-${activity.key}`);
+                      return accessed !== null;
+                    });
+                    
+                    return (
+                      <div key={taskName}>
+                        <div 
+                          style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'space-between',
+                            padding: '10px 12px',
+                            borderRadius: '8px',
+                            border: '1px solid rgba(255,255,255,0.05)',
+                            background: 'rgba(255,255,255,0.02)',
+                            transition: 'all 0.2s'
+                          }}
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.background = 'rgba(255,255,255,0.05)';
+                            e.currentTarget.style.borderColor = `${domainColors[domain]}40`;
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.background = 'rgba(255,255,255,0.02)';
+                            e.currentTarget.style.borderColor = 'rgba(255,255,255,0.05)';
+                          }}
+                        >
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flex: 1 }}>
+                            <span style={{ color: isMastered ? completeColor : 'rgba(255,255,255,0.3)', fontSize: '0.875rem' }}>
+                              {isMastered ? '✓' : '○'}
+                            </span>
+                            <span style={{ fontSize: '0.875rem', color: isMastered ? '#fff' : 'rgba(255,255,255,0.7)' }}>{taskName}</span>
+                            {isMastered && (
+                              <span style={{ 
+                                fontSize: '0.65rem', 
+                                padding: '2px 6px', 
+                                borderRadius: '4px', 
+                                background: `${completeColor}20`, 
+                                color: completeColor,
+                                fontWeight: 600
+                              }}>
+                                MASTERED
+                              </span>
+                            )}
+                          </div>
+                          <div style={{ display: 'flex', gap: '6px' }}>
+                            <button
+                              onClick={() => { setSelectedTask(taskName); setView('learn-hub'); }}
+                              style={{
+                                padding: '4px 10px',
+                                fontSize: '0.7rem',
+                                borderRadius: '6px',
+                                border: `1px solid ${domainColors[domain]}40`,
+                                background: `rgba(${domain === 'People Domain' ? '255, 107, 53' : domain === 'Process Domain' ? '0, 212, 255' : '191, 90, 242'}, 0.1)`,
+                                color: domainColors[domain],
+                                cursor: 'pointer',
+                                transition: 'all 0.2s'
+                              }}
+                              onMouseEnter={(e) => {
+                                e.currentTarget.style.background = `rgba(${domain === 'People Domain' ? '255, 107, 53' : domain === 'Process Domain' ? '0, 212, 255' : '191, 90, 242'}, 0.2)`;
+                              }}
+                              onMouseLeave={(e) => {
+                                e.currentTarget.style.background = `rgba(${domain === 'People Domain' ? '255, 107, 53' : domain === 'Process Domain' ? '0, 212, 255' : '191, 90, 242'}, 0.1)`;
+                              }}
+                            >
+                              Learn
+                            </button>
+                            <button
+                              onClick={() => { setSelectedTask(taskName); setView('practice-hub'); }}
+                              style={{
+                                padding: '4px 10px',
+                                fontSize: '0.7rem',
+                                borderRadius: '6px',
+                                border: `1px solid ${domainColors[domain]}40`,
+                                background: `rgba(${domain === 'People Domain' ? '255, 107, 53' : domain === 'Process Domain' ? '0, 212, 255' : '191, 90, 242'}, 0.1)`,
+                                color: domainColors[domain],
+                                cursor: 'pointer',
+                                transition: 'all 0.2s'
+                              }}
+                              onMouseEnter={(e) => {
+                                e.currentTarget.style.background = `rgba(${domain === 'People Domain' ? '255, 107, 53' : domain === 'Process Domain' ? '0, 212, 255' : '191, 90, 242'}, 0.2)`;
+                              }}
+                              onMouseLeave={(e) => {
+                                e.currentTarget.style.background = `rgba(${domain === 'People Domain' ? '255, 107, 53' : domain === 'Process Domain' ? '0, 212, 255' : '191, 90, 242'}, 0.1)`;
+                              }}
+                            >
+                              Practice
+                            </button>
+                          </div>
+                        </div>
+                        
+                        {/* Completed Areas Breakdown */}
+                        <div style={{
+                          marginTop: '6px',
+                          padding: '10px 12px',
+                          borderRadius: '6px',
+                          background: 'rgba(0,0,0,0.2)',
+                          border: '1px solid rgba(255,255,255,0.03)',
+                          fontSize: '0.7rem'
+                        }}>
+                          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                            {/* Learn Pages */}
+                            <div>
+                              <div style={{ 
+                                fontSize: '0.65rem', 
+                                color: 'rgba(255,255,255,0.5)', 
+                                marginBottom: '6px',
+                                textTransform: 'uppercase',
+                                letterSpacing: '0.5px'
+                              }}>
+                                Learn Pages ({completedLearnPages.length}/3)
+                              </div>
+                              <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                                {learnTabs.map(tab => {
+                                  const isCompleted = completedLearnPages.includes(tab);
+                                  const displayName = tab === 'pmp-application' ? 'PMP Application' : tab.charAt(0).toUpperCase() + tab.slice(1);
+                                  return (
+                                    <div key={tab} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                      <span style={{ color: isCompleted ? completeColor : 'rgba(255,255,255,0.3)', fontSize: '0.65rem' }}>
+                                        {isCompleted ? '✓' : '○'}
+                                      </span>
+                                      <span style={{ color: isCompleted ? 'rgba(255,255,255,0.8)' : 'rgba(255,255,255,0.4)', fontSize: '0.65rem' }}>
+                                        {displayName}
+                                      </span>
+                                    </div>
+                                  );
+                                })}
+                              </div>
+                            </div>
+                            
+                            {/* Activities */}
+                            <div>
+                              <div style={{ 
+                                fontSize: '0.65rem', 
+                                color: 'rgba(255,255,255,0.5)', 
+                                marginBottom: '6px',
+                                textTransform: 'uppercase',
+                                letterSpacing: '0.5px'
+                              }}>
+                                Activities ({completedActivities.length}/6)
+                              </div>
+                              <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                                {activities.map(activity => {
+                                  const isCompleted = completedActivities.some(a => a.key === activity.key);
+                                  return (
+                                    <div key={activity.key} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                      <span style={{ color: isCompleted ? completeColor : 'rgba(255,255,255,0.3)', fontSize: '0.65rem' }}>
+                                        {isCompleted ? '✓' : '○'}
+                                      </span>
+                                      <span style={{ color: isCompleted ? 'rgba(255,255,255,0.8)' : 'rgba(255,255,255,0.4)', fontSize: '0.65rem' }}>
+                                        {activity.name}
+                                      </span>
+                                    </div>
+                                  );
+                                })}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                    </div>
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    );
+  };
+
+  // Badge3D Component
+  const Badge3D = ({ name, icon, color = 'purple', tier = 'Rare', description, requirement, xp, earnedDate, isLocked = false, progress }) => {
+    const [showTooltip, setShowTooltip] = useState(false);
+    
+    const badgeColors = {
+      purple: {
+        outer: 'conic-gradient(from 0deg, #a78bfa, #8b5cf6, #7c3aed, #a78bfa, #c4b5fd, #a78bfa)',
+        inner: 'linear-gradient(145deg, #e9d5ff 0%, #a78bfa 30%, #8b5cf6 70%, #6d28d9 100%)',
+        edge: '#5b21b6',
+        icon: '#4c1d95',
+        tooltip: { bg: 'rgba(139, 92, 246, 0.2)', color: '#a78bfa' }
+      },
+      orange: {
+        outer: 'conic-gradient(from 0deg, #fb923c, #f97316, #ea580c, #fb923c, #fdba74, #fb923c)',
+        inner: 'linear-gradient(145deg, #fed7aa 0%, #fb923c 30%, #f97316 70%, #c2410c 100%)',
+        edge: '#c2410c',
+        icon: '#7c2d12',
+        tooltip: { bg: 'rgba(249, 115, 22, 0.2)', color: '#fb923c' }
+      },
+      teal: {
+        outer: 'conic-gradient(from 0deg, #2dd4bf, #14b8a6, #0d9488, #2dd4bf, #5eead4, #2dd4bf)',
+        inner: 'linear-gradient(145deg, #99f6e4 0%, #2dd4bf 30%, #14b8a6 70%, #0f766e 100%)',
+        edge: '#0f766e',
+        icon: '#134e4a',
+        tooltip: { bg: 'rgba(45, 212, 191, 0.2)', color: '#2dd4bf' }
+      },
+      pink: {
+        outer: 'conic-gradient(from 0deg, #f472b6, #ec4899, #db2777, #f472b6, #fbcfe8, #f472b6)',
+        inner: 'linear-gradient(145deg, #fbcfe8 0%, #f472b6 30%, #ec4899 70%, #be185d 100%)',
+        edge: '#be185d',
+        icon: '#831843',
+        tooltip: { bg: 'rgba(236, 72, 153, 0.2)', color: '#f472b6' }
+      },
+      cyan: {
+        outer: 'conic-gradient(from 0deg, #22d3ee, #06b6d4, #0891b2, #22d3ee, #67e8f9, #22d3ee)',
+        inner: 'linear-gradient(145deg, #a5f3fc 0%, #22d3ee 30%, #06b6d4 70%, #0e7490 100%)',
+        edge: '#0e7490',
+        icon: '#164e63',
+        tooltip: { bg: 'rgba(34, 211, 238, 0.2)', color: '#22d3ee' }
+      },
+      gradient: {
+        outer: 'conic-gradient(from 0deg, #a78bfa, #f472b6, #fb923c, #2dd4bf, #22d3ee, #a78bfa)',
+        inner: 'linear-gradient(145deg, #fdf4ff 0%, #e9d5ff 20%, #f9a8d4 50%, #fed7aa 80%, #99f6e4 100%)',
+        edge: 'linear-gradient(90deg, #5b21b6, #be185d, #0f766e)',
+        icon: '#4c1d95',
+        tooltip: { bg: 'linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(236, 72, 153, 0.2))', color: '#a78bfa' }
+      }
+    };
+    
+    const badgeStyle = isLocked ? {
+      outer: 'conic-gradient(from 0deg, #374151, #1f2937, #111827, #374151, #4b5563, #374151)',
+      inner: 'linear-gradient(145deg, #4b5563 0%, #374151 50%, #1f2937 100%)',
+      edge: '#1f2937',
+      icon: '#6b7280',
+      tooltip: { bg: 'rgba(75, 85, 99, 0.2)', color: '#9ca3af' }
+    } : badgeColors[color] || badgeColors.purple;
+    
+    return (
+      <div 
+        style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', position: 'relative' }}
+        onMouseEnter={() => setShowTooltip(true)}
+        onMouseLeave={() => setShowTooltip(false)}
+      >
+        <div style={{ width: '60px', height: '60px', position: 'relative', cursor: 'pointer', transformStyle: 'preserve-3d', transition: 'transform 0.4s ease', opacity: isLocked ? 0.4 : 1 }}
+          onMouseEnter={(e) => {
+            if (!isLocked) {
+              e.currentTarget.style.transform = 'rotateY(-15deg) rotateX(10deg) scale(1.15)';
+            }
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.transform = 'rotateY(0deg) rotateX(0deg) scale(1)';
+          }}
+        >
+          <div style={{ width: '100%', height: '100%', borderRadius: '50%', position: 'absolute', top: 0, left: 0, transformStyle: 'preserve-3d' }}>
+            {/* Edge */}
+            <div style={{ position: 'absolute', width: '100%', height: '100%', borderRadius: '50%', transform: 'translateZ(-3px)', background: badgeStyle.edge, boxShadow: isLocked ? '0 4px 0 #111827, 0 7px 12px rgba(0,0,0,0.4)' : `0 4px 0 ${badgeStyle.edge}, 0 7px 12px rgba(139, 92, 246, 0.3)` }}></div>
+            {/* Outer */}
+            <div style={{ width: '100%', height: '100%', borderRadius: '50%', position: 'absolute', transform: 'translateZ(0px)', background: badgeStyle.outer, boxShadow: isLocked ? '0 5px 18px rgba(0,0,0,0.4)' : `0 5px 18px rgba(139, 92, 246, 0.4), inset 0 1px 0 rgba(255,255,255,0.4)` }}></div>
+            {/* Inner */}
+            <div style={{ position: 'absolute', top: '8%', left: '8%', width: '84%', height: '84%', borderRadius: '50%', transform: 'translateZ(4px)', display: 'flex', alignItems: 'center', justifyContent: 'center', background: badgeStyle.inner, boxShadow: 'inset 0 2px 4px rgba(255,255,255,0.5), inset 0 -2px 4px rgba(0,0,0,0.3)' }}>
+              <div style={{ width: '50%', height: '50%', transform: 'translateZ(6px)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: badgeStyle.icon }}>
+                  {typeof icon === 'object' && icon.props ? React.cloneElement(icon, { style: { width: '100%', height: '100%', fill: 'currentColor', filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.3))' } }) : <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{icon}</div>}
+                </div>
+              </div>
+            </div>
+            {/* Shine */}
+            <div style={{ position: 'absolute', top: '5%', left: '15%', width: '35%', height: '20%', background: 'linear-gradient(180deg, rgba(255,255,255,0.6) 0%, transparent 100%)', borderRadius: '50%', transform: 'translateZ(8px) rotate(-20deg)', pointerEvents: 'none' }}></div>
+            {/* Status */}
+            <div style={{ position: 'absolute', bottom: '-2px', right: '-2px', width: '18px', height: '18px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.5rem', fontWeight: 700, transform: 'translateZ(10px)', border: '2px solid #0f172a', background: isLocked ? 'linear-gradient(135deg, #4b5563, #374151)' : 'linear-gradient(135deg, #22c55e, #16a34a)', color: isLocked ? '#9ca3af' : 'white', boxShadow: isLocked ? 'none' : '0 2px 5px rgba(34, 197, 94, 0.5)' }}>
+              {isLocked ? '🔒' : '✓'}
+            </div>
+          </div>
+        </div>
+        
+        <div style={{ marginTop: '8px', fontWeight: 600, fontSize: '0.65rem', textAlign: 'center', maxWidth: '70px', color: isLocked ? 'rgba(255,255,255,0.3)' : 'rgba(255,255,255,0.85)' }}>
+          {name}
+        </div>
+        
+        {/* Tooltip */}
+        {showTooltip && (
+          <div style={{
+            position: 'absolute',
+            bottom: 'calc(100% + 10px)',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            width: '220px',
+            background: 'rgba(15, 23, 42, 0.95)',
+            backdropFilter: 'blur(20px)',
+            border: '1px solid rgba(255,255,255,0.1)',
+            borderRadius: '12px',
+            padding: '12px',
+            zIndex: 100,
+            boxShadow: '0 12px 35px rgba(0,0,0,0.5)'
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px', paddingBottom: '8px', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
+              <div style={{ width: '28px', height: '28px', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: badgeStyle.tooltip.bg }}>
+                <div style={{ width: '14px', height: '14px' }}>{icon}</div>
+              </div>
+              <div>
+                <div style={{ fontWeight: 700, fontSize: '0.8rem' }}>{name}</div>
+                <div style={{ fontSize: '0.55rem', textTransform: 'uppercase', letterSpacing: '0.5px', color: badgeStyle.tooltip.color }}>{tier}</div>
+              </div>
+            </div>
+            <div style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.6)', lineHeight: 1.35, marginBottom: '8px' }}>{description}</div>
+            <div style={{ background: 'rgba(255,255,255,0.03)', borderRadius: '6px', padding: '8px', border: '1px solid rgba(255,255,255,0.05)' }}>
+              <div style={{ fontSize: '0.5rem', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '3px' }}>How to Earn</div>
+              <div style={{ fontSize: '0.65rem', fontWeight: 500, color: badgeStyle.tooltip.color }}>{requirement}</div>
+            </div>
+            {isLocked && progress !== undefined && (
+              <div style={{ marginTop: '6px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.55rem', color: 'rgba(255,255,255,0.5)', marginBottom: '3px' }}>
+                  <span>Progress</span>
+                  <span>{progress}%</span>
+                </div>
+                <div style={{ height: '3px', background: 'rgba(255,255,255,0.1)', borderRadius: '2px', overflow: 'hidden' }}>
+                  <div style={{ height: '100%', borderRadius: '2px', width: `${progress}%`, background: 'linear-gradient(90deg, #8b5cf6, #ec4899, #f97316)' }}></div>
+                </div>
+              </div>
+            )}
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '8px' }}>
+              <div style={{ display: 'inline-flex', alignItems: 'center', gap: '2px', background: 'rgba(45, 212, 191, 0.12)', color: '#2dd4bf', padding: '2px 6px', borderRadius: '8px', fontSize: '0.55rem', fontWeight: 600 }}>
+                ⚡ +{xp} XP
+              </div>
+              {earnedDate && <div style={{ fontSize: '0.5rem', color: 'rgba(255,255,255,0.3)' }}>{earnedDate}</div>}
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  };
+
   // Keep old GlobalFooter for backward compatibility if needed
   const GlobalFooter = GlobalNavFooter;
 
   // Practice Quizzes View
   if (view === 'practice-quizzes') return (
-    <div className="max-w-7xl w-full p-10 animate-fadeIn">
-      <div className="executive-header mb-8">
-        <h1 className="executive-font text-5xl font-bold text-white mb-2 tracking-tight">Practice Quizzes</h1>
-        <p className="text-slate-400 text-lg">Test your knowledge with targeted practice sessions</p>
-      </div>
+    <PageWrapper 
+      title="Practice Quizzes"
+      subtitle="Test Your Knowledge with Targeted Practice Sessions"
+      showBackButton={true}
+    >
+      <div className="animate-fadeIn">
       
       <div className="grid grid-cols-3 gap-6 mb-8">
         <button 
@@ -676,14 +1553,9 @@ const PMPApp = () => {
         </button>
       </div>
 
-      <button 
-        onClick={() => setView('executive-hud')} 
-        className="mt-6 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors executive-font"
-      >
-        ← Back to Dashboard
-      </button>
       <GlobalNavFooter />
-    </div>
+      </div>
+    </PageWrapper>
   );
 
   // PM Simulator Activity View
@@ -1073,9 +1945,9 @@ const PMPApp = () => {
                     <span className="font-bold text-blue-400 text-xl">{String.fromCharCode(65 + idx)}.</span>
                     <span className="text-white flex-1">{option.text}</span>
                   </div>
-                </button>
-              ))}
-            </div>
+          </button>
+        ))}
+      </div>
           )}
         </div>
         <GlobalNavFooter />
@@ -4574,26 +5446,56 @@ const PMPApp = () => {
     return (
       <>
         <Confetti />
-        <div className={`max-w-7xl w-full p-10 view-transition-wrapper ${viewTransition.isTransitioning && viewTransition.nextView !== 'executive-hud' ? 'view-transition-exit' : 'view-transition-enter'}`}>
-          <ErrorBanner />
-      {/* Privacy Disclaimer */}
-      <div className="glass-card p-4 mb-6 border-l-4 border-blue-500 bg-blue-500/10">
-        <div className="flex items-start gap-3">
-          <span className="text-2xl">🔒</span>
-          <div className="flex-1">
-            <p className="text-sm text-slate-300">
-              <span className="font-semibold text-white">Privacy First:</span> All your progress and scores are stored locally on your device. Nothing is shared or transmitted. Your data stays private and secure.
-            </p>
-          </div>
-        </div>
-      </div>
+        <div className="min-h-screen w-full view-transition-wrapper" style={{ background: 'linear-gradient(135deg, #0f172a 0%, #1e1b4b 30%, #172554 60%, #0f172a 100%)', color: '#fff', padding: '30px 40px' }}>
+          <div style={{ maxWidth: '1400px', margin: '0 auto' }}>
+            <ErrorBanner />
+            
+            {/* Header - Matching Progress Dashboard Style */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '20px', marginBottom: '35px' }}>
+              <div style={{ display: 'flex', gap: '3px', alignItems: 'flex-end', height: '44px' }}>
+                <div style={{ width: '10px', borderRadius: '3px', height: '55%', background: '#f97316' }}></div>
+                <div style={{ width: '10px', borderRadius: '3px', height: '100%', background: '#8b5cf6' }}></div>
+                <div style={{ width: '10px', borderRadius: '3px', height: '70%', background: '#ec4899' }}></div>
+              </div>
+              
+              <div>
+                <h1 style={{ fontSize: '1.75rem', fontWeight: 700, color: '#fff', margin: 0 }}>PMP Prep Center</h1>
+                <p style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', letterSpacing: '1.5px', marginTop: '3px', margin: 0 }}>Executive Learning Platform</p>
+              </div>
+              
+              <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: '25px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', padding: '8px 16px', borderRadius: '25px', fontSize: '0.8rem' }}>
+                  <div style={{ width: '8px', height: '8px', background: '#22c55e', borderRadius: '50%', animation: 'pulse 2s infinite', position: 'relative' }}>
+                    <div style={{ position: 'absolute', inset: 0, width: '8px', height: '8px', background: '#22c55e', borderRadius: '50%', animation: 'pulse 2s infinite' }}></div>
+                  </div>
+                  Live
+                </div>
+                <div style={{ textAlign: 'right' }}>
+                  <div style={{ fontSize: '1.75rem', fontWeight: 600, letterSpacing: '-1px' }}>{currentTime.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false })}</div>
+                  <div style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)' }}>{currentTime.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</div>
+                </div>
+              </div>
+            </div>
 
-      <div className="executive-header mb-12 animate-fadeIn">
-        <h1 className="executive-font text-6xl font-bold text-white mb-3 tracking-tight animate-slideDown bg-gradient-to-r from-white via-cyan-200 to-blue-300 bg-clip-text text-transparent">
-          PMP Prep Center
-        </h1>
-        <p className="text-slate-400 text-xl animate-slideUp">Executive Learning Platform • Master the PMP Exam</p>
-      </div>
+            {/* Privacy Disclaimer */}
+            <div style={{ 
+              background: 'linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%)',
+              backdropFilter: 'blur(10px)',
+              WebkitBackdropFilter: 'blur(10px)',
+              border: '1px solid rgba(255,255,255,0.08)',
+              borderRadius: '16px',
+              padding: '16px',
+              marginBottom: '24px'
+            }}>
+              <div style={{ display: 'flex', alignItems: 'start', gap: '12px' }}>
+                <span style={{ fontSize: '1.5rem' }}>🔒</span>
+                <div style={{ flex: 1 }}>
+                  <p style={{ fontSize: '0.875rem', color: 'rgba(255,255,255,0.7)', margin: 0, lineHeight: 1.5 }}>
+                    <span style={{ fontWeight: 600, color: '#fff' }}>Privacy First:</span> All your progress and scores are stored locally on your device. Nothing is shared or transmitted. Your data stays private and secure.
+                  </p>
+                </div>
+              </div>
+            </div>
 
       {/* Main Navigation Buttons - 3D Portfolio Style */}
       <div className="mb-12 animate-fadeIn">
@@ -4656,94 +5558,40 @@ const PMPApp = () => {
         </div>
       </div>
 
-      {/* Progress Meters Section - Enhanced Portfolio Style */}
+      {/* Progress & Stats Navigation Buttons */}
       <div className="mb-10 animate-fadeIn">
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="executive-font text-3xl font-semibold text-white tracking-wide">Performance Dashboard</h2>
-          <div className="text-xs text-slate-500 uppercase tracking-widest">Real-time Analytics</div>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
-          <div className="stat-card group hover:scale-105 transition-all duration-300 hover:shadow-2xl border-l-4" style={{borderColor: '#ff6b35', boxShadow: '0 0 20px rgba(255, 107, 53, 0.2)'}}>
-            <div className="flex items-center justify-between mb-3">
-              <div className="text-sm text-slate-400 uppercase font-semibold tracking-wide">Learning Progress</div>
-              <div className="text-2xl">📊</div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <button 
+            onClick={(e) => { createRipple(e); handleViewChange('progress-stats'); }} 
+            className="group relative glass-card p-8 text-center hover:scale-105 hover:-translate-y-2 transition-all duration-300 border-l-4 hover:shadow-[0_20px_50px_rgba(255,193,7,0.4)] hover:shadow-[#ffc107]/30 btn-ripple overflow-hidden transform perspective-1000 preserve-3d"
+            style={{transformStyle: 'preserve-3d', borderColor: '#ffc107', backgroundColor: 'rgba(255, 193, 7, 0.1)'}}
+          >
+            <div className="absolute inset-0 bg-gradient-to-br from-[#ffc107]/0 to-[#ffc107]/0 group-hover:from-[#ffc107]/10 group-hover:to-[#ffc107]/5 transition-all duration-300"></div>
+            <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <div className="relative z-10 transform group-hover:translate-z-10 transition-transform duration-300">
+              <div className="text-4xl mb-3 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300" style={{transformStyle: 'preserve-3d'}}>🏆</div>
+              <div className="executive-font text-lg font-bold text-white mb-2 group-hover:text-[#ffc107] transition-colors drop-shadow-lg">My Progress/Badges</div>
+              <div className="text-xs text-slate-400 group-hover:text-slate-300 uppercase tracking-widest">Track Your Journey</div>
             </div>
-            <div className="text-5xl font-bold text-white mb-2" style={{color: '#ff6b35'}}>0</div>
-            <div className="text-xs text-slate-500">Tasks & activities viewed</div>
-            <div className="mt-3 h-1 bg-slate-800 rounded-full overflow-hidden">
-              <div className="h-full rounded-full transition-all duration-1000" style={{width: '0%', backgroundColor: '#ff6b35', boxShadow: '0 0 10px #ff6b35'}}></div>
+          </button>
+          
+          <button 
+            onClick={(e) => { createRipple(e); handleViewChange('detailed-analytics'); }} 
+            className="group relative glass-card p-8 text-center hover:scale-105 hover:-translate-y-2 transition-all duration-300 border-l-4 hover:shadow-[0_20px_50px_rgba(236,72,153,0.4)] hover:shadow-[#ec4899]/30 btn-ripple overflow-hidden transform perspective-1000 preserve-3d"
+            style={{transformStyle: 'preserve-3d', borderColor: '#ec4899', backgroundColor: 'rgba(236, 72, 153, 0.1)'}}
+          >
+            <div className="absolute inset-0 bg-gradient-to-br from-[#ec4899]/0 to-[#ec4899]/0 group-hover:from-[#ec4899]/10 group-hover:to-[#ec4899]/5 transition-all duration-300"></div>
+            <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <div className="relative z-10 transform group-hover:translate-z-10 transition-transform duration-300">
+              <div className="text-4xl mb-3 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300" style={{transformStyle: 'preserve-3d'}}>📊</div>
+              <div className="executive-font text-lg font-bold text-white mb-2 group-hover:text-[#ec4899] transition-colors drop-shadow-lg">Detailed Analytics</div>
+              <div className="text-xs text-slate-400 group-hover:text-slate-300 uppercase tracking-widest">Comprehensive Performance Analytics</div>
             </div>
-          </div>
-          <div className="stat-card group hover:scale-105 transition-all duration-300 hover:shadow-2xl border-l-4" style={{borderColor: '#00d4ff', boxShadow: '0 0 20px rgba(0, 212, 255, 0.2)'}}>
-            <div className="flex items-center justify-between mb-3">
-              <div className="text-sm text-slate-400 uppercase font-semibold tracking-wide">Accuracy Rate</div>
-              <div className="text-2xl">🎯</div>
-            </div>
-            <div className="text-5xl font-bold text-white mb-2" style={{color: '#00d4ff'}}>0%</div>
-            <div className="text-xs text-slate-500">Overall performance</div>
-            <div className="mt-3 h-1 bg-slate-800 rounded-full overflow-hidden">
-              <div className="h-full rounded-full transition-all duration-1000" style={{width: '0%', backgroundColor: '#00d4ff', boxShadow: '0 0 10px #00d4ff'}}></div>
-            </div>
-          </div>
-          <div className="stat-card group hover:scale-105 transition-all duration-300 hover:shadow-2xl border-l-4" style={{borderColor: '#bf5af2', boxShadow: '0 0 20px rgba(191, 90, 242, 0.2)'}}>
-            <div className="flex items-center justify-between mb-3">
-              <div className="text-sm text-slate-400 uppercase font-semibold tracking-wide">Study Hours</div>
-              <div className="text-2xl">⏱️</div>
-            </div>
-            <div className="text-5xl font-bold text-white mb-2" style={{color: '#bf5af2'}}>0</div>
-            <div className="text-xs text-slate-500">Time invested</div>
-            <div className="mt-3 h-1 bg-slate-800 rounded-full overflow-hidden">
-              <div className="h-full rounded-full transition-all duration-1000" style={{width: '0%', backgroundColor: '#bf5af2', boxShadow: '0 0 10px #bf5af2'}}></div>
-            </div>
-          </div>
-          <div className="stat-card group hover:scale-105 transition-all duration-300 hover:shadow-2xl border-l-4" style={{borderColor: '#00ff88', boxShadow: '0 0 20px rgba(0, 255, 136, 0.2)'}}>
-            <div className="flex items-center justify-between mb-3">
-              <div className="text-sm text-slate-400 uppercase font-semibold tracking-wide">Current Streak</div>
-              <div className="text-2xl">🔥</div>
-            </div>
-            <div className="text-5xl font-bold text-white mb-2" style={{color: '#00ff88'}}>0</div>
-            <div className="text-xs text-slate-500">Days in a row</div>
-            <div className="mt-3 h-1 bg-slate-800 rounded-full overflow-hidden">
-              <div className="h-full rounded-full transition-all duration-1000" style={{width: '0%', backgroundColor: '#00ff88', boxShadow: '0 0 10px #00ff88'}}></div>
-            </div>
-          </div>
-        </div>
-        
-        <div className="glass-card p-6">
-          <h3 className="executive-font text-lg font-semibold text-white mb-4 uppercase tracking-wide">Domain Performance</h3>
-          <div className="grid grid-cols-3 gap-6">
-            <div>
-              <div className="flex justify-between mb-2">
-                <span className="text-sm text-slate-300">People Domain</span>
-                <span className="text-sm font-semibold text-white">0%</span>
-              </div>
-              <div className="w-full bg-slate-800 rounded-full h-2.5">
-                <div className="h-2.5 rounded-full transition-all" style={{width: '0%', backgroundColor: '#ff6b35', boxShadow: '0 0 10px #ff6b35'}}></div>
-              </div>
-            </div>
-            <div>
-              <div className="flex justify-between mb-2">
-                <span className="text-sm text-slate-300">Process Domain</span>
-                <span className="text-sm font-semibold text-white">0%</span>
-              </div>
-              <div className="w-full bg-slate-800 rounded-full h-2.5">
-                <div className="h-2.5 rounded-full transition-all" style={{width: '0%', backgroundColor: '#00d4ff', boxShadow: '0 0 10px #00d4ff'}}></div>
-              </div>
-            </div>
-            <div>
-              <div className="flex justify-between mb-2">
-                <span className="text-sm text-slate-300">Business Domain</span>
-                <span className="text-sm font-semibold text-white">0%</span>
-              </div>
-              <div className="w-full bg-slate-800 rounded-full h-2.5">
-                <div className="h-2.5 rounded-full transition-all" style={{width: '0%', backgroundColor: '#bf5af2', boxShadow: '0 0 10px #bf5af2'}}></div>
-              </div>
-            </div>
-          </div>
+          </button>
         </div>
       </div>
       
-      {/* Task Progress Modal */}
+          {/* Task Progress Modal */}
       {showTaskProgressModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-6 animate-fadeIn">
           <div className="glass-card max-w-7xl w-full max-h-[90vh] overflow-hidden flex flex-col border-2 border-cyan-500/30 shadow-2xl">
@@ -4907,24 +5755,26 @@ const PMPApp = () => {
           </div>
         </div>
       )}
+          </div>
         </div>
       </>
     );
   }
 
   if (view === 'strategy-suite') return (
-    <div className="max-w-[95%] w-full p-12 animate-fadeIn text-left">
-      <div className="executive-header mb-10">
-        <h2 className="executive-font text-4xl font-bold text-white mb-2 tracking-tight">Learning Lab</h2>
-        <p className="text-slate-400 text-lg">Explore PMP knowledge domains and tasks</p>
-      </div>
+    <PageWrapper 
+      title="Learning Lab"
+      subtitle="Explore PMP Knowledge Domains and Tasks"
+      showBackButton={true}
+    >
+      <div className="animate-fadeIn text-left">
       <div className="grid grid-cols-3 gap-8">
         {Object.entries(domainMap).map(([d, tasks]) => {
           const domainColor = d === 'People Domain' ? '#ff6b35' : d === 'Process Domain' ? '#00d4ff' : '#bf5af2';
           return (
             <div key={d} className="glass-card p-6 border-t-4" style={{borderColor: `${domainColor}80`}}>
               <h3 className="executive-font mb-6 uppercase text-sm font-bold tracking-widest" style={{color: domainColor}}>{d}</h3>
-              <div className="space-y-1 h-[450px] overflow-y-auto pr-2 custom-scrollbar">
+            <div className="space-y-1 h-[450px] overflow-y-auto pr-2 custom-scrollbar">
                 {tasks.map(t => {
                   const mastery = getTaskMastery(t);
                   const progressBars = '■'.repeat(mastery.completed) + '□'.repeat(mastery.total - mastery.completed);
@@ -4943,17 +5793,18 @@ const PMPApp = () => {
                             {progressBars}
                           </span>
                         )}
-                      </div>
+            </div>
                     </button>
                   );
                 })}
-              </div>
-            </div>
+          </div>
+      </div>
           );
         })}
       </div>
       <GlobalNavFooter />
-    </div>
+      </div>
+    </PageWrapper>
   );
 
   if (view === 'task-interstitial') return (
@@ -4977,19 +5828,13 @@ const PMPApp = () => {
 
   // Practice Hub View
   if (view === 'practice-hub') return (
-    <div className="max-w-7xl w-full p-10 animate-fadeIn text-left">
-      {/* Header with Back Button */}
-      <header className="mb-10">
-        <div className="flex items-center gap-4 mb-6">
-          <button 
-            onClick={() => setView('task-interstitial')}
-            className="px-4 py-2 executive-font text-xs text-slate-400 hover:text-white uppercase font-semibold transition-colors flex items-center gap-2"
-          >
-            ← Back
-          </button>
-          </div>
-        <h1 className="executive-font text-5xl font-bold text-white mb-2 tracking-tight">Practice Hub: {selectedTask}</h1>
-      </header>
+    <PageWrapper 
+      title={`Practice Hub: ${selectedTask}`}
+      subtitle="Skill Building Activities"
+      showBackButton={true}
+      backAction={() => setView('task-interstitial')}
+    >
+      <div className="animate-fadeIn text-left">
       
       {/* Activity Cards Grid - 3x2 */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
@@ -5101,7 +5946,8 @@ const PMPApp = () => {
       </div>
 
       <GlobalNavFooter />
-    </div>
+      </div>
+    </PageWrapper>
   );
 
   // Progress Stats View - Refactored to match condensed-dashboard.jsx
@@ -5114,7 +5960,8 @@ const PMPApp = () => {
     // Calculate overall stats
     let tasksStarted = 0;
     let activitiesCompleted = 0;
-    const tasksMastered = allTasks.filter(t => getTaskMastery(t).level === 'mastered').length;
+    // Calculate tasks mastered using the new definition: all 3 learn pages opened AND all 6 activities attempted
+    const tasksMastered = allTasks.filter(t => isTaskMastered(t)).length;
     
     const activityTypeScores = {
       'pm-simulator': [],
@@ -5232,441 +6079,798 @@ const PMPApp = () => {
       tasksMastered
     };
     
+    // Calculate domain stats for glass cards
+    const peopleDomain = domains.find(d => d.id === 'people');
+    const processDomain = domains.find(d => d.id === 'process');
+    const businessDomain = domains.find(d => d.id === 'business');
+    
+    const peopleDone = peopleDomain ? getCompleted(peopleDomain.tasks) : 0;
+    const peopleActive = peopleDomain ? getActive(peopleDomain.tasks) : 0;
+    const peopleLeft = peopleDomain ? peopleDomain.tasks.length - peopleDone - peopleActive : 0;
+    const peoplePercent = peopleDomain ? getDomainProgress(peopleDomain.tasks) : 0;
+    
+    const processDone = processDomain ? getCompleted(processDomain.tasks) : 0;
+    const processActive = processDomain ? getActive(processDomain.tasks) : 0;
+    const processLeft = processDomain ? processDomain.tasks.length - processDone - processActive : 0;
+    const processPercent = processDomain ? getDomainProgress(processDomain.tasks) : 0;
+    
+    const businessDone = businessDomain ? getCompleted(businessDomain.tasks) : 0;
+    const businessActive = businessDomain ? getActive(businessDomain.tasks) : 0;
+    const businessLeft = businessDomain ? businessDomain.tasks.length - businessDone - businessActive : 0;
+    const businessPercent = businessDomain ? getDomainProgress(businessDomain.tasks) : 0;
+    
+    // Generate mini progress bars (2 = active/filled, 1 = partial, 0 = empty)
+    const generateMiniProgress = (done, total) => {
+      return Array(total).fill(0).map((_, i) => {
+        if (i < done) return 2; // Completed
+        if (i < done + (total - done - (total - done - (total - done)))) return 1; // Partial - simplified
+        return 0; // Empty
+      });
+    };
+    
+    // Simplified version - just show completed vs not
+    const generateMiniProgressSimple = (done, total) => {
+      return Array(total).fill(0).map((_, i) => i < done ? 2 : 0);
+    };
+    
+    // Badge definitions
+    const badgeDefinitions = [
+      {
+        id: 'quick-start',
+        name: 'Quick Start',
+        icon: <svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 2.05v2.02c3.95.49 7 3.85 7 7.93 0 3.21-1.92 6-4.72 7.28L13 17v5h-2v-5l-2.28 2.28C5.92 18 4 15.21 4 12c0-4.08 3.05-7.44 7-7.93V2.05c-4.5.5-8 4.31-8 8.95 0 4.64 3.5 8.45 8 8.95V22h4v-2.05c4.5-.5 8-4.31 8-8.95 0-4.64-3.5-8.45-8-8.95z"/></svg>,
+        color: 'cyan',
+        tier: 'Uncommon',
+        description: 'Complete your first module.',
+        requirement: 'Complete your first module',
+        xp: 100,
+        checkUnlocked: () => tasksStarted >= 1,
+        getProgress: () => Math.min(100, (tasksStarted / 1) * 100)
+      },
+      {
+        id: 'streak-master',
+        name: 'Streak Master',
+        icon: <svg viewBox="0 0 24 24" fill="currentColor"><path d="M13.5.67s.74 2.65.74 4.8c0 2.06-1.35 3.73-3.41 3.73-2.07 0-3.63-1.67-3.63-3.73l.03-.36C5.21 7.51 4 10.62 4 14c0 4.42 3.58 8 8 8s8-3.58 8-8C20 8.61 17.41 3.8 13.5.67z"/></svg>,
+        color: 'orange',
+        tier: 'Epic',
+        description: '7 consecutive days of learning.',
+        requirement: '7 day learning streak',
+        xp: 250,
+        checkUnlocked: () => false, // TODO: Connect to streak data
+        getProgress: () => 0 // TODO: Connect to streak data
+      },
+      {
+        id: 'people-pro',
+        name: 'People Pro',
+        icon: <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>,
+        color: 'teal',
+        tier: 'Rare',
+        description: 'Master the People domain.',
+        requirement: '50% People Domain',
+        xp: 200,
+        checkUnlocked: () => peoplePercent >= 50,
+        getProgress: () => peoplePercent
+      },
+      {
+        id: 'scholar',
+        name: 'Scholar',
+        icon: <svg viewBox="0 0 24 24" fill="currentColor"><path d="M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82zM12 3L1 9l11 6 9-4.91V17h2V9L12 3z"/></svg>,
+        color: 'pink',
+        tier: 'Mythic',
+        description: 'Complete 20 modules.',
+        requirement: '20 modules completed',
+        xp: 300,
+        checkUnlocked: () => tasksMastered >= 20,
+        getProgress: () => Math.min(100, (tasksMastered / 20) * 100)
+      },
+      {
+        id: 'perfectionist',
+        name: 'Perfectionist',
+        icon: <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>,
+        color: 'purple',
+        tier: 'Legendary',
+        description: 'Score 100% on quizzes.',
+        requirement: '100% on 5 quizzes',
+        xp: 500,
+        checkUnlocked: () => false, // TODO: Connect to perfect quiz data
+        getProgress: () => 0
+      },
+      {
+        id: 'process-master',
+        name: 'Process Master',
+        icon: <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65C14.46 2.18 14.25 2 14 2h-4c-.25 0-.46.18-.49.42l-.38 2.65c-.61.25-1.17.59-1.69.98l-2.49-1c-.23-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64l2.11 1.65c-.04.32-.07.65-.07.98s.03.66.07.98l-2.11 1.65c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1c.52.4 1.08.73 1.69.98l.38 2.65c.03.24.24.42.49.42h4c.25 0 .46-.18.49-.42l.38-2.65c.61-.25 1.17-.59 1.69-.98l2.49 1c.23.09.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65z"/></svg>,
+        color: 'pink',
+        tier: 'Epic',
+        description: 'Master the Process domain.',
+        requirement: '50% Process Domain',
+        xp: 200,
+        checkUnlocked: () => processPercent >= 50,
+        getProgress: () => processPercent
+      },
+      {
+        id: 'business-guru',
+        name: 'Business Guru',
+        icon: <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3.5 18.49l6-6.01 4 4L22 6.92l-1.41-1.41-7.09 7.97-4-4L2 16.99z"/></svg>,
+        color: 'orange',
+        tier: 'Epic',
+        description: 'Master Business Environment.',
+        requirement: '50% Business Domain',
+        xp: 200,
+        checkUnlocked: () => businessPercent >= 50,
+        getProgress: () => businessPercent
+      },
+      {
+        id: 'champion',
+        name: 'Champion',
+        icon: <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 5h-2V3H7v2H5c-1.1 0-2 .9-2 2v1c0 2.55 1.92 4.63 4.39 4.94.63 1.5 1.98 2.63 3.61 2.96V19H7v2h10v-2h-4v-3.1c1.63-.33 2.98-1.46 3.61-2.96C19.08 12.63 21 10.55 21 8V7c0-1.1-.9-2-2-2z"/></svg>,
+        color: 'gradient',
+        tier: 'Mythic',
+        description: 'Complete all 35 modules.',
+        requirement: '100% completion',
+        xp: 1000,
+        checkUnlocked: () => tasksMastered >= totalTasks,
+        getProgress: () => overallProgress
+      },
+      {
+        id: 'pmp-master',
+        name: 'PMP Master',
+        icon: <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>,
+        color: 'gradient',
+        tier: 'Mythic',
+        description: 'Pass the final certification exam.',
+        requirement: 'Pass exam with 80%+',
+        xp: 2000,
+        checkUnlocked: () => false, // TODO: Connect to exam data
+        getProgress: () => 0
+      }
+    ];
+    
+    const earnedBadges = badgeDefinitions.filter(b => b.checkUnlocked());
+    const lockedBadges = badgeDefinitions.filter(b => !b.checkUnlocked());
+    
     return (
-      <div className="min-h-screen w-full bg-black text-white overflow-x-hidden">
-        {/* Ambient glows */}
-        <div className="fixed inset-0 pointer-events-none overflow-hidden">
-          <div className="absolute -top-32 -left-32 w-[600px] h-[600px] rounded-full blur-[150px] opacity-20 animate-pulse" style={{ background: '#ff6b35', animationDuration: '4s' }}/>
-          <div className="absolute top-1/4 -right-32 w-[500px] h-[500px] rounded-full blur-[150px] opacity-15 animate-pulse" style={{ background: '#00d4ff', animationDuration: '5s', animationDelay: '1s' }}/>
-          <div className="absolute -bottom-32 left-1/4 w-[550px] h-[550px] rounded-full blur-[150px] opacity-15 animate-pulse" style={{ background: '#bf5af2', animationDuration: '6s', animationDelay: '2s' }}/>
-        </div>
-
-        {/* Scan lines */}
-        <div className="fixed inset-0 pointer-events-none" style={{ background: 'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.3) 2px, rgba(0,0,0,0.3) 4px)', opacity: 0.3 }}/>
-
-        {/* Vignette */}
-        <div className="fixed inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse at center, transparent 0%, rgba(0,0,0,0.4) 100%)' }}/>
-
-        {/* HUD Corners */}
-        <div className="fixed inset-6 pointer-events-none hidden lg:block">
-          {['top-0 left-0 border-t-2 border-l-2 rounded-tl-xl', 'top-0 right-0 border-t-2 border-r-2 rounded-tr-xl',
-            'bottom-0 left-0 border-b-2 border-l-2 rounded-bl-xl', 'bottom-0 right-0 border-b-2 border-r-2 rounded-br-xl'
-          ].map((classes, i) => (
-            <div key={i} className={`absolute w-8 h-8 ${classes} transition-all duration-1000`}
-              style={{ borderColor: `rgba(0, 212, 255, ${animated ? 0.4 : 0})`, transitionDelay: `${i * 200}ms` }}/>
-          ))}
-        </div>
-
-        <div className="relative z-10 min-h-screen flex flex-col">
-          
+      <div className="min-h-screen w-full" style={{ background: 'linear-gradient(135deg, #0f172a 0%, #1e1b4b 30%, #172554 60%, #0f172a 100%)', color: '#fff', padding: '30px 40px' }}>
+        <div style={{ maxWidth: '1400px', margin: '0 auto' }}>
           {/* Header */}
-          <header className="flex-shrink-0 border-b border-white/10 bg-black/50 backdrop-blur-xl">
-            <div className="px-6 lg:px-8 py-5">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-5">
-                  <button 
-                    onClick={() => setView('practice-hub')}
-                    className="px-4 py-2 text-xs text-white/40 hover:text-white uppercase font-semibold transition-colors flex items-center gap-2"
-                  >
-                    ← Back
-                  </button>
-                  <div className="flex gap-1.5 h-12">
-                    {[{ color: '#ff6b35', height: '100%', delay: 0 }, { color: '#00d4ff', height: '75%', delay: 100 }, { color: '#bf5af2', height: '50%', delay: 200 }].map((bar, i) => (
-                      <div key={i} className={`w-2 rounded-full self-end transition-all duration-700 ${animated ? 'opacity-100' : 'opacity-0 scale-y-0'}`}
-                        style={{ background: `linear-gradient(180deg, ${bar.color} 0%, ${bar.color}80 100%)`, height: bar.height, boxShadow: `0 0 20px ${bar.color}80`, transitionDelay: `${bar.delay}ms`, transformOrigin: 'bottom' }}/>
-                    ))}
-                  </div>
-                  <div>
-                    <h1 className="text-2xl font-bold tracking-wide text-white">Task Mastery Overview</h1>
-                    <p className="text-xs text-white/40 tracking-widest uppercase mt-1">PMP Certification Training</p>
-                  </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '20px', marginBottom: '35px' }}>
+            <button 
+              onClick={() => setView('executive-hud')}
+              style={{ display: 'flex', alignItems: 'center', gap: '6px', color: 'rgba(255,255,255,0.6)', fontSize: '0.85rem', cursor: 'pointer', transition: 'color 0.2s', background: 'none', border: 'none', padding: 0 }}
+              onMouseEnter={(e) => e.target.style.color = '#fff'}
+              onMouseLeave={(e) => e.target.style.color = 'rgba(255,255,255,0.6)'}
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+              </svg>
+              BACK
+            </button>
+            
+            <div style={{ display: 'flex', gap: '3px', alignItems: 'flex-end', height: '44px' }}>
+              <div style={{ width: '10px', borderRadius: '3px', height: '55%', background: '#f97316' }}></div>
+              <div style={{ width: '10px', borderRadius: '3px', height: '100%', background: '#8b5cf6' }}></div>
+              <div style={{ width: '10px', borderRadius: '3px', height: '70%', background: '#ec4899' }}></div>
+            </div>
+            
+            <div>
+              <h1 style={{ fontSize: '1.75rem', fontWeight: 700, color: '#fff', margin: 0 }}>Task Mastery Overview</h1>
+              <p style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', letterSpacing: '1.5px', marginTop: '3px', margin: 0 }}>PMP Certification Training</p>
+            </div>
+            
+            <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: '25px' }}>
+              <button
+                onClick={() => setView('detailed-analytics')}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  padding: '8px 14px',
+                  borderRadius: '8px',
+                  background: 'rgba(236, 72, 153, 0.1)',
+                  border: '1px solid rgba(236, 72, 153, 0.3)',
+                  color: '#ec4899',
+                  fontSize: '0.75rem',
+                  fontWeight: 600,
+                  cursor: 'pointer',
+                  transition: 'all 0.2s',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.5px'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = 'rgba(236, 72, 153, 0.2)';
+                  e.currentTarget.style.borderColor = 'rgba(236, 72, 153, 0.5)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = 'rgba(236, 72, 153, 0.1)';
+                  e.currentTarget.style.borderColor = 'rgba(236, 72, 153, 0.3)';
+                }}
+              >
+                <span>📊</span>
+                <span>Detailed Analytics</span>
+              </button>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', padding: '8px 16px', borderRadius: '25px', fontSize: '0.8rem' }}>
+                <div style={{ width: '8px', height: '8px', background: '#22c55e', borderRadius: '50%', animation: 'pulse 2s infinite', position: 'relative' }}>
+                  <div style={{ position: 'absolute', inset: 0, width: '8px', height: '8px', background: '#22c55e', borderRadius: '50%', animation: 'pulse 2s infinite' }}></div>
                 </div>
-
-                <div className="flex items-center gap-6">
-                  <div className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10">
-                    <div className="relative">
-                      <div className="w-2 h-2 rounded-full bg-green-400"/>
-                      <div className="absolute inset-0 w-2 h-2 rounded-full bg-green-400 animate-ping"/>
-                    </div>
-                    <span className="text-xs text-white/50">Live</span>
-                  </div>
-                  <div className="text-right hidden sm:block">
-                    <div className="text-xl font-bold text-white tabular-nums">{currentTime.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false })}</div>
-                    <div className="text-xs text-white/30">{currentTime.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</div>
-                  </div>
-                  <OrbitalProgress progress={overallProgress}/>
-                </div>
+                Live
+              </div>
+              <div style={{ textAlign: 'right' }}>
+                <div style={{ fontSize: '1.75rem', fontWeight: 600, letterSpacing: '-1px' }}>{currentTime.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false })}</div>
+                <div style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)' }}>{currentTime.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</div>
+              </div>
+              <div style={{ width: '56px', height: '56px', borderRadius: '50%', border: '3px solid rgba(255,255,255,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, fontSize: '1rem', position: 'relative' }}>
+                {overallProgress}%
+                <div style={{ position: 'absolute', top: '-3px', left: '-3px', width: 'calc(100% + 6px)', height: 'calc(100% + 6px)', borderRadius: '50%', border: '3px solid transparent', borderTopColor: '#22c55e', transform: 'rotate(-90deg)' }}></div>
               </div>
             </div>
-          </header>
+          </div>
 
-          {/* Main content */}
-          <main className="flex-1 px-6 lg:px-8 py-6 overflow-x-hidden">
-            <div className="w-full space-y-4">
-
-              {/* ==================== PROGRESS STATISTICS - COMPACT ==================== */}
-              <div
-                className={`transition-all duration-700 ${animated ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
-                style={{ transitionDelay: '100ms' }}
-              >
-                <div
-                  onClick={() => setExpandedSection(expandedSection === 'stats' ? null : 'stats')}
-                  className={`
-                    relative overflow-hidden rounded-2xl cursor-pointer
-                    border transition-all duration-500 group
-                    ${expandedSection === 'stats' ? 'border-opacity-80' : 'border-white/10 hover:border-opacity-50'}
-                  `}
-                  style={{
-                    borderColor: expandedSection === 'stats' ? '#00d4ff' : undefined,
-                    background: 'linear-gradient(135deg, rgba(255,255,255,0.03) 0%, rgba(0,0,0,0.5) 100%)',
-                    boxShadow: expandedSection === 'stats' ? '0 0 50px rgba(0, 212, 255, 0.2), inset 0 0 60px rgba(0, 212, 255, 0.05)' : 'none'
-                  }}
-                >
-                  <div className="absolute top-0 left-0 right-0 h-px" style={{ background: 'linear-gradient(90deg, transparent, #00d4ff, transparent)', opacity: expandedSection === 'stats' ? 1 : 0.3 }}/>
-                  <div className="absolute left-0 top-0 bottom-0 w-1.5" style={{ backgroundColor: '#00d4ff', boxShadow: '0 0 20px #00d4ff80' }}/>
-
-                  <div className="relative p-5 pl-6">
-                    <div className="flex items-center justify-between gap-4 flex-wrap">
-                      <div className="flex items-center gap-5">
-                        <div className="w-14 h-14 rounded-xl flex items-center justify-center border transition-all duration-300 group-hover:scale-110"
-                          style={{ backgroundColor: 'rgba(0, 212, 255, 0.1)', borderColor: 'rgba(0, 212, 255, 0.4)', color: '#00d4ff', boxShadow: 'inset 0 0 20px rgba(0, 212, 255, 0.2), 0 0 20px rgba(0, 212, 255, 0.1)' }}>
-                          <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M5 9.2h3V19H5zM10.6 5h2.8v14h-2.8zm5.6 8H19v6h-2.8z"/>
-                          </svg>
-                        </div>
-                        <div>
-                          <div className="flex items-center gap-3">
-                            <h2 className="text-lg font-bold text-white">Progress Statistics</h2>
-                            <span className="text-xs px-2 py-0.5 rounded border" style={{ borderColor: 'rgba(0, 212, 255, 0.4)', color: '#00d4ff', backgroundColor: 'rgba(0, 212, 255, 0.1)' }}>
-                              3 metrics
-                            </span>
-                          </div>
-                          <p className="text-sm text-white/40 mt-1">Completion tracking and task mastery</p>
-                        </div>
+          {/* Main content - Glass Cards */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+            
+            {/* Progress Statistics Glass Card */}
+            <div
+              onClick={() => setExpandedSection(expandedSection === 'stats' ? null : 'stats')}
+              style={{
+                background: 'linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%)',
+                backdropFilter: 'blur(10px)',
+                WebkitBackdropFilter: 'blur(10px)',
+                border: '1px solid rgba(255,255,255,0.08)',
+                borderRadius: '16px',
+                padding: '18px 24px',
+                marginBottom: '10px',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '18px',
+                transition: 'all 0.3s ease',
+                cursor: 'pointer'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = 'linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.03) 100%)';
+                e.currentTarget.style.borderColor = 'rgba(255,255,255,0.12)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = 'linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%)';
+                e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)';
+              }}
+            >
+              <div style={{ width: '48px', height: '48px', borderRadius: '14px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(139, 92, 246, 0.15)', color: '#a78bfa' }}>
+                <svg viewBox="0 0 24 24" fill="currentColor" style={{ width: '24px', height: '24px' }}>
+                  <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/>
+                </svg>
+              </div>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '4px' }}>
+                  <h3 style={{ fontSize: '1rem', fontWeight: 600, margin: 0 }}>Progress Statistics</h3>
+                  <span style={{ padding: '3px 10px', borderRadius: '12px', fontSize: '0.7rem', fontWeight: 600, background: 'rgba(139, 92, 246, 0.2)', color: '#a78bfa' }}>3 metrics</span>
+                </div>
+                <div style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.4)' }}>Completion tracking and task mastery</div>
+                {expandedSection === 'stats' && (
+                  <div style={{ display: 'flex', gap: '24px', marginTop: '12px' }}>
+                    <div style={{ textAlign: 'right', minWidth: '70px' }}>
+                      <div style={{ fontSize: '1.1rem', fontWeight: 700 }}>
+                        {stats.tasksStarted}<span style={{ color: 'rgba(255,255,255,0.35)' }}>/{stats.totalTasks}</span>
                       </div>
-
-                      <div className="flex items-center gap-6">
-                        {/* Quick stats inline */}
-                        <div className="hidden lg:flex items-center gap-4 text-sm">
-                          <div className="text-center px-3">
-                            <div className="font-bold text-white">{stats.tasksStarted}<span className="text-white/30">/{stats.totalTasks}</span></div>
-                            <div className="text-xs text-white/30">Started</div>
-                          </div>
-                          <div className="w-px h-8 bg-white/10"/>
-                          <div className="text-center px-3">
-                            <div className="font-bold" style={{ color: '#00d4ff' }}>{stats.activitiesCompleted}<span className="text-white/30">/{stats.totalActivities}</span></div>
-                            <div className="text-xs text-white/30">Activities</div>
-                          </div>
-                          <div className="w-px h-8 bg-white/10"/>
-                          <div className="text-center px-3">
-                            <div className="font-bold" style={{ color: completeColor }}>{stats.tasksMastered}</div>
-                            <div className="text-xs text-white/30">Mastered</div>
-                          </div>
-                        </div>
-
-                        <SegmentedProgress progress={totalTasks > 0 ? Math.round((stats.tasksStarted / stats.totalTasks) * 100) : 0} color="#00d4ff"/>
-
-                        <div className={`w-10 h-10 rounded-lg flex items-center justify-center border transition-all duration-300 ${expandedSection === 'stats' ? 'rotate-180' : ''}`}
-                          style={{ borderColor: 'rgba(0, 212, 255, 0.3)', backgroundColor: expandedSection === 'stats' ? 'rgba(0, 212, 255, 0.2)' : 'rgba(255,255,255,0.03)' }}>
-                          <svg className="w-4 h-4" style={{ color: '#00d4ff' }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                            <path d="M19 9l-7 7-7-7"/>
-                          </svg>
-                        </div>
+                      <div style={{ fontSize: '0.6rem', color: 'rgba(255,255,255,0.4)' }}>Started</div>
+                    </div>
+                    <div style={{ textAlign: 'right', minWidth: '70px' }}>
+                      <div style={{ fontSize: '1.1rem', fontWeight: 700 }}>
+                        {stats.activitiesCompleted}<span style={{ color: 'rgba(255,255,255,0.35)' }}>/{stats.totalActivities}</span>
                       </div>
+                      <div style={{ fontSize: '0.6rem', color: 'rgba(255,255,255,0.4)' }}>Activities</div>
+                    </div>
+                    <div style={{ textAlign: 'right', minWidth: '70px' }}>
+                      <div style={{ fontSize: '1.1rem', fontWeight: 700, color: '#a78bfa' }}>{stats.tasksMastered}</div>
+                      <div style={{ fontSize: '0.6rem', color: 'rgba(255,255,255,0.4)' }}>Mastered</div>
                     </div>
                   </div>
-                </div>
-
-                {/* Expanded stats content */}
-                <div className={`overflow-hidden transition-all duration-500 ease-out ${expandedSection === 'stats' ? 'max-h-[500px] opacity-100 mt-2' : 'max-h-0 opacity-0'}`}>
-                  <div className="rounded-xl border overflow-hidden p-4" style={{ borderColor: 'rgba(0, 212, 255, 0.2)', backgroundColor: 'rgba(0,0,0,0.4)' }}>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                      {[
-                        { label: 'Tasks Started', value: stats.tasksStarted, total: stats.totalTasks, color: '#ff6b35' },
-                        { label: 'Activities Completed', value: stats.activitiesCompleted, total: stats.totalActivities, color: '#00d4ff' },
-                        { label: 'Tasks Mastered', value: stats.tasksMastered, total: null, color: completeColor },
-                      ].map((stat, i) => (
-                        <div key={i} className="p-4 rounded-lg border border-white/5 bg-white/[0.02]">
-                          <p className="text-xs text-white/40 uppercase tracking-wider mb-2">{stat.label}</p>
-                          <p className="text-3xl font-bold" style={{ color: stat.color }}>
-                            {stat.value}{stat.total && <span className="text-white/30 text-lg">/{stat.total}</span>}
-                          </p>
-                          {stat.total && (
-                            <div className="mt-3 h-1.5 rounded-full overflow-hidden bg-white/10">
-                              <div className="h-full rounded-full" style={{ width: `${(stat.value / stat.total) * 100}%`, backgroundColor: stat.color, boxShadow: `0 0 10px ${stat.color}` }}/>
+                )}
+              </div>
+              <div style={{ width: '50px', height: '50px', borderRadius: '50%', background: 'rgba(0,0,0,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, fontSize: '0.85rem', flexShrink: 0 }}>
+                {overallProgress}%
+              </div>
+              <div style={{ color: 'rgba(255,255,255,0.25)', cursor: 'pointer', transition: 'color 0.2s', flexShrink: 0 }}>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/>
+                </svg>
+              </div>
+            </div>
+            
+            {/* Expanded stats content with task lists */}
+            {expandedSection === 'stats' && (
+              <div style={{ marginTop: '10px', marginBottom: '10px' }}>
+                <div style={{ borderRadius: '16px', border: '1px solid rgba(255,255,255,0.08)', overflow: 'hidden', padding: '16px', background: 'rgba(0,0,0,0.2)' }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px' }}>
+                    {[
+                      { label: 'Tasks Started', value: stats.tasksStarted, total: stats.totalTasks, color: '#ff6b35', key: 'tasks-started' },
+                      { label: 'Activities Completed', value: stats.activitiesCompleted, total: stats.totalActivities, color: '#00d4ff', key: 'activities-completed' },
+                      { label: 'Tasks Mastered', value: stats.tasksMastered, total: null, color: completeColor, key: 'tasks-mastered' },
+                    ].map((stat, i) => {
+                      const isTasksStarted = stat.key === 'tasks-started';
+                      const isActivitiesCompleted = stat.key === 'activities-completed';
+                      const isTasksMastered = stat.key === 'tasks-mastered';
+                      const isExpanded = expandedTaskList === stat.key;
+                      
+                      return (
+                        <div key={i} style={{ position: 'relative' }}>
+                          <div 
+                            onClick={() => (isTasksStarted || isActivitiesCompleted || isTasksMastered) && setExpandedTaskList(expandedTaskList === stat.key ? null : stat.key)}
+                            style={{
+                              padding: '16px',
+                              borderRadius: '8px',
+                              border: '1px solid rgba(255,255,255,0.05)',
+                              background: 'rgba(255,255,255,0.02)',
+                              cursor: (isTasksStarted || isActivitiesCompleted || isTasksMastered) ? 'pointer' : 'default',
+                              transition: 'all 0.2s',
+                              position: 'relative'
+                            }}
+                            onMouseEnter={(e) => {
+                              if (isTasksStarted || isActivitiesCompleted || isTasksMastered) {
+                                e.currentTarget.style.background = 'rgba(255,255,255,0.05)';
+                              }
+                            }}
+                            onMouseLeave={(e) => {
+                              if (isTasksStarted || isActivitiesCompleted || isTasksMastered) {
+                                e.currentTarget.style.background = 'rgba(255,255,255,0.02)';
+                              }
+                            }}
+                          >
+                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }} className={isTasksMastered ? 'mastery-tooltip-parent' : ''}>
+                                <p style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', letterSpacing: '1px', margin: 0 }}>{stat.label}</p>
+                                {isTasksMastered && (
+                                  <div style={{ position: 'relative', display: 'inline-block' }}>
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ color: 'rgba(255,255,255,0.4)', cursor: 'help' }}>
+                                      <circle cx="12" cy="12" r="10"/>
+                                      <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3M12 17h.01"/>
+                                    </svg>
+                                    {/* Mastery Definition Tooltip */}
+                                    <div className="mastery-tooltip" style={{
+                                      position: 'absolute',
+                                      bottom: 'calc(100% + 10px)',
+                                      left: '50%',
+                                      transform: 'translateX(-50%) translateY(10px)',
+                                      width: '280px',
+                                      background: 'rgba(15, 23, 42, 0.95)',
+                                      backdropFilter: 'blur(20px)',
+                                      border: '1px solid rgba(255,255,255,0.1)',
+                                      borderRadius: '12px',
+                                      padding: '12px',
+                                      zIndex: 100,
+                                      boxShadow: '0 12px 35px rgba(0,0,0,0.5)',
+                                      pointerEvents: 'none',
+                                      opacity: 0,
+                                      visibility: 'hidden',
+                                      transition: 'all 0.3s ease'
+                                    }}>
+                                      <div style={{ fontSize: '0.75rem', fontWeight: 600, marginBottom: '6px', color: completeColor }}>What is Mastery?</div>
+                                      <div style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.7)', lineHeight: 1.4, marginBottom: '8px' }}>
+                                        A task is mastered when:
+                                      </div>
+                                      <div style={{ fontSize: '0.65rem', color: 'rgba(255,255,255,0.6)', lineHeight: 1.5 }}>
+                                        <div style={{ marginBottom: '4px' }}>✓ All 3 learn pages opened (Overview, PMP Application, Deep Dive)</div>
+                                        <div>✓ All 6 activities attempted (not necessarily 100% score)</div>
+                                      </div>
+                                      <div style={{ marginTop: '8px', paddingTop: '8px', borderTop: '1px solid rgba(255,255,255,0.1)', fontSize: '0.6rem', color: 'rgba(255,255,255,0.5)', fontStyle: 'italic' }}>
+                                        Note: Mastery means you've explored all content and attempted all activities, not that you scored 100% on everything.
+                                      </div>
+                                      <div style={{ position: 'absolute', bottom: '-5px', left: '50%', transform: 'translateX(-50%)', borderLeft: '5px solid transparent', borderRight: '5px solid transparent', borderTop: '5px solid rgba(15, 23, 42, 0.95)' }}></div>
+                                    </div>
+                                  </div>
+                                )}
+                              </div>
+                              {(isTasksStarted || isActivitiesCompleted || isTasksMastered) && (
+                                <svg 
+                                  style={{ width: '16px', height: '16px', color: stat.color, transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.3s' }}
+                                  fill="none" 
+                                  viewBox="0 0 24 24" 
+                                  stroke="currentColor"
+                                >
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                                </svg>
+                              )}
+                            </div>
+                            <p style={{ fontSize: '2rem', fontWeight: 700, color: stat.color, margin: 0 }}>
+                              {stat.value}{stat.total && <span style={{ color: 'rgba(255,255,255,0.3)', fontSize: '1.25rem' }}>/{stat.total}</span>}
+                            </p>
+                            {stat.total && (
+                              <div style={{ marginTop: '12px', height: '6px', borderRadius: '9999px', overflow: 'hidden', background: 'rgba(255,255,255,0.1)' }}>
+                                <div style={{ height: '100%', borderRadius: '9999px', width: `${(stat.value / stat.total) * 100}%`, background: stat.color, boxShadow: `0 0 10px ${stat.color}` }}/>
+                              </div>
+                            )}
+                          </div>
+                          
+                          {/* 2-Column Task List for Tasks Started */}
+                          {isTasksStarted && isExpanded && (
+                            <div style={{ marginTop: '16px' }}>
+                              <TaskListTwoColumn />
+                            </div>
+                          )}
+                          
+                          {/* Activities List for Activities Completed */}
+                          {isActivitiesCompleted && isExpanded && (
+                            <div style={{ marginTop: '16px' }}>
+                              <ActivitiesListByDomain />
+                            </div>
+                          )}
+                          
+                          {/* Mastered Tasks List */}
+                          {isTasksMastered && isExpanded && (
+                            <div style={{ marginTop: '16px' }}>
+                              <MasteredTasksList />
                             </div>
                           )}
                         </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Activity Scores Glass Card */}
+            <div
+              onClick={() => setExpandedSection(expandedSection === 'activities' ? null : 'activities')}
+              style={{
+                background: 'linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%)',
+                backdropFilter: 'blur(10px)',
+                WebkitBackdropFilter: 'blur(10px)',
+                border: '1px solid rgba(255,255,255,0.08)',
+                borderRadius: '16px',
+                padding: '18px 24px',
+                marginBottom: '10px',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '18px',
+                transition: 'all 0.3s ease',
+                cursor: 'pointer'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = 'linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.03) 100%)';
+                e.currentTarget.style.borderColor = 'rgba(255,255,255,0.12)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = 'linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%)';
+                e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)';
+              }}
+            >
+              <div style={{ width: '48px', height: '48px', borderRadius: '14px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(249, 115, 22, 0.15)', color: '#fb923c' }}>
+                <svg viewBox="0 0 24 24" fill="currentColor" style={{ width: '24px', height: '24px' }}>
+                  <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/>
+                </svg>
+              </div>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '4px' }}>
+                  <h3 style={{ fontSize: '1rem', fontWeight: 600, margin: 0 }}>Activity Scores</h3>
+                  <span style={{ padding: '3px 10px', borderRadius: '12px', fontSize: '0.7rem', fontWeight: 600, background: 'rgba(249, 115, 22, 0.2)', color: '#fb923c' }}>6 types</span>
+                </div>
+                <div style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.4)' }}>Average performance by activity type</div>
+              </div>
+              {/* Mini Progress Bars */}
+              <div style={{ display: 'flex', gap: '2px', marginRight: '10px', color: '#fb923c' }}>
+                {activityTypes.map((activity, i) => {
+                  const filled = activity.attempts > 0 ? (activity.score >= 80 ? 2 : 1) : 0;
+                  return (
+                    <div 
+                      key={i}
+                      style={{
+                        width: '4px',
+                        height: '28px',
+                        borderRadius: '2px',
+                        background: filled === 2 ? 'currentColor' : filled === 1 ? 'currentColor' : 'rgba(255,255,255,0.08)',
+                        opacity: filled === 2 ? 1 : filled === 1 ? 0.4 : 1
+                      }}
+                    />
+                  );
+                })}
+              </div>
+              <div style={{ textAlign: 'right', minWidth: '70px' }}>
+                <div style={{ fontSize: '1.1rem', fontWeight: 700, color: '#fb923c' }}>{avgScore}%</div>
+                <div style={{ fontSize: '0.6rem', color: 'rgba(255,255,255,0.4)' }}>Avg Score</div>
+              </div>
+              <div style={{ textAlign: 'right', minWidth: '70px' }}>
+                <div style={{ fontSize: '1.1rem', fontWeight: 700 }}>{totalAttempts}</div>
+                <div style={{ fontSize: '0.6rem', color: 'rgba(255,255,255,0.4)' }}>Attempts</div>
+              </div>
+              <div style={{ width: '50px', height: '50px', borderRadius: '50%', background: 'rgba(0,0,0,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, fontSize: '0.85rem', flexShrink: 0 }}>
+                {avgScore}%
+              </div>
+              <div style={{ color: 'rgba(255,255,255,0.25)', cursor: 'pointer', transition: 'color 0.2s', flexShrink: 0 }}>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/>
+                </svg>
+              </div>
+            </div>
+            
+            {/* Expanded activities content */}
+            {expandedSection === 'activities' && (
+              <div style={{ marginTop: '10px', marginBottom: '10px', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.08)', overflow: 'hidden', background: 'rgba(0,0,0,0.2)' }}>
+                {activityTypes.map((activity, i) => (
+                  <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '16px', padding: '14px 20px', borderBottom: i < activityTypes.length - 1 ? '1px solid rgba(255,255,255,0.03)' : 'none', transition: 'all 0.2s' }}
+                  onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.02)'}
+                  onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}>
+                    <div style={{ width: '10px', height: '10px', borderRadius: '50%', background: activity.attempts > 0 ? activity.color : 'rgba(255,255,255,0.1)', boxShadow: activity.attempts > 0 ? `0 0 10px ${activity.color}` : 'none' }}/>
+                    <span style={{ flex: 1, fontSize: '0.875rem', color: activity.attempts > 0 ? '#fff' : 'rgba(255,255,255,0.4)' }}>{activity.name}</span>
+                    <div style={{ width: '128px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <div style={{ flex: 1, height: '6px', borderRadius: '9999px', overflow: 'hidden', background: 'rgba(255,255,255,0.1)' }}>
+                        <div style={{ height: '100%', borderRadius: '9999px', width: `${activity.score}%`, background: activity.color, boxShadow: activity.score > 0 ? `0 0 8px ${activity.color}` : 'none' }}/>
+                      </div>
+                      <span style={{ fontSize: '0.75rem', width: '40px', textAlign: 'right', color: activity.attempts > 0 ? activity.color : 'rgba(255,255,255,0.3)' }}>{activity.score}%</span>
+                    </div>
+                    <span style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.3)', width: '80px', textAlign: 'right' }}>{activity.attempts} attempts</span>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Domain Cards */}
+            {domains.map((domain, index) => {
+              const isExpanded = expandedDomain === domain.id;
+              const progress = getDomainProgress(domain.tasks);
+              const completed = getCompleted(domain.tasks);
+              const active = getActive(domain.tasks);
+              const left = domain.tasks.length - completed - active;
+              
+              const domainIconColors = {
+                'people': { bg: 'rgba(45, 212, 191, 0.15)', color: '#2dd4bf', pill: { bg: 'rgba(45, 212, 191, 0.2)', color: '#2dd4bf' } },
+                'process': { bg: 'rgba(236, 72, 153, 0.15)', color: '#f472b6', pill: { bg: 'rgba(236, 72, 153, 0.2)', color: '#f472b6' } },
+                'business': { bg: 'rgba(59, 130, 246, 0.15)', color: '#60a5fa', pill: { bg: 'rgba(59, 130, 246, 0.2)', color: '#60a5fa' } }
+              };
+              
+              const iconStyle = domainIconColors[domain.id] || domainIconColors.people;
+              
+              const domainIcon = domain.id === 'people' ? (
+                <svg viewBox="0 0 24 24" fill="currentColor" style={{ width: '24px', height: '24px' }}>
+                  <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
+                </svg>
+              ) : domain.id === 'process' ? (
+                <svg viewBox="0 0 24 24" fill="currentColor" style={{ width: '24px', height: '24px' }}>
+                  <path d="M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65C14.46 2.18 14.25 2 14 2h-4c-.25 0-.46.18-.49.42l-.38 2.65c-.61.25-1.17.59-1.69.98l-2.49-1c-.23-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64l2.11 1.65c-.04.32-.07.65-.07.98s.03.66.07.98l-2.11 1.65c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1c.52.4 1.08.73 1.69.98l.38 2.65c.03.24.24.42.49.42h4c.25 0 .46-.18.49-.42l.38-2.65c.61-.25 1.17-.59 1.69-.98l2.49 1c.23.09.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65z"/>
+                </svg>
+              ) : (
+                <svg viewBox="0 0 24 24" fill="currentColor" style={{ width: '24px', height: '24px' }}>
+                  <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
+                </svg>
+              );
+
+              return (
+                <div key={domain.id}>
+                  <div
+                    onClick={() => setExpandedDomain(isExpanded ? null : domain.id)}
+                    style={{
+                      background: 'linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%)',
+                      backdropFilter: 'blur(10px)',
+                      WebkitBackdropFilter: 'blur(10px)',
+                      border: '1px solid rgba(255,255,255,0.08)',
+                      borderRadius: '16px',
+                      padding: '18px 24px',
+                      marginBottom: '10px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '18px',
+                      transition: 'all 0.3s ease',
+                      cursor: 'pointer'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.background = 'linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.03) 100%)';
+                      e.currentTarget.style.borderColor = 'rgba(255,255,255,0.12)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.background = 'linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%)';
+                      e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)';
+                    }}
+                  >
+                    <div style={{ width: '48px', height: '48px', borderRadius: '14px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: iconStyle.bg, color: iconStyle.color }}>
+                      {domainIcon}
+                    </div>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '4px' }}>
+                        <h3 style={{ fontSize: '1rem', fontWeight: 600, margin: 0 }}>{domain.name}</h3>
+                        <span style={{ padding: '3px 10px', borderRadius: '12px', fontSize: '0.7rem', fontWeight: 600, background: iconStyle.pill.bg, color: iconStyle.pill.color }}>
+                          {domain.tasks.length} tasks
+                        </span>
+                      </div>
+                      <div style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.4)' }}>{domain.description}</div>
+                    </div>
+                    {/* Mini Progress Bars */}
+                    <div style={{ display: 'flex', gap: '2px', marginRight: '10px', color: iconStyle.color }}>
+                      {generateMiniProgressSimple(completed, domain.tasks.length).map((filled, i) => (
+                        <div 
+                          key={i}
+                          style={{
+                            width: '4px',
+                            height: '28px',
+                            borderRadius: '2px',
+                            background: filled === 2 ? 'currentColor' : 'rgba(255,255,255,0.08)',
+                            opacity: filled === 2 ? 1 : 1
+                          }}
+                        />
                       ))}
                     </div>
+                    {/* Stats */}
+                    <div style={{ display: 'flex', gap: '6px' }}>
+                      <div style={{ textAlign: 'center', padding: '6px 12px', background: 'rgba(0,0,0,0.25)', borderRadius: '8px', minWidth: '48px' }}>
+                        <div style={{ fontSize: '0.95rem', fontWeight: 700, color: '#22c55e' }}>{completed}</div>
+                        <div style={{ fontSize: '0.55rem', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Done</div>
+                      </div>
+                      <div style={{ textAlign: 'center', padding: '6px 12px', background: 'rgba(0,0,0,0.25)', borderRadius: '8px', minWidth: '48px' }}>
+                        <div style={{ fontSize: '0.95rem', fontWeight: 700, color: iconStyle.color }}>{active}</div>
+                        <div style={{ fontSize: '0.55rem', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Active</div>
+                      </div>
+                      <div style={{ textAlign: 'center', padding: '6px 12px', background: 'rgba(0,0,0,0.25)', borderRadius: '8px', minWidth: '48px' }}>
+                        <div style={{ fontSize: '0.95rem', fontWeight: 700, color: 'rgba(255,255,255,0.5)' }}>{left}</div>
+                        <div style={{ fontSize: '0.55rem', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Left</div>
+                      </div>
+                    </div>
+                    <div style={{ width: '50px', height: '50px', borderRadius: '50%', background: 'rgba(0,0,0,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, fontSize: '0.85rem', flexShrink: 0 }}>
+                      {progress}%
+                    </div>
+                    <div style={{ color: 'rgba(255,255,255,0.25)', cursor: 'pointer', transition: 'color 0.2s', flexShrink: 0, transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)' }}>
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/>
+                      </svg>
+                    </div>
                   </div>
+                  
+                  {/* Expanded tasks */}
+                  {isExpanded && (
+                    <div style={{ marginTop: '10px', marginBottom: '10px', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.08)', overflow: 'hidden', background: 'rgba(0,0,0,0.2)', maxHeight: '500px', overflowY: 'auto' }}>
+                      {domain.tasks.map((task, taskIndex) => {
+                        const status = getTaskStatus(task.progress);
+                        return (
+                          <div key={taskIndex}
+                            style={{ display: 'flex', alignItems: 'center', gap: '16px', padding: '14px 20px', borderBottom: taskIndex < domain.tasks.length - 1 ? '1px solid rgba(255,255,255,0.03)' : 'none', transition: 'all 0.2s' }}
+                            onMouseEnter={(e) => e.currentTarget.style.background = `rgba(${domain.accentRgb}, 0.05)`}
+                            onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
+                          >
+                            <span style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.3)', width: '64px' }}>Task {task.id}</span>
+                            <div style={{ width: '10px', height: '10px', borderRadius: '50%', background: status === 'complete' ? completeColor : status === 'active' ? domain.accent : 'rgba(255,255,255,0.1)', boxShadow: status !== 'standby' ? `0 0 10px ${status === 'complete' ? completeColor : domain.accent}` : 'none' }}/>
+                            <span style={{ flex: 1, fontSize: '0.875rem', color: status === 'complete' ? completeColor : status === 'active' ? '#fff' : 'rgba(255,255,255,0.4)' }}>{task.name}</span>
+                            <div style={{ width: '144px', display: 'flex', alignItems: 'center', gap: '12px' }}>
+                              <div style={{ flex: 1, height: '6px', borderRadius: '9999px', overflow: 'hidden', background: 'rgba(255,255,255,0.1)' }}>
+                                <div style={{ height: '100%', borderRadius: '9999px', width: `${task.progress}%`, background: status === 'complete' ? completeColor : domain.accent, boxShadow: task.progress > 0 ? `0 0 10px ${status === 'complete' ? completeColor : domain.accent}` : 'none' }}/>
+                              </div>
+                              <span style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)', width: '40px', textAlign: 'right' }}>{task.progress}%</span>
+                            </div>
+                            <button 
+                              onClick={() => {
+                                setSelectedTask(task.name);
+                                setView('task-interstitial');
+                              }}
+                              style={{
+                                width: '96px',
+                                fontSize: '0.75rem',
+                                padding: '8px 12px',
+                                borderRadius: '8px',
+                                fontWeight: 600,
+                                border: `1px solid ${status === 'complete' ? completeColor + '40' : status === 'active' ? domain.accent + '40' : 'rgba(255,255,255,0.1)'}`,
+                                background: status === 'complete' ? 'rgba(0, 255, 136, 0.1)' : status === 'active' ? `rgba(${domain.accentRgb}, 0.15)` : 'rgba(255,255,255,0.03)',
+                                color: status === 'complete' ? completeColor : status === 'active' ? domain.accent : 'rgba(255,255,255,0.4)',
+                                cursor: 'pointer',
+                                transition: 'all 0.2s'
+                              }}
+                              onMouseEnter={(e) => {
+                                e.currentTarget.style.transform = 'scale(1.05)';
+                                e.currentTarget.style.boxShadow = status !== 'standby' ? `0 0 15px ${status === 'complete' ? completeColor : domain.accent}20` : 'none';
+                              }}
+                              onMouseLeave={(e) => {
+                                e.currentTarget.style.transform = 'scale(1)';
+                                e.currentTarget.style.boxShadow = 'none';
+                              }}
+                            >
+                              {status === 'complete' ? 'Review' : status === 'active' ? 'Continue' : 'Start'}
+                            </button>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
                 </div>
-              </div>
-
-              {/* ==================== ACTIVITY SCORES - COMPACT ==================== */}
+              );
+            })}
+            
+            {/* Achievement Badges Section */}
+            <div style={{ marginTop: '25px' }}>
               <div
-                className="transition-all duration-700 opacity-100 translate-y-0"
-                style={{ transitionDelay: '200ms' }}
+                style={{
+                  background: 'linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%)',
+                  backdropFilter: 'blur(10px)',
+                  WebkitBackdropFilter: 'blur(10px)',
+                  border: '1px solid rgba(255,255,255,0.08)',
+                  borderRadius: '16px',
+                  padding: '18px 24px',
+                  marginBottom: '10px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '18px'
+                }}
               >
-                <div
-                  onClick={() => setExpandedSection(expandedSection === 'activities' ? null : 'activities')}
-                  className={`
-                    relative overflow-hidden rounded-2xl cursor-pointer
-                    border transition-all duration-500 group
-                    ${expandedSection === 'activities' ? 'border-opacity-80' : 'border-white/10 hover:border-opacity-50'}
-                  `}
-                  style={{
-                    borderColor: expandedSection === 'activities' ? '#bf5af2' : undefined,
-                    background: 'linear-gradient(135deg, rgba(255,255,255,0.03) 0%, rgba(0,0,0,0.5) 100%)',
-                    boxShadow: expandedSection === 'activities' ? '0 0 50px rgba(191, 90, 242, 0.2), inset 0 0 60px rgba(191, 90, 242, 0.05)' : 'none'
-                  }}
-                >
-                  <div className="absolute top-0 left-0 right-0 h-px" style={{ background: 'linear-gradient(90deg, transparent, #bf5af2, transparent)', opacity: expandedSection === 'activities' ? 1 : 0.3 }}/>
-                  <div className="absolute left-0 top-0 bottom-0 w-1.5" style={{ backgroundColor: '#bf5af2', boxShadow: '0 0 20px #bf5af280' }}/>
-
-                  <div className="relative p-5 pl-6">
-                    <div className="flex items-center justify-between gap-4 flex-wrap">
-                      <div className="flex items-center gap-5">
-                        <div className="w-14 h-14 rounded-xl flex items-center justify-center border transition-all duration-300 group-hover:scale-110"
-                          style={{ backgroundColor: 'rgba(191, 90, 242, 0.1)', borderColor: 'rgba(191, 90, 242, 0.4)', color: '#bf5af2', boxShadow: 'inset 0 0 20px rgba(191, 90, 242, 0.2), 0 0 20px rgba(191, 90, 242, 0.1)' }}>
-                          <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/>
-                          </svg>
-                        </div>
-                        <div>
-                          <div className="flex items-center gap-3">
-                            <h2 className="text-lg font-bold text-white">Activity Scores</h2>
-                            <span className="text-xs px-2 py-0.5 rounded border" style={{ borderColor: 'rgba(191, 90, 242, 0.4)', color: '#bf5af2', backgroundColor: 'rgba(191, 90, 242, 0.1)' }}>
-                              6 types
-                            </span>
-                          </div>
-                          <p className="text-sm text-white/40 mt-1">Average performance by activity type</p>
-                        </div>
-                      </div>
-
-                      <div className="flex items-center gap-6">
-                        {/* Activity type indicators */}
-                        <div className="hidden lg:flex gap-1">
-                          {activityTypes.map((activity, i) => (
-                            <div key={i} className="w-1.5 h-8 rounded-full" style={{
-                              backgroundColor: activity.attempts > 0 ? activity.color : 'rgba(255,255,255,0.06)',
-                              boxShadow: activity.attempts > 0 ? `0 0 8px ${activity.color}60` : 'none'
-                            }}/>
-                          ))}
-                        </div>
-
-                        <div className="flex items-center gap-4 text-sm">
-                          <div className="text-center px-3">
-                            <div className="font-bold" style={{ color: '#bf5af2' }}>{avgScore}%</div>
-                            <div className="text-xs text-white/30">Avg Score</div>
-                          </div>
-                          <div className="w-px h-8 bg-white/10"/>
-                          <div className="text-center px-3">
-                            <div className="font-bold text-white">{totalAttempts}</div>
-                            <div className="text-xs text-white/30">Attempts</div>
-                          </div>
-                        </div>
-
-                        <SegmentedProgress progress={avgScore} color="#bf5af2"/>
-
-                        <div className={`w-10 h-10 rounded-lg flex items-center justify-center border transition-all duration-300 ${expandedSection === 'activities' ? 'rotate-180' : ''}`}
-                          style={{ borderColor: 'rgba(191, 90, 242, 0.3)', backgroundColor: expandedSection === 'activities' ? 'rgba(191, 90, 242, 0.2)' : 'rgba(255,255,255,0.03)' }}>
-                          <svg className="w-4 h-4" style={{ color: '#bf5af2' }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                            <path d="M19 9l-7 7-7-7"/>
-                          </svg>
-                        </div>
-                      </div>
-                    </div>
+                <div style={{ width: '48px', height: '48px', borderRadius: '14px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(34, 197, 94, 0.15)', color: '#22c55e' }}>
+                  <svg viewBox="0 0 24 24" fill="currentColor" style={{ width: '24px', height: '24px' }}>
+                    <path d="M19 5h-2V3H7v2H5c-1.1 0-2 .9-2 2v1c0 2.55 1.92 4.63 4.39 4.94.63 1.5 1.98 2.63 3.61 2.96V19H7v2h10v-2h-4v-3.1c1.63-.33 2.98-1.46 3.61-2.96C19.08 12.63 21 10.55 21 8V7c0-1.1-.9-2-2-2z"/>
+                  </svg>
+                </div>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '4px' }}>
+                    <h3 style={{ fontSize: '1rem', fontWeight: 600, margin: 0 }}>Achievement Badges</h3>
+                    <span style={{ padding: '3px 10px', borderRadius: '12px', fontSize: '0.7rem', fontWeight: 600, background: 'rgba(34, 197, 94, 0.2)', color: '#22c55e' }}>
+                      {earnedBadges.length} earned
+                    </span>
+                  </div>
+                  <div style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.4)' }}>Rewards for mastery and dedication</div>
+                </div>
+                <div style={{ display: 'flex', gap: '6px' }}>
+                  <div style={{ textAlign: 'center', padding: '6px 12px', background: 'rgba(0,0,0,0.25)', borderRadius: '8px', minWidth: '48px' }}>
+                    <div style={{ fontSize: '0.95rem', fontWeight: 700, color: '#22c55e' }}>{earnedBadges.length}</div>
+                    <div style={{ fontSize: '0.55rem', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Earned</div>
+                  </div>
+                  <div style={{ textAlign: 'center', padding: '6px 12px', background: 'rgba(0,0,0,0.25)', borderRadius: '8px', minWidth: '48px' }}>
+                    <div style={{ fontSize: '0.95rem', fontWeight: 700, color: '#2dd4bf' }}>{lockedBadges.filter(b => b.getProgress() >= 50).length}</div>
+                    <div style={{ fontSize: '0.55rem', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Close</div>
+                  </div>
+                  <div style={{ textAlign: 'center', padding: '6px 12px', background: 'rgba(0,0,0,0.25)', borderRadius: '8px', minWidth: '48px' }}>
+                    <div style={{ fontSize: '0.95rem', fontWeight: 700, color: 'rgba(255,255,255,0.5)' }}>{lockedBadges.length}</div>
+                    <div style={{ fontSize: '0.55rem', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Left</div>
                   </div>
                 </div>
-
-                {/* Expanded activities content */}
-                <div className={`overflow-hidden transition-all duration-500 ease-out ${expandedSection === 'activities' ? 'max-h-[400px] opacity-100 mt-2' : 'max-h-0 opacity-0'}`}>
-                  <div className="rounded-xl border overflow-hidden" style={{ borderColor: 'rgba(191, 90, 242, 0.2)', backgroundColor: 'rgba(0,0,0,0.4)' }}>
-                    {activityTypes.map((activity, i) => (
-                      <div key={i} className="flex items-center gap-4 px-5 py-3.5 border-b transition-all duration-200 hover:bg-white/[0.02]" style={{ borderColor: 'rgba(255,255,255,0.03)' }}>
-                        <div className="w-2.5 h-2.5 rounded-full" style={{
-                          backgroundColor: activity.attempts > 0 ? activity.color : 'rgba(255,255,255,0.1)',
-                          boxShadow: activity.attempts > 0 ? `0 0 10px ${activity.color}` : 'none'
-                        }}/>
-                        <span className={`flex-1 text-sm ${activity.attempts > 0 ? 'text-white' : 'text-white/40'}`}>{activity.name}</span>
-                        <div className="w-32 flex items-center gap-2">
-                          <div className="flex-1 h-1.5 rounded-full overflow-hidden bg-white/10">
-                            <div className="h-full rounded-full" style={{ width: `${activity.score}%`, backgroundColor: activity.color, boxShadow: activity.score > 0 ? `0 0 8px ${activity.color}` : 'none' }}/>
-                          </div>
-                          <span className="text-xs w-10 text-right" style={{ color: activity.attempts > 0 ? activity.color : 'rgba(255,255,255,0.3)' }}>{activity.score}%</span>
-                        </div>
-                        <span className="text-xs text-white/30 w-20 text-right">{activity.attempts} attempts</span>
-                      </div>
-                    ))}
-                  </div>
+                <div style={{ width: '50px', height: '50px', borderRadius: '50%', background: 'rgba(0,0,0,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, fontSize: '0.85rem', flexShrink: 0 }}>
+                  {Math.round((earnedBadges.length / badgeDefinitions.length) * 100)}%
                 </div>
               </div>
-
-              {/* ==================== DOMAIN TASKS ==================== */}
-              {domains.map((domain, index) => {
-                const isExpanded = expandedDomain === domain.id;
-                const progress = getDomainProgress(domain.tasks);
-                const completed = getCompleted(domain.tasks);
-                const active = getActive(domain.tasks);
+              
+              {/* Badges Grid */}
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '22px', justifyContent: 'flex-start', padding: '15px 10px' }}>
+                {/* Earned Badges First */}
+                {earnedBadges.map(badge => (
+                  <Badge3D
+                    key={badge.id}
+                    name={badge.name}
+                    icon={badge.icon}
+                    color={badge.color}
+                    tier={badge.tier}
+                    description={badge.description}
+                    requirement={badge.requirement}
+                    xp={badge.xp}
+                    earnedDate="Recently"
+                    isLocked={false}
+                  />
+                ))}
                 
-                const domainIcon = domain.id === 'people' ? (
-                  <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-                  </svg>
-                ) : domain.id === 'process' ? (
-                  <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M19.14 12.94c.04-.31.06-.63.06-.94 0-.31-.02-.63-.06-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.04.31-.06.63-.06.94s.02.63.06.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/>
-                  </svg>
-                ) : (
-                  <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M12 7V3H2v18h20V7H12zM6 19H4v-2h2v2zm0-4H4v-2h2v2zm0-4H4V9h2v2zm0-4H4V5h2v2zm4 12H8v-2h2v2zm0-4H8v-2h2v2zm0-4H8V9h2v2zm0-4H8V5h2v2zm10 12h-8v-2h2v-2h-2v-2h2v-2h-2V9h8v10zm-2-8h-2v2h2v-2zm0 4h-2v2h2v-2z"/>
-                  </svg>
-                );
-
-                return (
-                  <div key={domain.id}
-                    className={`transition-all duration-700 ${animated ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
-                    style={{ transitionDelay: `${(index + 3) * 100}ms` }}>
-                    <div
-                      onClick={() => setExpandedDomain(isExpanded ? null : domain.id)}
-                      className={`relative overflow-hidden rounded-2xl cursor-pointer border transition-all duration-500 group ${isExpanded ? 'border-opacity-80' : 'border-white/10 hover:border-opacity-50'}`}
-                      style={{
-                        borderColor: isExpanded ? domain.accent : undefined,
-                        background: 'linear-gradient(135deg, rgba(255,255,255,0.03) 0%, rgba(0,0,0,0.5) 100%)',
-                        boxShadow: isExpanded ? `0 0 50px rgba(${domain.accentRgb}, 0.2), inset 0 0 60px rgba(${domain.accentRgb}, 0.05)` : 'none'
-                      }}>
-                      <div className="absolute top-0 left-0 right-0 h-px transition-opacity duration-500" style={{ background: `linear-gradient(90deg, transparent, ${domain.accent}, transparent)`, opacity: isExpanded ? 1 : 0.3 }}/>
-                      <div className="absolute left-0 top-0 bottom-0 w-1.5 transition-all duration-300" style={{ backgroundColor: domain.accent, boxShadow: `0 0 ${isExpanded ? '30px' : '20px'} ${domain.accent}${isExpanded ? '' : '80'}` }}/>
-                      <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500" style={{ background: `radial-gradient(circle at 30% 50%, ${domain.accent}10 0%, transparent 50%)` }}/>
-
-                      <div className="relative p-5 pl-6">
-                        <div className="flex items-center justify-between gap-4 flex-wrap">
-                          <div className="flex items-center gap-5">
-                            <div className="w-14 h-14 rounded-xl flex items-center justify-center border transition-all duration-300 group-hover:scale-110"
-                              style={{ backgroundColor: `rgba(${domain.accentRgb}, 0.1)`, borderColor: `rgba(${domain.accentRgb}, 0.4)`, color: domain.accent, boxShadow: `inset 0 0 20px rgba(${domain.accentRgb}, 0.2), 0 0 20px rgba(${domain.accentRgb}, 0.1)` }}>
-                              {domainIcon}
-                            </div>
-                            <div>
-                              <div className="flex items-center gap-3 flex-wrap">
-                                <h3 className="text-lg font-bold text-white tracking-wide">{domain.name}</h3>
-                                <span className="text-xs px-2 py-0.5 rounded border" style={{ borderColor: `rgba(${domain.accentRgb}, 0.4)`, color: domain.accent, backgroundColor: `rgba(${domain.accentRgb}, 0.1)` }}>
-                                  {domain.tasks.length} tasks
-                                </span>
-                              </div>
-                              <p className="text-sm text-white/40 mt-1">{domain.description}</p>
-                            </div>
-                          </div>
-
-                          <div className="flex items-center gap-6">
-                            <div className="hidden lg:flex gap-1">
-                              {domain.tasks.map((task, i) => (
-                                <div key={i} className="w-1.5 h-8 rounded-full transition-all duration-300" style={{
-                                  backgroundColor: task.progress === 100 ? completeColor : task.progress > 0 ? domain.accent : 'rgba(255,255,255,0.06)',
-                                  boxShadow: task.progress === 100 ? `0 0 8px ${completeColor}` : task.progress > 0 ? `0 0 8px ${domain.accent}60` : 'none'
-                                }}/>
-                              ))}
-                            </div>
-
-                            <div className="flex items-center text-sm border border-white/10 rounded-lg overflow-hidden">
-                              <div className="px-3 py-2 bg-green-500/10 border-r border-white/10 text-center">
-                                <div className="font-bold" style={{ color: completeColor }}>{completed}</div>
-                                <div className="text-xs text-white/30">Done</div>
-                              </div>
-                              <div className="px-3 py-2 border-r border-white/10 text-center" style={{ backgroundColor: `rgba(${domain.accentRgb}, 0.1)` }}>
-                                <div className="font-bold" style={{ color: domain.accent }}>{active}</div>
-                                <div className="text-xs text-white/30">Active</div>
-                              </div>
-                              <div className="px-3 py-2 bg-white/5 text-center">
-                                <div className="font-bold text-white/40">{domain.tasks.length - completed - active}</div>
-                                <div className="text-xs text-white/30">Left</div>
-                              </div>
-                            </div>
-
-                            <SegmentedProgress progress={progress} color={domain.accent}/>
-
-                            <div className={`w-10 h-10 rounded-lg flex items-center justify-center border transition-all duration-300 ${isExpanded ? 'rotate-180' : ''}`}
-                              style={{ borderColor: `rgba(${domain.accentRgb}, 0.3)`, backgroundColor: isExpanded ? `rgba(${domain.accentRgb}, 0.2)` : 'rgba(255,255,255,0.03)' }}>
-                              <svg className="w-4 h-4" style={{ color: domain.accent }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                                <path d="M19 9l-7 7-7-7"/>
-                              </svg>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Expanded tasks */}
-                    <div className={`overflow-hidden transition-all duration-500 ease-out ${isExpanded ? 'max-h-[600px] opacity-100 mt-2' : 'max-h-0 opacity-0'}`}>
-                      <div className="rounded-xl border overflow-hidden" style={{ borderColor: `rgba(${domain.accentRgb}, 0.2)`, backgroundColor: 'rgba(0,0,0,0.4)' }}>
-                        <div className="max-h-[500px] overflow-y-auto custom-scrollbar">
-                          {domain.tasks.map((task, taskIndex) => {
-                            const status = getTaskStatus(task.progress);
-                            const isHovered = hoveredTask === `${domain.id}-${taskIndex}`;
-                            return (
-                              <div key={taskIndex}
-                                onMouseEnter={() => setHoveredTask(`${domain.id}-${taskIndex}`)}
-                                onMouseLeave={() => setHoveredTask(null)}
-                                className={`flex items-center gap-4 px-5 py-3.5 border-b transition-all duration-200 ${isExpanded ? 'opacity-100' : 'opacity-0'}`}
-                                style={{ borderColor: 'rgba(255,255,255,0.03)', backgroundColor: isHovered ? `rgba(${domain.accentRgb}, 0.05)` : 'transparent', transitionDelay: `${taskIndex * 20}ms` }}>
-                                <span className="text-xs text-white/30 w-16">Task {task.id}</span>
-                                <div className="w-2.5 h-2.5 rounded-full flex-shrink-0 transition-all duration-300" style={{
-                                  backgroundColor: status === 'complete' ? completeColor : status === 'active' ? domain.accent : 'rgba(255,255,255,0.1)',
-                                  boxShadow: status === 'complete' ? `0 0 ${isHovered ? '15px' : '10px'} ${completeColor}` : status === 'active' ? `0 0 ${isHovered ? '15px' : '10px'} ${domain.accent}` : 'none'
-                                }}/>
-                                <span className={`flex-1 text-sm transition-colors duration-200 ${status === 'complete' ? '' : status === 'active' ? 'text-white' : 'text-white/40'}`} style={{ color: status === 'complete' ? completeColor : undefined }}>{task.name}</span>
-                                <div className="w-36 flex items-center gap-3">
-                                  <div className="flex-1 h-1.5 rounded-full overflow-hidden bg-white/10">
-                                    <div className="h-full rounded-full transition-all duration-500" style={{ width: `${task.progress}%`, backgroundColor: status === 'complete' ? completeColor : domain.accent, boxShadow: task.progress > 0 ? `0 0 10px ${status === 'complete' ? completeColor : domain.accent}` : 'none' }}/>
-                                  </div>
-                                  <span className="text-xs tabular-nums w-10 text-right text-white/40">{task.progress}%</span>
-                                </div>
-                                <button 
-                                  onClick={() => {
-                                    setSelectedTask(task.name);
-                                    setView('task-interstitial');
-                                  }}
-                                  className="w-24 text-xs px-3 py-2 rounded-lg font-semibold transition-all duration-200 hover:scale-105 border" style={{
-                                    backgroundColor: status === 'complete' ? 'rgba(0, 255, 136, 0.1)' : status === 'active' ? `rgba(${domain.accentRgb}, 0.15)` : 'rgba(255,255,255,0.03)',
-                                    color: status === 'complete' ? completeColor : status === 'active' ? domain.accent : 'rgba(255,255,255,0.4)',
-                                    borderColor: status === 'complete' ? completeColor + '40' : status === 'active' ? domain.accent + '40' : 'rgba(255,255,255,0.1)',
-                                    boxShadow: status !== 'standby' ? `0 0 15px ${status === 'complete' ? completeColor : domain.accent}20` : 'none'
-                                  }}>
-                                  {status === 'complete' ? 'Review' : status === 'active' ? 'Continue' : 'Start'}
-                                </button>
-                              </div>
-                            );
-                          })}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
+                {/* Locked Badges */}
+                {lockedBadges.map(badge => (
+                  <Badge3D
+                    key={badge.id}
+                    name={badge.name}
+                    icon={badge.icon}
+                    color={badge.color}
+                    tier={badge.tier}
+                    description={badge.description}
+                    requirement={badge.requirement}
+                    xp={badge.xp}
+                    isLocked={true}
+                    progress={Math.round(badge.getProgress())}
+                  />
+                ))}
+              </div>
             </div>
-          </main>
+          </div>
 
           {/* Footer */}
-          <footer className="flex-shrink-0 border-t border-white/10 px-6 lg:px-8 py-4 bg-black/50 backdrop-blur-xl">
-            <div className="flex items-center justify-between text-sm">
-              <div className="flex items-center gap-3">
-                <div className="relative">
-                  <div className="w-2 h-2 rounded-full" style={{ backgroundColor: completeColor, boxShadow: `0 0 8px ${completeColor}` }}/>
-                  <div className="absolute inset-0 w-2 h-2 rounded-full animate-ping" style={{ backgroundColor: completeColor, opacity: 0.4 }}/>
-                </div>
-                <span className="text-white/40">System Online</span>
-              </div>
-              <span className="hidden sm:block text-white/30">PMP Certification • 35 Modules • 3 Domains</span>
-              <span className="text-white/30">v2.0</span>
+          <div style={{ marginTop: '30px', paddingTop: '20px', borderTop: '1px solid rgba(255,255,255,0.06)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'rgba(255,255,255,0.4)', fontSize: '0.75rem' }}>
+              <div style={{ width: '6px', height: '6px', background: '#22c55e', borderRadius: '50%' }}></div>
+              System Online
             </div>
-          </footer>
+            <div style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)' }}>PMP Certification • 35 Modules • 3 Domains</div>
+            <div style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.3)' }}>v2.0</div>
+          </div>
         </div>
       </div>
     );
   }
 
-  // Personal Stats View with Comprehensive Analytics
-  if (view === 'personal-stats') {
+  // Detailed Analytics View with Comprehensive Analytics
+  if (view === 'detailed-analytics') {
+    const completeColor = '#00ff88';
     let scoreData;
     try {
       scoreData = getScoreData();
@@ -7016,6 +8220,12 @@ const PMPApp = () => {
       return state && state[sectionKey] === true;
     };
     
+    const subViewTitles = {
+      'overview': 'Overview',
+      'pmp-application': 'PMP Application',
+      'deep-dive': 'Deep Dive'
+    };
+    
     // Jewel colors array for buttons
     const jewelColors = [
       { border: 'border-emerald-500', hover: 'hover:border-emerald-400', bg: 'hover:bg-emerald-500/10', text: 'text-emerald-400', close: 'text-emerald-400 hover:text-emerald-300' }, // Emerald
@@ -7045,16 +8255,15 @@ const PMPApp = () => {
     return (
       <>
         <Confetti />
-        <div className={`max-w-7xl w-full p-10 animate-fadeIn text-left view-transition-wrapper ${viewTransition.isTransitioning ? 'view-transition-exit' : 'view-transition-enter'}`}>
-          {/* Header with Back Button */}
-          <header className="mb-8">
-            <div className="flex items-center justify-between gap-4 mb-6">
-              <button 
-                onClick={() => setView('task-interstitial')}
-                className="px-4 py-2 executive-font text-xs text-slate-400 hover:text-white uppercase font-semibold transition-colors flex items-center gap-2"
-              >
-                ← Back
-              </button>
+        <PageWrapper 
+          title={`Learn: ${selectedTask}`}
+          subtitle={subViewTitles[subView] || 'Learning Content'}
+          showBackButton={true}
+          backAction={() => setView('task-interstitial')}
+        >
+          <div className={`animate-fadeIn text-left view-transition-wrapper ${viewTransition.isTransitioning ? 'view-transition-exit' : 'view-transition-enter'}`}>
+            {/* Action Buttons */}
+            <div className="flex items-center justify-end gap-4 mb-6">
               <button
                 onClick={(e) => {
                   createRipple(e);
@@ -7065,15 +8274,9 @@ const PMPApp = () => {
                 Go Practice →
               </button>
             </div>
-            <h1 className="executive-font text-5xl font-bold text-white tracking-tight mb-2">
-              {selectedTask}
-            </h1>
-            <p className="text-slate-400 text-lg mb-6">
-              {subView === 'overview' ? 'Overview' : subView === 'pmp-application' ? 'PMP Application' : 'Deep Dive'}
-            </p>
             
             {/* Tab Navigation */}
-            <div className="flex gap-8 border-b border-white/10">
+            <div className="flex gap-8 border-b border-white/10 mb-6">
               <button 
                 onClick={() => setSubView('overview')} 
                 className={`px-4 py-3 executive-font text-xs font-semibold uppercase transition-all relative ${
@@ -7105,7 +8308,6 @@ const PMPApp = () => {
                 Deep Dive
               </button>
             </div>
-          </header>
 
           {/* Content Area - Two Column Layout: Buttons Left, Content Right */}
           {sections.length === 0 ? (
@@ -7229,7 +8431,8 @@ const PMPApp = () => {
             </div>
           )}
           <GlobalNavFooter />
-        </div>
+          </div>
+        </PageWrapper>
       </>
     );
   }

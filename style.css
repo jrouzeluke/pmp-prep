@@ -918,3 +918,29 @@ input[type="radio"]:checked {
 .task-mastery-card-fade-in:nth-child(18) { transition-delay: 1700ms; }
 .task-mastery-card-fade-in:nth-child(19) { transition-delay: 1800ms; }
 .task-mastery-card-fade-in:nth-child(20) { transition-delay: 1900ms; }
+
+/* ============================================
+   PROGRESS DASHBOARD ANIMATIONS
+   ============================================ */
+
+@keyframes pulse {
+    0%, 100% { 
+        opacity: 1; 
+        box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4); 
+    }
+    50% { 
+        opacity: 0.8; 
+        box-shadow: 0 0 0 6px rgba(34, 197, 94, 0); 
+    }
+}
+
+/* Mastery Tooltip */
+.mastery-tooltip-parent {
+    position: relative;
+}
+
+.mastery-tooltip-parent:hover .mastery-tooltip {
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: translateX(-50%) translateY(0) !important;
+}
