@@ -294,6 +294,7 @@ const PMPApp = () => {
   // Animate progress-stats view on load
   useEffect(() => {
     if (view === 'progress-stats') {
+      // Set animated immediately
       setAnimated(true);
       // Update current time every minute
       const timeInterval = setInterval(() => {
@@ -304,6 +305,13 @@ const PMPApp = () => {
       setAnimated(false);
     }
   }, [view]);
+  
+  // Also set animated when view changes to progress-stats (immediate)
+  useEffect(() => {
+    if (view === 'progress-stats' && !animated) {
+      setAnimated(true);
+    }
+  }, [view, animated]);
 
   // Lightning Round Timer Effect
   useEffect(() => {
@@ -5225,7 +5233,7 @@ const PMPApp = () => {
     };
     
     return (
-      <div className="min-h-screen bg-black text-white overflow-x-hidden">
+      <div className="min-h-screen w-full bg-black text-white overflow-x-hidden">
         {/* Ambient glows */}
         <div className="fixed inset-0 pointer-events-none overflow-hidden">
           <div className="absolute -top-32 -left-32 w-[600px] h-[600px] rounded-full blur-[150px] opacity-20 animate-pulse" style={{ background: '#ff6b35', animationDuration: '4s' }}/>
@@ -5294,7 +5302,7 @@ const PMPApp = () => {
 
           {/* Main content */}
           <main className="flex-1 px-6 lg:px-8 py-6 overflow-x-hidden">
-            <div className="max-w-7xl mx-auto space-y-4">
+            <div className="w-full space-y-4">
 
               {/* ==================== PROGRESS STATISTICS - COMPACT ==================== */}
               <div
@@ -5397,7 +5405,7 @@ const PMPApp = () => {
 
               {/* ==================== ACTIVITY SCORES - COMPACT ==================== */}
               <div
-                className={`transition-all duration-700 ${animated ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
+                className="transition-all duration-700 opacity-100 translate-y-0"
                 style={{ transitionDelay: '200ms' }}
               >
                 <div
