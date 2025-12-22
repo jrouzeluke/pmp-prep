@@ -291,6 +291,20 @@ const PMPApp = () => {
     }
   }, [view, selectedTask]);
 
+  // Animate progress-stats view on load
+  useEffect(() => {
+    if (view === 'progress-stats') {
+      setAnimated(true);
+      // Update current time every minute
+      const timeInterval = setInterval(() => {
+        setCurrentTime(new Date());
+      }, 60000);
+      return () => clearInterval(timeInterval);
+    } else {
+      setAnimated(false);
+    }
+  }, [view]);
+
   // Lightning Round Timer Effect
   useEffect(() => {
     if (view !== 'lightning-round') return;
