@@ -96,6 +96,20 @@ const PMPApp = () => {
   const [showTaskProgressModal, setShowTaskProgressModal] = useState(false);
   const [showTasksModal, setShowTasksModal] = useState(false);
   
+  // Practice Quizzes State
+  const [quizView, setQuizView] = useState('main'); // main, domain-select, task-select, approach-select, quiz, results
+  const [quizHoveredCard, setQuizHoveredCard] = useState(null);
+  const [quizSelectedDomain, setQuizSelectedDomain] = useState(null);
+  const [quizSelectedApproach, setQuizSelectedApproach] = useState(null);
+  const [quizExpandedDomain, setQuizExpandedDomain] = useState('people');
+  const [quizSearchTerm, setQuizSearchTerm] = useState('');
+  const [quizSelectedTask, setQuizSelectedTask] = useState(null);
+  const [quizQuestions, setQuizQuestions] = useState([]);
+  const [quizCurrentQuestion, setQuizCurrentQuestion] = useState(0);
+  const [quizAnswers, setQuizAnswers] = useState([]);
+  const [quizStartTime, setQuizStartTime] = useState(null);
+  const [quizResults, setQuizResults] = useState(null);
+  
   // Progress Stats Animation State (must be at top level - Rules of Hooks)
   const [masteryCardsVisible, setMasteryCardsVisible] = useState(false);
   const masterySectionRef = useRef(null);
@@ -634,6 +648,153 @@ const PMPApp = () => {
     });
     
     return tasksByDomain;
+  };
+
+  // Helper functions for Practice Quizzes
+  const getQuestionsFromTask = (taskName) => {
+    if (!taskDatabase || !taskDatabase[taskName]) return [];
+    const task = taskDatabase[taskName];
+    const questions = task.learn?.pmp_application?.exam_focus?.sample_questions || [];
+    return questions.map((q, idx) => ({
+      ...q,
+      id: `${taskName}-${idx}`,
+      task: taskName,
+      domain: getTaskDomain(taskName)
+    }));
+  };
+
+  const getTaskDomain = (taskName) => {
+    if (domainMap['People Domain'].includes(taskName)) return 'people';
+    if (domainMap['Process Domain'].includes(taskName)) return 'process';
+    if (domainMap['Business Domain'].includes(taskName)) return 'business';
+    return 'unknown';
+  };
+
+  const shuffleArray = (array) => {
+    const shuffled = [...array];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    return shuffled;
+  };
+
+  const getRandomQuestions = (count = 15) => {
+    if (!taskDatabase) return [];
+    const allQuestions = [];
+    Object.keys(taskDatabase).forEach(taskName => {
+      const questions = getQuestionsFromTask(taskName);
+      allQuestions.push(...questions);
+    });
+    return shuffleArray(allQuestions).slice(0, count);
+  };
+
+  const getDomainQuestions = (domainKey, count = 20) => {
+    if (!taskDatabase) return [];
+    const domainMapKey = domainKey === 'people' ? 'People Domain' : 
+                        domainKey === 'process' ? 'Process Domain' : 
+                        'Business Domain';
+    const tasks = domainMap[domainMapKey] || [];
+    const allQuestions = [];
+    tasks.forEach(taskName => {
+      const questions = getQuestionsFromTask(taskName);
+      allQuestions.push(...questions);
+    });
+    return shuffleArray(allQuestions).slice(0, count);
+  };
+
+  const getTaskQuestions = (taskName, count = 30) => {
+    const questions = getQuestionsFromTask(taskName);
+    return shuffleArray(questions).slice(0, count);
+  };
+
+  const getApproachQuestions = (approach, count = 20) => {
+    // For now, pull from all questions and filter by approach keywords
+    // This is a simplified implementation - you may want to tag questions with approach metadata
+    if (!taskDatabase) return [];
+    const allQuestions = [];
+    Object.keys(taskDatabase).forEach(taskName => {
+      const questions = getQuestionsFromTask(taskName);
+      allQuestions.push(...questions);
+    });
+    
+    // Filter by approach keywords (simplified - ideally questions would be tagged)
+    const keywords = {
+      agile: ['agile', 'scrum', 'sprint', 'backlog', 'standup', 'retrospective', 'self-organizing', 'servant leadership'],
+      predictive: ['waterfall', 'phase gate', 'baseline', 'critical path', 'earned value', 'change control board', 'wbs'],
+      hybrid: ['hybrid', 'tailoring', 'adaptive', 'rolling wave', 'context-driven']
+    };
+    
+    const approachKeywords = keywords[approach] || [];
+    const filtered = allQuestions.filter(q => {
+      const questionText = (q.question || '').toLowerCase();
+      return approachKeywords.some(keyword => questionText.includes(keyword));
+    });
+    
+    // If not enough filtered questions, supplement with random
+    if (filtered.length < count) {
+      const remaining = count - filtered.length;
+      const randomQuestions = shuffleArray(allQuestions.filter(q => !filtered.includes(q))).slice(0, remaining);
+      return shuffleArray([...filtered, ...randomQuestions]).slice(0, count);
+    }
+    
+    return shuffleArray(filtered).slice(0, count);
+  };
+
+  const startQuiz = (quizType, selection = null) => {
+    let questions = [];
+    let quizTitle = '';
+    
+    if (quizType === 'random') {
+      questions = getRandomQuestions(15);
+      quizTitle = 'Random 15 Questions';
+    } else if (quizType === 'domain') {
+      questions = getDomainQuestions(selection, 20);
+      const domainNames = { people: 'People', process: 'Process', business: 'Business Environment' };
+      quizTitle = `${domainNames[selection]} Domain Quiz`;
+    } else if (quizType === 'task') {
+      questions = getTaskQuestions(selection, 30);
+      quizTitle = `${selection} Quiz`;
+    } else if (quizType === 'approach') {
+      questions = getApproachQuestions(selection, 20);
+      const approachNames = { agile: 'Agile', predictive: 'Predictive', hybrid: 'Hybrid' };
+      quizTitle = `${approachNames[selection]} Approach Quiz`;
+    }
+    
+    if (questions.length === 0) {
+      alert('No questions available. Please ensure task data is loaded.');
+      return;
+    }
+    
+    setQuizQuestions(questions);
+    setQuizCurrentQuestion(0);
+    setQuizAnswers([]);
+    setQuizStartTime(Date.now());
+    setQuizView('quiz');
+  };
+
+  const finishQuiz = () => {
+    const endTime = Date.now();
+    const timeSpent = Math.floor((endTime - quizStartTime) / 1000);
+    const minutes = Math.floor(timeSpent / 60);
+    const seconds = timeSpent % 60;
+    const timeString = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+    
+    const results = {
+      total: quizQuestions.length,
+      correct: quizAnswers.filter(a => a.correct).length,
+      timeSpent: timeString,
+      questions: quizQuestions.map((q, idx) => ({
+        id: q.id || idx,
+        correct: quizAnswers[idx]?.correct || false,
+        task: q.task || 'Unknown',
+        domain: q.domain || 'unknown',
+        weakness: !quizAnswers[idx]?.correct && q.explanation ? 'Review needed' : null
+      }))
+    };
+    
+    setQuizResults(results);
+    setQuizView('results');
   };
   
   // Reusable Page Wrapper Component with consistent styling
@@ -1515,48 +1676,695 @@ const PMPApp = () => {
   // Keep old GlobalFooter for backward compatibility if needed
   const GlobalFooter = GlobalNavFooter;
 
-  // Practice Quizzes View
-  if (view === 'practice-quizzes') return (
-    <PageWrapper 
-      title="Practice Quizzes"
-      subtitle="Test Your Knowledge with Targeted Practice Sessions"
-      showBackButton={true}
-    >
-      <div className="animate-fadeIn">
-      
-      <div className="grid grid-cols-3 gap-6 mb-8">
-        <button 
-          onClick={() => {/* Add quiz navigation */}}
-          className="glass-card p-8 text-left hover:bg-blue-500/10 transition-all border-l-4 border-blue-500"
-        >
-          <h3 className="executive-font text-xl font-semibold text-white mb-3">Quick Practice</h3>
-          <p className="text-slate-400 text-sm mb-4">10-20 questions on any topic</p>
-          <div className="text-xs text-blue-400 uppercase font-semibold">Start Quiz →</div>
-        </button>
-        
-        <button 
-          onClick={() => {/* Add domain quiz navigation */}}
-          className="glass-card p-8 text-left hover:bg-purple-500/10 transition-all border-l-4 border-purple-500"
-        >
-          <h3 className="executive-font text-xl font-semibold text-white mb-3">Domain Focus</h3>
-          <p className="text-slate-400 text-sm mb-4">Practice specific domains (People/Process/Business)</p>
-          <div className="text-xs text-purple-400 uppercase font-semibold">Start Quiz →</div>
-        </button>
-        
-        <button 
-          onClick={() => {/* Add approach quiz navigation */}}
-          className="glass-card p-8 text-left hover:bg-emerald-500/10 transition-all border-l-4 border-emerald-500"
-        >
-          <h3 className="executive-font text-xl font-semibold text-white mb-3">Approach Focus</h3>
-          <p className="text-slate-400 text-sm mb-4">Practice methodologies (Agile/Predictive/Hybrid)</p>
-          <div className="text-xs text-emerald-400 uppercase font-semibold">Start Quiz →</div>
-        </button>
-      </div>
+  // Practice Quizzes View - Complete Redesign
+  if (view === 'practice-quizzes') {
+    // Task data organized by domain
+    const quizTaskData = {
+      people: {
+        name: 'People',
+        color: 'violet',
+        gradient: 'from-violet-600 to-purple-600',
+        icon: '👥',
+        percentage: '42%',
+        tasks: domainMap['People Domain'].map((name, idx) => ({ id: idx + 1, name, short: name.split(' ').slice(-1)[0] }))
+      },
+      process: {
+        name: 'Process',
+        color: 'cyan',
+        gradient: 'from-cyan-500 to-blue-600',
+        icon: '⚙️',
+        percentage: '50%',
+        tasks: domainMap['Process Domain'].map((name, idx) => ({ id: idx + 15, name, short: name.split(' ').slice(-1)[0] }))
+      },
+      business: {
+        name: 'Business Environment',
+        color: 'emerald',
+        gradient: 'from-emerald-500 to-teal-600',
+        icon: '💼',
+        percentage: '8%',
+        tasks: domainMap['Business Domain'].map((name, idx) => ({ id: idx + 32, name, short: name.split(' ').slice(-1)[0] }))
+      }
+    };
 
-      <GlobalNavFooter />
+    // Approach data
+    const approachData = {
+      agile: {
+        name: 'Agile',
+        subtitle: 'Adaptive & Iterative',
+        gradient: 'from-emerald-500 to-teal-600',
+        borderColor: 'border-emerald-500',
+        icon: '🔄',
+        description: 'Scrum, Kanban, sprints, user stories, continuous delivery',
+        concepts: ['Sprints & Iterations', 'Product Backlog', 'Daily Standups', 'Retrospectives', 'User Stories', 'Velocity'],
+        examTip: '~50% of PMP questions have agile context'
+      },
+      predictive: {
+        name: 'Predictive',
+        subtitle: 'Plan-Driven & Sequential',
+        gradient: 'from-blue-500 to-indigo-600',
+        borderColor: 'border-blue-500',
+        icon: '📋',
+        description: 'Waterfall, detailed planning, phase gates, formal change control',
+        concepts: ['WBS & Scope Baseline', 'Critical Path', 'Earned Value', 'Change Control Board', 'Phase Gates', 'Formal Sign-offs'],
+        examTip: 'Foundation of traditional PM knowledge'
+      },
+      hybrid: {
+        name: 'Hybrid',
+        subtitle: 'Best of Both Worlds',
+        gradient: 'from-orange-500 to-amber-500',
+        borderColor: 'border-orange-500',
+        icon: '🔀',
+        description: 'Combining approaches based on project needs and context',
+        concepts: ['Tailoring', 'Adaptive Planning', 'Rolling Wave', 'Mixed Teams', 'Phased Agile', 'Context-Driven'],
+        examTip: 'PMI emphasizes choosing the right approach'
+      }
+    };
+
+    // Filter tasks based on search
+    const filterTasks = (tasks) => {
+      if (!quizSearchTerm) return tasks;
+      return tasks.filter(t => 
+        t.name.toLowerCase().includes(quizSearchTerm.toLowerCase()) ||
+        t.short.toLowerCase().includes(quizSearchTerm.toLowerCase())
+      );
+    };
+
+    // Main Quiz Selection View
+    const MainView = () => {
+      const quizOptions = [
+        {
+          id: 'random',
+          title: 'Random 15',
+          description: '15 questions across all domains',
+          icon: '🎲',
+          color: 'from-violet-600 to-purple-600',
+          borderColor: 'border-violet-500',
+          badge: 'POPULAR',
+          action: () => startQuiz('random')
+        },
+        {
+          id: 'domain',
+          title: 'By Domain',
+          description: 'People • Process • Business',
+          icon: '🎯',
+          color: 'from-cyan-500 to-blue-600',
+          borderColor: 'border-cyan-500',
+          action: () => setQuizView('domain-select')
+        },
+        {
+          id: 'task',
+          title: 'By Task Area',
+          description: 'Target specific ECO tasks',
+          icon: '📋',
+          color: 'from-emerald-500 to-teal-600',
+          borderColor: 'border-emerald-500',
+          action: () => setQuizView('task-select')
+        },
+        {
+          id: 'approach',
+          title: 'By Approach',
+          description: 'Agile • Predictive • Hybrid',
+          icon: '⚡',
+          color: 'from-orange-500 to-amber-500',
+          borderColor: 'border-orange-500',
+          action: () => setQuizView('approach-select')
+        }
+      ];
+
+      return (
+        <>
+          <div className="text-center mb-6">
+            <h1 className="text-3xl font-bold bg-gradient-to-r from-violet-400 via-cyan-400 to-emerald-400 bg-clip-text text-transparent">
+              Practice Quizzes
+            </h1>
+            <p className="text-slate-400 text-sm mt-1">Choose your challenge</p>
+          </div>
+
+          <div className="flex-1 grid grid-cols-2 grid-rows-2 gap-4">
+            {quizOptions.map((quiz) => (
+              <div
+                key={quiz.id}
+                onClick={quiz.action}
+                className={`
+                  relative cursor-pointer rounded-2xl
+                  bg-slate-900/80 backdrop-blur-sm
+                  border-2 transition-all duration-300
+                  ${quizHoveredCard === quiz.id ? `${quiz.borderColor} scale-[1.02]` : 'border-slate-800'}
+                  flex flex-col justify-center items-center text-center p-6
+                `}
+                onMouseEnter={() => setQuizHoveredCard(quiz.id)}
+                onMouseLeave={() => setQuizHoveredCard(null)}
+              >
+                <div className={`absolute inset-0 rounded-2xl bg-gradient-to-r ${quiz.color} opacity-0 blur-xl transition-opacity duration-300 -z-10 ${quizHoveredCard === quiz.id ? 'opacity-30' : ''}`}></div>
+                
+                {quiz.badge && (
+                  <span className="absolute top-3 right-3 px-2 py-0.5 text-xs font-bold bg-gradient-to-r from-amber-500 to-orange-500 rounded-full">
+                    {quiz.badge}
+                  </span>
+                )}
+
+                <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${quiz.color} flex items-center justify-center text-3xl mb-4 shadow-lg transition-transform duration-300 ${quizHoveredCard === quiz.id ? 'scale-110' : ''}`}>
+                  {quiz.icon}
+                </div>
+
+                <h3 className="text-xl font-bold mb-1">{quiz.title}</h3>
+                <p className="text-sm text-slate-400 mb-4">{quiz.description}</p>
+
+                <button className={`px-5 py-2 rounded-lg bg-gradient-to-r ${quiz.color} font-semibold text-sm transition-all duration-300 hover:shadow-lg hover:scale-105 flex items-center gap-2`}>
+                  Select <span>→</span>
+                </button>
+              </div>
+            ))}
+          </div>
+        </>
+      );
+    };
+
+    // Domain Selection View
+    const DomainSelectView = () => {
+      const domains = [
+        { key: 'people', ...quizTaskData.people },
+        { key: 'process', ...quizTaskData.process },
+        { key: 'business', ...quizTaskData.business }
+      ];
+
+      return (
+        <>
+          <div className="text-center mb-6">
+            <button onClick={() => setQuizView('main')} className="text-slate-400 hover:text-white text-sm mb-2 flex items-center gap-1 mx-auto">
+              ← Back to Quiz Types
+            </button>
+            <h1 className="text-3xl font-bold text-white">Select Domain</h1>
+            <p className="text-slate-400 text-sm mt-1">Choose a domain to focus your practice</p>
+          </div>
+
+          <div className="flex-1 flex gap-4 items-stretch">
+            {domains.map((domain) => (
+              <div
+                key={domain.key}
+                onClick={() => startQuiz('domain', domain.key)}
+                className={`
+                  flex-1 cursor-pointer rounded-2xl
+                  bg-slate-900/80 backdrop-blur-sm
+                  border-2 border-slate-800 hover:border-${domain.color}-500
+                  transition-all duration-300 hover:scale-[1.02]
+                  flex flex-col p-6 relative overflow-hidden group
+                `}
+              >
+                <div className={`absolute inset-0 bg-gradient-to-br ${domain.gradient} opacity-0 group-hover:opacity-20 transition-opacity duration-300`}></div>
+                
+                <div className="absolute top-4 right-4 px-3 py-1 bg-slate-800 rounded-full text-xs font-bold text-slate-300">
+                  {domain.percentage} of exam
+                </div>
+
+                <div className={`w-20 h-20 rounded-2xl bg-gradient-to-br ${domain.gradient} flex items-center justify-center text-4xl mb-4 shadow-lg`}>
+                  {domain.icon}
+                </div>
+
+                <h2 className="text-2xl font-bold text-white mb-2">{domain.name}</h2>
+                
+                <p className="text-slate-400 mb-4">{domain.tasks.length} task areas</p>
+
+                <div className="flex-1 space-y-1">
+                  {domain.tasks.slice(0, 4).map((task, i) => (
+                    <div key={i} className="text-xs text-slate-500 truncate">• {task.short}</div>
+                  ))}
+                  {domain.tasks.length > 4 && (
+                    <div className="text-xs text-slate-600">+{domain.tasks.length - 4} more...</div>
+                  )}
+                </div>
+
+                <button className={`mt-4 w-full py-3 rounded-xl bg-gradient-to-r ${domain.gradient} font-semibold transition-all hover:shadow-lg`}>
+                  Start {domain.name} Quiz →
+                </button>
+              </div>
+            ))}
+          </div>
+        </>
+      );
+    };
+
+    // Approach Selection View
+    const ApproachSelectView = () => {
+      const approaches = [
+        { key: 'agile', ...approachData.agile },
+        { key: 'predictive', ...approachData.predictive },
+        { key: 'hybrid', ...approachData.hybrid }
+      ];
+
+      return (
+        <>
+          <div className="text-center mb-6">
+            <button onClick={() => setQuizView('main')} className="text-slate-400 hover:text-white text-sm mb-2 flex items-center gap-1 mx-auto">
+              ← Back to Quiz Types
+            </button>
+            <h1 className="text-3xl font-bold text-white">Select Approach</h1>
+            <p className="text-slate-400 text-sm mt-1">Choose a methodology to focus your practice</p>
+          </div>
+
+          <div className="flex-1 flex gap-4 items-stretch">
+            {approaches.map((approach) => (
+              <div
+                key={approach.key}
+                onClick={() => startQuiz('approach', approach.key)}
+                className={`
+                  flex-1 cursor-pointer rounded-2xl
+                  bg-slate-900/80 backdrop-blur-sm
+                  border-2 border-slate-800 hover:${approach.borderColor}
+                  transition-all duration-300 hover:scale-[1.02]
+                  flex flex-col p-6 relative overflow-hidden group
+                `}
+              >
+                <div className={`absolute inset-0 bg-gradient-to-br ${approach.gradient} opacity-0 group-hover:opacity-20 transition-opacity duration-300`}></div>
+                
+                <div className={`w-20 h-20 rounded-2xl bg-gradient-to-br ${approach.gradient} flex items-center justify-center text-4xl mb-4 shadow-lg`}>
+                  {approach.icon}
+                </div>
+
+                <h2 className="text-2xl font-bold text-white mb-1">{approach.name}</h2>
+                <p className="text-sm text-slate-400 mb-3">{approach.subtitle}</p>
+                
+                <p className="text-xs text-slate-500 mb-4">{approach.description}</p>
+
+                <div className="flex-1">
+                  <div className="text-xs text-slate-400 mb-2 font-medium">Key Concepts:</div>
+                  <div className="flex flex-wrap gap-1">
+                    {approach.concepts.map((concept, i) => (
+                      <span key={i} className="text-xs bg-slate-800 text-slate-400 px-2 py-0.5 rounded-full">
+                        {concept}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="mt-4 p-2 bg-slate-800/50 rounded-lg">
+                  <span className="text-xs text-amber-400">💡 {approach.examTip}</span>
+                </div>
+
+                <button className={`mt-4 w-full py-3 rounded-xl bg-gradient-to-r ${approach.gradient} font-semibold transition-all hover:shadow-lg`}>
+                  Start {approach.name} Quiz →
+                </button>
+              </div>
+            ))}
+          </div>
+        </>
+      );
+    };
+
+    // Task Area Selection View
+    const TaskSelectView = () => {
+      return (
+        <>
+          <div className="text-center mb-4">
+            <button onClick={() => setQuizView('main')} className="text-slate-400 hover:text-white text-sm mb-2 flex items-center gap-1 mx-auto">
+              ← Back to Quiz Types
+            </button>
+            <h1 className="text-2xl font-bold text-white">Select Task Area</h1>
+            
+            <div className="mt-3 max-w-md mx-auto relative">
+              <input
+                type="text"
+                placeholder="Search 35 task areas..."
+                value={quizSearchTerm}
+                onChange={(e) => setQuizSearchTerm(e.target.value)}
+                className="w-full px-4 py-2 pl-10 bg-slate-800 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500"
+              />
+              <span className="absolute left-3 top-2.5 text-slate-500">🔍</span>
+            </div>
+          </div>
+
+          <div className="flex-1 flex gap-4 overflow-hidden">
+            <div className="w-48 flex flex-col gap-2">
+              {Object.entries(quizTaskData).map(([key, domain]) => (
+                <button
+                  key={key}
+                  onClick={() => setQuizExpandedDomain(key)}
+                  className={`
+                    p-3 rounded-xl text-left transition-all duration-300
+                    ${quizExpandedDomain === key 
+                      ? `bg-gradient-to-r ${domain.gradient} text-white` 
+                      : 'bg-slate-800/50 text-slate-400 hover:bg-slate-800'}
+                  `}
+                >
+                  <div className="flex items-center gap-2">
+                    <span className="text-xl">{domain.icon}</span>
+                    <div>
+                      <div className="font-semibold text-sm">{domain.name}</div>
+                      <div className="text-xs opacity-70">{domain.tasks.length} tasks</div>
+                    </div>
+                  </div>
+                </button>
+              ))}
+            </div>
+
+            <div className="flex-1 bg-slate-900/50 rounded-2xl p-4 overflow-y-auto">
+              <div className="grid grid-cols-3 gap-2">
+                {filterTasks(quizTaskData[quizExpandedDomain].tasks).map((task) => (
+                  <button
+                    key={task.id}
+                    onClick={() => startQuiz('task', task.name)}
+                    className={`
+                      p-3 rounded-xl text-left transition-all duration-200
+                      bg-slate-800/50 hover:bg-slate-700 border border-slate-700
+                      hover:border-${quizTaskData[quizExpandedDomain].color}-500 hover:scale-[1.02]
+                      group
+                    `}
+                  >
+                    <div className="text-lg mb-1">#{task.id}</div>
+                    <div className="text-sm font-medium text-white group-hover:text-cyan-400 transition-colors line-clamp-2">
+                      {task.name}
+                    </div>
+                  </button>
+                ))}
+              </div>
+              
+              {filterTasks(quizTaskData[quizExpandedDomain].tasks).length === 0 && (
+                <div className="text-center text-slate-500 py-8">
+                  No tasks found matching "{quizSearchTerm}"
+                </div>
+              )}
+            </div>
+          </div>
+        </>
+      );
+    };
+
+    // Quiz Results View
+    const ResultsView = () => {
+      if (!quizResults) return null;
+      
+      const percentage = Math.round((quizResults.correct / quizResults.total) * 100);
+      const isPassing = percentage >= 70;
+      
+      // Group incorrect answers by domain
+      const incorrectByDomain = quizResults.questions
+        .filter(q => !q.correct)
+        .reduce((acc, q) => {
+          if (!acc[q.domain]) acc[q.domain] = [];
+          acc[q.domain].push(q);
+          return acc;
+        }, {});
+
+      return (
+        <div className="flex-1 flex flex-col overflow-hidden">
+          <div className="text-center mb-4">
+            <div className={`inline-flex items-center justify-center w-24 h-24 rounded-full bg-gradient-to-br ${isPassing ? 'from-emerald-500 to-teal-600' : 'from-orange-500 to-red-500'} mb-3`}>
+              <span className="text-3xl font-bold">{percentage}%</span>
+            </div>
+            <h1 className="text-2xl font-bold text-white">
+              {isPassing ? '🎉 Great Job!' : '📚 Keep Studying!'}
+            </h1>
+            <p className="text-slate-400 text-sm">
+              {quizResults.correct} of {quizResults.total} correct • {quizResults.timeSpent} elapsed
+            </p>
+          </div>
+
+          <div className="flex-1 flex gap-4 overflow-hidden">
+            <div className="w-1/2 bg-slate-900/50 rounded-2xl p-4 overflow-y-auto">
+              <h3 className="font-semibold text-white mb-3 flex items-center gap-2">
+                <span>📊</span> Question Breakdown
+              </h3>
+              <div className="space-y-2">
+                {quizResults.questions.map((q, i) => (
+                  <div 
+                    key={i}
+                    className={`flex items-center gap-3 p-2 rounded-lg ${q.correct ? 'bg-emerald-500/10' : 'bg-red-500/10'}`}
+                  >
+                    <span className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${q.correct ? 'bg-emerald-500' : 'bg-red-500'}`}>
+                      {q.correct ? '✓' : '✗'}
+                    </span>
+                    <div className="flex-1 min-w-0">
+                      <div className="text-sm text-white truncate">{q.task}</div>
+                      <div className="text-xs text-slate-500 capitalize">{q.domain}</div>
+                    </div>
+                    {!q.correct && (
+                      <span className="text-xs text-red-400 truncate max-w-24">{q.weakness}</span>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="w-1/2 bg-slate-900/50 rounded-2xl p-4 overflow-y-auto">
+              <h3 className="font-semibold text-white mb-3 flex items-center gap-2">
+                <span>🎯</span> Areas to Study
+              </h3>
+              
+              {Object.keys(incorrectByDomain).length === 0 ? (
+                <div className="text-center py-8">
+                  <span className="text-4xl mb-2 block">🏆</span>
+                  <p className="text-emerald-400 font-medium">Perfect Score!</p>
+                  <p className="text-slate-500 text-sm">No areas need review</p>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {Object.entries(incorrectByDomain).map(([domain, questions]) => (
+                    <div key={domain} className="bg-slate-800/50 rounded-xl p-3">
+                      <div className="flex items-center gap-2 mb-2">
+                        <span className="text-lg">{quizTaskData[domain]?.icon || '📚'}</span>
+                        <span className="font-medium text-white">{quizTaskData[domain]?.name || domain}</span>
+                        <span className="text-xs bg-red-500/20 text-red-400 px-2 py-0.5 rounded-full">
+                          {questions.length} missed
+                        </span>
+                      </div>
+                      
+                      <div className="space-y-2">
+                        {questions.map((q, i) => (
+                          <div key={i} className="flex items-center justify-between bg-slate-900/50 rounded-lg p-2">
+                            <div>
+                              <div className="text-sm text-white">{q.task}</div>
+                              <div className="text-xs text-orange-400">Review: {q.weakness || 'General concepts'}</div>
+                            </div>
+                            <button 
+                              onClick={(e) => {
+                                createRipple(e);
+                                setSelectedTask(q.task);
+                                setView('learn-hub');
+                                setSubView('overview');
+                                setQuizView('main');
+                              }}
+                              className={`px-3 py-1 rounded-lg bg-gradient-to-r ${quizTaskData[domain]?.gradient || 'from-slate-600 to-slate-700'} text-xs font-medium hover:scale-105 transition-transform`}
+                            >
+                              Study →
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              <div className="mt-4 pt-4 border-t border-slate-700 space-y-2">
+                <button 
+                  onClick={() => {
+                    setQuizView('quiz');
+                    setQuizCurrentQuestion(0);
+                    setQuizAnswers([]);
+                    setQuizStartTime(Date.now());
+                  }}
+                  className="w-full py-2 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 font-semibold hover:scale-[1.02] transition-transform"
+                >
+                  🔄 Retry Quiz
+                </button>
+                <button 
+                  onClick={() => {
+                    setQuizView('main');
+                    setQuizResults(null);
+                    setQuizSelectedDomain(null);
+                    setQuizSelectedTask(null);
+                    setQuizSelectedApproach(null);
+                  }}
+                  className="w-full py-2 rounded-xl bg-slate-800 text-slate-300 hover:bg-slate-700 transition-colors"
+                >
+                  ← Back to Quiz Selection
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    };
+
+    // Quiz View - Actual Quiz Component
+    const QuizView = () => {
+      if (!quizQuestions || quizQuestions.length === 0) {
+        return (
+          <div className="flex-1 flex items-center justify-center">
+            <div className="text-center">
+              <div className="text-6xl mb-4">📝</div>
+              <h2 className="text-2xl font-bold text-white mb-2">Loading Questions...</h2>
+            </div>
+          </div>
+        );
+      }
+
+      const currentQ = quizQuestions[quizCurrentQuestion];
+      const progress = ((quizCurrentQuestion + 1) / quizQuestions.length) * 100;
+      const hasAnswered = quizAnswers[quizCurrentQuestion] !== undefined;
+
+      const handleAnswer = (answerIndex) => {
+        if (hasAnswered) return;
+        
+        const isCorrect = answerIndex === currentQ.correct;
+        const newAnswers = [...quizAnswers];
+        newAnswers[quizCurrentQuestion] = {
+          answer: answerIndex,
+          correct: isCorrect
+        };
+        setQuizAnswers(newAnswers);
+
+        // Auto-advance after 2 seconds
+        setTimeout(() => {
+          if (quizCurrentQuestion < quizQuestions.length - 1) {
+            setQuizCurrentQuestion(quizCurrentQuestion + 1);
+          } else {
+            finishQuiz();
+          }
+        }, 2000);
+      };
+
+      const handleNext = () => {
+        if (quizCurrentQuestion < quizQuestions.length - 1) {
+          setQuizCurrentQuestion(quizCurrentQuestion + 1);
+        } else {
+          finishQuiz();
+        }
+      };
+
+      const handlePrevious = () => {
+        if (quizCurrentQuestion > 0) {
+          setQuizCurrentQuestion(quizCurrentQuestion - 1);
+        }
+      };
+
+      return (
+        <div className="flex-1 flex flex-col overflow-hidden">
+          {/* Progress Bar */}
+          <div className="mb-4">
+            <div className="flex justify-between text-sm text-slate-400 mb-2">
+              <span>Question {quizCurrentQuestion + 1} of {quizQuestions.length}</span>
+              <span>{Math.round(progress)}% Complete</span>
+            </div>
+            <div className="w-full bg-slate-800 rounded-full h-2">
+              <div 
+                className="bg-gradient-to-r from-cyan-500 to-blue-600 h-2 rounded-full transition-all duration-300"
+                style={{ width: `${progress}%` }}
+              ></div>
+            </div>
+          </div>
+
+          {/* Question Card */}
+          <div className="flex-1 bg-slate-900/50 rounded-2xl p-6 overflow-y-auto mb-4">
+            <div className="mb-4">
+              <span className="text-xs text-slate-500 uppercase">{currentQ.task || 'General'}</span>
+            </div>
+            
+            <h2 className="text-xl font-bold text-white mb-6 leading-relaxed">
+              {currentQ.question}
+            </h2>
+
+            <div className="space-y-3">
+              {currentQ.options.map((option, idx) => {
+                const isSelected = hasAnswered && quizAnswers[quizCurrentQuestion].answer === idx;
+                const isCorrect = idx === currentQ.correct;
+                const showFeedback = hasAnswered;
+                
+                let buttonClass = 'w-full text-left p-4 rounded-xl border-2 transition-all ';
+                if (showFeedback) {
+                  if (isCorrect) {
+                    buttonClass += 'bg-emerald-500/20 border-emerald-500 text-emerald-100';
+                  } else if (isSelected) {
+                    buttonClass += 'bg-red-500/20 border-red-500 text-red-100';
+                  } else {
+                    buttonClass += 'bg-slate-800/50 border-slate-700 text-slate-400';
+                  }
+                } else {
+                  buttonClass += 'bg-slate-800/50 border-slate-700 text-white hover:border-cyan-500 hover:bg-slate-800 cursor-pointer';
+                }
+
+                return (
+                  <button
+                    key={idx}
+                    onClick={() => handleAnswer(idx)}
+                    disabled={hasAnswered}
+                    className={buttonClass}
+                  >
+                    <div className="flex items-start gap-3">
+                      <span className={`w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold ${
+                        showFeedback && isCorrect ? 'bg-emerald-500' :
+                        showFeedback && isSelected ? 'bg-red-500' :
+                        'bg-slate-700'
+                      }`}>
+                        {String.fromCharCode(65 + idx)}
+                      </span>
+                      <span className="flex-1">{option}</span>
+                      {showFeedback && isCorrect && <span className="text-emerald-400">✓</span>}
+                      {showFeedback && isSelected && !isCorrect && <span className="text-red-400">✗</span>}
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+
+            {hasAnswered && currentQ.explanation && (
+              <div className="mt-6 p-4 bg-blue-500/10 border-l-4 border-blue-500 rounded-lg">
+                <p className="text-sm text-blue-200 font-semibold mb-2">Explanation:</p>
+                <p className="text-sm text-slate-300">{currentQ.explanation}</p>
+              </div>
+            )}
+          </div>
+
+          {/* Navigation */}
+          <div className="flex justify-between gap-4">
+            <button
+              onClick={handlePrevious}
+              disabled={quizCurrentQuestion === 0}
+              className="px-6 py-2 rounded-xl bg-slate-800 text-slate-300 hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            >
+              ← Previous
+            </button>
+            
+            <button
+              onClick={handleNext}
+              className="px-6 py-2 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 font-semibold hover:scale-105 transition-transform"
+            >
+              {quizCurrentQuestion === quizQuestions.length - 1 ? 'Finish Quiz →' : 'Next →'}
+            </button>
+          </div>
+        </div>
+      );
+    };
+
+    return (
+      <div className="h-screen bg-slate-950 text-white p-6 flex flex-col overflow-hidden">
+        {/* Background glows */}
+        <div className="fixed inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute top-10 left-10 w-64 h-64 bg-purple-600/20 rounded-full blur-3xl"></div>
+          <div className="absolute bottom-10 right-10 w-64 h-64 bg-cyan-600/20 rounded-full blur-3xl"></div>
+        </div>
+
+        <div className="relative z-10 flex flex-col h-full max-w-5xl mx-auto w-full">
+          {quizView === 'main' && <MainView />}
+          {quizView === 'domain-select' && <DomainSelectView />}
+          {quizView === 'task-select' && <TaskSelectView />}
+          {quizView === 'approach-select' && <ApproachSelectView />}
+          {quizView === 'quiz' && <QuizView />}
+          {quizView === 'results' && <ResultsView />}
+
+          {/* Footer Nav */}
+          <div className="flex justify-center gap-8 pt-4 mt-4 border-t border-slate-800">
+            <button onClick={(e) => { createRipple(e); handleViewChange('strategy-suite'); }} className="text-xs font-medium transition-colors text-slate-500 hover:text-white">LEARN</button>
+            <button onClick={(e) => { createRipple(e); handleViewChange('practice-hub'); }} className="text-xs font-medium transition-colors text-slate-500 hover:text-white">PRACTICE</button>
+            <button className="text-xs font-medium text-cyan-400">QUIZZES</button>
+            <button onClick={(e) => { createRipple(e); handleViewChange('strategy-suite'); }} className="text-xs font-medium transition-colors text-slate-500 hover:text-white">TASK AREAS</button>
+            <button onClick={(e) => { createRipple(e); handleViewChange('progress-stats'); }} className="text-xs font-medium transition-colors text-slate-500 hover:text-white">MY PROGRESS</button>
+            <button onClick={(e) => { createRipple(e); handleViewChange('executive-hud'); }} className="text-xs font-medium transition-colors text-slate-500 hover:text-white">HOME</button>
+          </div>
+        </div>
       </div>
-    </PageWrapper>
-  );
+    );
+  }
 
   // PM Simulator Activity View
   if (view === 'pm-simulator') {
@@ -1682,16 +2490,31 @@ const PMPApp = () => {
           <Confetti />
           <div className="max-w-6xl w-full p-10 animate-fadeIn text-left success-modal">
             <header className="mb-8">
-            <div className="flex items-center gap-4 mb-6">
-              <button 
-                onClick={() => {
-                  setSimulatorState({ currentScene: 0, morale: 75, projectHealth: 75, trust: 75, choices: [], showingFeedback: false, showEndScreen: false });
-                  setView('practice-hub');
-                }}
-                className="px-4 py-2 executive-font text-xs text-slate-400 hover:text-white uppercase font-semibold transition-colors flex items-center gap-2"
-              >
-                ← Back
-              </button>
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center gap-4">
+                <button 
+                  onClick={(e) => {
+                    createRipple(e);
+                    setSelectedTask(selectedTask);
+                    setView('learn-hub');
+                    setSubView('overview');
+                    setSimulatorState({ currentScene: 0, morale: 75, projectHealth: 75, trust: 75, choices: [], showingFeedback: false, showEndScreen: false });
+                  }}
+                  className="px-4 py-2 executive-font text-xs text-blue-400 hover:text-blue-300 uppercase font-semibold transition-colors flex items-center gap-2 border border-blue-400/30 hover:border-blue-400/50 rounded-lg btn-ripple"
+                >
+                  Learn More about this task
+                </button>
+                <button 
+                  onClick={(e) => {
+                    createRipple(e);
+                    setSimulatorState({ currentScene: 0, morale: 75, projectHealth: 75, trust: 75, choices: [], showingFeedback: false, showEndScreen: false });
+                    handleViewChange('strategy-suite');
+                  }}
+                  className="px-4 py-2 executive-font text-xs text-slate-400 hover:text-white uppercase font-semibold transition-colors flex items-center gap-2 btn-ripple"
+                >
+                  Back to Activity Selector
+                </button>
+              </div>
             </div>
             <h1 className="executive-font text-5xl font-bold text-white tracking-tight">{missionStatus}</h1>
           </header>
@@ -1767,15 +2590,30 @@ const PMPApp = () => {
             >
               Try Again
             </button>
-            <button 
-              onClick={() => {
-                setSimulatorState({ currentScene: 0, morale: 75, projectHealth: 75, trust: 75, choices: [], showingFeedback: false, showEndScreen: false });
-                setView('practice-hub');
-              }}
-              className="px-6 py-3 bg-slate-700 hover:bg-slate-600 text-white font-semibold rounded-lg transition-colors executive-font"
-            >
-              Back to Practice Hub
-            </button>
+            <div className="flex gap-4">
+              <button 
+                onClick={(e) => {
+                  createRipple(e);
+                  setSelectedTask(selectedTask);
+                  setView('learn-hub');
+                  setSubView('overview');
+                  setSimulatorState({ currentScene: 0, morale: 75, projectHealth: 75, trust: 75, choices: [], showingFeedback: false, showEndScreen: false });
+                }}
+                className="px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white font-semibold rounded-lg transition-colors executive-font btn-ripple"
+              >
+                Learn More about this task
+              </button>
+              <button 
+                onClick={(e) => {
+                  createRipple(e);
+                  setSimulatorState({ currentScene: 0, morale: 75, projectHealth: 75, trust: 75, choices: [], showingFeedback: false, showEndScreen: false });
+                  setView('practice-hub');
+                }}
+                className="px-6 py-3 bg-slate-700 hover:bg-slate-600 text-white font-semibold rounded-lg transition-colors executive-font btn-ripple"
+              >
+                Back to Activity Selector
+              </button>
+            </div>
           </div>
           <GlobalNavFooter />
         </div>
@@ -1792,16 +2630,29 @@ const PMPApp = () => {
         <div className="max-w-6xl w-full p-10 animate-fadeIn text-left view-transition-wrapper">
           <header className="mb-8">
             <div className="flex items-center gap-4 mb-6">
-              <button 
-                onClick={() => {
-                  setSimulatorState({ currentScene: 0, morale: 75, projectHealth: 75, trust: 75, choices: [], showingFeedback: false, showEndScreen: false });
-                  setView('practice-hub');
-                }}
-                className="px-4 py-2 executive-font text-xs text-slate-400 hover:text-white uppercase font-semibold transition-colors flex items-center gap-2"
-              >
-                ← Back
-              </button>
-            </div>
+            <button 
+              onClick={(e) => {
+                createRipple(e);
+                setSelectedTask(selectedTask);
+                setView('learn-hub');
+                setSubView('overview');
+                setSimulatorState({ currentScene: 0, morale: 75, projectHealth: 75, trust: 75, choices: [], showingFeedback: false, showEndScreen: false });
+              }}
+              className="px-4 py-2 executive-font text-xs text-blue-400 hover:text-blue-300 uppercase font-semibold transition-colors flex items-center gap-2 border border-blue-400/30 hover:border-blue-400/50 rounded-lg btn-ripple"
+            >
+              Learn More about this task
+            </button>
+            <button 
+              onClick={(e) => {
+                createRipple(e);
+                setSimulatorState({ currentScene: 0, morale: 75, projectHealth: 75, trust: 75, choices: [], showingFeedback: false, showEndScreen: false });
+                handleViewChange('strategy-suite');
+              }}
+              className="px-4 py-2 executive-font text-xs text-slate-400 hover:text-white uppercase font-semibold transition-colors flex items-center gap-2 btn-ripple"
+            >
+              Back to Activity Selector
+            </button>
+          </div>
             <h1 className="executive-font text-5xl font-bold text-white tracking-tight">PM Simulator: {currentScenario?.title || 'Scenario'}</h1>
           </header>
 
@@ -1881,15 +2732,30 @@ const PMPApp = () => {
       <div className="max-w-6xl w-full p-10 animate-fadeIn text-left">
         <header className="mb-8">
           <div className="flex items-center gap-4 mb-6">
-            <button 
-              onClick={() => {
-                setSimulatorState({ currentScene: 0, morale: 75, projectHealth: 75, trust: 75, choices: [], showingFeedback: false, showEndScreen: false });
-                setView('practice-hub');
-              }}
-              className="px-4 py-2 executive-font text-xs text-slate-400 hover:text-white uppercase font-semibold transition-colors flex items-center gap-2"
-            >
-              ← Back
-            </button>
+            <div className="flex items-center gap-4">
+              <button 
+                onClick={(e) => {
+                  createRipple(e);
+                  setSelectedTask(selectedTask);
+                  setView('learn-hub');
+                  setSubView('overview');
+                  setSimulatorState({ currentScene: 0, morale: 75, projectHealth: 75, trust: 75, choices: [], showingFeedback: false, showEndScreen: false });
+                }}
+                className="px-4 py-2 executive-font text-xs text-blue-400 hover:text-blue-300 uppercase font-semibold transition-colors flex items-center gap-2 border border-blue-400/30 hover:border-blue-400/50 rounded-lg btn-ripple"
+              >
+                Learn More about this task
+              </button>
+              <button 
+                onClick={(e) => {
+                  createRipple(e);
+                  setSimulatorState({ currentScene: 0, morale: 75, projectHealth: 75, trust: 75, choices: [], showingFeedback: false, showEndScreen: false });
+                  setView('practice-hub');
+                }}
+                className="px-4 py-2 executive-font text-xs text-slate-400 hover:text-white uppercase font-semibold transition-colors flex items-center gap-2 btn-ripple"
+              >
+                Back to Activity Selector
+              </button>
+            </div>
           </div>
           <h1 className="executive-font text-5xl font-bold text-white tracking-tight">PM Simulator: {currentScenario?.title || 'Scenario'}</h1>
         </header>
@@ -2147,10 +3013,22 @@ const PMPApp = () => {
             <header className="mb-8">
               <div className="flex items-center gap-4 mb-6">
                 <button 
-                  onClick={(e) => { createRipple(e); resetQuiz(); handleViewChange('practice-hub'); }}
+                  onClick={(e) => { 
+                    createRipple(e); 
+                    resetQuiz(); 
+                    setSelectedTask(selectedTask);
+                    setView('learn-hub');
+                    setSubView('overview');
+                  }}
+                  className="px-4 py-2 executive-font text-xs text-blue-400 hover:text-blue-300 uppercase font-semibold transition-colors flex items-center gap-2 border border-blue-400/30 hover:border-blue-400/50 rounded-lg btn-ripple"
+                >
+                  Learn More about this task
+                </button>
+                <button 
+                  onClick={(e) => { createRipple(e); resetQuiz(); setView('practice-hub'); }}
                   className="px-4 py-2 executive-font text-xs text-slate-400 hover:text-white uppercase font-semibold transition-colors flex items-center gap-2 btn-ripple"
                 >
-                  ← Back
+                  Back to Activity Selector
                 </button>
               </div>
               <h1 className="executive-font text-5xl font-bold text-white tracking-tight">🎉 Lightning Round Complete!</h1>
@@ -2222,15 +3100,30 @@ const PMPApp = () => {
           <div className="glass-card p-10 text-center">
             <h1 className="executive-font text-3xl font-bold text-white mb-4">⚡ Lightning Round</h1>
             <p className="text-slate-400">No questions available for this task.</p>
-            <button 
-              onClick={() => {
-                resetQuiz();
-                setView('practice-hub');
-              }}
-              className="mt-6 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors executive-font"
-            >
-              ← Back to Practice Hub
-            </button>
+            <div className="flex gap-4 mt-6">
+              <button 
+                onClick={(e) => {
+                  createRipple(e);
+                  resetQuiz();
+                  setSelectedTask(selectedTask);
+                  setView('learn-hub');
+                  setSubView('overview');
+                }}
+                className="px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white font-semibold rounded-lg transition-colors executive-font btn-ripple"
+              >
+                Learn More about this task
+              </button>
+              <button 
+                onClick={(e) => {
+                  createRipple(e);
+                  resetQuiz();
+                  setView('practice-hub');
+                }}
+                className="px-6 py-3 bg-slate-700 hover:bg-slate-600 text-white font-semibold rounded-lg transition-colors executive-font btn-ripple"
+              >
+                Back to Activity Selector
+              </button>
+            </div>
             <GlobalNavFooter />
           </div>
         </div>
@@ -2482,7 +3375,7 @@ const PMPApp = () => {
       }
     };
 
-    const goToPracticeHub = () => {
+    const goToTasksList = () => {
       setDocumentDetectiveState({
         currentCase: 0,
         selectedDocs: [],
@@ -2492,7 +3385,7 @@ const PMPApp = () => {
         showingAnswer: false,
         userAnswers: {}
       });
-      setView('practice-hub');
+      handleViewChange('strategy-suite');
     };
 
     if (!currentCaseData) {
@@ -2501,12 +3394,37 @@ const PMPApp = () => {
           <div className="glass-card p-10 text-center">
             <h1 className="executive-font text-3xl font-bold text-white mb-4">🕵️ Document Detective</h1>
             <p className="text-slate-400">No cases available for this task.</p>
-            <button 
-              onClick={goToPracticeHub}
-              className="mt-6 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors executive-font"
-            >
-              ← Back to Practice Hub
-            </button>
+            <div className="flex gap-4 mt-6 justify-center">
+              <button 
+                onClick={(e) => {
+                  createRipple(e);
+                  setDocumentDetectiveState({
+                    currentCase: 0,
+                    selectedDocs: [],
+                    showingFeedback: false,
+                    score: 0,
+                    currentQuestion: 0,
+                    showingAnswer: false,
+                    userAnswers: {}
+                  });
+                  setSelectedTask(selectedTask);
+                  setView('learn-hub');
+                  setSubView('overview');
+                }}
+                className="px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white font-semibold rounded-lg transition-colors executive-font btn-ripple"
+              >
+                Learn More about this task
+              </button>
+              <button 
+                onClick={(e) => {
+                  createRipple(e);
+                  goToTasksList();
+                }}
+                className="px-6 py-3 bg-slate-700 hover:bg-slate-600 text-white font-semibold rounded-lg transition-colors executive-font btn-ripple"
+              >
+                Back to Activity Selector
+              </button>
+            </div>
             <GlobalNavFooter />
           </div>
         </div>
@@ -2528,13 +3446,38 @@ const PMPApp = () => {
       return (
         <div className="max-w-6xl w-full p-10 animate-fadeIn text-left">
           <header className="mb-8">
-            <div className="flex items-center gap-4 mb-6">
-              <button 
-                onClick={goToPracticeHub}
-                className="px-4 py-2 executive-font text-xs text-slate-400 hover:text-white uppercase font-semibold transition-colors flex items-center gap-2"
-              >
-                ← Back
-              </button>
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center gap-4">
+                <button 
+                  onClick={(e) => {
+                    createRipple(e);
+                    setDocumentDetectiveState({
+                      currentCase: 0,
+                      selectedDocs: [],
+                      showingFeedback: false,
+                      score: 0,
+                      currentQuestion: 0,
+                      showingAnswer: false,
+                      userAnswers: {}
+                    });
+                    setSelectedTask(selectedTask);
+                    setView('learn-hub');
+                    setSubView('overview');
+                  }}
+                  className="px-4 py-2 executive-font text-xs text-blue-400 hover:text-blue-300 uppercase font-semibold transition-colors flex items-center gap-2 border border-blue-400/30 hover:border-blue-400/50 rounded-lg btn-ripple"
+                >
+                  Learn More about this task
+                </button>
+                <button 
+                  onClick={(e) => {
+                    createRipple(e);
+                    goToTasksList();
+                  }}
+                  className="px-4 py-2 executive-font text-xs text-slate-400 hover:text-white uppercase font-semibold transition-colors flex items-center gap-2 btn-ripple"
+                >
+                  Back to Activity Selector
+                </button>
+              </div>
             </div>
             <h1 className="executive-font text-5xl font-bold text-white tracking-tight">🕵️ Document Detective: {currentCaseData.title}</h1>
           </header>
@@ -2659,12 +3602,37 @@ const PMPApp = () => {
                 Next Case →
               </button>
             )}
-            <button 
-              onClick={goToPracticeHub}
-              className="px-6 py-3 bg-slate-700 hover:bg-slate-600 text-white font-semibold rounded-lg transition-colors executive-font"
-            >
-              Back to Practice Hub
-            </button>
+            <div className="flex gap-4">
+              <button 
+                onClick={(e) => {
+                  createRipple(e);
+                  setDocumentDetectiveState({
+                    currentCase: 0,
+                    selectedDocs: [],
+                    showingFeedback: false,
+                    score: 0,
+                    currentQuestion: 0,
+                    showingAnswer: false,
+                    userAnswers: {}
+                  });
+                  setSelectedTask(selectedTask);
+                  setView('learn-hub');
+                  setSubView('overview');
+                }}
+                className="px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white font-semibold rounded-lg transition-colors executive-font btn-ripple"
+              >
+                Learn More about this task
+              </button>
+              <button 
+                onClick={(e) => {
+                  createRipple(e);
+                  goToTasksList();
+                }}
+                className="px-6 py-3 bg-slate-700 hover:bg-slate-600 text-white font-semibold rounded-lg transition-colors executive-font btn-ripple"
+              >
+                Back to Activity Selector
+              </button>
+            </div>
           </div>
           <GlobalNavFooter />
         </div>
@@ -2679,13 +3647,38 @@ const PMPApp = () => {
       return (
         <div className="max-w-6xl w-full p-10 animate-fadeIn text-left">
           <header className="mb-8">
-            <div className="flex items-center gap-4 mb-6">
-              <button 
-                onClick={goToPracticeHub}
-                className="px-4 py-2 executive-font text-xs text-slate-400 hover:text-white uppercase font-semibold transition-colors flex items-center gap-2"
-              >
-                ← Back
-              </button>
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center gap-4">
+                <button 
+                  onClick={(e) => {
+                    createRipple(e);
+                    setDocumentDetectiveState({
+                      currentCase: 0,
+                      selectedDocs: [],
+                      showingFeedback: false,
+                      score: 0,
+                      currentQuestion: 0,
+                      showingAnswer: false,
+                      userAnswers: {}
+                    });
+                    setSelectedTask(selectedTask);
+                    setView('learn-hub');
+                    setSubView('overview');
+                  }}
+                  className="px-4 py-2 executive-font text-xs text-blue-400 hover:text-blue-300 uppercase font-semibold transition-colors flex items-center gap-2 border border-blue-400/30 hover:border-blue-400/50 rounded-lg btn-ripple"
+                >
+                  Learn More about this task
+                </button>
+                <button 
+                  onClick={(e) => {
+                    createRipple(e);
+                    goToTasksList();
+                  }}
+                  className="px-4 py-2 executive-font text-xs text-slate-400 hover:text-white uppercase font-semibold transition-colors flex items-center gap-2 btn-ripple"
+                >
+                  Back to Activity Selector
+                </button>
+              </div>
             </div>
             <h1 className="executive-font text-5xl font-bold text-white tracking-tight">🕵️ Document Detective</h1>
             <p className="text-slate-400 mt-2">Case {documentDetectiveState.currentCase + 1} of {documentDetectiveCases.length}: {currentCaseData.title}</p>
@@ -3066,7 +4059,7 @@ const PMPApp = () => {
       });
     };
 
-    const goToPracticeHub = () => {
+    const goToTasksList = () => {
       resetGame();
       setView('practice-hub');
     };
@@ -3495,7 +4488,7 @@ const PMPApp = () => {
       });
     };
 
-    const goToPracticeHub = () => {
+    const goToTasksList = () => {
       setTimelineReconstructorState({
         steps: [],
         showingFeedback: false,
@@ -3513,12 +4506,36 @@ const PMPApp = () => {
           <div className="glass-card p-10 text-center">
             <h1 className="executive-font text-3xl font-bold text-white mb-4">📋 {activityTitle}</h1>
             <p className="text-slate-400">No timeline data available for this task.</p>
-            <button 
-              onClick={goToPracticeHub}
-              className="mt-6 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors executive-font"
-            >
-              ← Back to Practice Hub
-            </button>
+            <div className="flex gap-4 mt-6 justify-center">
+              <button 
+                onClick={(e) => {
+                  createRipple(e);
+                  setTimelineReconstructorState({
+                    steps: [],
+                    showingFeedback: false,
+                    score: 0,
+                    draggedStep: null,
+                    dragOverIndex: null,
+                    expandedCards: {}
+                  });
+                  setSelectedTask(selectedTask);
+                  setView('learn-hub');
+                  setSubView('overview');
+                }}
+                className="px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white font-semibold rounded-lg transition-colors executive-font btn-ripple"
+              >
+                Learn More about this task
+              </button>
+              <button 
+                onClick={(e) => {
+                  createRipple(e);
+                  goToTasksList();
+                }}
+                className="px-6 py-3 bg-slate-700 hover:bg-slate-600 text-white font-semibold rounded-lg transition-colors executive-font btn-ripple"
+              >
+                Back to Activity Selector
+              </button>
+            </div>
             <GlobalNavFooter />
           </div>
         </div>
@@ -3542,13 +4559,37 @@ const PMPApp = () => {
       return (
         <div className="max-w-6xl w-full p-10 animate-fadeIn text-left">
           <header className="mb-8">
-            <div className="flex items-center gap-4 mb-6">
-              <button 
-                onClick={goToPracticeHub}
-                className="px-4 py-2 executive-font text-xs text-slate-400 hover:text-white uppercase font-semibold transition-colors flex items-center gap-2"
-              >
-                ← Back
-              </button>
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center gap-4">
+                <button 
+                  onClick={(e) => {
+                    createRipple(e);
+                    setTimelineReconstructorState({
+                      steps: [],
+                      showingFeedback: false,
+                      score: 0,
+                      draggedStep: null,
+                      dragOverIndex: null,
+                      expandedCards: {}
+                    });
+                    setSelectedTask(selectedTask);
+                    setView('learn-hub');
+                    setSubView('overview');
+                  }}
+                  className="px-4 py-2 executive-font text-xs text-blue-400 hover:text-blue-300 uppercase font-semibold transition-colors flex items-center gap-2 border border-blue-400/30 hover:border-blue-400/50 rounded-lg btn-ripple"
+                >
+                  Learn More about this task
+                </button>
+                <button 
+                  onClick={(e) => {
+                    createRipple(e);
+                    goToTasksList();
+                  }}
+                  className="px-4 py-2 executive-font text-xs text-slate-400 hover:text-white uppercase font-semibold transition-colors flex items-center gap-2 btn-ripple"
+                >
+                  Back to Activity Selector
+                </button>
+              </div>
             </div>
             <h1 className="executive-font text-5xl font-bold text-white tracking-tight">📋 {activityTitle}: {timelineData.title || timelineData.subtitle || 'Timeline Reconstructor'}</h1>
           </header>
@@ -4226,13 +5267,37 @@ const PMPApp = () => {
     return (
       <div className="max-w-6xl w-full p-10 animate-fadeIn text-left">
         <header className="mb-8">
-          <div className="flex items-center gap-4 mb-6">
-            <button 
-              onClick={goToPracticeHub}
-              className="px-4 py-2 executive-font text-xs text-slate-400 hover:text-white uppercase font-semibold transition-colors flex items-center gap-2"
-            >
-              ← Back
-            </button>
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center gap-4">
+              <button 
+                onClick={(e) => {
+                  createRipple(e);
+                  setTimelineReconstructorState({
+                    steps: [],
+                    showingFeedback: false,
+                    score: 0,
+                    draggedStep: null,
+                    dragOverIndex: null,
+                    expandedCards: {}
+                  });
+                  setSelectedTask(selectedTask);
+                  setView('learn-hub');
+                  setSubView('overview');
+                }}
+                className="px-4 py-2 executive-font text-xs text-blue-400 hover:text-blue-300 uppercase font-semibold transition-colors flex items-center gap-2 border border-blue-400/30 hover:border-blue-400/50 rounded-lg btn-ripple"
+              >
+                Learn More about this task
+              </button>
+              <button 
+                onClick={(e) => {
+                  createRipple(e);
+                  goToTasksList();
+                }}
+                className="px-4 py-2 executive-font text-xs text-slate-400 hover:text-white uppercase font-semibold transition-colors flex items-center gap-2 btn-ripple"
+              >
+                Back to Activity Selector
+              </button>
+            </div>
           </div>
             <h1 className="executive-font text-5xl font-bold text-white tracking-tight">📋 {activityTitle}: {timelineData.title || timelineData.subtitle || 'Timeline Reconstructor'}</h1>
         </header>
@@ -4414,7 +5479,7 @@ const PMPApp = () => {
         <header className="mb-8">
           <div className="flex items-center gap-4 mb-6">
             <button 
-              onClick={() => setView('practice-hub')}
+              onClick={() => setView('strategy-suite')}
               className="px-4 py-2 executive-font text-xs text-slate-400 hover:text-white uppercase font-semibold transition-colors flex items-center gap-2"
             >
               ← Back
@@ -4646,14 +5711,165 @@ const PMPApp = () => {
                 </div>
               )}
 
-              {/* Placeholder for other scenarios - structure is ready for expansion */}
-              {teamMemberPerspectivesState.currentScenario !== '1A' && (
+              {/* Scenario 1B: Storming */}
+              {teamMemberPerspectivesState.currentScenario === '1B' && (
+                <div className="space-y-6">
+                  <div className="glass-card p-6 border-l-4 border-red-500">
+                    <h3 className="executive-font text-xl font-bold text-white mb-4">Scenario 1B: Alex Four Weeks Later (Storming)</h3>
+                    <div className="bg-slate-800/50 p-4 rounded mb-4">
+                      <p className="text-white font-semibold mb-2">YOU ARE: Still Alex, UX Designer</p>
+                      <p className="text-slate-300 text-sm mb-2"><strong>PROJECT STATUS: Week 4</strong></p>
+                      <p className="text-slate-300 text-sm">
+                        The first couple weeks were better after Sarah sent those process documents and you had a good 1-on-1. You started working on designs and felt more confident. But now things are getting tense.
+                      </p>
+                    </div>
+                    
+                    <div className="mb-4">
+                      <h4 className="text-white font-semibold mb-2">TODAY'S DESIGN REVIEW MEETING</h4>
+                      <p className="text-slate-300 leading-relaxed mb-2">
+                        You're presenting your mockups for the main dashboard. You worked hard on these - stayed late two nights getting them right. You're proud of the design.
+                      </p>
+                      <div className="bg-slate-800/50 p-4 rounded my-3">
+                        <p className="text-slate-300 mb-2"><strong>You:</strong> "So I've incorporated the user research insights into this dashboard design. The key actions are front and center, and I've—"</p>
+                        <p className="text-red-400 mb-2"><strong>Jordan (Dev Lead):</strong> "Wait, this won't work. You've got the navigation on the left, but our framework uses top navigation. Redesigning the whole nav structure would add three weeks to the timeline."</p>
+                        <p className="text-slate-300 mb-2"><strong>You:</strong> "Oh, I didn't know about that constraint. Why wasn't that in the requirements?"</p>
+                        <p className="text-red-400 mb-2"><strong>Jordan:</strong> "It's common knowledge about our tech stack. Any designer should know this."</p>
+                        <p className="text-slate-300 mb-2 italic">You feel your face getting hot. "Any designer should know this" - is he saying I'm incompetent?</p>
+                        <p className="text-slate-300 mb-2"><strong>You:</strong> "Well, I'm new to the company, so I didn't know about your specific framework. If someone had told me—"</p>
+                        <p className="text-red-400 mb-2"><strong>Jordan:</strong> "Sarah, did we not share the tech stack documentation?"</p>
+                        <p className="text-slate-300 mb-2"><strong>Sarah:</strong> "I think it was in the shared drive..."</p>
+                        <p className="text-red-400 mb-2"><strong>Jordan:</strong> "Well, regardless, we can't use left navigation. Sorry, Alex, but you'll need to redesign."</p>
+                        <p className="text-slate-300 italic">You worked so hard on this. And he just dismisses it. "Sorry, Alex" - he doesn't sound sorry at all.</p>
+                        <p className="text-slate-300 mb-2"><strong>Casey (jumping in):</strong> "Actually, could we consider changing the framework? Left nav is a better UX pattern for this use case."</p>
+                        <p className="text-red-400 mb-2"><strong>Jordan:</strong> "No. That would blow the timeline. We're using the existing framework."</p>
+                        <p className="text-red-400 mb-2"><strong>Jordan:</strong> "Look, I don't mean to be harsh, but we don't have time to debate this. Just move the nav to the top and we can move forward."</p>
+                        <p className="text-slate-300 italic">The meeting continues but you're barely listening. You feel embarrassed, frustrated, and angry.</p>
+                      </div>
+                    </div>
+
+                    <div className="mb-4">
+                      <h4 className="text-white font-semibold mb-2">AFTER THE MEETING</h4>
+                      <p className="text-slate-300 leading-relaxed mb-2">
+                        You're back at your desk, staring at your mockups. Morgan walks by.
+                      </p>
+                      <div className="bg-slate-800/50 p-4 rounded">
+                        <p className="text-slate-300 mb-2"><strong>Morgan:</strong> "Hey, you okay? That meeting was rough."</p>
+                        <p className="text-slate-300 mb-2"><strong>You:</strong> "I'm fine."</p>
+                        <p className="text-slate-300 mb-2"><strong>Morgan:</strong> "Jordan can be... intense. Don't take it personally."</p>
+                        <p className="text-slate-300 mb-2"><strong>You:</strong> "He basically called me incompetent in front of everyone. And Sarah didn't say anything."</p>
+                        <p className="text-slate-300 mb-2"><strong>Morgan:</strong> "I know. She should have stepped in. Jordan does this to everyone, though. Last week he tore apart Casey's product requirements."</p>
+                        <p className="text-slate-300"><strong>Morgan:</strong> "Yeah. Casey and I were talking about it. Jordan thinks he knows everything."</p>
+                      </div>
+                    </div>
+
+                    <div className="mb-4">
+                      <h4 className="text-white font-semibold mb-2">YOUR INTERNAL MONOLOGUE</h4>
+                      <div className="bg-slate-800/50 p-4 rounded italic text-slate-300">
+                        <p className="mb-2">"I can't believe Jordan humiliated me like that. 'Any designer should know this' - in front of the whole team. And Sarah just sat there.</p>
+                        <p className="mb-2">Why didn't she defend me? Or at least acknowledge that the tech stack documentation wasn't clearly shared? It feels like she's siding with Jordan.</p>
+                        <p className="mb-2">Now I have to redo two weeks of work. I'm so frustrated. I don't even want to work on this anymore.</p>
+                        <p className="mb-2">Morgan's right - Jordan does this to everyone. He shot down Casey's ideas too. Why does Sarah let him dominate everything?</p>
+                        <p className="mb-2">Maybe I should look for another project. Or another company. This isn't what I signed up for.</p>
+                        <p className="mb-2">But I also wonder... was Jordan right? Should I have known about the tech stack? Am I actually not as good as I thought?</p>
+                        <p className="mb-2">No, this isn't my fault. If it was documented in a shared drive that I didn't know existed, how was I supposed to find it?</p>
+                        <p className="mb-2">God, I don't even want to go to tomorrow's standup. It'll be so awkward seeing Jordan. Do I apologize? Defend myself? Pretend it didn't happen?</p>
+                        <p>I need to talk to Sarah. But what do I even say? 'Jordan was mean to me'? That sounds childish. But if I don't say something, how will this get better?</p>
+                        <p>I miss my old team. We never had this kind of conflict."</p>
+                      </div>
+                    </div>
+
+                    <div className="mb-4">
+                      <h4 className="text-white font-semibold mb-2">Reflection Questions</h4>
+                      <ol className="list-decimal list-inside space-y-2 text-slate-300 ml-4">
+                        <li>What stage is the team in now? How has this changed from Week 1?</li>
+                        <li>What emotions is Alex experiencing? List at least 5 specific feelings.</li>
+                        <li>What does Alex need from Sarah RIGHT NOW? Be specific about actions.</li>
+                        <li>What's really happening between Jordan and Alex? Is this personal? Technical? Something else?</li>
+                        <li>What mistakes has Sarah made in handling this?</li>
+                        <li>If you were Sarah, what would you do in the next 24 hours?</li>
+                        <li>How might this situation be an opportunity? What could the team learn?</li>
+                      </ol>
+                    </div>
+
+                    <details className="glass-card p-4 bg-slate-800/30">
+                      <summary className="text-white font-semibold cursor-pointer hover:text-red-400">
+                        Click for Analysis & Insights
+                      </summary>
+                      <div className="mt-4 space-y-4 text-slate-300 text-sm">
+                        <div>
+                          <h5 className="text-white font-semibold mb-2">Stage Recognition:</h5>
+                          <p className="mb-2"><strong>The team has moved from Forming to Storming.</strong></p>
+                          <p className="mb-2"><strong>Evidence:</strong></p>
+                          <ul className="list-disc list-inside space-y-1 ml-4">
+                            <li>Open conflict (Jordan vs. Alex)</li>
+                            <li>PM authority questioned ("She should have stepped in")</li>
+                            <li>Coalitions forming (Morgan and Casey talking about Jordan)</li>
+                            <li>Personal tension ("Jordan thinks he knows everything")</li>
+                            <li>Productivity impact (two weeks of work needs redoing)</li>
+                            <li>Team members considering leaving</li>
+                            <li>Energy going to conflict, not work</li>
+                          </ul>
+                        </div>
+                        <div>
+                          <h5 className="text-white font-semibold mb-2">Alex's Emotional State (Storming):</h5>
+                          <ul className="list-disc list-inside space-y-1 ml-4">
+                            <li><strong>Humiliated</strong> - Called out in front of team</li>
+                            <li><strong>Angry</strong> - At Jordan and Sarah both</li>
+                            <li><strong>Frustrated</strong> - Hard work dismissed</li>
+                            <li><strong>Confused</strong> - Whose fault is this really?</li>
+                            <li><strong>Self-doubting</strong> - "Am I not as good as I thought?"</li>
+                            <li><strong>Unsupported</strong> - Sarah didn't defend them</li>
+                            <li><strong>Anxious</strong> - About tomorrow's standup</li>
+                            <li><strong>Disconnected</strong> - "I miss my old team"</li>
+                            <li><strong>Vengeful</strong> - Talking negatively about Jordan</li>
+                            <li><strong>Uncertain</strong> - Should I stay on this project?</li>
+                          </ul>
+                          <p className="mt-2 italic">This is classic Storming stage emotional experience - much more intense than Forming.</p>
+                        </div>
+                        <div>
+                          <h5 className="text-white font-semibold mb-2">What Alex Needs IMMEDIATELY (within 2 hours):</h5>
+                          <p className="mb-2">Sarah should pull Alex aside (private 1-on-1) and:</p>
+                          <ul className="list-disc list-inside space-y-1 ml-4">
+                            <li>Apologize for not handling the meeting better</li>
+                            <li>Take responsibility for the tech stack documentation gap</li>
+                            <li>Address Jordan's inappropriate delivery</li>
+                            <li>Validate Alex's excellent design work</li>
+                            <li>Acknowledge the real technical constraint</li>
+                            <li>Ask what Alex needs</li>
+                          </ul>
+                        </div>
+                        <div>
+                          <h5 className="text-white font-semibold mb-2">What Sarah Got Wrong:</h5>
+                          <ul className="list-disc list-inside space-y-1 ml-4">
+                            <li>Didn't facilitate the conflict in the moment</li>
+                            <li>Appeared to side with Jordan through silence</li>
+                            <li>Didn't follow up immediately after meeting</li>
+                            <li>Didn't set ground rules for conflict earlier</li>
+                            <li>Didn't acknowledge her own error</li>
+                          </ul>
+                        </div>
+                        <div>
+                          <h5 className="text-white font-semibold mb-2">Leadership Style Needed:</h5>
+                          <p><strong>Coaching/Facilitating</strong> - Help them work through it, establish constructive conflict norms, don't take sides, facilitate resolution. With Affiliative elements to acknowledge emotions and repair relationships.</p>
+                        </div>
+                        <div>
+                          <h5 className="text-white font-semibold mb-2">Key Insight:</h5>
+                          <p>Storming is NECESSARY. Teams that avoid or suppress conflict never reach high performance. The PM's job is to facilitate them through it constructively, not eliminate it.</p>
+                        </div>
+                      </div>
+                    </details>
+                  </div>
+                </div>
+              )}
+
+              {/* Placeholder for scenarios 1C, 1D, 1E - will add full content */}
+              {['1C', '1D', '1E'].includes(teamMemberPerspectivesState.currentScenario) && (
                 <div className="glass-card p-8 text-center">
                   <p className="text-slate-400 mb-4">
                     Scenario {teamMemberPerspectivesState.currentScenario} content coming soon.
                   </p>
                   <p className="text-slate-500 text-sm">
-                    The full content for all 5 scenarios (1A-1E) will follow the same structure as Scenario 1A above.
+                    Full content for {teamMemberPerspectivesState.currentScenario === '1C' ? 'Norming' : teamMemberPerspectivesState.currentScenario === '1D' ? 'Performing' : 'Adjourning'} stage will be added.
                   </p>
                 </div>
               )}
@@ -4709,13 +5925,289 @@ const PMPApp = () => {
               </div>
 
               {/* Perspective Content */}
-              {teamMemberPerspectivesState.currentScenario.startsWith('2') && (
-                <div className="glass-card p-6">
-                  <p className="text-slate-400 text-center">
-                    Full perspective content for {teamMemberPerspectivesState.currentScenario} will be displayed here, 
-                    following the same structure as Part 1 scenarios with character background, situation, internal experience, 
-                    reflection questions, and collapsible analysis.
-                  </p>
+              {teamMemberPerspectivesState.currentScenario === '2A' && (
+                <div className="glass-card p-6 border-l-4 border-green-500">
+                  <h3 className="executive-font text-xl font-bold text-white mb-4">Perspective A: Casey (Junior Developer, 6 months experience)</h3>
+                  <div className="bg-slate-800/50 p-4 rounded mb-4">
+                    <p className="text-white font-semibold mb-2">YOU ARE: Casey</p>
+                    <p className="text-slate-300 text-sm">
+                      <strong>Your Background:</strong> First job out of coding bootcamp, 6 months professional experience, smart but inexperienced with production issues, eager to learn but easily overwhelmed. This is your first production outage.
+                    </p>
+                  </div>
+                  
+                  <div className="mb-4">
+                    <h4 className="text-white font-semibold mb-2">WHAT HAPPENS:</h4>
+                    <p className="text-slate-300 leading-relaxed mb-2">
+                      You see the alerts come through. Your heart starts racing. <em>Oh god, the whole system is down. What do I do?</em>
+                    </p>
+                    <p className="text-slate-300 leading-relaxed mb-2">
+                      You start opening logs but there's so much data you don't know where to start. <em>Database errors? API timeouts? Is it on our end or AWS? I don't know what I'm looking for.</em>
+                    </p>
+                    <div className="bg-slate-800/50 p-4 rounded my-3">
+                      <p className="text-cyan-400 mb-2"><strong>Chris:</strong> "Everyone stop what you're doing. Here's what we're doing right now. Casey - check the API gateway logs for errors in the past 30 minutes. Filter for 500-level errors. Send me the count in the #incident channel. Do that first, nothing else."</p>
+                      <p className="text-slate-300 italic mb-2">Oh thank god. Okay, I can do that. API gateway logs, 500-level errors, past 30 minutes. That's clear.</p>
+                      <p className="text-slate-300 mb-2">You navigate to the logs, apply the filters Chris specified. You find 247 errors. You post in Slack: "247 500-level errors in API gateway"</p>
+                      <p className="text-cyan-400 mb-2"><strong>Chris:</strong> "Good, Casey. Now check if they're all from the same endpoint or distributed. Post findings."</p>
+                      <p className="text-slate-300 mb-2">You run the query. "All from /api/auth/login endpoint"</p>
+                      <p className="text-cyan-400 mb-2"><strong>Chris:</strong> "Perfect. Stand by."</p>
+                      <p className="text-slate-300 italic">My hands have stopped shaking. I know what I'm doing now. Chris is handling this. We're going to fix it.</p>
+                    </div>
+                  </div>
+
+                  <div className="mb-4">
+                    <h4 className="text-white font-semibold mb-2">YOUR INTERNAL THOUGHTS:</h4>
+                    <div className="bg-slate-800/50 p-4 rounded italic text-slate-300">
+                      <p className="mb-2">"I was panicking, but Chris's clear instructions helped me focus. I didn't have to figure out what to do - he told me exactly what. That's what I needed.</p>
+                      <p className="mb-2">I know some people don't like being told what to do, but in a crisis like this? I'm relieved someone with experience is taking charge. I wouldn't have known where to start.</p>
+                      <p className="mb-2">Chris trusts me to do this specific task. It's small enough I can handle it, but important enough to matter. I feel useful, not useless.</p>
+                      <p>I'm learning what to look for in a production issue. Next time, maybe I'll know how to start investigating on my own."</p>
+                    </div>
+                  </div>
+
+                  <div className="mb-4">
+                    <h4 className="text-white font-semibold mb-2">Reflection Questions</h4>
+                    <ol className="list-decimal list-inside space-y-2 text-slate-300 ml-4">
+                      <li>How did Chris's Commanding style affect Casey? Was it helpful or harmful?</li>
+                      <li>What does Casey need that Chris provided?</li>
+                      <li>Why did Casey feel relieved rather than frustrated?</li>
+                    </ol>
+                  </div>
+
+                  <details className="glass-card p-4 bg-slate-800/30">
+                    <summary className="text-white font-semibold cursor-pointer hover:text-green-400">
+                      Click for Analysis
+                    </summary>
+                    <div className="mt-4 space-y-4 text-slate-300 text-sm">
+                      <div>
+                        <h5 className="text-white font-semibold mb-2">Casey's Experience:</h5>
+                        <p className="mb-2"><strong>Commanding style WORKED for Casey because:</strong></p>
+                        <ul className="list-disc list-inside space-y-1 ml-4">
+                          <li>Casey is junior and inexperienced with production issues</li>
+                          <li>Clear, specific instructions reduced panic</li>
+                          <li>Didn't have to figure out what to do (wouldn't have known where to start)</li>
+                          <li>Felt useful and trusted with achievable task</li>
+                          <li>Learning through structured guidance</li>
+                        </ul>
+                        <p className="mt-2"><strong>Casey's needs:</strong> Clear expectations, step-by-step guidance, regular feedback, building confidence through small successes</p>
+                      </div>
+                    </div>
+                  </details>
+                </div>
+              )}
+
+              {teamMemberPerspectivesState.currentScenario === '2B' && (
+                <div className="glass-card p-6 border-l-4 border-blue-500">
+                  <h3 className="executive-font text-xl font-bold text-white mb-4">Perspective B: Jordan (Senior Developer, 12 years experience)</h3>
+                  <div className="bg-slate-800/50 p-4 rounded mb-4">
+                    <p className="text-white font-semibold mb-2">YOU ARE: Jordan</p>
+                    <p className="text-slate-300 text-sm">
+                      <strong>Your Background:</strong> 12 years as a software engineer, you've handled dozens of production outages, very experienced with this codebase, pride yourself on quick problem diagnosis, independent and confident.
+                    </p>
+                  </div>
+                  
+                  <div className="mb-4">
+                    <h4 className="text-white font-semibold mb-2">WHAT HAPPENS:</h4>
+                    <p className="text-slate-300 leading-relaxed mb-2">
+                      You see the alerts. <em>System's down. Okay, let's see...</em>
+                    </p>
+                    <p className="text-slate-300 leading-relaxed mb-2">
+                      You immediately start investigating. You pull up monitoring dashboards, check recent deployments, scan error logs. You're mentally building a hypothesis: <em>Probably the authentication service. The deployment from yesterday might have—</em>
+                    </p>
+                    <div className="bg-slate-800/50 p-4 rounded my-3">
+                      <p className="text-cyan-400 mb-2"><strong>Chris:</strong> "Everyone stop what you're doing. Here's what we're doing. Jordan - check the database connection pool. Count active connections vs. max connections. Report back in 5 minutes."</p>
+                      <p className="text-slate-300 italic mb-2">Wait, what? The database connection pool? That's not where the problem is. This is clearly an auth service issue, not a database problem.</p>
+                      <p className="text-slate-300 mb-2">You check the connection pool anyway because Chris told you to. <em>47 active connections, max is 100. Plenty of capacity. This is a waste of time.</em></p>
+                      <p className="text-slate-300 mb-2">You post: "Connection pool fine. 47 active."</p>
+                      <p className="text-slate-300 italic">I could have had this diagnosed by now if he'd just let me investigate. I already had a hypothesis. Now I'm checking things I know aren't the problem because Chris is micromanaging everyone.</p>
+                    </div>
+                  </div>
+
+                  <div className="mb-4">
+                    <h4 className="text-white font-semibold mb-2">YOUR INTERNAL THOUGHTS:</h4>
+                    <div className="bg-slate-800/50 p-4 rounded italic text-slate-300">
+                      <p className="mb-2">"I get that Chris is trying to coordinate, but this feels like he doesn't trust me to do my job. I've handled more outages than he has.</p>
+                      <p className="mb-2">That task he gave me was something a junior could do. I'm capable of leading the investigation, not just running a single query.</p>
+                      <p className="mb-2">If he'd asked 'Jordan, what do you need to investigate?' instead of telling me what to check, we'd probably be further along.</p>
+                      <p className="mb-2">This command-and-control approach might work for Casey, but it's frustrating for me. I'm not a soldier following orders, I'm an experienced engineer who can troubleshoot.</p>
+                      <p>I want to respect Chris's role as PM, but this is making me less effective, not more."</p>
+                    </div>
+                  </div>
+
+                  <div className="mb-4">
+                    <h4 className="text-white font-semibold mb-2">Reflection Questions</h4>
+                    <ol className="list-decimal list-inside space-y-2 text-slate-300 ml-4">
+                      <li>How did the SAME Commanding style affect Jordan differently than Casey?</li>
+                      <li>What does Jordan need that Chris didn't provide?</li>
+                      <li>How could Chris have adapted his approach for Jordan while still coordinating?</li>
+                    </ol>
+                  </div>
+
+                  <details className="glass-card p-4 bg-slate-800/30">
+                    <summary className="text-white font-semibold cursor-pointer hover:text-blue-400">
+                      Click for Analysis
+                    </summary>
+                    <div className="mt-4 space-y-4 text-slate-300 text-sm">
+                      <div>
+                        <h5 className="text-white font-semibold mb-2">Jordan's Experience:</h5>
+                        <p className="mb-2"><strong>Commanding style DIDN'T WORK for Jordan because:</strong></p>
+                        <ul className="list-disc list-inside space-y-1 ml-4">
+                          <li>Jordan is senior and experienced - doesn't need micromanagement</li>
+                          <li>Already had a hypothesis and was investigating</li>
+                          <li>Felt untrusted and underutilized</li>
+                          <li>Task assigned was too simple for his expertise</li>
+                          <li>Wasted time on tasks that weren't the problem</li>
+                        </ul>
+                        <p className="mt-2"><strong>Better approach for Jordan:</strong> "Jordan, you've handled more outages than anyone. What's your hypothesis about root cause? You lead the auth service investigation. Keep me posted every 5 minutes."</p>
+                        <p className="mt-2"><strong>Jordan's needs:</strong> Trust and autonomy, strategic direction (not tactical), recognition of expertise, space to lead in domain, input on approach</p>
+                      </div>
+                    </div>
+                  </details>
+                </div>
+              )}
+
+              {teamMemberPerspectivesState.currentScenario === '2C' && (
+                <div className="glass-card p-6 border-l-4 border-yellow-500">
+                  <h3 className="executive-font text-xl font-bold text-white mb-4">Perspective C: Morgan (Developer with Performance Anxiety)</h3>
+                  <div className="bg-slate-800/50 p-4 rounded mb-4">
+                    <p className="text-white font-semibold mb-2">YOU ARE: Morgan</p>
+                    <p className="text-slate-300 text-sm">
+                      <strong>Your Background:</strong> 4 years development experience, competent developer but struggles with anxiety, performance anxiety worsens under pressure, doctor-diagnosed anxiety disorder, managing well with therapy and medication, but stress still triggers symptoms.
+                    </p>
+                  </div>
+                  
+                  <div className="mb-4">
+                    <h4 className="text-white font-semibold mb-2">WHAT HAPPENS:</h4>
+                    <p className="text-slate-300 leading-relaxed mb-2">
+                      You see the alerts. Your chest tightens immediately. <em>Oh no, not now. Everyone's going to see if I mess this up.</em>
+                    </p>
+                    <p className="text-slate-300 leading-relaxed mb-2">
+                      Your hands start trembling slightly. You try to pull up logs but accidentally close the wrong window. <em>Come on, focus. Everyone else is probably already investigating. I'm behind.</em>
+                    </p>
+                    <div className="bg-slate-800/50 p-4 rounded my-3">
+                      <p className="text-cyan-400 mb-2"><strong>Chris (loudly):</strong> "Everyone STOP. Here's what we're doing RIGHT NOW. Morgan - check Redis cache status. Is it up? Are we getting hits or misses? Report back IMMEDIATELY."</p>
+                      <p className="text-slate-300 italic mb-2">His tone is so intense. This must be really bad. Okay, Redis, Redis...</p>
+                      <p className="text-slate-300 mb-2">Your heart is pounding. You try to SSH into the Redis server but you typo the command. <em>Shit. Everyone can see this in the terminal. They'll know I'm panicking.</em></p>
+                      <p className="text-slate-300 mb-2">You try again, hands shaking worse. You get in.</p>
+                      <p className="text-cyan-400 mb-2"><strong>Chris:</strong> "Morgan, where's the Redis status? Need it now."</p>
+                      <p className="text-slate-300 italic mb-2">I'm going as fast as I can! The pressure is making it worse.</p>
+                      <p className="text-slate-300 mb-2">You finally get the info: "Redis is up, showing 73% hit rate"</p>
+                      <p className="text-cyan-400 mb-2"><strong>Chris:</strong> "Okay. Stand by for next task."</p>
+                      <p className="text-slate-300 italic">I did it. But I feel like I'm going to throw up. My heart won't stop racing. I hate feeling this way.</p>
+                    </div>
+                  </div>
+
+                  <div className="mb-4">
+                    <h4 className="text-white font-semibold mb-2">YOUR INTERNAL THOUGHTS:</h4>
+                    <div className="bg-slate-800/50 p-4 rounded italic text-slate-300">
+                      <p className="mb-2">"Chris's commanding approach makes the crisis feel even more urgent and intense. I know he's trying to coordinate, but the barking orders raises my anxiety.</p>
+                      <p className="mb-2">When he said 'RIGHT NOW' and 'IMMEDIATELY,' it made me more panicked, not more effective. I started making typos and mistakes.</p>
+                      <p className="mb-2">If he'd said 'Morgan, when you can, check Redis status and let me know' - same request, less panic-inducing.</p>
+                      <p className="mb-2">I know I have anxiety issues that aren't Chris's fault. But his leadership style is amplifying my anxiety, not helping me manage it.</p>
+                      <p>After this is over, I'm going to be exhausted. The crisis itself plus managing my panic response - it's draining.</p>
+                      <p>I wish I could tell Chris that I work better with calm direction than urgent barking. But I don't want him to think I can't handle pressure."</p>
+                    </div>
+                  </div>
+
+                  <div className="mb-4">
+                    <h4 className="text-white font-semibold mb-2">Reflection Questions</h4>
+                    <ol className="list-decimal list-inside space-y-2 text-slate-300 ml-4">
+                      <li>How did Chris's urgent, intense tone affect Morgan?</li>
+                      <li>What would have helped Morgan perform better?</li>
+                      <li>How can leaders adapt their communication for team members with anxiety?</li>
+                    </ol>
+                  </div>
+
+                  <details className="glass-card p-4 bg-slate-800/30">
+                    <summary className="text-white font-semibold cursor-pointer hover:text-yellow-400">
+                      Click for Analysis
+                    </summary>
+                    <div className="mt-4 space-y-4 text-slate-300 text-sm">
+                      <div>
+                        <h5 className="text-white font-semibold mb-2">Morgan's Experience:</h5>
+                        <p className="mb-2"><strong>Commanding style HARMED Morgan because:</strong></p>
+                        <ul className="list-disc list-inside space-y-1 ml-4">
+                          <li>Urgent, intense tone increased anxiety</li>
+                          <li>"RIGHT NOW" and "IMMEDIATELY" created panic</li>
+                          <li>Made mistakes due to pressure (typos, wrong windows)</li>
+                          <li>Physical symptoms worsened (hands shaking, heart racing)</li>
+                          <li>Less effective, not more</li>
+                        </ul>
+                        <p className="mt-2"><strong>Better approach for Morgan:</strong> "Morgan, I need you to check Redis cache status when you're able. Let me know what you find - no rush, I'm gathering info from everyone." (Calm, steady tone)</p>
+                        <p className="mt-2"><strong>Morgan's needs:</strong> Calm, steady leadership, psychological safety, patience with processing time, understanding of anxiety as real, confidence-building rather than pressure</p>
+                      </div>
+                    </div>
+                  </details>
+                </div>
+              )}
+
+              {teamMemberPerspectivesState.currentScenario === '2D' && (
+                <div className="glass-card p-6 border-l-4 border-purple-500">
+                  <h3 className="executive-font text-xl font-bold text-white mb-4">Perspective D: Taylor (Developer who needs context)</h3>
+                  <div className="bg-slate-800/50 p-4 rounded mb-4">
+                    <p className="text-white font-semibold mb-2">YOU ARE: Taylor</p>
+                    <p className="text-slate-300 text-sm">
+                      <strong>Your Background:</strong> 8 years development experience, analytical thinker who needs to understand the "why", makes good decisions when you understand the full picture, can execute tasks but works better when you understand the strategy, values autonomy and context.
+                    </p>
+                  </div>
+                  
+                  <div className="mb-4">
+                    <h4 className="text-white font-semibold mb-2">WHAT HAPPENS:</h4>
+                    <p className="text-slate-300 leading-relaxed mb-2">
+                      You see the alerts and start investigating. You're trying to understand the full scope: <em>What services are down? What's the user impact? Where should we focus first?</em>
+                    </p>
+                    <div className="bg-slate-800/50 p-4 rounded my-3">
+                      <p className="text-cyan-400 mb-2"><strong>Chris:</strong> "Taylor - check the load balancer health checks. Tell me which instances are responding."</p>
+                      <p className="text-slate-300 mb-2">You start checking, but you're thinking: <em>Why the load balancer? What's his theory about root cause? What have others found?</em></p>
+                      <p className="text-slate-300 mb-2">You find the info: "All instances responding to health checks"</p>
+                      <p className="text-cyan-400 mb-2"><strong>Chris:</strong> "Good. Now check the SSL certificate expiration dates."</p>
+                      <p className="text-slate-300 italic mb-2">SSL certificates? That seems random. Is he just throwing out tasks or does he have a hypothesis? I wish I understood his thinking.</p>
+                      <p className="text-slate-300 mb-2">You check: "Certificates valid for 89 more days"</p>
+                      <p className="text-cyan-400 mb-2"><strong>Chris:</strong> "Okay, stand by."</p>
+                      <p className="text-slate-300 italic">I'm just running random checks. I have no idea if we're getting closer to the problem or not. Are we working from a theory or just checking everything we can think of?</p>
+                    </div>
+                  </div>
+
+                  <div className="mb-4">
+                    <h4 className="text-white font-semibold mb-2">YOUR INTERNAL THOUGHTS:</h4>
+                    <div className="bg-slate-800/50 p-4 rounded italic text-slate-300">
+                      <p className="mb-2">"I'm following orders but I don't understand the strategy. That makes it hard for me to know if my findings are important or not.</p>
+                      <p className="mb-2">When I found all instances were healthy, I didn't know if that was good news (not a deployment issue) or bad news (the problem is somewhere else). Chris just said 'good' and moved on.</p>
+                      <p className="mb-2">If Chris had said 'I think this might be a routing issue, I need you to check load balancer health checks to rule that out' - I'd understand why I'm doing this and what to look for.</p>
+                      <p className="mb-2">I can follow instructions, but I'm much more effective when I understand the context. Right now I'm a robot executing commands.</p>
+                      <p>I also have insights about this system that could help, but there's no space for me to share them. It's all top-down direction.</p>
+                      <p>Once we fix this, I probably won't understand WHY my findings mattered or what I learned for next time."</p>
+                    </div>
+                  </div>
+
+                  <div className="mb-4">
+                    <h4 className="text-white font-semibold mb-2">Reflection Questions</h4>
+                    <ol className="list-decimal list-inside space-y-2 text-slate-300 ml-4">
+                      <li>How did the lack of context affect Taylor's effectiveness?</li>
+                      <li>What would have helped Taylor contribute more?</li>
+                      <li>How can leaders provide context even in urgent situations?</li>
+                    </ol>
+                  </div>
+
+                  <details className="glass-card p-4 bg-slate-800/30">
+                    <summary className="text-white font-semibold cursor-pointer hover:text-purple-400">
+                      Click for Analysis
+                    </summary>
+                    <div className="mt-4 space-y-4 text-slate-300 text-sm">
+                      <div>
+                        <h5 className="text-white font-semibold mb-2">Taylor's Experience:</h5>
+                        <p className="mb-2"><strong>Commanding style WITHOUT CONTEXT didn't work for Taylor because:</strong></p>
+                        <ul className="list-disc list-inside space-y-1 ml-4">
+                          <li>Taylor needs to understand WHY to be effective</li>
+                          <li>Operating blindly without understanding strategy</li>
+                          <li>Can't determine if findings are important</li>
+                          <li>Has insights that aren't being utilized</li>
+                          <li>Won't learn from the experience</li>
+                        </ul>
+                        <p className="mt-2"><strong>Better approach for Taylor:</strong> "Taylor, I'm thinking this might be a routing or configuration issue since the alerts started after yesterday's deployment. Can you check load balancer and SSL cert status? I want to rule out infrastructure before we dive into application code."</p>
+                        <p className="mt-2"><strong>Taylor's needs:</strong> Context and rationale, understanding the strategy, opportunity to contribute ideas, explanation of how pieces fit together, trusted with the full picture</p>
+                      </div>
+                    </div>
+                  </details>
                 </div>
               )}
             </div>
@@ -4806,7 +6298,9 @@ const PMPApp = () => {
     );
   }
 
-  if (view === 'empathy-exercise' || view === 'team-member-perspectives') {
+  // Empathy Exercise view (for tasks other than Lead a Team/Support Performance)
+  // Note: team-member-perspectives for Lead a Team/Support Performance is handled above
+  if (view === 'empathy-exercise' || (view === 'team-member-perspectives' && selectedTask !== 'Lead a Team' && selectedTask !== 'Support Performance')) {
     if (!currentTask) {
       return (
         <div className="max-w-6xl w-full p-10 animate-fadeIn text-left">
@@ -5515,7 +7009,7 @@ const PMPApp = () => {
           </button>
           
           <button 
-            onClick={(e) => { createRipple(e); handleViewChange('practice-hub'); }} 
+            onClick={(e) => { createRipple(e); handleViewChange('strategy-suite'); }} 
             className="group relative glass-card p-8 text-center hover:scale-105 hover:-translate-y-2 transition-all duration-300 border-l-4 hover:shadow-[0_20px_50px_rgba(0,212,255,0.4)] hover:shadow-[#00d4ff]/30 btn-ripple overflow-hidden transform perspective-1000 preserve-3d"
             style={{transformStyle: 'preserve-3d', borderColor: '#00d4ff', backgroundColor: 'rgba(0, 212, 255, 0.1)'}}
           >
@@ -5524,7 +7018,7 @@ const PMPApp = () => {
             <div className="relative z-10 transform group-hover:translate-z-10 transition-transform duration-300">
               <div className="text-4xl mb-3 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300" style={{transformStyle: 'preserve-3d'}}>⚡</div>
               <div className="executive-font text-lg font-bold text-white mb-2 group-hover:text-[#00d4ff] transition-colors drop-shadow-lg">Practice</div>
-              <div className="text-xs text-slate-400 group-hover:text-slate-300 uppercase tracking-widest">Skill Building</div>
+              <div className="text-xs text-slate-400 group-hover:text-slate-300 uppercase tracking-widest">Task Areas</div>
             </div>
           </button>
           
@@ -5899,7 +7393,14 @@ const PMPApp = () => {
           return (
             <button
               key={activity.name}
-              onClick={() => setView(activity.name)}
+              onClick={() => {
+                // For Lead a Team and Support Performance, route empathy-exercise to team-member-perspectives
+                if (activity.name === 'empathy-exercise' && (selectedTask === 'Lead a Team' || selectedTask === 'Support Performance')) {
+                  setView('team-member-perspectives');
+                } else {
+                  setView(activity.name);
+                }
+              }}
               className={`glass-card p-8 text-left ${activity.hoverColor} transition-all ${isCompleted ? 'border-l-4 border-emerald-500' : activity.borderColor} min-h-[200px] transform hover:scale-105 hover:shadow-2xl ${activity.shadowColor} relative group`}
             >
               {/* Status Indicator */}
@@ -6229,6 +7730,7 @@ const PMPApp = () => {
     const lockedBadges = badgeDefinitions.filter(b => !b.checkUnlocked());
     
     return (
+      <>
       <div className="min-h-screen w-full" style={{ background: 'linear-gradient(135deg, #0f172a 0%, #1e1b4b 30%, #172554 60%, #0f172a 100%)', color: '#fff', padding: '30px 40px' }}>
         <div style={{ maxWidth: '1400px', margin: '0 auto' }}>
           {/* Header */}
@@ -6346,7 +7848,19 @@ const PMPApp = () => {
                 <div style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.4)' }}>Completion tracking and task mastery</div>
                 {expandedSection === 'stats' && (
                   <div style={{ display: 'flex', gap: '24px', marginTop: '12px' }}>
-                    <div style={{ textAlign: 'right', minWidth: '70px' }}>
+                    <div 
+                      onClick={() => setShowTasksModal(true)}
+                      style={{ 
+                        textAlign: 'right', 
+                        minWidth: '70px',
+                        cursor: 'pointer',
+                        transition: 'opacity 0.2s',
+                        padding: '4px',
+                        borderRadius: '4px'
+                      }}
+                      onMouseEnter={(e) => e.currentTarget.style.opacity = '0.8'}
+                      onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
+                    >
                       <div style={{ fontSize: '1.1rem', fontWeight: 700 }}>
                         {stats.tasksStarted}<span style={{ color: 'rgba(255,255,255,0.35)' }}>/{stats.totalTasks}</span>
                       </div>
@@ -6380,7 +7894,7 @@ const PMPApp = () => {
               <div style={{ marginTop: '10px', marginBottom: '10px' }}>
                 <div style={{ borderRadius: '16px', border: '1px solid rgba(255,255,255,0.08)', overflow: 'hidden', padding: '16px', background: 'rgba(0,0,0,0.2)' }}>
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px' }}>
-                    {[
+                      {[
                       { label: 'Tasks Started', value: stats.tasksStarted, total: stats.totalTasks, color: '#ff6b35', key: 'tasks-started' },
                       { label: 'Activities Completed', value: stats.activitiesCompleted, total: stats.totalActivities, color: '#00d4ff', key: 'activities-completed' },
                       { label: 'Tasks Mastered', value: stats.tasksMastered, total: null, color: completeColor, key: 'tasks-mastered' },
@@ -6393,7 +7907,13 @@ const PMPApp = () => {
                       return (
                         <div key={i} style={{ position: 'relative' }}>
                           <div 
-                            onClick={() => (isTasksStarted || isActivitiesCompleted || isTasksMastered) && setExpandedTaskList(expandedTaskList === stat.key ? null : stat.key)}
+                            onClick={() => {
+                              if (isTasksStarted) {
+                                setShowTasksModal(true);
+                              } else if (isActivitiesCompleted || isTasksMastered) {
+                                setExpandedTaskList(expandedTaskList === stat.key ? null : stat.key);
+                              }
+                            }}
                             style={{
                               padding: '16px',
                               borderRadius: '8px',
@@ -6865,6 +8385,288 @@ const PMPApp = () => {
           </div>
         </div>
       </div>
+
+      {/* Tasks Progress Modal */}
+      {showTasksModal && (
+        <div 
+          style={{
+            position: 'fixed',
+            inset: 0,
+            zIndex: 50,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            background: 'rgba(0, 0, 0, 0.8)',
+            backdropFilter: 'blur(8px)'
+          }}
+          onClick={() => setShowTasksModal(false)}
+        >
+          <div 
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              background: 'rgba(15, 23, 42, 0.95)',
+              backdropFilter: 'blur(20px)',
+              border: '1px solid rgba(255, 255, 255, 0.1)',
+              borderRadius: '16px',
+              maxWidth: '1400px',
+              width: '90%',
+              maxHeight: '90vh',
+              display: 'flex',
+              flexDirection: 'column',
+              boxShadow: '0 20px 60px rgba(0, 0, 0, 0.5)'
+            }}
+          >
+            {/* Modal Header */}
+            <div style={{
+              padding: '24px',
+              borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center'
+            }}>
+              <h2 style={{
+                margin: 0,
+                fontSize: '1.5rem',
+                fontWeight: 700,
+                color: '#fff',
+                fontFamily: 'system-ui, -apple-system, sans-serif'
+              }}>
+                Task Progress Breakdown
+              </h2>
+              <button
+                onClick={() => setShowTasksModal(false)}
+                style={{
+                  background: 'transparent',
+                  border: 'none',
+                  color: 'rgba(255, 255, 255, 0.6)',
+                  fontSize: '24px',
+                  cursor: 'pointer',
+                  width: '32px',
+                  height: '32px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  borderRadius: '4px',
+                  transition: 'all 0.2s'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)';
+                  e.currentTarget.style.color = '#fff';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = 'transparent';
+                  e.currentTarget.style.color = 'rgba(255, 255, 255, 0.6)';
+                }}
+              >
+                ×
+              </button>
+            </div>
+
+            {/* Modal Content - 2 Column Layout */}
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: '1fr 1fr',
+              gap: '24px',
+              padding: '24px',
+              overflowY: 'auto',
+              flex: 1
+            }}>
+              {/* Left Column: Completed Tasks */}
+              <div>
+                <h3 style={{
+                  margin: '0 0 16px 0',
+                  fontSize: '1.1rem',
+                  fontWeight: 600,
+                  color: '#00ff88',
+                  fontFamily: 'system-ui, -apple-system, sans-serif'
+                }}>
+                  Completed (Mastered)
+                </h3>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                  {domains.map(domain => {
+                    const completedTasks = domain.tasks.filter(t => isTaskMastered(t.name));
+                    if (completedTasks.length === 0) return null;
+                    
+                    return (
+                      <div key={domain.id}>
+                        <div style={{
+                          fontSize: '0.85rem',
+                          fontWeight: 600,
+                          color: domain.accent,
+                          marginBottom: '12px',
+                          textTransform: 'uppercase',
+                          letterSpacing: '0.5px'
+                        }}>
+                          {domain.name} Domain
+                        </div>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                          {completedTasks.map(task => (
+                            <div
+                              key={task.name}
+                              style={{
+                                padding: '12px',
+                                borderRadius: '8px',
+                                background: 'rgba(255, 255, 255, 0.03)',
+                                border: `1px solid ${domain.accent}40`,
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '10px'
+                              }}
+                            >
+                              <span style={{ color: '#00ff88', fontSize: '1.2rem' }}>✓</span>
+                              <span style={{ color: 'rgba(255, 255, 255, 0.9)', fontSize: '0.9rem' }}>{task.name}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    );
+                  })}
+                  {domains.every(d => d.tasks.filter(t => isTaskMastered(t.name)).length === 0) && (
+                    <div style={{
+                      padding: '24px',
+                      textAlign: 'center',
+                      color: 'rgba(255, 255, 255, 0.4)',
+                      fontSize: '0.9rem'
+                    }}>
+                      No tasks mastered yet. Complete all 3 learn pages and attempt all 6 activities to master a task.
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Right Column: Not Completed Tasks */}
+              <div>
+                <h3 style={{
+                  margin: '0 0 16px 0',
+                  fontSize: '1.1rem',
+                  fontWeight: 600,
+                  color: '#ff6b35',
+                  fontFamily: 'system-ui, -apple-system, sans-serif'
+                }}>
+                  Not Completed
+                </h3>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                  {domains.map(domain => {
+                    const notCompletedTasks = domain.tasks.filter(t => !isTaskMastered(t.name));
+                    if (notCompletedTasks.length === 0) return null;
+                    
+                    return (
+                      <div key={domain.id}>
+                        <div style={{
+                          fontSize: '0.85rem',
+                          fontWeight: 600,
+                          color: domain.accent,
+                          marginBottom: '12px',
+                          textTransform: 'uppercase',
+                          letterSpacing: '0.5px'
+                        }}>
+                          {domain.name} Domain
+                        </div>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                          {notCompletedTasks.map(task => {
+                            const mastery = getTaskMastery(task.name);
+                            const isStarted = mastery.progress > 0;
+                            
+                            return (
+                              <div
+                                key={task.name}
+                                style={{
+                                  padding: '12px',
+                                  borderRadius: '8px',
+                                  background: 'rgba(255, 255, 255, 0.03)',
+                                  border: `1px solid ${domain.accent}40`,
+                                  display: 'flex',
+                                  flexDirection: 'column',
+                                  gap: '10px'
+                                }}
+                              >
+                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                                  <span style={{ color: 'rgba(255, 255, 255, 0.9)', fontSize: '0.9rem', fontWeight: 500 }}>
+                                    {task.name}
+                                  </span>
+                                  <span style={{
+                                    color: isStarted ? '#00d4ff' : 'rgba(255, 255, 255, 0.4)',
+                                    fontSize: '0.75rem',
+                                    fontStyle: 'italic'
+                                  }}>
+                                    ({isStarted ? 'started' : 'not started'})
+                                  </span>
+                                </div>
+                                <div style={{ display: 'flex', gap: '8px' }}>
+                                  <button
+                                    onClick={() => {
+                                      setSelectedTask(task.name);
+                                      setView('learn-hub');
+                                      setSubView('overview');
+                                      setShowTasksModal(false);
+                                    }}
+                                    style={{
+                                      padding: '6px 12px',
+                                      borderRadius: '6px',
+                                      background: `${domain.accent}20`,
+                                      border: `1px solid ${domain.accent}60`,
+                                      color: domain.accent,
+                                      fontSize: '0.75rem',
+                                      fontWeight: 600,
+                                      cursor: 'pointer',
+                                      transition: 'all 0.2s',
+                                      flex: 1
+                                    }}
+                                    onMouseEnter={(e) => {
+                                      e.currentTarget.style.background = `${domain.accent}30`;
+                                      e.currentTarget.style.borderColor = domain.accent;
+                                    }}
+                                    onMouseLeave={(e) => {
+                                      e.currentTarget.style.background = `${domain.accent}20`;
+                                      e.currentTarget.style.borderColor = `${domain.accent}60`;
+                                    }}
+                                  >
+                                    Learn
+                                  </button>
+                                  <button
+                                    onClick={() => {
+                                      setSelectedTask(task.name);
+                                      setView('practice-hub');
+                                      setShowTasksModal(false);
+                                    }}
+                                    style={{
+                                      padding: '6px 12px',
+                                      borderRadius: '6px',
+                                      background: `${domain.accent}20`,
+                                      border: `1px solid ${domain.accent}60`,
+                                      color: domain.accent,
+                                      fontSize: '0.75rem',
+                                      fontWeight: 600,
+                                      cursor: 'pointer',
+                                      transition: 'all 0.2s',
+                                      flex: 1
+                                    }}
+                                    onMouseEnter={(e) => {
+                                      e.currentTarget.style.background = `${domain.accent}30`;
+                                      e.currentTarget.style.borderColor = domain.accent;
+                                    }}
+                                    onMouseLeave={(e) => {
+                                      e.currentTarget.style.background = `${domain.accent}20`;
+                                      e.currentTarget.style.borderColor = `${domain.accent}60`;
+                                    }}
+                                  >
+                                    Practice
+                                  </button>
+                                </div>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+      </>
     );
   }
 
@@ -7452,11 +9254,14 @@ const PMPApp = () => {
     
     if (subView === 'overview' && currentTask.learn.overview) {
       const overview = currentTask.learn.overview;
+      // Support Performance uses 7-section structure: What This Task Is, ECO Enablers, Key Frameworks, How To Apply It, Exam Triggers, Quick Scenarios, Common Mistakes
+      if (overview.what_this_task_is) sections.push({ key: 'what_this_task_is', title: 'What This Task Is', content: overview.what_this_task_is, type: 'what-this-task-is' });
       if (overview.definition) sections.push({ key: 'definition', title: 'Definition', content: overview.definition, type: 'definition' });
       if (overview.eco_enablers && overview.eco_enablers.length > 0) sections.push({ key: 'eco_enablers', title: 'ECO Enablers', content: overview.eco_enablers, type: 'list' });
       if (overview.core_principle) sections.push({ key: 'core_principle', title: 'Core Principle', content: overview.core_principle, type: 'text' });
       if (overview.module_introduction) sections.push({ key: 'module_introduction', title: 'Module Introduction', content: overview.module_introduction, type: 'text' });
       if (overview.key_frameworks) sections.push({ key: 'key_frameworks', title: 'Key Frameworks', content: overview.key_frameworks, type: 'key-frameworks' });
+      if (overview.how_to_apply_it) sections.push({ key: 'how_to_apply_it', title: 'How To Apply It', content: overview.how_to_apply_it, type: 'how-to-apply' });
       if (overview.what_youll_learn && overview.what_youll_learn.length > 0) sections.push({ key: 'what_youll_learn', title: "What You'll Learn", content: overview.what_youll_learn, type: 'list' });
       if (overview.key_learning_objectives && overview.key_learning_objectives.length > 0) sections.push({ key: 'key_learning_objectives', title: 'Key Learning Objectives', content: overview.key_learning_objectives, type: 'numbered-list' });
       if (overview.why_this_matters) sections.push({ key: 'why_this_matters', title: 'Why This Matters', content: overview.why_this_matters, type: 'text' });
@@ -7467,39 +9272,82 @@ const PMPApp = () => {
       if (overview.quick_scenarios && overview.quick_scenarios.length > 0) sections.push({ key: 'quick_scenarios', title: 'Quick Scenarios', content: overview.quick_scenarios, type: 'scenarios' });
       if (overview.key_exam_principles) sections.push({ key: 'key_exam_principles', title: 'Key Exam Principles', content: overview.key_exam_principles, type: 'exam-principles' });
       if (overview.common_wrong_answers && overview.common_wrong_answers.length > 0) sections.push({ key: 'common_wrong_answers', title: 'Common Wrong Answers', content: overview.common_wrong_answers, type: 'list' });
+      if (overview.common_mistakes) sections.push({ key: 'common_mistakes', title: 'Common Mistakes', content: overview.common_mistakes, type: 'common-mistakes' });
       if (overview.pmi_hierarchy && overview.pmi_hierarchy.length > 0) sections.push({ key: 'pmi_hierarchy', title: 'PMI Hierarchy', content: overview.pmi_hierarchy, type: 'hierarchy' });
     } else if (subView === 'pmp-application' && currentTask.learn.pmp_application) {
       const pmp = currentTask.learn.pmp_application;
+      // Support Performance uses 5-section structure: How This Task Is Tested, Sample Question 1, Sample Question 2, Sample Question 3, Exam Strategy
+      if (pmp.how_this_task_is_tested) sections.push({ key: 'how_this_task_is_tested', title: 'How This Task Is Tested', content: pmp.how_this_task_is_tested, type: 'how-task-tested' });
+      if (pmp.sample_question_1) sections.push({ key: 'sample_question_1', title: 'Sample Question 1', content: pmp.sample_question_1, type: 'sample-question', correctAnswer: 'B' });
+      if (pmp.sample_question_2) sections.push({ key: 'sample_question_2', title: 'Sample Question 2', content: pmp.sample_question_2, type: 'sample-question', correctAnswer: 'B' });
+      if (pmp.sample_question_3) sections.push({ key: 'sample_question_3', title: 'Sample Question 3', content: pmp.sample_question_3, type: 'sample-question', correctAnswer: 'B' });
       if (pmp.connection_to_pmp) sections.push({ key: 'connection_to_pmp', title: 'Connection to PMP Certification', content: pmp.connection_to_pmp, domain: pmp.domain, type: 'text' });
       if (pmp.related_tasks && pmp.related_tasks.length > 0) sections.push({ key: 'related_tasks', title: 'Related PMP Tasks', content: pmp.related_tasks, type: 'related-tasks' });
-      if (pmp.exam_strategy) sections.push({ key: 'exam_strategy', title: 'Exam Strategy', content: pmp.exam_strategy, type: 'text' });
+      if (pmp.exam_strategy) sections.push({ key: 'exam_strategy', title: 'Exam Strategy', content: pmp.exam_strategy, type: 'exam-strategy' });
+      if (pmp.how_this_task_appears_on_exam) sections.push({ key: 'how_this_task_appears_on_exam', title: 'How This Task Appears on Exam', content: pmp.how_this_task_appears_on_exam, type: 'text' });
       if (pmp.how_module_supports_pmp_application && pmp.how_module_supports_pmp_application.length > 0) sections.push({ key: 'how_module_supports_pmp_application', title: 'How This Module Supports Your PMP Application', content: pmp.how_module_supports_pmp_application, type: 'numbered-list' });
       if (pmp.application_tips && pmp.application_tips.length > 0) sections.push({ key: 'application_tips', title: 'Application Tips', content: pmp.application_tips, type: 'list' });
       if (pmp.question_patterns && pmp.question_patterns.length > 0) sections.push({ key: 'question_patterns', title: 'Question Patterns', content: pmp.question_patterns, type: 'question-patterns' });
+      if (pmp.sample_questions && pmp.sample_questions.length > 0) sections.push({ key: 'sample_questions', title: 'Sample Questions', content: pmp.sample_questions, type: 'sample-questions' });
       if (pmp.agile_vs_traditional) sections.push({ key: 'agile_vs_traditional', title: 'Agile vs Traditional', content: pmp.agile_vs_traditional, type: 'agile-vs-traditional' });
       if (pmp.decision_tree_visual) sections.push({ key: 'decision_tree_visual', title: 'Decision Tree', content: pmp.decision_tree_visual, type: 'text' });
     } else if (subView === 'deep-dive' && currentTask.learn.deep_dive) {
       const deep = currentTask.learn.deep_dive;
-      if (deep.introduction) sections.push({ key: 'introduction', title: 'Introduction', content: deep.introduction, type: 'text' });
-      if (deep.foundational_concept) sections.push({ key: 'foundational_concept', title: 'Foundational Concept', content: deep.foundational_concept, type: 'text' });
-      if (deep.performance_support_framework) sections.push({ key: 'performance_support_framework', title: 'The Performance Support Framework', content: deep.performance_support_framework, type: 'performance-support-framework' });
-      if (deep.sbi_feedback_model) sections.push({ key: 'sbi_feedback_model', title: 'The SBI Feedback Model', content: deep.sbi_feedback_model, type: 'sbi-feedback-model' });
-      if (deep.recognition_strategies) sections.push({ key: 'recognition_strategies', title: 'Recognition Strategies', content: deep.recognition_strategies, type: 'recognition-strategies' });
-      if (deep.addressing_underperformance) sections.push({ key: 'addressing_underperformance', title: 'Addressing Underperformance', content: deep.addressing_underperformance, type: 'addressing-underperformance' });
-      if (deep.development_and_growth) sections.push({ key: 'development_and_growth', title: 'Development and Growth', content: deep.development_and_growth, type: 'development-growth' });
-      if (deep.performance_metrics) sections.push({ key: 'performance_metrics', title: 'Performance Metrics', content: deep.performance_metrics, type: 'performance-metrics' });
-      if (deep.integration_with_other_tasks) sections.push({ key: 'integration_with_other_tasks', title: 'Integration with Other Tasks', content: deep.integration_with_other_tasks, type: 'integration-tasks' });
-      if (deep.key_principles && deep.key_principles.length > 0) sections.push({ key: 'key_principles', title: 'Summary: Key Principles', content: deep.key_principles, type: 'numbered-list' });
-      if (deep.tuckmans_model) sections.push({ key: 'tuckmans_model', title: "Tuckman's Model", content: deep.tuckmans_model, type: 'tuckman' });
-      if (deep.leadership_styles) sections.push({ key: 'leadership_styles', title: 'Leadership Styles', content: deep.leadership_styles, type: 'leadership-styles' });
-      if (deep.situational_leadership) sections.push({ key: 'situational_leadership', title: 'Situational Leadership', content: deep.situational_leadership, type: 'situational-leadership' });
-      if (deep.practical_application) sections.push({ key: 'practical_application', title: 'Practical Application', content: deep.practical_application, type: 'practical-application' });
-      if (deep.summary_and_key_takeaways) sections.push({ key: 'summary_and_key_takeaways', title: 'Summary and Key Takeaways', content: deep.summary_and_key_takeaways, type: 'summary' });
-      if (deep.additional_resources) sections.push({ key: 'additional_resources', title: 'Additional Resources', content: deep.additional_resources, type: 'resources' });
-      if (deep.thomas_kilmann_model) sections.push({ key: 'thomas_kilmann_model', title: 'Thomas-Kilmann Conflict Model', content: deep.thomas_kilmann_model, type: 'thomas-kilmann' });
-      if (deep.step_by_step_process && deep.step_by_step_process.length > 0) sections.push({ key: 'step_by_step_process', title: 'Step-by-Step Process', content: deep.step_by_step_process, type: 'step-by-step' });
-      if (deep.common_mistakes && deep.common_mistakes.length > 0) sections.push({ key: 'common_mistakes', title: 'Common Mistakes', content: deep.common_mistakes, type: 'common-mistakes' });
-      if (deep.emotional_intelligence_connection) sections.push({ key: 'emotional_intelligence_connection', title: 'Emotional Intelligence Connection', content: deep.emotional_intelligence_connection, type: 'emotional-intelligence' });
+      // Support Performance uses 7-section structure: Introduction, SBI Feedback Model, Recognition & Development, Practical Application, Common Challenges, Connections to Other Tasks, Key Takeaways
+      if (selectedTask === 'Support Performance') {
+        // Exact 7 sections for Support Performance
+        if (deep.introduction) {
+          const introType = typeof deep.introduction === 'string' ? 'text' : 'introduction-detailed';
+          sections.push({ key: 'introduction', title: 'Introduction', content: deep.introduction, type: introType });
+        }
+        if (deep.sbi_feedback_model) sections.push({ key: 'sbi_feedback_model', title: 'The SBI Feedback Model', content: deep.sbi_feedback_model, type: 'sbi-feedback-model' });
+        if (deep.recognition_and_development) sections.push({ key: 'recognition_and_development', title: 'Recognition & Development', content: deep.recognition_and_development, type: 'recognition-development' });
+        if (deep.practical_application) sections.push({ key: 'practical_application', title: 'Practical Application', content: deep.practical_application, type: 'practical-application' });
+        if (deep.common_challenges && deep.common_challenges.length > 0) sections.push({ key: 'common_challenges', title: 'Common Challenges', content: deep.common_challenges, type: 'common-challenges' });
+        if (deep.connections_to_other_tasks) sections.push({ key: 'connections_to_other_tasks', title: 'Connections to Other Tasks', content: deep.connections_to_other_tasks, type: 'connections-tasks' });
+        if (deep.key_takeaways && deep.key_takeaways.length > 0) sections.push({ key: 'key_takeaways', title: 'Key Takeaways', content: deep.key_takeaways, type: 'numbered-list' });
+      } else if (selectedTask === 'Empower Team') {
+        // Exact 7 sections for Empower Team: Introduction, Delegation Continuum, Building Self-Organizing Teams, Practical Application, Common Challenges, Connections to Other Tasks, Key Takeaways
+        if (deep.introduction) {
+          const introType = typeof deep.introduction === 'string' ? 'text' : 'introduction-detailed';
+          sections.push({ key: 'introduction', title: 'Introduction', content: deep.introduction, type: introType });
+        }
+        if (deep.delegation_continuum) sections.push({ key: 'delegation_continuum', title: 'The Delegation Continuum', content: deep.delegation_continuum, type: 'delegation-continuum' });
+        if (deep.building_self_organizing_teams) sections.push({ key: 'building_self_organizing_teams', title: 'Building Self-Organizing Teams', content: deep.building_self_organizing_teams, type: 'self-organizing-teams' });
+        if (deep.practical_application) sections.push({ key: 'practical_application', title: 'Practical Application', content: deep.practical_application, type: 'practical-application' });
+        if (deep.common_challenges) sections.push({ key: 'common_challenges', title: 'Common Challenges', content: deep.common_challenges, type: 'common-challenges' });
+        if (deep.connections_to_other_tasks) sections.push({ key: 'connections_to_other_tasks', title: 'Connections to Other Tasks', content: deep.connections_to_other_tasks, type: 'connections-tasks' });
+        if (deep.key_takeaways) sections.push({ key: 'key_takeaways', title: 'Key Takeaways', content: deep.key_takeaways, type: 'key-takeaways' });
+      } else {
+        // Other tasks - use flexible structure
+        if (deep.introduction) {
+          const introType = typeof deep.introduction === 'string' ? 'text' : 'introduction-detailed';
+          sections.push({ key: 'introduction', title: 'Introduction', content: deep.introduction, type: introType });
+        }
+        if (deep.foundational_concept) sections.push({ key: 'foundational_concept', title: 'Foundational Concept', content: deep.foundational_concept, type: 'text' });
+        if (deep.performance_support_framework) sections.push({ key: 'performance_support_framework', title: 'The Performance Support Framework', content: deep.performance_support_framework, type: 'performance-support-framework' });
+        if (deep.sbi_feedback_model) sections.push({ key: 'sbi_feedback_model', title: 'The SBI Feedback Model', content: deep.sbi_feedback_model, type: 'sbi-feedback-model' });
+        if (deep.recognition_strategies) sections.push({ key: 'recognition_strategies', title: 'Recognition Strategies', content: deep.recognition_strategies, type: 'recognition-strategies' });
+        if (deep.recognition_and_development) sections.push({ key: 'recognition_and_development', title: 'Recognition & Development', content: deep.recognition_and_development, type: 'recognition-development' });
+        if (deep.addressing_underperformance) sections.push({ key: 'addressing_underperformance', title: 'Addressing Underperformance', content: deep.addressing_underperformance, type: 'addressing-underperformance' });
+        if (deep.practical_application) sections.push({ key: 'practical_application', title: 'Practical Application', content: deep.practical_application, type: 'practical-application' });
+        if (deep.development_and_growth) sections.push({ key: 'development_and_growth', title: 'Development and Growth', content: deep.development_and_growth, type: 'development-growth' });
+        if (deep.performance_metrics) sections.push({ key: 'performance_metrics', title: 'Performance Metrics', content: deep.performance_metrics, type: 'performance-metrics' });
+        if (deep.integration_with_other_tasks) sections.push({ key: 'integration_with_other_tasks', title: 'Integration with Other Tasks', content: deep.integration_with_other_tasks, type: 'integration-tasks' });
+        if (deep.connections_to_other_tasks) sections.push({ key: 'connections_to_other_tasks', title: 'Connections to Other Tasks', content: deep.connections_to_other_tasks, type: 'connections-tasks' });
+        if (deep.key_principles && deep.key_principles.length > 0) sections.push({ key: 'key_principles', title: 'Summary: Key Principles', content: deep.key_principles, type: 'numbered-list' });
+        if (deep.key_takeaways && deep.key_takeaways.length > 0) sections.push({ key: 'key_takeaways', title: 'Key Takeaways', content: deep.key_takeaways, type: 'numbered-list' });
+        if (deep.common_challenges && deep.common_challenges.length > 0) sections.push({ key: 'common_challenges', title: 'Common Challenges', content: deep.common_challenges, type: 'common-challenges' });
+        if (deep.tuckmans_model) sections.push({ key: 'tuckmans_model', title: "Tuckman's Model", content: deep.tuckmans_model, type: 'tuckman' });
+        if (deep.leadership_styles) sections.push({ key: 'leadership_styles', title: 'Leadership Styles', content: deep.leadership_styles, type: 'leadership-styles' });
+        if (deep.situational_leadership) sections.push({ key: 'situational_leadership', title: 'Situational Leadership', content: deep.situational_leadership, type: 'situational-leadership' });
+        if (deep.summary_and_key_takeaways) sections.push({ key: 'summary_and_key_takeaways', title: 'Summary and Key Takeaways', content: deep.summary_and_key_takeaways, type: 'summary' });
+        if (deep.additional_resources) sections.push({ key: 'additional_resources', title: 'Additional Resources', content: deep.additional_resources, type: 'resources' });
+        if (deep.thomas_kilmann_model) sections.push({ key: 'thomas_kilmann_model', title: 'Thomas-Kilmann Conflict Model', content: deep.thomas_kilmann_model, type: 'thomas-kilmann' });
+        if (deep.step_by_step_process && deep.step_by_step_process.length > 0) sections.push({ key: 'step_by_step_process', title: 'Step-by-Step Process', content: deep.step_by_step_process, type: 'step-by-step' });
+        if (deep.common_mistakes && deep.common_mistakes.length > 0) sections.push({ key: 'common_mistakes', title: 'Common Mistakes', content: deep.common_mistakes, type: 'common-mistakes' });
+        if (deep.emotional_intelligence_connection) sections.push({ key: 'emotional_intelligence_connection', title: 'Emotional Intelligence Connection', content: deep.emotional_intelligence_connection, type: 'emotional-intelligence' });
+      }
     }
     
     return sections;
@@ -7517,11 +9365,17 @@ const PMPApp = () => {
         return <p className="text-slate-300 leading-relaxed">{content}</p>;
       
       case 'list':
+        // Check if this is ECO enablers section (show checkmarks)
+        const isEcoEnablers = section.key === 'eco_enablers';
         return (
           <ul className="space-y-2">
             {content.map((item, idx) => (
               <li key={idx} className="text-slate-300 flex items-start gap-2">
-                <span className="text-purple-400 mt-1">•</span>
+                {isEcoEnablers ? (
+                  <span className="text-emerald-400 mt-1 font-bold">✓</span>
+                ) : (
+                  <span className="text-purple-400 mt-1">•</span>
+                )}
                 <span>{item}</span>
               </li>
             ))}
@@ -7540,14 +9394,28 @@ const PMPApp = () => {
       case 'scenarios':
         return (
           <div className="space-y-4">
-            {content.map((scenario, idx) => (
-              <div key={idx} className="border-l-2 border-cyan-500/50 pl-4">
-                <p className="text-white font-semibold mb-2">{scenario.scenario}</p>
-                <p className="text-sm text-red-400 mb-1"><span className="font-semibold">Wrong:</span> {scenario.wrong_answer}</p>
-                <p className="text-sm text-emerald-400 mb-1"><span className="font-semibold">Right:</span> {scenario.right_answer}</p>
-                <p className="text-sm text-slate-400 italic">{scenario.why}</p>
-              </div>
-            ))}
+            {content.map((scenario, idx) => {
+              const isRight = scenario.right_wrong === 'Right';
+              return (
+                <div key={idx} className="border-l-2 border-cyan-500/50 pl-4">
+                  <p className="text-white font-semibold mb-2">{scenario.scenario}</p>
+                  {scenario.right_wrong ? (
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className="text-lg">{isRight ? '✅' : '❌'}</span>
+                      <span className={`text-sm font-semibold ${isRight ? 'text-emerald-400' : 'text-red-400'}`}>
+                        {isRight ? 'Right' : 'Wrong'}
+                      </span>
+                    </div>
+                  ) : (
+                    <>
+                      <p className="text-sm text-red-400 mb-1"><span className="font-semibold">Wrong:</span> {scenario.wrong_answer}</p>
+                      <p className="text-sm text-emerald-400 mb-1"><span className="font-semibold">Right:</span> {scenario.right_answer}</p>
+                    </>
+                  )}
+                  <p className="text-sm text-slate-400 italic">{scenario.why}</p>
+                </div>
+              );
+            })}
           </div>
         );
       
@@ -7699,6 +9567,118 @@ const PMPApp = () => {
         );
       
       case 'practical-application':
+        // Support Performance structure
+        if (content.addressing_underperformance) {
+          return (
+            <div className="space-y-6">
+              <h4 className="executive-font text-xl font-bold text-white mb-4">Addressing Underperformance</h4>
+              {content.addressing_underperformance.step_1_observe_and_document && (
+                <div className="border-l-4 border-blue-500/50 bg-blue-500/5 p-4 rounded">
+                  <h5 className="text-white font-semibold mb-2">Step 1: Observe and Document</h5>
+                  <ul className="space-y-1 text-slate-300 text-sm ml-4">
+                    {content.addressing_underperformance.step_1_observe_and_document.map((item, idx) => (
+                      <li key={idx}>• {item}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+              {content.addressing_underperformance.step_2_diagnose_root_cause && (
+                <div className="border-l-4 border-purple-500/50 bg-purple-500/5 p-4 rounded">
+                  <h5 className="text-white font-semibold mb-2">Step 2: Diagnose Root Cause</h5>
+                  <ul className="space-y-1 text-slate-300 text-sm ml-4">
+                    {content.addressing_underperformance.step_2_diagnose_root_cause.map((item, idx) => (
+                      <li key={idx}>• {item}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+              {content.addressing_underperformance.step_3_have_the_conversation && (
+                <div className="border-l-4 border-cyan-500/50 bg-cyan-500/5 p-4 rounded">
+                  <h5 className="text-white font-semibold mb-2">Step 3: Have the Conversation</h5>
+                  <ol className="space-y-2 text-slate-300 text-sm ml-4">
+                    {content.addressing_underperformance.step_3_have_the_conversation.map((item, idx) => (
+                      <li key={idx}>{idx + 1}. {item}</li>
+                    ))}
+                  </ol>
+                </div>
+              )}
+              {content.addressing_underperformance.step_4_create_improvement_plan && (
+                <div className="border-l-4 border-emerald-500/50 bg-emerald-500/5 p-4 rounded">
+                  <h5 className="text-white font-semibold mb-2">Step 4: Create Improvement Plan</h5>
+                  <ul className="space-y-1 text-slate-300 text-sm ml-4">
+                    {content.addressing_underperformance.step_4_create_improvement_plan.map((item, idx) => (
+                      <li key={idx}>• {item}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+              {content.addressing_underperformance.step_5_follow_up && (
+                <div className="border-l-4 border-yellow-500/50 bg-yellow-500/5 p-4 rounded">
+                  <h5 className="text-white font-semibold mb-2">Step 5: Follow Up</h5>
+                  <ul className="space-y-1 text-slate-300 text-sm ml-4">
+                    {content.addressing_underperformance.step_5_follow_up.map((item, idx) => (
+                      <li key={idx}>• {item}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+              {content.addressing_underperformance.step_6_escalate_if_necessary && (
+                <div className="border-l-4 border-red-500/50 bg-red-500/5 p-4 rounded">
+                  <h5 className="text-white font-semibold mb-2">Step 6: Escalate if Necessary</h5>
+                  <ul className="space-y-1 text-slate-300 text-sm ml-4">
+                    {content.addressing_underperformance.step_6_escalate_if_necessary.map((item, idx) => (
+                      <li key={idx}>• {item}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+              {content.underperformance_conversation_script && (
+                <div className="mt-4 space-y-4">
+                  <div className="border-l-4 border-emerald-500/50 bg-emerald-500/5 p-4 rounded">
+                    <h5 className="text-white font-semibold mb-2">What to Say:</h5>
+                    <div className="bg-slate-800/50 p-4 rounded italic text-slate-300 leading-relaxed whitespace-pre-line">
+                      {content.underperformance_conversation_script.what_to_say}
+                    </div>
+                  </div>
+                  <div className="border-l-4 border-red-500/50 bg-red-500/5 p-4 rounded">
+                    <h5 className="text-white font-semibold mb-2">What NOT to Say:</h5>
+                    <div className="bg-slate-800/50 p-4 rounded italic text-red-300 leading-relaxed">
+                      {content.underperformance_conversation_script.what_not_to_say}
+                    </div>
+                  </div>
+                </div>
+              )}
+              {content.coaching_vs_corrective_spectrum && (
+                <div className="mt-4">
+                  <h5 className="text-white font-semibold mb-3">Coaching vs. Corrective Action Spectrum</h5>
+                  <div className="overflow-x-auto">
+                    <table className="w-full border-collapse">
+                      <thead>
+                        <tr className="border-b border-slate-600">
+                          <th className="text-left p-3 text-white font-semibold">Approach</th>
+                          <th className="text-left p-3 text-white font-semibold">When to Use</th>
+                          <th className="text-left p-3 text-white font-semibold">Tone</th>
+                          <th className="text-left p-3 text-white font-semibold">Focus</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {content.coaching_vs_corrective_spectrum.map((item, idx) => (
+                          <tr key={idx} className="border-b border-slate-700/50">
+                            <td className="p-3 text-orange-400 font-semibold">{item.approach}</td>
+                            <td className="p-3 text-slate-300">{item.when_to_use}</td>
+                            <td className="p-3 text-slate-300">{item.tone}</td>
+                            <td className="p-3 text-slate-300">{item.focus}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              )}
+            </div>
+          );
+        }
+        // Fallback for other structures
         return (
           <div className="space-y-4">
             {content.title && <h4 className="executive-font text-xl font-bold text-white mb-4">{content.title}</h4>}
@@ -7828,9 +9808,48 @@ const PMPApp = () => {
         );
       
       case 'common-mistakes':
+        // Support Performance uses object structure with wrong_answer_patterns
+        if (content.wrong_answer_patterns) {
+          return (
+            <div className="space-y-4">
+              {content.wrong_answer_patterns && content.wrong_answer_patterns.length > 0 && (
+                <div>
+                  <h4 className="executive-font text-lg font-semibold text-white mb-3">Wrong Answer Patterns on Exam</h4>
+                  <div className="overflow-x-auto">
+                    <table className="w-full border-collapse">
+                      <thead>
+                        <tr className="border-b border-slate-600">
+                          <th className="text-left p-3 text-white font-semibold">Trap</th>
+                          <th className="text-left p-3 text-white font-semibold">Why It's Wrong</th>
+                          <th className="text-left p-3 text-white font-semibold">Better Approach</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {content.wrong_answer_patterns.map((mistake, idx) => (
+                          <tr key={idx} className="border-b border-slate-700/50">
+                            <td className="p-3 text-red-400 font-semibold">{mistake.trap}</td>
+                            <td className="p-3 text-slate-300">{mistake.why_wrong}</td>
+                            <td className="p-3 text-emerald-400">{mistake.better_approach}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              )}
+              {content.feedback_sandwich_trap && (
+                <div className="border-l-4 border-yellow-500/50 bg-yellow-500/5 p-4 rounded mt-4">
+                  <h4 className="executive-font text-lg font-semibold text-white mb-2">The "Feedback Sandwich" Trap</h4>
+                  <p className="text-slate-300">{content.feedback_sandwich_trap}</p>
+                </div>
+              )}
+            </div>
+          );
+        }
+        // Fallback for array format
         return (
           <div className="space-y-3">
-            {content.map((mistake, idx) => (
+            {Array.isArray(content) && content.map((mistake, idx) => (
               <div key={idx} className="border-l-2 border-rose-500/50 pl-4">
                 <h5 className="font-semibold text-white mb-1">{mistake.mistake}</h5>
                 <p className="text-sm text-slate-400 mb-1"><span className="font-semibold">Consequence:</span> {mistake.consequence}</p>
@@ -7856,32 +9875,104 @@ const PMPApp = () => {
             {content.sbi_model && (
               <div className="border-l-4 border-blue-500/50 bg-blue-500/5 p-4 rounded">
                 <h4 className="executive-font text-lg font-semibold text-white mb-3">📊 {content.sbi_model.title}</h4>
-                <div className="space-y-2 text-sm">
-                  <p className="text-slate-300"><span className="font-semibold text-blue-400">S</span> = {content.sbi_model.s}</p>
-                  <p className="text-slate-300"><span className="font-semibold text-blue-400">B</span> = {content.sbi_model.b}</p>
-                  <p className="text-slate-300"><span className="font-semibold text-blue-400">I</span> = {content.sbi_model.i}</p>
-                </div>
+                {content.sbi_model.table ? (
+                  <div className="overflow-x-auto">
+                    <table className="w-full border-collapse">
+                      <thead>
+                        <tr className="border-b border-slate-600">
+                          <th className="text-left p-3 text-white font-semibold">Component</th>
+                          <th className="text-left p-3 text-white font-semibold">Question</th>
+                          <th className="text-left p-3 text-white font-semibold">Example</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {content.sbi_model.table.map((row, idx) => (
+                          <tr key={idx} className="border-b border-slate-700/50">
+                            <td className="p-3 text-orange-400 font-semibold"><strong>{row.component}</strong></td>
+                            <td className="p-3 text-slate-300">{row.question}</td>
+                            <td className="p-3 text-slate-400 italic">{row.example}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                ) : (
+                  <div className="space-y-2 text-sm">
+                    <p className="text-slate-300"><span className="font-semibold text-blue-400">S</span> = {content.sbi_model.s}</p>
+                    <p className="text-slate-300"><span className="font-semibold text-blue-400">B</span> = {content.sbi_model.b}</p>
+                    <p className="text-slate-300"><span className="font-semibold text-blue-400">I</span> = {content.sbi_model.i}</p>
+                  </div>
+                )}
+              </div>
+            )}
+            {content.performance_equation && (
+              <div className="border-l-4 border-cyan-500/50 bg-cyan-500/5 p-4 rounded">
+                <h4 className="executive-font text-lg font-semibold text-white mb-3">📈 {content.performance_equation.title}</h4>
+                <p className="text-slate-300 text-xl font-mono text-center mb-4 font-bold">{content.performance_equation.formula}</p>
+                {content.performance_equation.table && (
+                  <div className="overflow-x-auto">
+                    <table className="w-full border-collapse">
+                      <thead>
+                        <tr className="border-b border-slate-600">
+                          <th className="text-left p-3 text-white font-semibold">Factor</th>
+                          <th className="text-left p-3 text-white font-semibold">Symptoms</th>
+                          <th className="text-left p-3 text-white font-semibold">Intervention</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {content.performance_equation.table.map((row, idx) => (
+                          <tr key={idx} className="border-b border-slate-700/50">
+                            <td className="p-3 text-orange-400 font-semibold">{row.factor}</td>
+                            <td className="p-3 text-slate-300">{row.symptoms}</td>
+                            <td className="p-3 text-emerald-400">{row.intervention}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
               </div>
             )}
             {content.recognition_types && (
               <div className="border-l-4 border-purple-500/50 bg-purple-500/5 p-4 rounded">
                 <h4 className="executive-font text-lg font-semibold text-white mb-3">⭐ {content.recognition_types.title}</h4>
-                <div className="grid grid-cols-2 gap-4 text-sm">
-                  <div>
-                    <p className="text-slate-400 mb-1">Formal: {content.recognition_types.formal}</p>
-                    <p className="text-slate-400">Informal: {content.recognition_types.informal}</p>
+                {content.recognition_types.table ? (
+                  <div className="overflow-x-auto">
+                    <table className="w-full border-collapse">
+                      <thead>
+                        <tr className="border-b border-slate-600">
+                          <th className="text-left p-3 text-white font-semibold">Dimension</th>
+                          <th className="text-left p-3 text-white font-semibold">Options</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {content.recognition_types.table.map((row, idx) => (
+                          <tr key={idx} className="border-b border-slate-700/50">
+                            <td className="p-3 text-orange-400 font-semibold"><strong>{row.dimension}</strong></td>
+                            <td className="p-3 text-slate-300">{row.options}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
                   </div>
-                  <div>
-                    <p className="text-slate-400 mb-1">Public: {content.recognition_types.public}</p>
-                    <p className="text-slate-400">Private: {content.recognition_types.private}</p>
+                ) : (
+                  <div className="grid grid-cols-2 gap-4 text-sm">
+                    <div>
+                      <p className="text-slate-400 mb-1">Formal: {content.recognition_types.formal}</p>
+                      <p className="text-slate-400">Informal: {content.recognition_types.informal}</p>
+                    </div>
+                    <div>
+                      <p className="text-slate-400 mb-1">Public: {content.recognition_types.public}</p>
+                      <p className="text-slate-400">Private: {content.recognition_types.private}</p>
+                    </div>
                   </div>
-                </div>
+                )}
               </div>
             )}
             {content.performance_continuum && (
               <div className="border-l-4 border-emerald-500/50 bg-emerald-500/5 p-4 rounded">
                 <h4 className="executive-font text-lg font-semibold text-white mb-3">📈 {content.performance_continuum.title}</h4>
-                <p className="text-slate-300">{content.performance_continuum.stages}</p>
+                <p className="text-slate-300 text-lg font-mono text-center">{content.performance_continuum.stages}</p>
               </div>
             )}
           </div>
@@ -8118,31 +10209,83 @@ const PMPApp = () => {
       case 'exam-strategy':
         return (
           <div className="space-y-4">
-            {content.do && content.do.length > 0 && (
+            {content.do && Array.isArray(content.do) && content.do.length > 0 && (
               <div className="border-l-4 border-emerald-500/50 bg-emerald-500/5 p-4 rounded">
                 <h4 className="executive-font text-lg font-semibold text-emerald-400 mb-3">✓ Do:</h4>
-                <ul className="space-y-1">
-                  {content.do.map((item, idx) => (
-                    <li key={idx} className="text-slate-300 flex items-start gap-2">
-                      <span className="text-emerald-400 mt-1">•</span>
-                      <span>{item}</span>
-                    </li>
-                  ))}
-                </ul>
+                {typeof content.do[0] === 'object' && content.do[0].action ? (
+                  <div className="space-y-2">
+                    {content.do.map((item, idx) => (
+                      <div key={idx} className="text-slate-300">
+                        <span className="font-semibold text-emerald-400">{item.action}</span>
+                        <span className="text-slate-400 ml-2">— {item.why}</span>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <ul className="space-y-1">
+                    {content.do.map((item, idx) => (
+                      <li key={idx} className="text-slate-300 flex items-start gap-2">
+                        <span className="text-emerald-400 mt-1">•</span>
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                )}
               </div>
             )}
-            {content.dont && content.dont.length > 0 && (
+            {content.dont && Array.isArray(content.dont) && content.dont.length > 0 && (
               <div className="border-l-4 border-red-500/50 bg-red-500/5 p-4 rounded">
                 <h4 className="executive-font text-lg font-semibold text-red-400 mb-3">✗ Don't:</h4>
-                <ul className="space-y-1">
-                  {content.dont.map((item, idx) => (
-                    <li key={idx} className="text-slate-300 flex items-start gap-2">
-                      <span className="text-red-400 mt-1">•</span>
-                      <span>{item}</span>
-                    </li>
-                  ))}
-                </ul>
+                {typeof content.dont[0] === 'object' && content.dont[0].trap ? (
+                  <div className="space-y-2">
+                    {content.dont.map((item, idx) => (
+                      <div key={idx} className="text-slate-300">
+                        <span className="font-semibold text-red-400">{item.trap}</span>
+                        <span className="text-slate-400 ml-2">— {item.why_wrong}</span>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <ul className="space-y-1">
+                    {content.dont.map((item, idx) => (
+                      <li key={idx} className="text-slate-300 flex items-start gap-2">
+                        <span className="text-red-400 mt-1">•</span>
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                )}
               </div>
+            )}
+            {content.signal_words && (
+              <>
+                {content.signal_words.correct && content.signal_words.correct.length > 0 && (
+                  <div className="border-l-4 border-cyan-500/50 bg-cyan-500/5 p-4 rounded">
+                    <h4 className="executive-font text-lg font-semibold text-cyan-400 mb-3">Signal Words (Correct Answers):</h4>
+                    <ul className="space-y-1">
+                      {content.signal_words.correct.map((item, idx) => (
+                        <li key={idx} className="text-slate-300 flex items-start gap-2">
+                          <span className="text-cyan-400 mt-1">•</span>
+                          <span>{item}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+                {content.signal_words.wrong && content.signal_words.wrong.length > 0 && (
+                  <div className="border-l-4 border-orange-500/50 bg-orange-500/5 p-4 rounded">
+                    <h4 className="executive-font text-lg font-semibold text-orange-400 mb-3">Signal Words (Wrong Answers):</h4>
+                    <ul className="space-y-1">
+                      {content.signal_words.wrong.map((item, idx) => (
+                        <li key={idx} className="text-slate-300 flex items-start gap-2">
+                          <span className="text-orange-400 mt-1">•</span>
+                          <span>{item}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </>
             )}
             {content.key_phrases_correct && content.key_phrases_correct.length > 0 && (
               <div className="border-l-4 border-cyan-500/50 bg-cyan-500/5 p-4 rounded">
@@ -8173,6 +10316,667 @@ const PMPApp = () => {
           </div>
         );
       
+      case 'what-this-task-is':
+        return (
+          <div className="space-y-4">
+            {content.definition && (
+              <div className="border-l-4 border-orange-500/50 bg-orange-500/5 p-4 rounded">
+                <h4 className="executive-font text-lg font-semibold text-white mb-2">Definition</h4>
+                <p className="text-slate-300 italic">"{content.definition}"</p>
+              </div>
+            )}
+            {content.core_principle && (
+              <div className="mt-4">
+                <h4 className="executive-font text-lg font-semibold text-white mb-2">Core Principle</h4>
+                <p className="text-slate-300 leading-relaxed">{content.core_principle}</p>
+              </div>
+            )}
+          </div>
+        );
+      
+      case 'how-to-apply':
+        return (
+          <div className="space-y-6">
+            {content.delivering_effective_feedback && (
+              <div>
+                <h4 className="executive-font text-lg font-semibold text-white mb-3">Delivering Effective Feedback</h4>
+                <ol className="list-decimal list-inside space-y-2 text-slate-300 ml-4">
+                  {content.delivering_effective_feedback.map((item, idx) => (
+                    <li key={idx}>{item}</li>
+                  ))}
+                </ol>
+              </div>
+            )}
+            {content.sbi_examples && (
+              <div>
+                <h4 className="executive-font text-lg font-semibold text-white mb-3">SBI Examples</h4>
+                {content.sbi_examples.constructive && (
+                  <div className="border-l-4 border-red-500/50 bg-red-500/5 p-4 rounded mb-4">
+                    <h5 className="text-white font-semibold mb-2">Constructive:</h5>
+                    <div className="bg-slate-800/50 p-4 rounded italic text-slate-300 space-y-2">
+                      <p><strong className="text-red-400">S</strong>: "{content.sbi_examples.constructive.s}"</p>
+                      <p><strong className="text-red-400">B</strong>: "{content.sbi_examples.constructive.b}"</p>
+                      <p><strong className="text-red-400">I</strong>: "{content.sbi_examples.constructive.i}"</p>
+                    </div>
+                  </div>
+                )}
+                {content.sbi_examples.positive && (
+                  <div className="border-l-4 border-emerald-500/50 bg-emerald-500/5 p-4 rounded">
+                    <h5 className="text-white font-semibold mb-2">Positive:</h5>
+                    <div className="bg-slate-800/50 p-4 rounded italic text-slate-300 space-y-2">
+                      <p><strong className="text-emerald-400">S</strong>: "{content.sbi_examples.positive.s}"</p>
+                      <p><strong className="text-emerald-400">B</strong>: "{content.sbi_examples.positive.b}"</p>
+                      <p><strong className="text-emerald-400">I</strong>: "{content.sbi_examples.positive.i}"</p>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+            {content.recognition_best_practices_taps && (
+              <div>
+                <h4 className="executive-font text-lg font-semibold text-white mb-3">Recognition Best Practices (T.A.P.S.)</h4>
+                <div className="space-y-2 text-slate-300">
+                  <p><strong className="text-orange-400">T</strong>: {content.recognition_best_practices_taps.t}</p>
+                  <p><strong className="text-orange-400">A</strong>: {content.recognition_best_practices_taps.a}</p>
+                  <p><strong className="text-orange-400">P</strong>: {content.recognition_best_practices_taps.p}</p>
+                  <p><strong className="text-orange-400">S</strong>: {content.recognition_best_practices_taps.s}</p>
+                </div>
+              </div>
+            )}
+          </div>
+        );
+      
+      case 'how-task-tested':
+        return (
+          <div className="space-y-4">
+            {content.description && (
+              <p className="text-slate-300 leading-relaxed mb-4">{content.description}</p>
+            )}
+            {content.question_patterns && content.question_patterns.length > 0 && (
+              <div>
+                <h4 className="executive-font text-lg font-semibold text-white mb-3">Question Patterns</h4>
+                <div className="overflow-x-auto">
+                  <table className="w-full border-collapse">
+                    <thead>
+                      <tr className="border-b border-slate-600">
+                        <th className="text-left p-3 text-white font-semibold">Pattern</th>
+                        <th className="text-left p-3 text-white font-semibold">What They Test</th>
+                        <th className="text-left p-3 text-white font-semibold">Key Signals</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {content.question_patterns.map((pattern, idx) => (
+                        <tr key={idx} className="border-b border-slate-700/50">
+                          <td className="p-3 text-orange-400 font-semibold">{pattern.pattern}</td>
+                          <td className="p-3 text-slate-300">{pattern.what_they_test}</td>
+                          <td className="p-3 text-slate-400 italic">{pattern.key_signals}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
+            {content.what_pmi_expects && content.what_pmi_expects.length > 0 && (
+              <div className="border-l-4 border-cyan-500/50 bg-cyan-500/5 p-4 rounded">
+                <h4 className="executive-font text-lg font-semibold text-white mb-3">What PMI Expects</h4>
+                <ul className="space-y-2">
+                  {content.what_pmi_expects.map((item, idx) => (
+                    <li key={idx} className="text-slate-300 flex items-start gap-2">
+                      <span className="text-cyan-400 mt-1">•</span>
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
+        );
+      
+      case 'sample-question':
+        const correctIndex = section.correctAnswer === 'B' ? 1 : (section.correctAnswer === 'A' ? 0 : (section.correctAnswer === 'C' ? 2 : 3));
+        return (
+          <div className="space-y-4">
+            {content.scenario && (
+              <div className="bg-slate-800/50 p-4 rounded mb-4">
+                <h4 className="text-white font-semibold mb-2">Scenario:</h4>
+                <p className="text-slate-300 leading-relaxed">{content.scenario}</p>
+              </div>
+            )}
+            {content.options && content.options.length > 0 && (
+              <div className="space-y-2 mb-4">
+                {content.options.map((opt, optIdx) => {
+                  const isCorrect = optIdx === correctIndex;
+                  return (
+                    <div key={optIdx} className={`p-3 rounded transition-all ${
+                      isCorrect 
+                        ? 'bg-emerald-500/20 border-2 border-emerald-500/50' 
+                        : 'bg-slate-800/50 border border-slate-700'
+                    }`}>
+                      <div className="flex items-start gap-3">
+                        <span className={`font-bold text-lg ${isCorrect ? 'text-emerald-400' : 'text-slate-400'}`}>
+                          {String.fromCharCode(65 + optIdx)}:
+                        </span>
+                        <span className={`flex-1 ${isCorrect ? 'text-emerald-300 font-semibold' : 'text-slate-300'}`}>
+                          {opt}
+                        </span>
+                        {isCorrect && (
+                          <span className="text-emerald-400 font-bold">✓ Correct</span>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+            {content.analysis && (
+              <>
+                {content.analysis.why_b_correct && (
+                  <div className="bg-emerald-500/10 p-4 rounded border border-emerald-500/30 mb-3">
+                    <p className="text-emerald-400 font-semibold mb-2">Why B is correct:</p>
+                    <p className="text-slate-300 text-sm leading-relaxed">{content.analysis.why_b_correct}</p>
+                  </div>
+                )}
+                {content.analysis.why_others_wrong && (
+                  <div className="bg-red-500/10 p-4 rounded border border-red-500/30">
+                    <p className="text-red-400 font-semibold mb-2">Why others are wrong:</p>
+                    <div className="space-y-2">
+                      {Object.entries(content.analysis.why_others_wrong).map(([key, value]) => (
+                        <div key={key} className="text-slate-300 text-sm">
+                          <span className="font-semibold text-red-300">{key}:</span> {value}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </>
+            )}
+            {content.key_principle && (
+              <div className="border-l-4 border-orange-500/50 bg-orange-500/5 p-4 rounded mt-4">
+                <p className="text-white font-semibold mb-1">Key Principle</p>
+                <p className="text-slate-300 text-sm">{content.key_principle}</p>
+              </div>
+            )}
+          </div>
+        );
+      
+      case 'common-mistakes':
+        return (
+          <div className="space-y-4">
+            {content.wrong_answer_patterns && content.wrong_answer_patterns.length > 0 && (
+              <div>
+                <h4 className="executive-font text-lg font-semibold text-white mb-3">Wrong Answer Patterns on Exam</h4>
+                <div className="overflow-x-auto">
+                  <table className="w-full border-collapse">
+                    <thead>
+                      <tr className="border-b border-slate-600">
+                        <th className="text-left p-3 text-white font-semibold">Trap</th>
+                        <th className="text-left p-3 text-white font-semibold">Why It's Wrong</th>
+                        <th className="text-left p-3 text-white font-semibold">Better Approach</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {content.wrong_answer_patterns.map((mistake, idx) => (
+                        <tr key={idx} className="border-b border-slate-700/50">
+                          <td className="p-3 text-red-400 font-semibold">{mistake.trap}</td>
+                          <td className="p-3 text-slate-300">{mistake.why_wrong}</td>
+                          <td className="p-3 text-emerald-400">{mistake.better_approach}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
+            {content.feedback_sandwich_trap && (
+              <div className="border-l-4 border-yellow-500/50 bg-yellow-500/5 p-4 rounded mt-4">
+                <h4 className="executive-font text-lg font-semibold text-white mb-2">The \"Feedback Sandwich\" Trap</h4>
+                <p className="text-slate-300">{content.feedback_sandwich_trap}</p>
+              </div>
+            )}
+          </div>
+        );
+      
+      case 'introduction-detailed':
+        return (
+          <div className="space-y-6">
+            {content.description && (
+              <p className="text-slate-300 leading-relaxed mb-4">{content.description}</p>
+            )}
+            {content.pm_vs_functional_manager && (
+              <p className="text-slate-300 leading-relaxed mb-2">{content.pm_vs_functional_manager}</p>
+            )}
+            {content.pm_tools && content.pm_tools.length > 0 && (
+              <ul className="space-y-2 text-slate-300 ml-4 mb-4">
+                {content.pm_tools.map((tool, idx) => (
+                  <li key={idx} className="flex items-start gap-2">
+                    <span className="text-orange-400 mt-1">•</span>
+                    <span>{tool}</span>
+                  </li>
+                ))}
+              </ul>
+            )}
+            {content.unique_challenge && (
+              <p className="text-slate-300 leading-relaxed mt-4 italic mb-4">{content.unique_challenge}</p>
+            )}
+            {content.performance_equation && (
+              <div className="border-l-4 border-orange-500/50 bg-orange-500/5 p-4 rounded">
+                <h4 className="executive-font text-lg font-semibold text-white mb-3">The Performance Equation</h4>
+                <div className="bg-slate-800/50 p-3 rounded mb-3 font-mono text-center">
+                  <p className="text-orange-400 text-xl font-bold">{content.performance_equation.formula}</p>
+                </div>
+                {content.performance_equation.description && (
+                  <p className="text-slate-300 text-sm mb-3">{content.performance_equation.description}</p>
+                )}
+                {content.performance_equation.diagnosis_table && content.performance_equation.diagnosis_table.length > 0 && (
+                  <div className="overflow-x-auto">
+                    <table className="w-full border-collapse">
+                      <thead>
+                        <tr className="border-b border-slate-600">
+                          <th className="text-left p-2 text-white font-semibold">Factor</th>
+                          <th className="text-left p-2 text-white font-semibold">Symptoms</th>
+                          <th className="text-left p-2 text-white font-semibold">Intervention</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {content.performance_equation.diagnosis_table.map((row, idx) => (
+                          <tr key={idx} className="border-b border-slate-700/50">
+                            <td className="p-2 text-orange-400 font-semibold">{row.factor}</td>
+                            <td className="p-2 text-slate-300 text-sm">{row.symptoms}</td>
+                            <td className="p-2 text-slate-300 text-sm">{row.intervention}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+              </div>
+            )}
+            {content.what_youll_learn && content.what_youll_learn.length > 0 && (
+              <div className="mt-4">
+                <h4 className="executive-font text-lg font-semibold text-white mb-3">What You'll Learn:</h4>
+                <ol className="list-decimal list-inside space-y-2 text-slate-300 ml-4">
+                  {content.what_youll_learn.map((item, idx) => (
+                    <li key={idx}>{item}</li>
+                  ))}
+                </ol>
+              </div>
+            )}
+          </div>
+        );
+      
+      case 'sbi-feedback-model':
+        return (
+          <div className="space-y-6">
+            {content.why_sbi_works && (
+              <div>
+                <h4 className="executive-font text-lg font-semibold text-white mb-3">Why SBI Works</h4>
+                {content.why_sbi_works.description && (
+                  <p className="text-slate-300 mb-2">{content.why_sbi_works.description}</p>
+                )}
+                {content.why_sbi_works.problems && content.why_sbi_works.problems.length > 0 && (
+                  <ul className="space-y-2 text-slate-300 ml-4 mb-3">
+                    {content.why_sbi_works.problems.map((problem, idx) => (
+                      <li key={idx} className="flex items-start gap-2">
+                        <span className="text-red-400 mt-1">•</span>
+                        <span>{problem}</span>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+                {content.why_sbi_works.solution && (
+                  <p className="text-emerald-400 font-semibold">{content.why_sbi_works.solution}</p>
+                )}
+              </div>
+            )}
+            {content.three_components && (
+              <div>
+                <h4 className="executive-font text-lg font-semibold text-white mb-3">The Three Components</h4>
+                <div className="space-y-4">
+                  {content.three_components.situation && (
+                    <div className="border-l-4 border-blue-500/50 bg-blue-500/5 p-4 rounded">
+                      <h5 className="text-white font-semibold mb-2">Situation (S)</h5>
+                      <p className="text-slate-300 text-sm mb-2">{content.three_components.situation.description}</p>
+                      {content.three_components.situation.benefits && (
+                        <ul className="text-slate-300 text-sm space-y-1 ml-4 mb-2">
+                          {content.three_components.situation.benefits.map((benefit, idx) => (
+                            <li key={idx}>• {benefit}</li>
+                          ))}
+                        </ul>
+                      )}
+                      {content.three_components.situation.examples && (
+                        <div className="mt-2">
+                          <p className="text-slate-400 text-xs mb-1">Examples:</p>
+                          <ul className="text-slate-300 text-sm space-y-1 ml-4">
+                            {content.three_components.situation.examples.map((ex, idx) => (
+                              <li key={idx}>• {ex}</li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                  {content.three_components.behavior && (
+                    <div className="border-l-4 border-purple-500/50 bg-purple-500/5 p-4 rounded">
+                      <h5 className="text-white font-semibold mb-2">Behavior (B)</h5>
+                      <p className="text-slate-300 text-sm mb-2">{content.three_components.behavior.description}</p>
+                      {content.three_components.behavior.guidance && (
+                        <ul className="text-slate-300 text-sm space-y-1 ml-4 mb-2">
+                          {content.three_components.behavior.guidance.map((guide, idx) => (
+                            <li key={idx}>• {guide}</li>
+                          ))}
+                        </ul>
+                      )}
+                      {content.three_components.behavior.examples && (
+                        <div className="mt-2">
+                          <p className="text-slate-400 text-xs mb-1">Examples:</p>
+                          <ul className="text-slate-300 text-sm space-y-1 ml-4">
+                            {content.three_components.behavior.examples.map((ex, idx) => (
+                              <li key={idx}>• {ex}</li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                  {content.three_components.impact && (
+                    <div className="border-l-4 border-rose-500/50 bg-rose-500/5 p-4 rounded">
+                      <h5 className="text-white font-semibold mb-2">Impact (I)</h5>
+                      <p className="text-slate-300 text-sm mb-2">{content.three_components.impact.description}</p>
+                      {content.three_components.impact.purpose && (
+                        <p className="text-slate-300 text-sm italic mb-2">{content.three_components.impact.purpose}</p>
+                      )}
+                      {content.three_components.impact.scope && (
+                        <p className="text-slate-400 text-xs mb-2">{content.three_components.impact.scope}</p>
+                      )}
+                      {content.three_components.impact.examples && (
+                        <div className="mt-2">
+                          <p className="text-slate-400 text-xs mb-1">Examples:</p>
+                          <ul className="text-slate-300 text-sm space-y-1 ml-4">
+                            {content.three_components.impact.examples.map((ex, idx) => (
+                              <li key={idx}>• {ex}</li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+            {content.sbi_examples && (
+              <div>
+                <h4 className="executive-font text-lg font-semibold text-white mb-3">SBI Examples</h4>
+                {content.sbi_examples.constructive && (
+                  <div className="border-l-4 border-red-500/50 bg-red-500/5 p-4 rounded mb-4">
+                    <h5 className="text-white font-semibold mb-2">Constructive (Issue-focused):</h5>
+                    <div className="bg-slate-800/50 p-4 rounded italic text-slate-300 leading-relaxed">
+                      <p>{content.sbi_examples.constructive}</p>
+                    </div>
+                  </div>
+                )}
+                {content.sbi_examples.positive && (
+                  <div className="border-l-4 border-emerald-500/50 bg-emerald-500/5 p-4 rounded">
+                    <h5 className="text-white font-semibold mb-2">Positive (Recognition-focused):</h5>
+                    <div className="bg-slate-800/50 p-4 rounded italic text-slate-300 leading-relaxed">
+                      <p>{content.sbi_examples.positive}</p>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+            {content.delivery_framework && content.delivery_framework.length > 0 && (
+              <div>
+                <h4 className="executive-font text-lg font-semibold text-white mb-3">SBI Delivery Framework</h4>
+                <ol className="list-decimal list-inside space-y-2 text-slate-300 ml-4">
+                  {content.delivery_framework.map((item, idx) => (
+                    <li key={idx}>{item}</li>
+                  ))}
+                </ol>
+              </div>
+            )}
+            {content.common_mistakes && content.common_mistakes.length > 0 && (
+              <div>
+                <h4 className="executive-font text-lg font-semibold text-white mb-3">Common SBI Mistakes</h4>
+                <div className="overflow-x-auto">
+                  <table className="w-full border-collapse">
+                    <thead>
+                      <tr className="border-b border-slate-600">
+                        <th className="text-left p-3 text-white font-semibold">Mistake</th>
+                        <th className="text-left p-3 text-white font-semibold">Example</th>
+                        <th className="text-left p-3 text-white font-semibold">Fix</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {content.common_mistakes.map((mistake, idx) => (
+                        <tr key={idx} className="border-b border-slate-700/50">
+                          <td className="p-3 text-red-400 font-semibold">{mistake.mistake}</td>
+                          <td className="p-3 text-slate-300 italic">{mistake.example}</td>
+                          <td className="p-3 text-emerald-400">{mistake.fix}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
+          </div>
+        );
+      
+      case 'recognition-development':
+        return (
+          <div className="space-y-6">
+            {content.performance_equation && (
+              <div className="border-l-4 border-cyan-500/50 bg-cyan-500/5 p-4 rounded">
+                <h4 className="executive-font text-lg font-semibold text-white mb-3">The Performance Equation</h4>
+                <p className="text-2xl font-bold text-cyan-400 mb-4 text-center">{content.performance_equation.formula}</p>
+                {content.performance_equation.diagnosis_table && (
+                  <div className="overflow-x-auto">
+                    <table className="w-full border-collapse">
+                      <thead>
+                        <tr className="border-b border-slate-600">
+                          <th className="text-left p-3 text-white font-semibold">Factor</th>
+                          <th className="text-left p-3 text-white font-semibold">Signs</th>
+                          <th className="text-left p-3 text-white font-semibold">Questions to Ask</th>
+                          <th className="text-left p-3 text-white font-semibold">Interventions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {content.performance_equation.diagnosis_table.map((row, idx) => (
+                          <tr key={idx} className="border-b border-slate-700/50">
+                            <td className="p-3 text-orange-400 font-semibold">{row.factor}</td>
+                            <td className="p-3 text-slate-300">{row.signs}</td>
+                            <td className="p-3 text-slate-300 italic">{row.questions_to_ask}</td>
+                            <td className="p-3 text-emerald-400">{row.interventions}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+              </div>
+            )}
+            {content.why_recognition_matters && content.why_recognition_matters.length > 0 && (
+              <div>
+                <h4 className="executive-font text-lg font-semibold text-white mb-3">Why Recognition Matters</h4>
+                <p className="text-slate-300 mb-3">Research consistently shows recognition is one of the most powerful performance drivers:</p>
+                <ul className="space-y-2 text-slate-300 ml-4">
+                  {content.why_recognition_matters.map((item, idx) => (
+                    <li key={idx} className="flex items-start gap-2">
+                      <span className="text-orange-400 mt-1">•</span>
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+            {content.types_of_recognition && (
+              <div>
+                <h4 className="executive-font text-lg font-semibold text-white mb-3">Types of Recognition</h4>
+                {content.types_of_recognition.by_formality && (
+                  <div className="mb-4">
+                    <h5 className="text-white font-semibold mb-2">By Formality:</h5>
+                    <div className="overflow-x-auto">
+                      <table className="w-full border-collapse">
+                        <thead>
+                          <tr className="border-b border-slate-600">
+                            <th className="text-left p-3 text-white font-semibold">Type</th>
+                            <th className="text-left p-3 text-white font-semibold">Examples</th>
+                            <th className="text-left p-3 text-white font-semibold">Best For</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {content.types_of_recognition.by_formality.map((type, idx) => (
+                            <tr key={idx} className="border-b border-slate-700/50">
+                              <td className="p-3 text-orange-400 font-semibold">{type.type}</td>
+                              <td className="p-3 text-slate-300">{type.examples}</td>
+                              <td className="p-3 text-slate-400">{type.best_for}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                )}
+                {content.types_of_recognition.by_visibility && (
+                  <div>
+                    <h5 className="text-white font-semibold mb-2">By Visibility:</h5>
+                    <div className="overflow-x-auto">
+                      <table className="w-full border-collapse">
+                        <thead>
+                          <tr className="border-b border-slate-600">
+                            <th className="text-left p-3 text-white font-semibold">Type</th>
+                            <th className="text-left p-3 text-white font-semibold">Examples</th>
+                            <th className="text-left p-3 text-white font-semibold">Best For</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {content.types_of_recognition.by_visibility.map((type, idx) => (
+                            <tr key={idx} className="border-b border-slate-700/50">
+                              <td className="p-3 text-orange-400 font-semibold">{type.type}</td>
+                              <td className="p-3 text-slate-300">{type.examples}</td>
+                              <td className="p-3 text-slate-400">{type.best_for}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+            {content.taps_framework && (
+              <div className="border-l-4 border-purple-500/50 bg-purple-500/5 p-4 rounded">
+                <h4 className="executive-font text-lg font-semibold text-white mb-3">The T.A.P.S. Recognition Framework</h4>
+                <div className="space-y-2 text-slate-300">
+                  <p><strong className="text-purple-400">T</strong>: {content.taps_framework.t}</p>
+                  <p><strong className="text-purple-400">A</strong>: {content.taps_framework.a}</p>
+                  <p><strong className="text-purple-400">P</strong>: {content.taps_framework.p}</p>
+                  <p><strong className="text-purple-400">S</strong>: {content.taps_framework.s}</p>
+                </div>
+              </div>
+            )}
+            {content.herzberg_two_factor_theory && (
+              <div>
+                <h4 className="executive-font text-lg font-semibold text-white mb-3">Herzberg's Two-Factor Theory</h4>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="border-l-4 border-yellow-500/50 bg-yellow-500/5 p-4 rounded">
+                    <h5 className="text-white font-semibold mb-2">Hygiene Factors (prevent dissatisfaction):</h5>
+                    <ul className="space-y-1 text-slate-300 text-sm">
+                      {content.herzberg_two_factor_theory.hygiene_factors.examples.map((factor, idx) => (
+                        <li key={idx}>• {factor}</li>
+                      ))}
+                    </ul>
+                    <p className="text-slate-400 text-xs mt-2 italic">{content.herzberg_two_factor_theory.hygiene_factors.note}</p>
+                  </div>
+                  <div className="border-l-4 border-emerald-500/50 bg-emerald-500/5 p-4 rounded">
+                    <h5 className="text-white font-semibold mb-2">Motivators (drive engagement):</h5>
+                    <ul className="space-y-1 text-slate-300 text-sm">
+                      {content.herzberg_two_factor_theory.motivators.examples.map((factor, idx) => (
+                        <li key={idx}>• {factor}</li>
+                      ))}
+                    </ul>
+                    <p className="text-slate-400 text-xs mt-2 italic">{content.herzberg_two_factor_theory.motivators.note}</p>
+                  </div>
+                </div>
+                {content.herzberg_two_factor_theory.implication && (
+                  <p className="text-slate-300 mt-4 italic">{content.herzberg_two_factor_theory.implication}</p>
+                )}
+              </div>
+            )}
+          </div>
+        );
+      
+      case 'common-challenges':
+        // Handle both array format (Support Performance) and object format (Empower Team)
+        if (Array.isArray(content)) {
+          return (
+            <div className="space-y-4">
+              {content.map((challenge, idx) => (
+                <div key={idx} className="border-l-4 border-orange-500/50 bg-orange-500/5 p-4 rounded">
+                  <h4 className="executive-font text-lg font-semibold text-white mb-2">Challenge {idx + 1}: "{challenge.challenge}"</h4>
+                  <div className="space-y-2 text-slate-300 text-sm">
+                    <p><span className="font-semibold text-orange-400">Reality:</span> {challenge.reality}</p>
+                    <p><span className="font-semibold text-emerald-400">Action:</span> {challenge.action}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          );
+        } else if (typeof content === 'object' && content !== null) {
+          // Object format (Empower Team)
+          return (
+            <div className="space-y-4">
+              {Object.entries(content).map(([key, challenge], idx) => (
+                <div key={key} className="border-l-4 border-orange-500/50 bg-orange-500/5 p-4 rounded">
+                  <h4 className="executive-font text-lg font-semibold text-white mb-2">Challenge {idx + 1}: {challenge.problem || key.replace(/_/g, ' ')}</h4>
+                  {challenge.symptoms && Array.isArray(challenge.symptoms) && (
+                    <div className="mb-3">
+                      <p className="text-sm font-semibold text-orange-400 mb-2">Symptoms:</p>
+                      <ul className="list-disc list-inside space-y-1 text-slate-300 text-sm ml-4">
+                        {challenge.symptoms.map((symptom, sIdx) => (
+                          <li key={sIdx}>{symptom}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                  {challenge.solution && (
+                    <div className="mt-3">
+                      <p className="text-sm font-semibold text-emerald-400 mb-1">Solution:</p>
+                      <p className="text-slate-300 text-sm">{challenge.solution}</p>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          );
+        }
+        return <p className="text-slate-300">No challenges data available.</p>;
+      
+      case 'connections-tasks':
+        return (
+          <div className="space-y-6">
+            {Object.entries(content).map(([taskKey, taskData]) => (
+              <div key={taskKey} className="border-l-4 border-orange-500/50 bg-orange-500/5 p-4 rounded">
+                <h4 className="executive-font text-lg font-semibold text-white mb-2">{taskData.connections ? `Task ${taskKey.split('_')[1]}: ${taskKey.split('_').slice(2).join(' ')}` : taskKey.replace(/_/g, ' ')}</h4>
+                {taskData.connections && Array.isArray(taskData.connections) && (
+                  <ul className="space-y-2 text-slate-300 ml-4 mb-2">
+                    {taskData.connections.map((conn, idx) => (
+                      <li key={idx} className="flex items-start gap-2">
+                        <span className="text-orange-400 mt-1">•</span>
+                        <span>{conn}</span>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+                {taskData.summary && (
+                  <p className="text-slate-400 italic mt-2">Connection: {taskData.summary}</p>
+                )}
+              </div>
+            ))}
+          </div>
+        );
+      
       case 'performance-support-framework':
       case 'sbi-feedback-model':
       case 'recognition-strategies':
@@ -8180,6 +10984,9 @@ const PMPApp = () => {
       case 'development-growth':
       case 'performance-metrics':
       case 'integration-tasks':
+      case 'delegation-continuum':
+      case 'self-organizing-teams':
+      case 'key-takeaways':
         // Render complex nested objects as formatted sections
         return (
           <div className="space-y-4 text-slate-300">
