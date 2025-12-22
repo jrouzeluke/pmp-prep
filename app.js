@@ -94,6 +94,18 @@ const PMPApp = () => {
   
   // Task Progress Modal State
   const [showTaskProgressModal, setShowTaskProgressModal] = useState(false);
+  
+  // Progress Stats Animation State (must be at top level - Rules of Hooks)
+  const [masteryCardsVisible, setMasteryCardsVisible] = useState(false);
+  const masterySectionRef = useRef(null);
+  
+  // Condensed Dashboard State
+  const [expandedSection, setExpandedSection] = useState(null);
+  const [expandedDomain, setExpandedDomain] = useState(null);
+  const [hoveredTask, setHoveredTask] = useState(null);
+  const [pulseRing, setPulseRing] = useState(0);
+  const [animated, setAnimated] = useState(false);
+  const [currentTime, setCurrentTime] = useState(new Date());
 
   // Comprehensive Score Persistence Utilities
   const getOrCreateUserId = () => {
@@ -529,10 +541,77 @@ const PMPApp = () => {
       progressData.completedActivities[taskName]?.[activity]?.completed
     ).length;
     
-    if (completed === 0) return { level: 'not-started', completed, total: 6, label: 'Not Started', color: 'slate' };
-    if (completed <= 3) return { level: 'in-progress', completed, total: 6, label: 'In Progress', color: 'yellow' };
-    if (completed <= 5) return { level: 'advanced', completed, total: 6, label: 'Advanced', color: 'orange' };
-    return { level: 'mastered', completed, total: 6, label: 'Mastered', color: 'emerald' };
+    if (completed === 0) return { level: 'not-started', completed, total: 6, label: 'Not Started', color: 'slate', progress: 0 };
+    if (completed <= 3) return { level: 'in-progress', completed, total: 6, label: 'In Progress', color: 'yellow', progress: Math.round((completed / 6) * 100) };
+    if (completed <= 5) return { level: 'advanced', completed, total: 6, label: 'Advanced', color: 'orange', progress: Math.round((completed / 6) * 100) };
+    return { level: 'mastered', completed, total: 6, label: 'Mastered', color: 'emerald', progress: 100 };
+  };
+  
+  // Condensed Dashboard Helper Components
+  const OrbitalProgress = ({ progress, size = 80 }) => {
+    const rings = [
+      { radius: 32, width: 4, color: '#ff6b35' },
+      { radius: 26, width: 3, color: '#00d4ff' },
+      { radius: 20, width: 2, color: '#bf5af2' },
+    ];
+
+    return (
+      <div className="relative" style={{ width: size, height: size }}>
+        <svg className="transform -rotate-90" width={size} height={size}>
+          <defs>
+            <filter id="glow">
+              <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+              <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+          </defs>
+          {rings.map((ring, i) => {
+            const circumference = ring.radius * 2 * Math.PI;
+            const offset = circumference - (progress / 100) * circumference;
+            const isPulsing = pulseRing === i;
+            return (
+              <g key={i}>
+                <circle cx={size/2} cy={size/2} r={ring.radius} fill="none" stroke="rgba(255,255,255,0.05)" strokeWidth={ring.width}/>
+                <circle cx={size/2} cy={size/2} r={ring.radius} fill="none" stroke={ring.color} strokeWidth={ring.width} strokeLinecap="round"
+                  strokeDasharray={circumference} strokeDashoffset={offset} filter="url(#glow)" className="transition-all duration-1000"
+                  style={{ opacity: isPulsing ? 1 : 0.7, filter: isPulsing ? `drop-shadow(0 0 8px ${ring.color})` : 'none' }}/>
+              </g>
+            );
+          })}
+        </svg>
+        <div className="absolute inset-0 flex flex-col items-center justify-center">
+          <span className="text-lg font-bold text-white">{progress}%</span>
+        </div>
+      </div>
+    );
+  };
+
+  const SegmentedProgress = ({ progress, color, size = 56 }) => {
+    const segments = 20;
+    const activeSegments = Math.round((progress / 100) * segments);
+    const radius = (size - 10) / 2;
+    
+    return (
+      <div className="relative" style={{ width: size, height: size }}>
+        <svg className="transform -rotate-90" width={size} height={size}>
+          {Array.from({ length: segments }).map((_, i) => {
+            const angle = (i / segments) * 360;
+            const isActive = i < activeSegments;
+            const segmentAngle = (360 / segments) - 4;
+            const circumference = 2 * Math.PI * radius;
+            return (
+              <circle key={i} cx={size/2} cy={size/2} r={radius} fill="none"
+                stroke={isActive ? color : 'rgba(255,255,255,0.08)'} strokeWidth="4"
+                strokeDasharray={`${(segmentAngle / 360) * circumference} ${circumference}`}
+                strokeDashoffset={-((angle / 360) * circumference)} strokeLinecap="butt"
+                style={{ filter: isActive ? `drop-shadow(0 0 4px ${color})` : 'none', transition: 'all 0.3s ease' }}/>
+            );
+          })}
+        </svg>
+        <div className="absolute inset-0 flex items-center justify-center">
+          <span className="text-sm font-bold text-white">{progress}%</span>
+        </div>
+      </div>
+    );
   };
 
   // Keep old GlobalFooter for backward compatibility if needed
@@ -4499,56 +4578,56 @@ const PMPApp = () => {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
           <button 
             onClick={(e) => { createRipple(e); handleViewChange('strategy-suite'); }} 
-            className="group relative glass-card p-8 text-center hover:scale-105 hover:-translate-y-2 transition-all duration-300 border-l-4 border-blue-500 hover:border-blue-400 hover:bg-blue-500/10 hover:shadow-[0_20px_50px_rgba(59,130,246,0.4)] hover:shadow-blue-500/30 btn-ripple overflow-hidden transform perspective-1000 preserve-3d"
-            style={{transformStyle: 'preserve-3d'}}
+            className="group relative glass-card p-8 text-center hover:scale-105 hover:-translate-y-2 transition-all duration-300 border-l-4 hover:shadow-[0_20px_50px_rgba(255,107,53,0.4)] hover:shadow-[#ff6b35]/30 btn-ripple overflow-hidden transform perspective-1000 preserve-3d"
+            style={{transformStyle: 'preserve-3d', borderColor: '#ff6b35', backgroundColor: 'rgba(255, 107, 53, 0.1)'}}
           >
-            <div className="absolute inset-0 bg-gradient-to-br from-blue-600/0 to-blue-600/0 group-hover:from-blue-600/10 group-hover:to-blue-600/5 transition-all duration-300"></div>
+            <div className="absolute inset-0 bg-gradient-to-br from-[#ff6b35]/0 to-[#ff6b35]/0 group-hover:from-[#ff6b35]/10 group-hover:to-[#ff6b35]/5 transition-all duration-300"></div>
             <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
             <div className="relative z-10 transform group-hover:translate-z-10 transition-transform duration-300">
               <div className="text-4xl mb-3 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300" style={{transformStyle: 'preserve-3d'}}>📚</div>
-              <div className="executive-font text-lg font-bold text-white mb-2 group-hover:text-blue-300 transition-colors drop-shadow-lg">Learn</div>
+              <div className="executive-font text-lg font-bold text-white mb-2 group-hover:text-[#ff6b35] transition-colors drop-shadow-lg">Learn</div>
               <div className="text-xs text-slate-400 group-hover:text-slate-300 uppercase tracking-widest">35 PMP Tasks</div>
             </div>
           </button>
           
           <button 
             onClick={(e) => { createRipple(e); handleViewChange('practice-hub'); }} 
-            className="group relative glass-card p-8 text-center hover:scale-105 hover:-translate-y-2 transition-all duration-300 border-l-4 border-purple-500 hover:border-purple-400 hover:bg-purple-500/10 hover:shadow-[0_20px_50px_rgba(168,85,247,0.4)] hover:shadow-purple-500/30 btn-ripple overflow-hidden transform perspective-1000 preserve-3d"
-            style={{transformStyle: 'preserve-3d'}}
+            className="group relative glass-card p-8 text-center hover:scale-105 hover:-translate-y-2 transition-all duration-300 border-l-4 hover:shadow-[0_20px_50px_rgba(0,212,255,0.4)] hover:shadow-[#00d4ff]/30 btn-ripple overflow-hidden transform perspective-1000 preserve-3d"
+            style={{transformStyle: 'preserve-3d', borderColor: '#00d4ff', backgroundColor: 'rgba(0, 212, 255, 0.1)'}}
           >
-            <div className="absolute inset-0 bg-gradient-to-br from-purple-600/0 to-purple-600/0 group-hover:from-purple-600/10 group-hover:to-purple-600/5 transition-all duration-300"></div>
+            <div className="absolute inset-0 bg-gradient-to-br from-[#00d4ff]/0 to-[#00d4ff]/0 group-hover:from-[#00d4ff]/10 group-hover:to-[#00d4ff]/5 transition-all duration-300"></div>
             <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
             <div className="relative z-10 transform group-hover:translate-z-10 transition-transform duration-300">
               <div className="text-4xl mb-3 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300" style={{transformStyle: 'preserve-3d'}}>⚡</div>
-              <div className="executive-font text-lg font-bold text-white mb-2 group-hover:text-purple-300 transition-colors drop-shadow-lg">Practice</div>
+              <div className="executive-font text-lg font-bold text-white mb-2 group-hover:text-[#00d4ff] transition-colors drop-shadow-lg">Practice</div>
               <div className="text-xs text-slate-400 group-hover:text-slate-300 uppercase tracking-widest">Skill Building</div>
             </div>
           </button>
           
           <button 
             onClick={(e) => { createRipple(e); handleViewChange('practice-quizzes'); }} 
-            className="group relative glass-card p-8 text-center hover:scale-105 hover:-translate-y-2 transition-all duration-300 border-l-4 border-emerald-500 hover:border-emerald-400 hover:bg-emerald-500/10 hover:shadow-[0_20px_50px_rgba(16,185,129,0.4)] hover:shadow-emerald-500/30 btn-ripple overflow-hidden transform perspective-1000 preserve-3d"
-            style={{transformStyle: 'preserve-3d'}}
+            className="group relative glass-card p-8 text-center hover:scale-105 hover:-translate-y-2 transition-all duration-300 border-l-4 hover:shadow-[0_20px_50px_rgba(191,90,242,0.4)] hover:shadow-[#bf5af2]/30 btn-ripple overflow-hidden transform perspective-1000 preserve-3d"
+            style={{transformStyle: 'preserve-3d', borderColor: '#bf5af2', backgroundColor: 'rgba(191, 90, 242, 0.1)'}}
           >
-            <div className="absolute inset-0 bg-gradient-to-br from-emerald-600/0 to-emerald-600/0 group-hover:from-emerald-600/10 group-hover:to-emerald-600/5 transition-all duration-300"></div>
+            <div className="absolute inset-0 bg-gradient-to-br from-[#bf5af2]/0 to-[#bf5af2]/0 group-hover:from-[#bf5af2]/10 group-hover:to-[#bf5af2]/5 transition-all duration-300"></div>
             <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
             <div className="relative z-10 transform group-hover:translate-z-10 transition-transform duration-300">
               <div className="text-4xl mb-3 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300" style={{transformStyle: 'preserve-3d'}}>🎯</div>
-              <div className="executive-font text-lg font-bold text-white mb-2 group-hover:text-emerald-300 transition-colors drop-shadow-lg">Quizzes</div>
+              <div className="executive-font text-lg font-bold text-white mb-2 group-hover:text-[#bf5af2] transition-colors drop-shadow-lg">Quizzes</div>
               <div className="text-xs text-slate-400 group-hover:text-slate-300 uppercase tracking-widest">Test Knowledge</div>
             </div>
           </button>
           
           <button 
             onClick={(e) => { createRipple(e); handleViewChange('practice-quizzes'); }} 
-            className="group relative glass-card p-8 text-center hover:scale-105 hover:-translate-y-2 transition-all duration-300 border-l-4 border-rose-500 hover:border-rose-400 hover:bg-rose-500/10 hover:shadow-[0_20px_50px_rgba(244,63,94,0.4)] hover:shadow-rose-500/30 btn-ripple overflow-hidden transform perspective-1000 preserve-3d"
-            style={{transformStyle: 'preserve-3d'}}
+            className="group relative glass-card p-8 text-center hover:scale-105 hover:-translate-y-2 transition-all duration-300 border-l-4 hover:shadow-[0_20px_50px_rgba(0,255,136,0.4)] hover:shadow-[#00ff88]/30 btn-ripple overflow-hidden transform perspective-1000 preserve-3d"
+            style={{transformStyle: 'preserve-3d', borderColor: '#00ff88', backgroundColor: 'rgba(0, 255, 136, 0.1)'}}
           >
-            <div className="absolute inset-0 bg-gradient-to-br from-rose-600/0 to-rose-600/0 group-hover:from-rose-600/10 group-hover:to-rose-600/5 transition-all duration-300"></div>
+            <div className="absolute inset-0 bg-gradient-to-br from-[#00ff88]/0 to-[#00ff88]/0 group-hover:from-[#00ff88]/10 group-hover:to-[#00ff88]/5 transition-all duration-300"></div>
             <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
             <div className="relative z-10 transform group-hover:translate-z-10 transition-transform duration-300">
               <div className="text-4xl mb-3 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300" style={{transformStyle: 'preserve-3d'}}>🎓</div>
-              <div className="executive-font text-lg font-bold text-white mb-2 group-hover:text-rose-300 transition-colors drop-shadow-lg">Full Exam</div>
+              <div className="executive-font text-lg font-bold text-white mb-2 group-hover:text-[#00ff88] transition-colors drop-shadow-lg">Full Exam</div>
               <div className="text-xs text-slate-400 group-hover:text-slate-300 uppercase tracking-widest">180 Questions</div>
             </div>
           </button>
@@ -4562,48 +4641,48 @@ const PMPApp = () => {
           <div className="text-xs text-slate-500 uppercase tracking-widest">Real-time Analytics</div>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
-          <div className="stat-card group hover:scale-105 transition-all duration-300 hover:shadow-2xl hover:shadow-blue-500/20 border-l-4 border-blue-500">
+          <div className="stat-card group hover:scale-105 transition-all duration-300 hover:shadow-2xl border-l-4" style={{borderColor: '#ff6b35', boxShadow: '0 0 20px rgba(255, 107, 53, 0.2)'}}>
             <div className="flex items-center justify-between mb-3">
-              <div className="text-sm text-slate-400 uppercase font-semibold tracking-wide">Total Questions</div>
+              <div className="text-sm text-slate-400 uppercase font-semibold tracking-wide">Learning Progress</div>
               <div className="text-2xl">📊</div>
             </div>
-            <div className="text-5xl font-bold text-white mb-2 bg-gradient-to-br from-blue-400 to-cyan-400 bg-clip-text text-transparent">0</div>
-            <div className="text-xs text-slate-500">Practice sessions completed</div>
+            <div className="text-5xl font-bold text-white mb-2" style={{color: '#ff6b35'}}>0</div>
+            <div className="text-xs text-slate-500">Tasks & activities viewed</div>
             <div className="mt-3 h-1 bg-slate-800 rounded-full overflow-hidden">
-              <div className="h-full bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full transition-all duration-1000" style={{width: '0%'}}></div>
+              <div className="h-full rounded-full transition-all duration-1000" style={{width: '0%', backgroundColor: '#ff6b35', boxShadow: '0 0 10px #ff6b35'}}></div>
             </div>
           </div>
-          <div className="stat-card group hover:scale-105 transition-all duration-300 hover:shadow-2xl hover:shadow-purple-500/20 border-l-4 border-purple-500">
+          <div className="stat-card group hover:scale-105 transition-all duration-300 hover:shadow-2xl border-l-4" style={{borderColor: '#00d4ff', boxShadow: '0 0 20px rgba(0, 212, 255, 0.2)'}}>
             <div className="flex items-center justify-between mb-3">
               <div className="text-sm text-slate-400 uppercase font-semibold tracking-wide">Accuracy Rate</div>
               <div className="text-2xl">🎯</div>
             </div>
-            <div className="text-5xl font-bold text-white mb-2 bg-gradient-to-br from-purple-400 to-pink-400 bg-clip-text text-transparent">0%</div>
+            <div className="text-5xl font-bold text-white mb-2" style={{color: '#00d4ff'}}>0%</div>
             <div className="text-xs text-slate-500">Overall performance</div>
             <div className="mt-3 h-1 bg-slate-800 rounded-full overflow-hidden">
-              <div className="h-full bg-gradient-to-r from-purple-500 to-pink-500 rounded-full transition-all duration-1000" style={{width: '0%'}}></div>
+              <div className="h-full rounded-full transition-all duration-1000" style={{width: '0%', backgroundColor: '#00d4ff', boxShadow: '0 0 10px #00d4ff'}}></div>
             </div>
           </div>
-          <div className="stat-card group hover:scale-105 transition-all duration-300 hover:shadow-2xl hover:shadow-emerald-500/20 border-l-4 border-emerald-500">
+          <div className="stat-card group hover:scale-105 transition-all duration-300 hover:shadow-2xl border-l-4" style={{borderColor: '#bf5af2', boxShadow: '0 0 20px rgba(191, 90, 242, 0.2)'}}>
             <div className="flex items-center justify-between mb-3">
               <div className="text-sm text-slate-400 uppercase font-semibold tracking-wide">Study Hours</div>
               <div className="text-2xl">⏱️</div>
             </div>
-            <div className="text-5xl font-bold text-white mb-2 bg-gradient-to-br from-emerald-400 to-teal-400 bg-clip-text text-transparent">0</div>
+            <div className="text-5xl font-bold text-white mb-2" style={{color: '#bf5af2'}}>0</div>
             <div className="text-xs text-slate-500">Time invested</div>
             <div className="mt-3 h-1 bg-slate-800 rounded-full overflow-hidden">
-              <div className="h-full bg-gradient-to-r from-emerald-500 to-teal-500 rounded-full transition-all duration-1000" style={{width: '0%'}}></div>
+              <div className="h-full rounded-full transition-all duration-1000" style={{width: '0%', backgroundColor: '#bf5af2', boxShadow: '0 0 10px #bf5af2'}}></div>
             </div>
           </div>
-          <div className="stat-card group hover:scale-105 transition-all duration-300 hover:shadow-2xl hover:shadow-amber-500/20 border-l-4 border-amber-500">
+          <div className="stat-card group hover:scale-105 transition-all duration-300 hover:shadow-2xl border-l-4" style={{borderColor: '#00ff88', boxShadow: '0 0 20px rgba(0, 255, 136, 0.2)'}}>
             <div className="flex items-center justify-between mb-3">
               <div className="text-sm text-slate-400 uppercase font-semibold tracking-wide">Current Streak</div>
               <div className="text-2xl">🔥</div>
             </div>
-            <div className="text-5xl font-bold text-white mb-2 bg-gradient-to-br from-amber-400 to-orange-400 bg-clip-text text-transparent">0</div>
+            <div className="text-5xl font-bold text-white mb-2" style={{color: '#00ff88'}}>0</div>
             <div className="text-xs text-slate-500">Days in a row</div>
             <div className="mt-3 h-1 bg-slate-800 rounded-full overflow-hidden">
-              <div className="h-full bg-gradient-to-r from-amber-500 to-orange-500 rounded-full transition-all duration-1000" style={{width: '0%'}}></div>
+              <div className="h-full rounded-full transition-all duration-1000" style={{width: '0%', backgroundColor: '#00ff88', boxShadow: '0 0 10px #00ff88'}}></div>
             </div>
           </div>
         </div>
@@ -4617,7 +4696,7 @@ const PMPApp = () => {
                 <span className="text-sm font-semibold text-white">0%</span>
               </div>
               <div className="w-full bg-slate-800 rounded-full h-2.5">
-                <div className="bg-blue-500 h-2.5 rounded-full transition-all" style={{width: '0%'}}></div>
+                <div className="h-2.5 rounded-full transition-all" style={{width: '0%', backgroundColor: '#ff6b35', boxShadow: '0 0 10px #ff6b35'}}></div>
               </div>
             </div>
             <div>
@@ -4626,7 +4705,7 @@ const PMPApp = () => {
                 <span className="text-sm font-semibold text-white">0%</span>
               </div>
               <div className="w-full bg-slate-800 rounded-full h-2.5">
-                <div className="bg-purple-500 h-2.5 rounded-full transition-all" style={{width: '0%'}}></div>
+                <div className="h-2.5 rounded-full transition-all" style={{width: '0%', backgroundColor: '#00d4ff', boxShadow: '0 0 10px #00d4ff'}}></div>
               </div>
             </div>
             <div>
@@ -4635,7 +4714,7 @@ const PMPApp = () => {
                 <span className="text-sm font-semibold text-white">0%</span>
               </div>
               <div className="w-full bg-slate-800 rounded-full h-2.5">
-                <div className="bg-emerald-500 h-2.5 rounded-full transition-all" style={{width: '0%'}}></div>
+                <div className="h-2.5 rounded-full transition-all" style={{width: '0%', backgroundColor: '#bf5af2', boxShadow: '0 0 10px #bf5af2'}}></div>
               </div>
             </div>
           </div>
@@ -4818,35 +4897,38 @@ const PMPApp = () => {
         <p className="text-slate-400 text-lg">Explore PMP knowledge domains and tasks</p>
       </div>
       <div className="grid grid-cols-3 gap-8">
-        {Object.entries(domainMap).map(([d, tasks]) => (
-          <div key={d} className="glass-card p-6 border-t-4 border-blue-500/50">
-            <h3 className="executive-font text-blue-400 mb-6 uppercase text-sm font-bold tracking-widest">{d}</h3>
-            <div className="space-y-1 h-[450px] overflow-y-auto pr-2 custom-scrollbar">
-              {tasks.map(t => {
-                const mastery = getTaskMastery(t);
-                const progressBars = '■'.repeat(mastery.completed) + '□'.repeat(mastery.total - mastery.completed);
-                const colorClass = mastery.color === 'slate' ? 'text-slate-500' : mastery.color === 'yellow' ? 'text-yellow-500' : mastery.color === 'orange' ? 'text-orange-500' : 'text-emerald-500';
-                
-                return (
-                  <button 
-                    key={t} 
-                    onClick={() => { setSelectedTask(t); setView('task-interstitial'); }} 
-                    className="task-btn relative"
-                  >
-                    <div className="flex items-center justify-between">
-                      <span>{t}</span>
-                      {mastery.completed > 0 && (
-                        <span className={`text-xs font-mono ${colorClass}`} title={mastery.label}>
-                          {progressBars}
-                        </span>
-                      )}
-                    </div>
-                  </button>
-                );
-              })}
+        {Object.entries(domainMap).map(([d, tasks]) => {
+          const domainColor = d === 'People Domain' ? '#ff6b35' : d === 'Process Domain' ? '#00d4ff' : '#bf5af2';
+          return (
+            <div key={d} className="glass-card p-6 border-t-4" style={{borderColor: `${domainColor}80`}}>
+              <h3 className="executive-font mb-6 uppercase text-sm font-bold tracking-widest" style={{color: domainColor}}>{d}</h3>
+              <div className="space-y-1 h-[450px] overflow-y-auto pr-2 custom-scrollbar">
+                {tasks.map(t => {
+                  const mastery = getTaskMastery(t);
+                  const progressBars = '■'.repeat(mastery.completed) + '□'.repeat(mastery.total - mastery.completed);
+                  const colorClass = mastery.color === 'slate' ? 'text-slate-500' : mastery.color === 'yellow' ? 'text-yellow-500' : mastery.color === 'orange' ? 'text-orange-500' : 'text-emerald-500';
+                  
+                  return (
+                    <button 
+                      key={t} 
+                      onClick={() => { setSelectedTask(t); setView('task-interstitial'); }} 
+                      className="task-btn relative"
+                    >
+                      <div className="flex items-center justify-between">
+                        <span>{t}</span>
+                        {mastery.completed > 0 && (
+                          <span className={`text-xs font-mono ${colorClass}`} title={mastery.label}>
+                            {progressBars}
+                          </span>
+                        )}
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
       <GlobalNavFooter />
     </div>
@@ -4892,12 +4974,12 @@ const PMPApp = () => {
         {(() => {
           // Base activity configuration
           const baseActivities = [
-            { name: 'pm-simulator', emoji: '🎯', title: 'PM Simulator', desc: 'Branching scenarios with consequences', color: 'blue', borderColor: 'border-blue-500', hoverColor: 'hover:bg-blue-500/10', shadowColor: 'hover:shadow-blue-500/20' },
-            { name: 'lightning-round', emoji: '⚡', title: 'Lightning Round', desc: 'Fast-paced quiz - 10 questions', color: 'yellow', borderColor: 'border-yellow-500', hoverColor: 'hover:bg-yellow-500/10', shadowColor: 'hover:shadow-yellow-500/20' },
-            { name: 'document-detective', emoji: '🕵️', title: 'Document Detective', desc: 'Match documents to scenarios', color: 'purple', borderColor: 'border-purple-500', hoverColor: 'hover:bg-purple-500/10', shadowColor: 'hover:shadow-purple-500/20' },
-            { name: 'conflict-matcher', emoji: '🧩', title: 'Conflict Mode Matcher', desc: 'Drag-drop conflict modes', color: 'emerald', borderColor: 'border-emerald-500', hoverColor: 'hover:bg-emerald-500/10', shadowColor: 'hover:shadow-emerald-500/20' },
-            { name: 'timeline-reconstructor', emoji: '📋', title: 'Timeline Reconstructor', desc: 'Order resolution steps', color: 'cyan', borderColor: 'border-cyan-500', hoverColor: 'hover:bg-cyan-500/10', shadowColor: 'hover:shadow-cyan-500/20' },
-            { name: 'empathy-exercise', emoji: '👥', title: (selectedTask === 'Lead a Team' || selectedTask === 'Support Performance') ? 'Team Member Perspectives' : 'Empathy Exercise', desc: 'See all perspectives', color: 'rose', borderColor: 'border-rose-500', hoverColor: 'hover:bg-rose-500/10', shadowColor: 'hover:shadow-rose-500/20' }
+            { name: 'pm-simulator', emoji: '🎯', title: 'PM Simulator', desc: 'Branching scenarios with consequences', color: '#ff6b35', borderColor: '#ff6b35', hoverColor: 'rgba(255, 107, 53, 0.1)', shadowColor: 'rgba(255, 107, 53, 0.2)' },
+            { name: 'lightning-round', emoji: '⚡', title: 'Lightning Round', desc: 'Fast-paced quiz - 10 questions', color: '#00d4ff', borderColor: '#00d4ff', hoverColor: 'rgba(0, 212, 255, 0.1)', shadowColor: 'rgba(0, 212, 255, 0.2)' },
+            { name: 'document-detective', emoji: '🕵️', title: 'Document Detective', desc: 'Match documents to scenarios', color: '#bf5af2', borderColor: '#bf5af2', hoverColor: 'rgba(191, 90, 242, 0.1)', shadowColor: 'rgba(191, 90, 242, 0.2)' },
+            { name: 'conflict-matcher', emoji: '🧩', title: selectedTask === 'Support Performance' ? 'Feedback Type Matcher' : 'Conflict Mode Matcher', desc: 'Drag-drop matching', color: '#ff6b35', borderColor: '#ff6b35', hoverColor: 'rgba(255, 107, 53, 0.1)', shadowColor: 'rgba(255, 107, 53, 0.2)' },
+            { name: 'timeline-reconstructor', emoji: '📋', title: 'Timeline Reconstructor', desc: 'Order resolution steps', color: '#00d4ff', borderColor: '#00d4ff', hoverColor: 'rgba(0, 212, 255, 0.1)', shadowColor: 'rgba(0, 212, 255, 0.2)' },
+            { name: 'empathy-exercise', emoji: '👥', title: (selectedTask === 'Lead a Team' || selectedTask === 'Support Performance') ? 'Team Member Perspectives' : 'Empathy Exercise', desc: 'See all perspectives', color: '#bf5af2', borderColor: '#bf5af2', hoverColor: 'rgba(191, 90, 242, 0.1)', shadowColor: 'rgba(191, 90, 242, 0.2)' }
           ];
           
           // For Lead a Team, rename specific activities
@@ -4955,13 +5037,13 @@ const PMPApp = () => {
             >
               {/* Status Indicator */}
               <div 
-                className={`absolute top-4 right-4 w-8 h-8 rounded-full flex items-center justify-center transition-all ${
-                  isCompleted 
-                    ? 'bg-emerald-500 text-white' 
-                    : isInProgress 
-                    ? 'bg-yellow-500 text-white' 
-                    : 'border-2 border-slate-500 bg-transparent'
-                }`}
+                className="absolute top-4 right-4 w-8 h-8 rounded-full flex items-center justify-center transition-all"
+                style={{
+                  backgroundColor: isCompleted ? '#00ff88' : isInProgress ? activity.color : 'transparent',
+                  border: isCompleted || isInProgress ? 'none' : '2px solid rgba(255,255,255,0.3)',
+                  boxShadow: isCompleted ? `0 0 10px #00ff88` : isInProgress ? `0 0 10px ${activity.color}` : 'none',
+                  color: isCompleted || isInProgress ? '#000' : 'rgba(255,255,255,0.5)'
+                }}
                 title={statusTooltip}
               >
                 {isCompleted ? (
@@ -4984,7 +5066,7 @@ const PMPApp = () => {
               {isCompleted && (
                 <div className="mt-3 pt-3 border-t border-white/10">
                   {bestScore > 0 && (
-                    <p className="text-emerald-400 text-xs font-semibold mb-1">Best: {bestScore.toLocaleString()} pts</p>
+                    <p className="text-xs font-semibold mb-1" style={{color: '#00ff88'}}>Best: {bestScore.toLocaleString()} pts</p>
                   )}
                   {lastAttempted && (
                     <p className="text-slate-500 text-xs">Last: {new Date(lastAttempted).toLocaleDateString()}</p>
@@ -5000,42 +5082,18 @@ const PMPApp = () => {
     </div>
   );
 
-  // Progress Stats View
+  // Progress Stats View - Refactored to match condensed-dashboard.jsx
   if (view === 'progress-stats') {
     const allTasks = domainMap ? Object.values(domainMap).flat().filter(Boolean) : [];
     const totalTasks = allTasks.length;
     const totalActivities = totalTasks * 6;
-    
-    // Intersection Observer for fade-in animation
-    const [masteryCardsVisible, setMasteryCardsVisible] = useState(false);
-    const masterySectionRef = useRef(null);
-    
-    useEffect(() => {
-      if (!masterySectionRef.current || masteryCardsVisible) return;
-      
-      const observer = new IntersectionObserver(
-        (entries) => {
-          entries.forEach(entry => {
-            if (entry.isIntersecting) {
-              setMasteryCardsVisible(true);
-            }
-          });
-        },
-        { threshold: 0.1 }
-      );
-      
-      observer.observe(masterySectionRef.current);
-      
-      return () => {
-        if (masterySectionRef.current) {
-          observer.unobserve(masterySectionRef.current);
-        }
-      };
-    }, [masteryCardsVisible]);
+    const completeColor = '#00ff88';
     
     // Calculate overall stats
     let tasksStarted = 0;
     let activitiesCompleted = 0;
+    const tasksMastered = allTasks.filter(t => getTaskMastery(t).level === 'mastered').length;
+    
     const activityTypeScores = {
       'pm-simulator': [],
       'lightning-round': [],
@@ -5063,193 +5121,524 @@ const PMPApp = () => {
       });
     });
     
-    // Calculate average scores
-    const avgScores = Object.keys(activityTypeScores).map(activityName => {
-      const scores = activityTypeScores[activityName];
-      const avg = scores.length > 0 ? scores.reduce((sum, s) => sum + s, 0) / scores.length : 0;
-      return { activityName, avg, attempts: scores.length };
+    // Calculate average scores for activities
+    const activityTypes = [
+      { name: 'PM Simulator', key: 'pm-simulator', color: '#ff6b35' },
+      { name: 'Lightning Round', key: 'lightning-round', color: '#00d4ff' },
+      { name: 'Document Detective', key: 'document-detective', color: '#bf5af2' },
+      { name: 'Conflict Matcher', key: 'conflict-matcher', color: '#ff6b35' },
+      { name: 'Timeline Reconstructor', key: 'timeline-reconstructor', color: '#00d4ff' },
+      { name: 'Empathy Exercise', key: 'empathy-exercise', color: '#bf5af2' }
+    ].map(activity => {
+      const scores = activityTypeScores[activity.key] || [];
+      const avg = scores.length > 0 ? Math.round(scores.reduce((sum, s) => sum + s, 0) / scores.length) : 0;
+      return { ...activity, score: avg, attempts: scores.length };
     });
     
-    // Find tasks that need more activities
-    const recommendations = allTasks.filter(taskName => {
-      const taskActivities = progressData.completedActivities[taskName] || {};
-      const completedCount = Object.keys(taskActivities).filter(a => taskActivities[a].completed).length;
-      return completedCount > 0 && completedCount < 6;
-    }).slice(0, 5);
+    const activeActivities = activityTypes.filter(a => a.attempts > 0);
+    const avgScore = activeActivities.length > 0 
+      ? Math.round(activeActivities.reduce((a, b) => a + b.score, 0) / activeActivities.length)
+      : 0;
+    const totalAttempts = activityTypes.reduce((a, b) => a + b.attempts, 0);
+    
+    // Organize tasks by domain
+    const domains = [
+      {
+        id: 'people',
+        name: 'People',
+        description: 'Leadership & Stakeholder Management',
+        accent: '#ff6b35',
+        accentRgb: '255, 107, 53',
+        tasks: (domainMap?.['People Domain'] || []).map((taskName, idx) => {
+          const mastery = getTaskMastery(taskName);
+          return {
+            id: String(idx + 1).padStart(2, '0'),
+            name: taskName,
+            progress: mastery.progress
+          };
+        })
+      },
+      {
+        id: 'process',
+        name: 'Process',
+        description: 'Planning, Execution & Delivery',
+        accent: '#00d4ff',
+        accentRgb: '0, 212, 255',
+        tasks: (domainMap?.['Process Domain'] || []).map((taskName, idx) => {
+          const mastery = getTaskMastery(taskName);
+          return {
+            id: String(idx + 1).padStart(2, '0'),
+            name: taskName,
+            progress: mastery.progress
+          };
+        })
+      },
+      {
+        id: 'business',
+        name: 'Business Environment',
+        description: 'Compliance, Benefits & Change',
+        accent: '#bf5af2',
+        accentRgb: '191, 90, 242',
+        tasks: (domainMap?.['Business Domain'] || []).map((taskName, idx) => {
+          const mastery = getTaskMastery(taskName);
+          return {
+            id: String(idx + 1).padStart(2, '0'),
+            name: taskName,
+            progress: mastery.progress
+          };
+        })
+      }
+    ];
+    
+    const getDomainProgress = (tasks) => Math.round(tasks.reduce((a, t) => a + t.progress, 0) / (tasks.length || 1));
+    const getCompleted = (tasks) => tasks.filter(t => t.progress === 100).length;
+    const getActive = (tasks) => tasks.filter(t => t.progress > 0 && t.progress < 100).length;
+    
+    const overallProgress = Math.round(domains.reduce((a, d) => a + getDomainProgress(d.tasks), 0) / (domains.length || 1));
+    
+    const getTaskStatus = (progress) => {
+      if (progress === 100) return 'complete';
+      if (progress > 0) return 'active';
+      return 'standby';
+    };
+    
+    const stats = {
+      tasksStarted,
+      totalTasks,
+      activitiesCompleted,
+      totalActivities,
+      tasksMastered
+    };
     
     return (
-      <div className="max-w-7xl w-full p-10 animate-fadeIn text-left">
-        <header className="mb-8">
-          <div className="flex items-center gap-4 mb-6">
-            <button 
-              onClick={() => setView('practice-hub')}
-              className="px-4 py-2 executive-font text-xs text-slate-400 hover:text-white uppercase font-semibold transition-colors flex items-center gap-2"
-            >
-              ← Back
-            </button>
-          </div>
-          <h1 className="executive-font text-5xl font-bold text-white tracking-tight">📊 Progress Statistics</h1>
-          <p className="text-slate-400 text-lg mt-2">Basic completion tracking and task mastery overview</p>
-          <div className="mt-4 glass-card p-4 bg-purple-500/10 border-l-4 border-purple-500">
-            <p className="text-sm text-slate-300">
-              <span className="font-semibold text-white">Note:</span> This view shows basic completion status. 
-              For detailed analytics with scores, times, and trends, see <button onClick={() => setView('personal-stats')} className="text-purple-400 hover:text-purple-300 underline ml-1">Personal Statistics</button>.
-            </p>
-          </div>
-        </header>
-
-        {/* Overall Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <div className="glass-card p-6 border-l-4 border-blue-500">
-            <div className="text-sm text-slate-400 uppercase mb-2">Tasks Started</div>
-            <div className="text-4xl font-bold text-white">{tasksStarted}/{totalTasks}</div>
-            <div className="text-xs text-slate-500 mt-2">{Math.round((tasksStarted / totalTasks) * 100)}%</div>
-          </div>
-          <div className="glass-card p-6 border-l-4 border-purple-500">
-            <div className="text-sm text-slate-400 uppercase mb-2">Activities Completed</div>
-            <div className="text-4xl font-bold text-white">{activitiesCompleted}/{totalActivities}</div>
-            <div className="text-xs text-slate-500 mt-2">{Math.round((activitiesCompleted / totalActivities) * 100)}%</div>
-          </div>
-          <div className="glass-card p-6 border-l-4 border-emerald-500">
-            <div className="text-sm text-slate-400 uppercase mb-2">Tasks Mastered</div>
-            <div className="text-4xl font-bold text-white">
-              {allTasks.filter(t => getTaskMastery(t).level === 'mastered').length}
-            </div>
-            <div className="text-xs text-slate-500 mt-2">All 6 activities completed</div>
-          </div>
+      <div className="min-h-screen bg-black text-white overflow-x-hidden">
+        {/* Ambient glows */}
+        <div className="fixed inset-0 pointer-events-none overflow-hidden">
+          <div className="absolute -top-32 -left-32 w-[600px] h-[600px] rounded-full blur-[150px] opacity-20 animate-pulse" style={{ background: '#ff6b35', animationDuration: '4s' }}/>
+          <div className="absolute top-1/4 -right-32 w-[500px] h-[500px] rounded-full blur-[150px] opacity-15 animate-pulse" style={{ background: '#00d4ff', animationDuration: '5s', animationDelay: '1s' }}/>
+          <div className="absolute -bottom-32 left-1/4 w-[550px] h-[550px] rounded-full blur-[150px] opacity-15 animate-pulse" style={{ background: '#bf5af2', animationDuration: '6s', animationDelay: '2s' }}/>
         </div>
 
-        {/* Average Scores */}
-        <div className="glass-card p-6 mb-6">
-          <h2 className="executive-font text-2xl font-bold text-white mb-4">Average Scores by Activity Type</h2>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-            {avgScores.map(({ activityName, avg, attempts }) => {
-              const activityLabels = {
-                'pm-simulator': 'PM Simulator',
-                'lightning-round': 'Lightning Round',
-                'document-detective': 'Document Detective',
-                'conflict-matcher': 'Conflict Matcher',
-                'timeline-reconstructor': 'Timeline Reconstructor',
-                'empathy-exercise': (selectedTask === 'Lead a Team' || selectedTask === 'Support Performance') ? 'Team Member Perspectives' : 'Empathy Exercise'
-              };
-              
-              return (
-                <div key={activityName} className="glass-card p-4 bg-slate-800/30">
-                  <div className="text-sm text-slate-400 mb-1">{activityLabels[activityName]}</div>
-                  <div className="text-2xl font-bold text-white">{Math.round(avg).toLocaleString()}</div>
-                  <div className="text-xs text-slate-500">{attempts} attempts</div>
+        {/* Scan lines */}
+        <div className="fixed inset-0 pointer-events-none" style={{ background: 'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.3) 2px, rgba(0,0,0,0.3) 4px)', opacity: 0.3 }}/>
+
+        {/* Vignette */}
+        <div className="fixed inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse at center, transparent 0%, rgba(0,0,0,0.4) 100%)' }}/>
+
+        {/* HUD Corners */}
+        <div className="fixed inset-6 pointer-events-none hidden lg:block">
+          {['top-0 left-0 border-t-2 border-l-2 rounded-tl-xl', 'top-0 right-0 border-t-2 border-r-2 rounded-tr-xl',
+            'bottom-0 left-0 border-b-2 border-l-2 rounded-bl-xl', 'bottom-0 right-0 border-b-2 border-r-2 rounded-br-xl'
+          ].map((classes, i) => (
+            <div key={i} className={`absolute w-8 h-8 ${classes} transition-all duration-1000`}
+              style={{ borderColor: `rgba(0, 212, 255, ${animated ? 0.4 : 0})`, transitionDelay: `${i * 200}ms` }}/>
+          ))}
+        </div>
+
+        <div className="relative z-10 min-h-screen flex flex-col">
+          
+          {/* Header */}
+          <header className="flex-shrink-0 border-b border-white/10 bg-black/50 backdrop-blur-xl">
+            <div className="px-6 lg:px-8 py-5">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-5">
+                  <button 
+                    onClick={() => setView('practice-hub')}
+                    className="px-4 py-2 text-xs text-white/40 hover:text-white uppercase font-semibold transition-colors flex items-center gap-2"
+                  >
+                    ← Back
+                  </button>
+                  <div className="flex gap-1.5 h-12">
+                    {[{ color: '#ff6b35', height: '100%', delay: 0 }, { color: '#00d4ff', height: '75%', delay: 100 }, { color: '#bf5af2', height: '50%', delay: 200 }].map((bar, i) => (
+                      <div key={i} className={`w-2 rounded-full self-end transition-all duration-700 ${animated ? 'opacity-100' : 'opacity-0 scale-y-0'}`}
+                        style={{ background: `linear-gradient(180deg, ${bar.color} 0%, ${bar.color}80 100%)`, height: bar.height, boxShadow: `0 0 20px ${bar.color}80`, transitionDelay: `${bar.delay}ms`, transformOrigin: 'bottom' }}/>
+                    ))}
+                  </div>
+                  <div>
+                    <h1 className="text-2xl font-bold tracking-wide text-white">Task Mastery Overview</h1>
+                    <p className="text-xs text-white/40 tracking-widest uppercase mt-1">PMP Certification Training</p>
+                  </div>
                 </div>
-              );
-            })}
-          </div>
-        </div>
 
-        {/* Recommendations */}
-        {recommendations.length > 0 && (
-          <div className="glass-card p-6 mb-6 border-l-4 border-orange-500">
-            <h2 className="executive-font text-2xl font-bold text-white mb-4">📋 Recommendations</h2>
-            <p className="text-slate-300 mb-4">Tasks where you've started but haven't completed all activities:</p>
-            <div className="space-y-2">
-              {recommendations.map(taskName => {
-                const mastery = getTaskMastery(taskName);
+                <div className="flex items-center gap-6">
+                  <div className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10">
+                    <div className="relative">
+                      <div className="w-2 h-2 rounded-full bg-green-400"/>
+                      <div className="absolute inset-0 w-2 h-2 rounded-full bg-green-400 animate-ping"/>
+                    </div>
+                    <span className="text-xs text-white/50">Live</span>
+                  </div>
+                  <div className="text-right hidden sm:block">
+                    <div className="text-xl font-bold text-white tabular-nums">{currentTime.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false })}</div>
+                    <div className="text-xs text-white/30">{currentTime.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</div>
+                  </div>
+                  <OrbitalProgress progress={overallProgress}/>
+                </div>
+              </div>
+            </div>
+          </header>
+
+          {/* Main content */}
+          <main className="flex-1 px-6 lg:px-8 py-6 overflow-x-hidden">
+            <div className="max-w-7xl mx-auto space-y-4">
+
+              {/* ==================== PROGRESS STATISTICS - COMPACT ==================== */}
+              <div
+                className={`transition-all duration-700 ${animated ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
+                style={{ transitionDelay: '100ms' }}
+              >
+                <div
+                  onClick={() => setExpandedSection(expandedSection === 'stats' ? null : 'stats')}
+                  className={`
+                    relative overflow-hidden rounded-2xl cursor-pointer
+                    border transition-all duration-500 group
+                    ${expandedSection === 'stats' ? 'border-opacity-80' : 'border-white/10 hover:border-opacity-50'}
+                  `}
+                  style={{
+                    borderColor: expandedSection === 'stats' ? '#00d4ff' : undefined,
+                    background: 'linear-gradient(135deg, rgba(255,255,255,0.03) 0%, rgba(0,0,0,0.5) 100%)',
+                    boxShadow: expandedSection === 'stats' ? '0 0 50px rgba(0, 212, 255, 0.2), inset 0 0 60px rgba(0, 212, 255, 0.05)' : 'none'
+                  }}
+                >
+                  <div className="absolute top-0 left-0 right-0 h-px" style={{ background: 'linear-gradient(90deg, transparent, #00d4ff, transparent)', opacity: expandedSection === 'stats' ? 1 : 0.3 }}/>
+                  <div className="absolute left-0 top-0 bottom-0 w-1.5" style={{ backgroundColor: '#00d4ff', boxShadow: '0 0 20px #00d4ff80' }}/>
+
+                  <div className="relative p-5 pl-6">
+                    <div className="flex items-center justify-between gap-4 flex-wrap">
+                      <div className="flex items-center gap-5">
+                        <div className="w-14 h-14 rounded-xl flex items-center justify-center border transition-all duration-300 group-hover:scale-110"
+                          style={{ backgroundColor: 'rgba(0, 212, 255, 0.1)', borderColor: 'rgba(0, 212, 255, 0.4)', color: '#00d4ff', boxShadow: 'inset 0 0 20px rgba(0, 212, 255, 0.2), 0 0 20px rgba(0, 212, 255, 0.1)' }}>
+                          <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M5 9.2h3V19H5zM10.6 5h2.8v14h-2.8zm5.6 8H19v6h-2.8z"/>
+                          </svg>
+                        </div>
+                        <div>
+                          <div className="flex items-center gap-3">
+                            <h2 className="text-lg font-bold text-white">Progress Statistics</h2>
+                            <span className="text-xs px-2 py-0.5 rounded border" style={{ borderColor: 'rgba(0, 212, 255, 0.4)', color: '#00d4ff', backgroundColor: 'rgba(0, 212, 255, 0.1)' }}>
+                              3 metrics
+                            </span>
+                          </div>
+                          <p className="text-sm text-white/40 mt-1">Completion tracking and task mastery</p>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center gap-6">
+                        {/* Quick stats inline */}
+                        <div className="hidden lg:flex items-center gap-4 text-sm">
+                          <div className="text-center px-3">
+                            <div className="font-bold text-white">{stats.tasksStarted}<span className="text-white/30">/{stats.totalTasks}</span></div>
+                            <div className="text-xs text-white/30">Started</div>
+                          </div>
+                          <div className="w-px h-8 bg-white/10"/>
+                          <div className="text-center px-3">
+                            <div className="font-bold" style={{ color: '#00d4ff' }}>{stats.activitiesCompleted}<span className="text-white/30">/{stats.totalActivities}</span></div>
+                            <div className="text-xs text-white/30">Activities</div>
+                          </div>
+                          <div className="w-px h-8 bg-white/10"/>
+                          <div className="text-center px-3">
+                            <div className="font-bold" style={{ color: completeColor }}>{stats.tasksMastered}</div>
+                            <div className="text-xs text-white/30">Mastered</div>
+                          </div>
+                        </div>
+
+                        <SegmentedProgress progress={totalTasks > 0 ? Math.round((stats.tasksStarted / stats.totalTasks) * 100) : 0} color="#00d4ff"/>
+
+                        <div className={`w-10 h-10 rounded-lg flex items-center justify-center border transition-all duration-300 ${expandedSection === 'stats' ? 'rotate-180' : ''}`}
+                          style={{ borderColor: 'rgba(0, 212, 255, 0.3)', backgroundColor: expandedSection === 'stats' ? 'rgba(0, 212, 255, 0.2)' : 'rgba(255,255,255,0.03)' }}>
+                          <svg className="w-4 h-4" style={{ color: '#00d4ff' }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                            <path d="M19 9l-7 7-7-7"/>
+                          </svg>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Expanded stats content */}
+                <div className={`overflow-hidden transition-all duration-500 ease-out ${expandedSection === 'stats' ? 'max-h-[500px] opacity-100 mt-2' : 'max-h-0 opacity-0'}`}>
+                  <div className="rounded-xl border overflow-hidden p-4" style={{ borderColor: 'rgba(0, 212, 255, 0.2)', backgroundColor: 'rgba(0,0,0,0.4)' }}>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      {[
+                        { label: 'Tasks Started', value: stats.tasksStarted, total: stats.totalTasks, color: '#ff6b35' },
+                        { label: 'Activities Completed', value: stats.activitiesCompleted, total: stats.totalActivities, color: '#00d4ff' },
+                        { label: 'Tasks Mastered', value: stats.tasksMastered, total: null, color: completeColor },
+                      ].map((stat, i) => (
+                        <div key={i} className="p-4 rounded-lg border border-white/5 bg-white/[0.02]">
+                          <p className="text-xs text-white/40 uppercase tracking-wider mb-2">{stat.label}</p>
+                          <p className="text-3xl font-bold" style={{ color: stat.color }}>
+                            {stat.value}{stat.total && <span className="text-white/30 text-lg">/{stat.total}</span>}
+                          </p>
+                          {stat.total && (
+                            <div className="mt-3 h-1.5 rounded-full overflow-hidden bg-white/10">
+                              <div className="h-full rounded-full" style={{ width: `${(stat.value / stat.total) * 100}%`, backgroundColor: stat.color, boxShadow: `0 0 10px ${stat.color}` }}/>
+                            </div>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* ==================== ACTIVITY SCORES - COMPACT ==================== */}
+              <div
+                className={`transition-all duration-700 ${animated ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
+                style={{ transitionDelay: '200ms' }}
+              >
+                <div
+                  onClick={() => setExpandedSection(expandedSection === 'activities' ? null : 'activities')}
+                  className={`
+                    relative overflow-hidden rounded-2xl cursor-pointer
+                    border transition-all duration-500 group
+                    ${expandedSection === 'activities' ? 'border-opacity-80' : 'border-white/10 hover:border-opacity-50'}
+                  `}
+                  style={{
+                    borderColor: expandedSection === 'activities' ? '#bf5af2' : undefined,
+                    background: 'linear-gradient(135deg, rgba(255,255,255,0.03) 0%, rgba(0,0,0,0.5) 100%)',
+                    boxShadow: expandedSection === 'activities' ? '0 0 50px rgba(191, 90, 242, 0.2), inset 0 0 60px rgba(191, 90, 242, 0.05)' : 'none'
+                  }}
+                >
+                  <div className="absolute top-0 left-0 right-0 h-px" style={{ background: 'linear-gradient(90deg, transparent, #bf5af2, transparent)', opacity: expandedSection === 'activities' ? 1 : 0.3 }}/>
+                  <div className="absolute left-0 top-0 bottom-0 w-1.5" style={{ backgroundColor: '#bf5af2', boxShadow: '0 0 20px #bf5af280' }}/>
+
+                  <div className="relative p-5 pl-6">
+                    <div className="flex items-center justify-between gap-4 flex-wrap">
+                      <div className="flex items-center gap-5">
+                        <div className="w-14 h-14 rounded-xl flex items-center justify-center border transition-all duration-300 group-hover:scale-110"
+                          style={{ backgroundColor: 'rgba(191, 90, 242, 0.1)', borderColor: 'rgba(191, 90, 242, 0.4)', color: '#bf5af2', boxShadow: 'inset 0 0 20px rgba(191, 90, 242, 0.2), 0 0 20px rgba(191, 90, 242, 0.1)' }}>
+                          <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/>
+                          </svg>
+                        </div>
+                        <div>
+                          <div className="flex items-center gap-3">
+                            <h2 className="text-lg font-bold text-white">Activity Scores</h2>
+                            <span className="text-xs px-2 py-0.5 rounded border" style={{ borderColor: 'rgba(191, 90, 242, 0.4)', color: '#bf5af2', backgroundColor: 'rgba(191, 90, 242, 0.1)' }}>
+                              6 types
+                            </span>
+                          </div>
+                          <p className="text-sm text-white/40 mt-1">Average performance by activity type</p>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center gap-6">
+                        {/* Activity type indicators */}
+                        <div className="hidden lg:flex gap-1">
+                          {activityTypes.map((activity, i) => (
+                            <div key={i} className="w-1.5 h-8 rounded-full" style={{
+                              backgroundColor: activity.attempts > 0 ? activity.color : 'rgba(255,255,255,0.06)',
+                              boxShadow: activity.attempts > 0 ? `0 0 8px ${activity.color}60` : 'none'
+                            }}/>
+                          ))}
+                        </div>
+
+                        <div className="flex items-center gap-4 text-sm">
+                          <div className="text-center px-3">
+                            <div className="font-bold" style={{ color: '#bf5af2' }}>{avgScore}%</div>
+                            <div className="text-xs text-white/30">Avg Score</div>
+                          </div>
+                          <div className="w-px h-8 bg-white/10"/>
+                          <div className="text-center px-3">
+                            <div className="font-bold text-white">{totalAttempts}</div>
+                            <div className="text-xs text-white/30">Attempts</div>
+                          </div>
+                        </div>
+
+                        <SegmentedProgress progress={avgScore} color="#bf5af2"/>
+
+                        <div className={`w-10 h-10 rounded-lg flex items-center justify-center border transition-all duration-300 ${expandedSection === 'activities' ? 'rotate-180' : ''}`}
+                          style={{ borderColor: 'rgba(191, 90, 242, 0.3)', backgroundColor: expandedSection === 'activities' ? 'rgba(191, 90, 242, 0.2)' : 'rgba(255,255,255,0.03)' }}>
+                          <svg className="w-4 h-4" style={{ color: '#bf5af2' }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                            <path d="M19 9l-7 7-7-7"/>
+                          </svg>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Expanded activities content */}
+                <div className={`overflow-hidden transition-all duration-500 ease-out ${expandedSection === 'activities' ? 'max-h-[400px] opacity-100 mt-2' : 'max-h-0 opacity-0'}`}>
+                  <div className="rounded-xl border overflow-hidden" style={{ borderColor: 'rgba(191, 90, 242, 0.2)', backgroundColor: 'rgba(0,0,0,0.4)' }}>
+                    {activityTypes.map((activity, i) => (
+                      <div key={i} className="flex items-center gap-4 px-5 py-3.5 border-b transition-all duration-200 hover:bg-white/[0.02]" style={{ borderColor: 'rgba(255,255,255,0.03)' }}>
+                        <div className="w-2.5 h-2.5 rounded-full" style={{
+                          backgroundColor: activity.attempts > 0 ? activity.color : 'rgba(255,255,255,0.1)',
+                          boxShadow: activity.attempts > 0 ? `0 0 10px ${activity.color}` : 'none'
+                        }}/>
+                        <span className={`flex-1 text-sm ${activity.attempts > 0 ? 'text-white' : 'text-white/40'}`}>{activity.name}</span>
+                        <div className="w-32 flex items-center gap-2">
+                          <div className="flex-1 h-1.5 rounded-full overflow-hidden bg-white/10">
+                            <div className="h-full rounded-full" style={{ width: `${activity.score}%`, backgroundColor: activity.color, boxShadow: activity.score > 0 ? `0 0 8px ${activity.color}` : 'none' }}/>
+                          </div>
+                          <span className="text-xs w-10 text-right" style={{ color: activity.attempts > 0 ? activity.color : 'rgba(255,255,255,0.3)' }}>{activity.score}%</span>
+                        </div>
+                        <span className="text-xs text-white/30 w-20 text-right">{activity.attempts} attempts</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* ==================== DOMAIN TASKS ==================== */}
+              {domains.map((domain, index) => {
+                const isExpanded = expandedDomain === domain.id;
+                const progress = getDomainProgress(domain.tasks);
+                const completed = getCompleted(domain.tasks);
+                const active = getActive(domain.tasks);
+                
+                const domainIcon = domain.id === 'people' ? (
+                  <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                  </svg>
+                ) : domain.id === 'process' ? (
+                  <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M19.14 12.94c.04-.31.06-.63.06-.94 0-.31-.02-.63-.06-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.04.31-.06.63-.06.94s.02.63.06.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/>
+                  </svg>
+                ) : (
+                  <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 7V3H2v18h20V7H12zM6 19H4v-2h2v2zm0-4H4v-2h2v2zm0-4H4V9h2v2zm0-4H4V5h2v2zm4 12H8v-2h2v2zm0-4H8v-2h2v2zm0-4H8V9h2v2zm0-4H8V5h2v2zm10 12h-8v-2h2v-2h-2v-2h2v-2h-2V9h8v10zm-2-8h-2v2h2v-2zm0 4h-2v2h2v-2z"/>
+                  </svg>
+                );
+
                 return (
-                  <div key={taskName} className="flex items-center justify-between p-3 bg-slate-800/30 rounded">
-                    <span className="text-white font-semibold">{taskName}</span>
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm text-slate-400">{mastery.completed}/6 activities</span>
-                      <button
-                        onClick={() => {
-                          setSelectedTask(taskName);
-                          setView('practice-hub');
-                        }}
-                        className="text-xs px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded transition-colors"
-                      >
-                        Practice →
-                      </button>
+                  <div key={domain.id}
+                    className={`transition-all duration-700 ${animated ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
+                    style={{ transitionDelay: `${(index + 3) * 100}ms` }}>
+                    <div
+                      onClick={() => setExpandedDomain(isExpanded ? null : domain.id)}
+                      className={`relative overflow-hidden rounded-2xl cursor-pointer border transition-all duration-500 group ${isExpanded ? 'border-opacity-80' : 'border-white/10 hover:border-opacity-50'}`}
+                      style={{
+                        borderColor: isExpanded ? domain.accent : undefined,
+                        background: 'linear-gradient(135deg, rgba(255,255,255,0.03) 0%, rgba(0,0,0,0.5) 100%)',
+                        boxShadow: isExpanded ? `0 0 50px rgba(${domain.accentRgb}, 0.2), inset 0 0 60px rgba(${domain.accentRgb}, 0.05)` : 'none'
+                      }}>
+                      <div className="absolute top-0 left-0 right-0 h-px transition-opacity duration-500" style={{ background: `linear-gradient(90deg, transparent, ${domain.accent}, transparent)`, opacity: isExpanded ? 1 : 0.3 }}/>
+                      <div className="absolute left-0 top-0 bottom-0 w-1.5 transition-all duration-300" style={{ backgroundColor: domain.accent, boxShadow: `0 0 ${isExpanded ? '30px' : '20px'} ${domain.accent}${isExpanded ? '' : '80'}` }}/>
+                      <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500" style={{ background: `radial-gradient(circle at 30% 50%, ${domain.accent}10 0%, transparent 50%)` }}/>
+
+                      <div className="relative p-5 pl-6">
+                        <div className="flex items-center justify-between gap-4 flex-wrap">
+                          <div className="flex items-center gap-5">
+                            <div className="w-14 h-14 rounded-xl flex items-center justify-center border transition-all duration-300 group-hover:scale-110"
+                              style={{ backgroundColor: `rgba(${domain.accentRgb}, 0.1)`, borderColor: `rgba(${domain.accentRgb}, 0.4)`, color: domain.accent, boxShadow: `inset 0 0 20px rgba(${domain.accentRgb}, 0.2), 0 0 20px rgba(${domain.accentRgb}, 0.1)` }}>
+                              {domainIcon}
+                            </div>
+                            <div>
+                              <div className="flex items-center gap-3 flex-wrap">
+                                <h3 className="text-lg font-bold text-white tracking-wide">{domain.name}</h3>
+                                <span className="text-xs px-2 py-0.5 rounded border" style={{ borderColor: `rgba(${domain.accentRgb}, 0.4)`, color: domain.accent, backgroundColor: `rgba(${domain.accentRgb}, 0.1)` }}>
+                                  {domain.tasks.length} tasks
+                                </span>
+                              </div>
+                              <p className="text-sm text-white/40 mt-1">{domain.description}</p>
+                            </div>
+                          </div>
+
+                          <div className="flex items-center gap-6">
+                            <div className="hidden lg:flex gap-1">
+                              {domain.tasks.map((task, i) => (
+                                <div key={i} className="w-1.5 h-8 rounded-full transition-all duration-300" style={{
+                                  backgroundColor: task.progress === 100 ? completeColor : task.progress > 0 ? domain.accent : 'rgba(255,255,255,0.06)',
+                                  boxShadow: task.progress === 100 ? `0 0 8px ${completeColor}` : task.progress > 0 ? `0 0 8px ${domain.accent}60` : 'none'
+                                }}/>
+                              ))}
+                            </div>
+
+                            <div className="flex items-center text-sm border border-white/10 rounded-lg overflow-hidden">
+                              <div className="px-3 py-2 bg-green-500/10 border-r border-white/10 text-center">
+                                <div className="font-bold" style={{ color: completeColor }}>{completed}</div>
+                                <div className="text-xs text-white/30">Done</div>
+                              </div>
+                              <div className="px-3 py-2 border-r border-white/10 text-center" style={{ backgroundColor: `rgba(${domain.accentRgb}, 0.1)` }}>
+                                <div className="font-bold" style={{ color: domain.accent }}>{active}</div>
+                                <div className="text-xs text-white/30">Active</div>
+                              </div>
+                              <div className="px-3 py-2 bg-white/5 text-center">
+                                <div className="font-bold text-white/40">{domain.tasks.length - completed - active}</div>
+                                <div className="text-xs text-white/30">Left</div>
+                              </div>
+                            </div>
+
+                            <SegmentedProgress progress={progress} color={domain.accent}/>
+
+                            <div className={`w-10 h-10 rounded-lg flex items-center justify-center border transition-all duration-300 ${isExpanded ? 'rotate-180' : ''}`}
+                              style={{ borderColor: `rgba(${domain.accentRgb}, 0.3)`, backgroundColor: isExpanded ? `rgba(${domain.accentRgb}, 0.2)` : 'rgba(255,255,255,0.03)' }}>
+                              <svg className="w-4 h-4" style={{ color: domain.accent }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                                <path d="M19 9l-7 7-7-7"/>
+                              </svg>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Expanded tasks */}
+                    <div className={`overflow-hidden transition-all duration-500 ease-out ${isExpanded ? 'max-h-[600px] opacity-100 mt-2' : 'max-h-0 opacity-0'}`}>
+                      <div className="rounded-xl border overflow-hidden" style={{ borderColor: `rgba(${domain.accentRgb}, 0.2)`, backgroundColor: 'rgba(0,0,0,0.4)' }}>
+                        <div className="max-h-[500px] overflow-y-auto custom-scrollbar">
+                          {domain.tasks.map((task, taskIndex) => {
+                            const status = getTaskStatus(task.progress);
+                            const isHovered = hoveredTask === `${domain.id}-${taskIndex}`;
+                            return (
+                              <div key={taskIndex}
+                                onMouseEnter={() => setHoveredTask(`${domain.id}-${taskIndex}`)}
+                                onMouseLeave={() => setHoveredTask(null)}
+                                className={`flex items-center gap-4 px-5 py-3.5 border-b transition-all duration-200 ${isExpanded ? 'opacity-100' : 'opacity-0'}`}
+                                style={{ borderColor: 'rgba(255,255,255,0.03)', backgroundColor: isHovered ? `rgba(${domain.accentRgb}, 0.05)` : 'transparent', transitionDelay: `${taskIndex * 20}ms` }}>
+                                <span className="text-xs text-white/30 w-16">Task {task.id}</span>
+                                <div className="w-2.5 h-2.5 rounded-full flex-shrink-0 transition-all duration-300" style={{
+                                  backgroundColor: status === 'complete' ? completeColor : status === 'active' ? domain.accent : 'rgba(255,255,255,0.1)',
+                                  boxShadow: status === 'complete' ? `0 0 ${isHovered ? '15px' : '10px'} ${completeColor}` : status === 'active' ? `0 0 ${isHovered ? '15px' : '10px'} ${domain.accent}` : 'none'
+                                }}/>
+                                <span className={`flex-1 text-sm transition-colors duration-200 ${status === 'complete' ? '' : status === 'active' ? 'text-white' : 'text-white/40'}`} style={{ color: status === 'complete' ? completeColor : undefined }}>{task.name}</span>
+                                <div className="w-36 flex items-center gap-3">
+                                  <div className="flex-1 h-1.5 rounded-full overflow-hidden bg-white/10">
+                                    <div className="h-full rounded-full transition-all duration-500" style={{ width: `${task.progress}%`, backgroundColor: status === 'complete' ? completeColor : domain.accent, boxShadow: task.progress > 0 ? `0 0 10px ${status === 'complete' ? completeColor : domain.accent}` : 'none' }}/>
+                                  </div>
+                                  <span className="text-xs tabular-nums w-10 text-right text-white/40">{task.progress}%</span>
+                                </div>
+                                <button 
+                                  onClick={() => {
+                                    setSelectedTask(task.name);
+                                    setView('task-interstitial');
+                                  }}
+                                  className="w-24 text-xs px-3 py-2 rounded-lg font-semibold transition-all duration-200 hover:scale-105 border" style={{
+                                    backgroundColor: status === 'complete' ? 'rgba(0, 255, 136, 0.1)' : status === 'active' ? `rgba(${domain.accentRgb}, 0.15)` : 'rgba(255,255,255,0.03)',
+                                    color: status === 'complete' ? completeColor : status === 'active' ? domain.accent : 'rgba(255,255,255,0.4)',
+                                    borderColor: status === 'complete' ? completeColor + '40' : status === 'active' ? domain.accent + '40' : 'rgba(255,255,255,0.1)',
+                                    boxShadow: status !== 'standby' ? `0 0 15px ${status === 'complete' ? completeColor : domain.accent}20` : 'none'
+                                  }}>
+                                  {status === 'complete' ? 'Review' : status === 'active' ? 'Continue' : 'Start'}
+                                </button>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
                     </div>
                   </div>
                 );
               })}
             </div>
-          </div>
-        )}
+          </main>
 
-        {/* Task Mastery Overview */}
-        <div className="glass-card p-6" ref={masterySectionRef}>
-          <h2 className="executive-font text-2xl font-bold text-white mb-4">Task Mastery Overview</h2>
-          <div className="space-y-3 max-h-96 overflow-y-auto custom-scrollbar">
-            {allTasks.map((taskName, index) => {
-              const mastery = getTaskMastery(taskName);
-              const progressBars = '■'.repeat(mastery.completed) + '□'.repeat(mastery.total - mastery.completed);
-              const colorClass = mastery.color === 'slate' ? 'text-slate-500' : mastery.color === 'yellow' ? 'text-yellow-500' : mastery.color === 'orange' ? 'text-orange-500' : 'text-emerald-500';
-              
-              // Get first activity name
-              const activities = ['pm-simulator', 'lightning-round', 'document-detective', 'conflict-matcher', 'timeline-reconstructor', 'empathy-exercise'];
-              const activityLabels = {
-                'pm-simulator': 'PM Simulator',
-                'lightning-round': 'Lightning Round',
-                'document-detective': 'Document Detective',
-                'conflict-matcher': taskName === 'Lead a Team' ? 'Leadership Style Matcher' : 'Conflict Mode Matcher',
-                'timeline-reconstructor': 'Timeline Reconstructor',
-                'empathy-exercise': taskName === 'Lead a Team' ? 'Team Member Perspectives' : 'Empathy Exercise'
-              };
-              const firstActivity = activityLabels[activities[0]] || 'PM Simulator';
-              
-              // Generate badge name
-              const badgeNames = {
-                'Manage Conflict': 'Conflict Navigator',
-                'Lead a Team': 'Team Leader',
-                'Support Performance': 'Performance Champion',
-                'Empower Team': 'Empowerment Expert',
-                'Train Team': 'Training Master',
-                'Build Team': 'Team Builder',
-                'Address Obstacles': 'Obstacle Remover',
-                'Negotiate Agreements': 'Negotiation Pro',
-                'Collaborate Stakeholders': 'Stakeholder Connector',
-                'Build Understanding': 'Understanding Builder',
-                'Support Virtual Teams': 'Virtual Team Expert',
-                'Define Team Ground Rules': 'Rules Architect',
-                'Mentor Stakeholders': 'Mentor Master',
-                'Promote Performance': 'Performance Promoter'
-              };
-              const badgeName = badgeNames[taskName] || taskName.split(' ')[0] + ' Master';
-              
-              return (
-                <div 
-                  key={taskName} 
-                  className={`task-mastery-card task-mastery-card-fade-in flex flex-col items-start justify-between p-3 bg-slate-800/30 rounded relative ${masteryCardsVisible ? 'visible' : ''}`}
-                >
-                  <div className="flex items-center justify-between w-full">
-                    <span className="text-white relative z-10">{taskName}</span>
-                    <div className="flex items-center gap-3 relative z-10">
-                      <span className={`text-sm font-mono ${colorClass}`}>{progressBars}</span>
-                      <span className={`text-xs px-2 py-1 rounded ${
-                        mastery.color === 'slate' ? 'bg-slate-700 text-slate-300' :
-                        mastery.color === 'yellow' ? 'bg-yellow-500/20 text-yellow-400' :
-                        mastery.color === 'orange' ? 'bg-orange-500/20 text-orange-400' :
-                        'bg-emerald-500/20 text-emerald-400'
-                      }`}>
-                        {mastery.label}
-                      </span>
-                    </div>
-                  </div>
-                  
-                  {/* Hover Reveal Preview */}
-                  <div className="task-mastery-preview w-full">
-                    <div className="text-xs text-slate-400 mb-1">
-                      Start with: <span className="text-white font-semibold">{firstActivity}</span>
-                    </div>
-                    <div className="text-xs text-slate-400">
-                      🏆 Earn: <span className="text-amber-400 font-semibold">{badgeName} Badge</span>
-                    </div>
-                  </div>
+          {/* Footer */}
+          <footer className="flex-shrink-0 border-t border-white/10 px-6 lg:px-8 py-4 bg-black/50 backdrop-blur-xl">
+            <div className="flex items-center justify-between text-sm">
+              <div className="flex items-center gap-3">
+                <div className="relative">
+                  <div className="w-2 h-2 rounded-full" style={{ backgroundColor: completeColor, boxShadow: `0 0 8px ${completeColor}` }}/>
+                  <div className="absolute inset-0 w-2 h-2 rounded-full animate-ping" style={{ backgroundColor: completeColor, opacity: 0.4 }}/>
                 </div>
-              );
-            })}
-          </div>
+                <span className="text-white/40">System Online</span>
+              </div>
+              <span className="hidden sm:block text-white/30">PMP Certification • 35 Modules • 3 Domains</span>
+              <span className="text-white/30">v2.0</span>
+            </div>
+          </footer>
         </div>
-
-        <GlobalNavFooter />
       </div>
     );
   }
