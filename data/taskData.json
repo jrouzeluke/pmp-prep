@@ -2,7 +2,75 @@
   "Manage Conflict": {
     "learn": {
       "overview": {
-        "definition": "Apply emotional intelligence and interpersonal skills to navigate disagreements, reach consensus, and maintain team productivity while preserving relationships.",
+        "definition": {
+          "enhanced": true,
+          "eco_definition": "Apply emotional intelligence and interpersonal skills to navigate disagreements, reach consensus, and maintain team productivity while preserving relationships.",
+          "core_principle": "Conflict isn't the enemy—<span className=\"text-amber-400 font-semibold\">unmanaged</span> conflict is. Healthy disagreement drives innovation, surfaces blind spots, and produces better decisions. Your job isn't to eliminate conflict—it's to <span className=\"text-emerald-400 font-semibold\">channel it productively</span> while protecting relationships and team cohesion.",
+          "conflict_equation": true,
+          "conflict_equation_note": "Miss any element and conflict escalates, festers, or damages trust",
+          "three_truths": [
+            {
+              "emoji": "💡",
+              "title": "Conflict Is Natural",
+              "description": "Diverse teams with different perspectives WILL disagree. That's a feature, not a bug.",
+              "color": "cyan"
+            },
+            {
+              "emoji": "🎯",
+              "title": "Early Is Better",
+              "description": "Address conflict when it's a spark, not after it's a fire. Prevention beats intervention.",
+              "color": "emerald"
+            },
+            {
+              "emoji": "🤝",
+              "title": "Relationships Matter",
+              "description": "Win the argument but lose the relationship? You've lost. Long-term collaboration beats short-term victory.",
+              "color": "purple"
+            }
+          ],
+          "practice_comparison": {
+            "effective": [
+              "Noticing tension before it explodes",
+              "Facilitating difficult conversations",
+              "Finding solutions both sides can accept",
+              "Separating people from problems",
+              "Building bridges after disagreements"
+            ],
+            "ineffective": [
+              "Avoiding conflict until it escalates",
+              "Taking sides or showing favoritism",
+              "Forcing solutions without buy-in",
+              "Ignoring the emotional component",
+              "\"Winning\" at relationship cost"
+            ]
+          },
+          "why_matters": {
+            "stats": [
+              {
+                "value": "85%",
+                "label": "of employees deal with conflict",
+                "color": "red"
+              },
+              {
+                "value": "2.8 hrs",
+                "label": "per week spent on conflict",
+                "color": "amber"
+              },
+              {
+                "value": "$359B",
+                "label": "annual cost to US businesses",
+                "color": "orange"
+              },
+              {
+                "value": "#1",
+                "label": "reason for project failure",
+                "color": "emerald"
+              }
+            ],
+            "note": "Conflict management isn't a soft skill—it's a business-critical capability"
+          },
+          "bottom_line": "<span className=\"text-emerald-400 font-bold\">Bottom Line:</span> The best project managers don't avoid conflict—they <span className=\"text-white font-semibold\"> create environments where disagreements lead to better outcomes</span>, not damaged relationships."
+        },
         "exam_triggers": [
           "Two team members disagree",
           "Stakeholder conflict",

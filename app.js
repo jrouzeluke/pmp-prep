@@ -4922,12 +4922,12 @@ const PMPApp = () => {
                   >
                     {/* Card Header - Always Visible */}
                     <div className="p-2.5 flex items-center gap-3">
-                      {/* Drag Handle - More Prominent */}
+                      {/* Drag Handle - More Prominent and Easier to Use */}
                       <div 
-                        className="flex items-center justify-center w-8 h-8 rounded bg-cyan-500/20 hover:bg-cyan-500/40 cursor-grab active:cursor-grabbing transition-colors flex-shrink-0"
+                        className="flex items-center justify-center w-10 h-10 rounded-lg bg-cyan-500/30 hover:bg-cyan-500/60 active:bg-cyan-500/80 cursor-grab active:cursor-grabbing transition-all duration-200 flex-shrink-0 border border-cyan-400/50 hover:border-cyan-400 hover:scale-110 active:scale-95 shadow-md hover:shadow-lg"
                         title="Drag to reorder"
                       >
-                        <div className="text-cyan-400 text-lg font-bold">☰</div>
+                        <div className="text-cyan-300 text-xl font-bold select-none">☰</div>
                       </div>
                       
                       {/* Position Number - Smaller */}
@@ -4963,25 +4963,57 @@ const PMPApp = () => {
 
                     {/* Collapsible Content */}
                     {isExpanded && (
-                      <div className="px-2.5 pb-2.5 border-t border-slate-700/50 pt-2.5">
+                      <div className="px-2.5 pb-2.5 border-t border-slate-700/50 pt-2.5 space-y-3">
+                        {/* Event Content */}
                         {event.content && (
-                          <div className="bg-slate-900/50 p-2.5 rounded border border-slate-700 mb-2">
-                            <pre className="text-slate-300 whitespace-pre-wrap font-mono text-xs">{event.content}</pre>
+                          <div className="bg-slate-900/50 p-3 rounded border border-slate-700">
+                            <h4 className="text-cyan-400 font-semibold text-xs mb-2 uppercase tracking-wide">Event Details</h4>
+                            <pre className="text-slate-300 whitespace-pre-wrap font-mono text-xs leading-relaxed">{event.content}</pre>
                           </div>
                         )}
-                        <div className="mt-2 flex gap-2 text-xs">
-                          <div className="flex-1">
-                            <label className="text-slate-400 block mb-0.5 text-xs">Sequence:</label>
-                            <input type="number" className="w-full px-2 py-1 bg-slate-800 border border-slate-600 rounded text-white text-xs" placeholder="___" disabled />
+                        
+                        {/* Key Indicators */}
+                        {event.indicators && (
+                          <div className="bg-blue-900/30 p-3 rounded border-l-4 border-blue-500">
+                            <h4 className="text-blue-400 font-semibold text-xs mb-2 uppercase tracking-wide">Key Indicators</h4>
+                            <p className="text-slate-300 text-xs leading-relaxed">{event.indicators}</p>
                           </div>
-                          <div className="flex-1">
-                            <label className="text-slate-400 block mb-0.5 text-xs">Stage:</label>
-                            <input type="text" className="w-full px-2 py-1 bg-slate-800 border border-slate-600 rounded text-white text-xs" placeholder="___" disabled />
+                        )}
+                        
+                        {/* Why This Order */}
+                        {event.whyThisOrder && (
+                          <div className="bg-emerald-900/30 p-3 rounded border-l-4 border-emerald-500">
+                            <h4 className="text-emerald-400 font-semibold text-xs mb-2 uppercase tracking-wide">Why This Order</h4>
+                            <p className="text-slate-300 text-xs leading-relaxed">{event.whyThisOrder}</p>
                           </div>
-                          <div className="flex-1">
-                            <label className="text-slate-400 block mb-0.5 text-xs">Style:</label>
-                            <input type="text" className="w-full px-2 py-1 bg-slate-800 border border-slate-600 rounded text-white text-xs" placeholder="___" disabled />
-                          </div>
+                        )}
+                        
+                        {/* Event Metadata */}
+                        <div className="grid grid-cols-2 gap-2 text-xs">
+                          {event.month && (
+                            <div className="bg-slate-800/50 p-2 rounded">
+                              <label className="text-slate-400 block mb-1 text-xs">Month:</label>
+                              <span className="text-white font-semibold">{event.month}</span>
+                            </div>
+                          )}
+                          {event.stage && (
+                            <div className="bg-slate-800/50 p-2 rounded">
+                              <label className="text-slate-400 block mb-1 text-xs">Stage:</label>
+                              <span className="text-white font-semibold">{event.stage}</span>
+                            </div>
+                          )}
+                          {event.leadershipStyle && (
+                            <div className="bg-slate-800/50 p-2 rounded">
+                              <label className="text-slate-400 block mb-1 text-xs">Leadership Style:</label>
+                              <span className="text-white font-semibold">{event.leadershipStyle}</span>
+                            </div>
+                          )}
+                          {event.correctOrder && (
+                            <div className="bg-slate-800/50 p-2 rounded">
+                              <label className="text-slate-400 block mb-1 text-xs">Correct Sequence:</label>
+                              <span className="text-white font-semibold">#{event.correctOrder}</span>
+                            </div>
+                          )}
                         </div>
                       </div>
                     )}
@@ -5435,12 +5467,12 @@ const PMPApp = () => {
                 >
                   {/* Card Header - Always Visible */}
                   <div className="p-2.5 flex items-center gap-3">
-                    {/* Drag Handle - More Prominent */}
+                    {/* Drag Handle - More Prominent and Easier to Use */}
                     <div 
-                      className="flex items-center justify-center w-8 h-8 rounded bg-cyan-500/20 hover:bg-cyan-500/40 cursor-grab active:cursor-grabbing transition-colors flex-shrink-0"
+                      className="flex items-center justify-center w-10 h-10 rounded-lg bg-cyan-500/30 hover:bg-cyan-500/60 active:bg-cyan-500/80 cursor-grab active:cursor-grabbing transition-all duration-200 flex-shrink-0 border border-cyan-400/50 hover:border-cyan-400 hover:scale-110 active:scale-95 shadow-md hover:shadow-lg"
                       title="Drag to reorder"
                     >
-                      <div className="text-cyan-400 text-lg font-bold">☰</div>
+                      <div className="text-cyan-300 text-xl font-bold select-none">☰</div>
                     </div>
                     
                     {/* Step Number - Smaller */}
@@ -5498,20 +5530,65 @@ const PMPApp = () => {
                   </div>
 
                   {/* Collapsible Content */}
-                  {isExpanded && (step.details || step.content || step.whyThisOrder) && (
-                    <div className="px-2.5 pb-2.5 border-t border-slate-700/50 pt-2.5">
-                      {step.details && (
-                        <p className="text-slate-300 text-xs mb-2">{step.details}</p>
-                      )}
+                  {isExpanded && (
+                    <div className="px-2.5 pb-2.5 border-t border-slate-700/50 pt-2.5 space-y-3">
+                      {/* Event Details/Content */}
                       {step.content && (
-                        <div className="bg-slate-900/50 p-2 rounded border border-slate-700 mb-2">
-                          <pre className="text-slate-300 whitespace-pre-wrap text-xs">{step.content}</pre>
+                        <div className="bg-slate-900/50 p-3 rounded border border-slate-700">
+                          <h4 className="text-cyan-400 font-semibold text-xs mb-2 uppercase tracking-wide">Event Details</h4>
+                          <pre className="text-slate-300 whitespace-pre-wrap font-mono text-xs leading-relaxed">{step.content}</pre>
                         </div>
                       )}
+                      {step.details && !step.content && (
+                        <div className="bg-slate-900/50 p-3 rounded border border-slate-700">
+                          <h4 className="text-cyan-400 font-semibold text-xs mb-2 uppercase tracking-wide">Event Details</h4>
+                          <p className="text-slate-300 text-xs leading-relaxed">{step.details}</p>
+                        </div>
+                      )}
+                      
+                      {/* Key Indicators */}
+                      {step.indicators && (
+                        <div className="bg-blue-900/30 p-3 rounded border-l-4 border-blue-500">
+                          <h4 className="text-blue-400 font-semibold text-xs mb-2 uppercase tracking-wide">Key Indicators</h4>
+                          <p className="text-slate-300 text-xs leading-relaxed">{step.indicators}</p>
+                        </div>
+                      )}
+                      
+                      {/* Why This Order */}
                       {step.whyThisOrder && (
-                        <div className="bg-blue-500/10 p-2 rounded border-l-2 border-blue-500">
-                          <p className="text-blue-400 text-xs font-semibold mb-0.5">Why this order:</p>
-                          <p className="text-slate-300 text-xs">{step.whyThisOrder}</p>
+                        <div className="bg-emerald-900/30 p-3 rounded border-l-4 border-emerald-500">
+                          <h4 className="text-emerald-400 font-semibold text-xs mb-2 uppercase tracking-wide">Why This Order</h4>
+                          <p className="text-slate-300 text-xs leading-relaxed">{step.whyThisOrder}</p>
+                        </div>
+                      )}
+                      
+                      {/* Event Metadata */}
+                      {(step.month || step.stage || step.leadershipStyle || step.correctOrder) && (
+                        <div className="grid grid-cols-2 gap-2 text-xs">
+                          {step.month && (
+                            <div className="bg-slate-800/50 p-2 rounded">
+                              <label className="text-slate-400 block mb-1 text-xs">Month:</label>
+                              <span className="text-white font-semibold">{step.month}</span>
+                            </div>
+                          )}
+                          {step.stage && (
+                            <div className="bg-slate-800/50 p-2 rounded">
+                              <label className="text-slate-400 block mb-1 text-xs">Stage:</label>
+                              <span className="text-white font-semibold">{step.stage}</span>
+                            </div>
+                          )}
+                          {step.leadershipStyle && (
+                            <div className="bg-slate-800/50 p-2 rounded">
+                              <label className="text-slate-400 block mb-1 text-xs">Leadership Style:</label>
+                              <span className="text-white font-semibold">{step.leadershipStyle}</span>
+                            </div>
+                          )}
+                          {step.correctOrder && (
+                            <div className="bg-slate-800/50 p-2 rounded">
+                              <label className="text-slate-400 block mb-1 text-xs">Correct Sequence:</label>
+                              <span className="text-white font-semibold">#{step.correctOrder}</span>
+                            </div>
+                          )}
                         </div>
                       )}
                     </div>
@@ -9613,6 +9690,158 @@ const PMPApp = () => {
     
     switch (type) {
       case 'definition':
+        // Special enhanced definition for Manage Conflict
+        if (selectedTask === 'Manage Conflict' && typeof content === 'object' && content.enhanced) {
+          const def = content;
+          return (
+            <div className="space-y-6">
+              {/* Official ECO Definition */}
+              <div className="bg-gradient-to-r from-emerald-500/10 to-blue-500/10 rounded-xl p-6 border border-emerald-500/20">
+                <div className="flex items-start gap-4">
+                  <div className="bg-emerald-500/20 rounded-full p-3">
+                    <svg className="w-6 h-6 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                  </div>
+                  <div>
+                    <div className="text-emerald-400 text-sm font-semibold uppercase tracking-wide mb-2">ECO Task Definition</div>
+                    <p className="text-xl text-gray-200 italic">
+                      "{def.eco_definition || content.eco_definition || 'Apply emotional intelligence and interpersonal skills to navigate disagreements, reach consensus, and maintain team productivity while preserving relationships.'}"
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Core Principle */}
+              {def.core_principle && (
+                <div className="bg-white/5 rounded-xl p-6 border border-white/10">
+                  <h4 className="text-lg font-semibold text-amber-400 mb-4">Core Principle</h4>
+                  <p className="text-gray-300 text-lg leading-relaxed" dangerouslySetInnerHTML={{__html: def.core_principle.replace(/className/g, 'class')}} />
+                </div>
+              )}
+
+              {/* The Conflict Equation */}
+              {def.conflict_equation && (
+                <div className="bg-gradient-to-br from-purple-500/10 to-pink-500/10 rounded-xl p-6 border border-purple-500/20">
+                  <h4 className="text-lg font-semibold text-purple-400 mb-4">The Conflict Management Equation</h4>
+                  <div className="flex flex-wrap items-center justify-center gap-3 text-xl py-4">
+                    <span className="bg-blue-500/20 px-4 py-2 rounded-lg text-blue-400 font-semibold">Early Detection</span>
+                    <span className="text-gray-500">+</span>
+                    <span className="bg-emerald-500/20 px-4 py-2 rounded-lg text-emerald-400 font-semibold">Right Approach</span>
+                    <span className="text-gray-500">+</span>
+                    <span className="bg-amber-500/20 px-4 py-2 rounded-lg text-amber-400 font-semibold">Emotional Intelligence</span>
+                    <span className="text-gray-500">=</span>
+                    <span className="bg-gradient-to-r from-emerald-500/30 to-blue-500/30 px-4 py-2 rounded-lg text-white font-bold">Resolution + Stronger Relationships</span>
+                  </div>
+                  {def.conflict_equation_note && (
+                    <p className="text-gray-400 text-center text-sm mt-2">{def.conflict_equation_note}</p>
+                  )}
+                </div>
+              )}
+
+              {/* Three Truths About Conflict */}
+              {def.three_truths && Array.isArray(def.three_truths) && (
+                <div className="bg-white/5 rounded-xl p-6 border border-white/10">
+                  <h4 className="text-lg font-semibold text-cyan-400 mb-4">Three Truths PMI Wants You to Know</h4>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    {def.three_truths.map((truth, idx) => {
+                      const getColorClasses = (color) => {
+                        switch(color) {
+                          case 'cyan':
+                            return { bg: 'bg-cyan-500/10', border: 'border-cyan-500/20', text: 'text-cyan-400' };
+                          case 'emerald':
+                            return { bg: 'bg-emerald-500/10', border: 'border-emerald-500/20', text: 'text-emerald-400' };
+                          case 'purple':
+                            return { bg: 'bg-purple-500/10', border: 'border-purple-500/20', text: 'text-purple-400' };
+                          default:
+                            return { bg: 'bg-cyan-500/10', border: 'border-cyan-500/20', text: 'text-cyan-400' };
+                        }
+                      };
+                      const colors = getColorClasses(truth.color);
+                      return (
+                        <div key={idx} className={`${colors.bg} rounded-lg p-4 border ${colors.border} text-center`}>
+                          <div className="text-3xl mb-2">{truth.emoji}</div>
+                          <div className={`${colors.text} font-semibold mb-2`}>{truth.title}</div>
+                          <p className="text-gray-400 text-sm">{truth.description}</p>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
+              {/* What This Looks Like in Practice */}
+              {def.practice_comparison && (
+                <div className="bg-white/5 rounded-xl p-6 border border-white/10">
+                  <h4 className="text-lg font-semibold text-rose-400 mb-4">What This Looks Like in Practice</h4>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-3">
+                      <div className="text-emerald-400 font-semibold flex items-center gap-2">
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                        </svg>
+                        Effective Conflict Management
+                      </div>
+                      <ul className="text-gray-300 text-sm space-y-2 ml-7">
+                        {def.practice_comparison.effective && def.practice_comparison.effective.map((item, idx) => (
+                          <li key={idx}>• {item}</li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div className="space-y-3">
+                      <div className="text-red-400 font-semibold flex items-center gap-2">
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                        Ineffective Approaches
+                      </div>
+                      <ul className="text-gray-400 text-sm space-y-2 ml-7">
+                        {def.practice_comparison.ineffective && def.practice_comparison.ineffective.map((item, idx) => (
+                          <li key={idx}>• {item}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Why This Matters */}
+              {def.why_matters && (
+                <div className="bg-gradient-to-r from-red-500/10 to-amber-500/10 rounded-xl p-6 border border-red-500/20">
+                  <h4 className="text-lg font-semibold text-red-400 mb-3">Why This Matters</h4>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+                    {def.why_matters.stats && def.why_matters.stats.map((stat, idx) => {
+                      const colorClasses = {
+                        red: 'text-red-400',
+                        amber: 'text-amber-400',
+                        orange: 'text-orange-400',
+                        emerald: 'text-emerald-400'
+                      };
+                      const colorClass = colorClasses[stat.color] || colorClasses.red;
+                      return (
+                        <div key={idx}>
+                          <div className={`text-3xl font-bold ${colorClass}`}>{stat.value}</div>
+                          <div className="text-gray-400 text-xs">{stat.label}</div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                  {def.why_matters.note && (
+                    <p className="text-gray-400 text-sm text-center mt-4 italic">{def.why_matters.note}</p>
+                  )}
+                </div>
+              )}
+
+              {/* Bottom Line Callout */}
+              {def.bottom_line && (
+                <div className="bg-black/40 rounded-xl p-5 border-l-4 border-emerald-500">
+                  <p className="text-gray-200 text-lg" dangerouslySetInnerHTML={{__html: def.bottom_line.replace(/className/g, 'class')}} />
+                </div>
+              )}
+            </div>
+          );
+        }
+        // Default simple definition for other tasks
         return <p className="text-xl text-white font-light italic leading-tight">"{content}"</p>;
       
       case 'text':
