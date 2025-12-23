@@ -9691,7 +9691,7 @@ const PMPApp = () => {
     switch (type) {
       case 'definition':
         // Special enhanced definition for Manage Conflict
-        if (selectedTask === 'Manage Conflict' && typeof content === 'object' && content.enhanced) {
+        if (selectedTask === 'Manage Conflict' && typeof content === 'object' && content !== null && content.enhanced === true) {
           const def = content;
           return (
             <div className="space-y-6">
@@ -9706,7 +9706,7 @@ const PMPApp = () => {
                   <div>
                     <div className="text-emerald-400 text-sm font-semibold uppercase tracking-wide mb-2">ECO Task Definition</div>
                     <p className="text-xl text-gray-200 italic">
-                      "{def.eco_definition || content.eco_definition || 'Apply emotional intelligence and interpersonal skills to navigate disagreements, reach consensus, and maintain team productivity while preserving relationships.'}"
+                      "{def.eco_definition || 'Apply emotional intelligence and interpersonal skills to navigate disagreements, reach consensus, and maintain team productivity while preserving relationships.'}"
                     </p>
                   </div>
                 </div>
@@ -9842,7 +9842,17 @@ const PMPApp = () => {
           );
         }
         // Default simple definition for other tasks
-        return <p className="text-xl text-white font-light italic leading-tight">"{content}"</p>;
+        // Handle both string and object cases
+        if (typeof content === 'string') {
+          return <p className="text-xl text-white font-light italic leading-tight">"{content}"</p>;
+        }
+        // If content is an object but not enhanced, try to extract a string value
+        if (typeof content === 'object' && content !== null) {
+          const defText = content.eco_definition || content.definition || JSON.stringify(content);
+          return <p className="text-xl text-white font-light italic leading-tight">"{defText}"</p>;
+        }
+        // Fallback
+        return <p className="text-xl text-white font-light italic leading-tight">"{String(content)}"</p>;
       
       case 'text':
         return <p className="text-slate-300 leading-relaxed">{content}</p>;
