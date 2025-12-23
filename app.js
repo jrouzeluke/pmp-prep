@@ -85,6 +85,15 @@ const PMPApp = () => {
     'pmp-application': {},
     'deep-dive': {}
   });
+  // Navigation state for task connections
+  const [showingRelatedTask, setShowingRelatedTask] = useState(false);
+  const [relatedTaskId, setRelatedTaskId] = useState(null);
+  const [returnToSection, setReturnToSection] = useState('connections');
+  
+  // Navigation function for practice hub
+  const goToPracticeHub = () => {
+    setView('practice-hub');
+  };
   
   // Progress Tracking State
   const [progressData, setProgressData] = useState({
@@ -2368,7 +2377,8 @@ const PMPApp = () => {
 
   // PM Simulator Activity View
   if (view === 'pm-simulator') {
-    const stressTests = currentTask.practice?.stress_test || [];
+    // Handle both stress_test (old format) and pm_simulator (new format)
+    const stressTests = currentTask.practice?.pm_simulator || currentTask.practice?.stress_test || [];
     const currentScenario = stressTests[simulatorState.currentScene];
     const totalScenes = stressTests.length;
     
@@ -2823,7 +2833,8 @@ const PMPApp = () => {
 
   // Lightning Round Activity View
   if (view === 'lightning-round') {
-    const reflexPrompts = currentTask.practice?.reflex_prompts || [];
+    // Handle both reflex_prompts (old format) and lightning_round (new format)
+    const reflexPrompts = currentTask.practice?.lightning_round || currentTask.practice?.reflex_prompts || [];
     const totalQuestions = Math.min(10, reflexPrompts.length);
     const currentPrompt = reflexPrompts[lightningRoundState.currentQuestion];
     const bestScore = parseInt(localStorage.getItem(`lightning-round-best-${selectedTask}`) || '0');
@@ -3247,6 +3258,7 @@ const PMPApp = () => {
       );
     }
     // Handle different data structures: array directly OR object with cases array
+    // Handle both document_detective formats
     let documentDetectiveCases = currentTask.practice?.document_detective;
     
     // If it's an object with a cases array (Lead a Team format), extract the cases
@@ -3883,73 +3895,96 @@ const PMPApp = () => {
   // Conflict Mode Matcher / Leadership Style Matcher Activity View
   // Support both route names for Lead a Team
   if (view === 'conflict-matcher' || view === 'leadership-style-matcher') {
-    // For Lead a Team, use leadership_style_matcher, otherwise conflict_matcher
-    const dataKey = selectedTask === 'Lead a Team' ? 'leadership_style_matcher' : 'conflict_matcher';
-    const activityTitle = selectedTask === 'Lead a Team' ? 'Leadership Style Matcher' : 'Conflict Mode Matcher';
+    // For Lead a Team, use leadership_style_matcher, for Empower Team use delegation_level_matcher, otherwise conflict_matcher
+    let dataKey = 'conflict_matcher';
+    let activityTitle = 'Conflict Mode Matcher';
+    if (selectedTask === 'Lead a Team') {
+      dataKey = 'leadership_style_matcher';
+      activityTitle = 'Leadership Style Matcher';
+    } else if (selectedTask === 'Empower Team') {
+      dataKey = 'delegation_level_matcher';
+      activityTitle = 'Delegation Level Matcher';
+    }
     
     // Extract scenarios - handle both object with scenarios property and direct array
     const rawData = currentTask.practice?.[dataKey] || currentTask.practice?.conflict_matcher;
-    const conflictMatcherScenarios = (rawData?.scenarios || (Array.isArray(rawData) ? rawData : null)) || [
-      {
-        id: 1,
-        scenario: "Two developers disagree on API design during Sprint Planning. Both have valid technical arguments.",
-        correctMode: "COLLABORATE",
-        explanation: "Technical decisions benefit from collaborative discussion to find the best solution that leverages both perspectives.",
-        examTip: "For technical disagreements between team members, collaboration is almost always the best answer."
-      },
-      {
-        id: 2,
-        scenario: "Team member consistently misses daily standup. When asked, they say it's not important.",
-        correctMode: "CONFRONT",
-        explanation: "Address issues directly with facts and empathy. This is a behavior that needs correction.",
-        examTip: "When someone isn't following agreed processes, confront (direct but respectful) is the right first step."
-      },
-      {
-        id: 3,
-        scenario: "Emergency: Production system down. Two experts suggest different fixes. Decision needed NOW.",
-        correctMode: "FORCE",
-        explanation: "In emergency situations, use expertise and authority to make fast decision. Document rationale afterwards.",
-        examTip: "Force mode is only correct for emergencies, safety issues, or legal/ethical violations."
-      },
-      {
-        id: 4,
-        scenario: "Designer prefers blue interface, you prefer green. Both work. Issue is minor.",
-        correctMode: "ACCOMMODATE",
-        explanation: "When the issue is minor and the other party is the expert (designer), accommodating preserves relationship and leverages their expertise.",
-        examTip: "Accommodate when issue is minor and relationship/expertise matters more than the specific choice."
-      },
-      {
-        id: 5,
-        scenario: "Two departments want same resource for overlapping timeframes. Both projects critical. Budget is fixed.",
-        correctMode: "COMPROMISE",
-        explanation: "When both parties have equal legitimate needs and time/budget constraints prevent full satisfaction, compromise finds middle ground.",
-        examTip: "Compromise is acceptable when time is limited and both parties can give ground."
-      },
-      {
-        id: 6,
-        scenario: "Two team members have minor disagreement about meeting time. One prefers morning, one prefers afternoon.",
-        correctMode: "COLLABORATE",
-        explanation: "Even for minor issues, collaboration builds team ownership and may reveal creative solutions (e.g., alternating times).",
-        examTip: "PMI prefers collaboration whenever possible, even for minor issues."
-      }
-    ];
+    
+    // For Empower Team, use situations array and delegation_levels
+    let conflictMatcherScenarios, availableModes;
+    if (selectedTask === 'Empower Team' && rawData?.situations) {
+      conflictMatcherScenarios = rawData.situations;
+      availableModes = rawData.delegation_levels || [];
+    } else {
+      conflictMatcherScenarios = (rawData?.scenarios || (Array.isArray(rawData) ? rawData : null)) || [
+        {
+          id: 1,
+          scenario: "Two developers disagree on API design during Sprint Planning. Both have valid technical arguments.",
+          correctMode: "COLLABORATE",
+          explanation: "Technical decisions benefit from collaborative discussion to find the best solution that leverages both perspectives.",
+          examTip: "For technical disagreements between team members, collaboration is almost always the best answer."
+        },
+        {
+          id: 2,
+          scenario: "Team member consistently misses daily standup. When asked, they say it's not important.",
+          correctMode: "CONFRONT",
+          explanation: "Address issues directly with facts and empathy. This is a behavior that needs correction.",
+          examTip: "When someone isn't following agreed processes, confront (direct but respectful) is the right first step."
+        },
+        {
+          id: 3,
+          scenario: "Emergency: Production system down. Two experts suggest different fixes. Decision needed NOW.",
+          correctMode: "FORCE",
+          explanation: "In emergency situations, use expertise and authority to make fast decision. Document rationale afterwards.",
+          examTip: "Force mode is only correct for emergencies, safety issues, or legal/ethical violations."
+        },
+        {
+          id: 4,
+          scenario: "Designer prefers blue interface, you prefer green. Both work. Issue is minor.",
+          correctMode: "ACCOMMODATE",
+          explanation: "When the issue is minor and the other party is the expert (designer), accommodating preserves relationship and leverages their expertise.",
+          examTip: "Accommodate when issue is minor and relationship/expertise matters more than the specific choice."
+        },
+        {
+          id: 5,
+          scenario: "Two departments want same resource for overlapping timeframes. Both projects critical. Budget is fixed.",
+          correctMode: "COMPROMISE",
+          explanation: "When both parties have equal legitimate needs and time/budget constraints prevent full satisfaction, compromise finds middle ground.",
+          examTip: "Compromise is acceptable when time is limited and both parties can give ground."
+        },
+        {
+          id: 6,
+          scenario: "Two team members have minor disagreement about meeting time. One prefers morning, one prefers afternoon.",
+          correctMode: "COLLABORATE",
+          explanation: "Even for minor issues, collaboration builds team ownership and may reveal creative solutions (e.g., alternating times).",
+          examTip: "PMI prefers collaboration whenever possible, even for minor issues."
+        }
+      ];
+      availableModes = null;
+    }
 
     // Define modes/styles based on task
-    const conflictModes = selectedTask === 'Lead a Team' ? [
-      { name: "Commanding", emoji: "⚡", color: "red" },
-      { name: "Authoritative", emoji: "🎯", color: "blue" },
-      { name: "Affiliative", emoji: "🤝", color: "emerald" },
-      { name: "Democratic", emoji: "🗳️", color: "yellow" },
-      { name: "Pacesetting", emoji: "⚡", color: "orange" },
-      { name: "Coaching", emoji: "📚", color: "purple" }
-    ] : [
-      { name: "COLLABORATE", emoji: "🤝", color: "emerald" },
-      { name: "CONFRONT", emoji: "🎯", color: "blue" },
-      { name: "COMPROMISE", emoji: "⚖️", color: "yellow" },
-      { name: "ACCOMMODATE", emoji: "🤝", color: "orange" },
-      { name: "FORCE", emoji: "⚠️", color: "red" },
-      { name: "AVOID", emoji: "❌", color: "slate" }
-    ];
+    const conflictModes = selectedTask === 'Empower Team' && availableModes ? 
+      availableModes.map(level => ({
+        name: level.name,
+        emoji: level.level === 1 ? "📢" : level.level === 2 ? "💬" : level.level === 3 ? "🤝" : level.level === 4 ? "🤝" : level.level === 5 ? "💡" : level.level === 6 ? "❓" : "✅",
+        color: level.color || "blue",
+        level: level.level
+      })) :
+      selectedTask === 'Lead a Team' ? [
+        { name: "Commanding", emoji: "⚡", color: "red" },
+        { name: "Authoritative", emoji: "🎯", color: "blue" },
+        { name: "Affiliative", emoji: "🤝", color: "emerald" },
+        { name: "Democratic", emoji: "🗳️", color: "yellow" },
+        { name: "Pacesetting", emoji: "⚡", color: "orange" },
+        { name: "Coaching", emoji: "📚", color: "purple" }
+      ] : [
+        { name: "COLLABORATE", emoji: "🤝", color: "emerald" },
+        { name: "CONFRONT", emoji: "🎯", color: "blue" },
+        { name: "COMPROMISE", emoji: "⚖️", color: "yellow" },
+        { name: "ACCOMMODATE", emoji: "🤝", color: "orange" },
+        { name: "FORCE", emoji: "⚠️", color: "red" },
+        { name: "AVOID", emoji: "❌", color: "slate" }
+      ];
 
     const handleDragStart = (scenarioId) => {
       setConflictMatcherState(prev => ({ ...prev, draggedScenario: scenarioId }));
@@ -3972,8 +4007,17 @@ const PMPApp = () => {
       if (!conflictMatcherState.draggedScenario) return;
       
       const scenarioId = conflictMatcherState.draggedScenario;
-      const correctAnswer = conflictMatcherScenarios.find(s => s.id === scenarioId)?.correctStyle || 
-                            conflictMatcherScenarios.find(s => s.id === scenarioId)?.correctMode;
+      const scenario = conflictMatcherScenarios.find(s => s.id === scenarioId);
+      let correctAnswer;
+      if (selectedTask === 'Empower Team' && scenario) {
+        // For Empower Team, check correctLevel or levelName
+        const correctLevel = scenario.correctLevel;
+        const levelName = scenario.levelName;
+        const matchedMode = conflictModes.find(m => m.level === correctLevel || m.name === levelName);
+        correctAnswer = matchedMode?.name || levelName;
+      } else {
+        correctAnswer = scenario?.correctStyle || scenario?.correctMode;
+      }
       const isCorrect = correctAnswer && (correctAnswer.includes('/') 
         ? correctAnswer.split('/').some(style => style.trim() === modeName)
         : modeName === correctAnswer);
@@ -4110,11 +4154,16 @@ const PMPApp = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
             {conflictMatcherScenarios.map(scenario => {
               const userMatch = conflictMatcherState.matches[scenario.id];
-              const correctAnswer = scenario.correctStyle || scenario.correctMode;
+              let correctAnswer;
+              if (selectedTask === 'Empower Team' && scenario.levelName) {
+                correctAnswer = scenario.levelName;
+              } else {
+                correctAnswer = scenario.correctStyle || scenario.correctMode;
+              }
               // Handle combined answers like "Authoritative/Commanding" - check if user answer is in the combined string
-              const isCorrect = correctAnswer.includes('/') 
+              const isCorrect = correctAnswer && (correctAnswer.includes('/') 
                 ? correctAnswer.split('/').some(style => style.trim() === userMatch)
-                : userMatch === correctAnswer;
+                : userMatch === correctAnswer);
 
               return (
                 <div 
@@ -4123,10 +4172,16 @@ const PMPApp = () => {
                     isCorrect ? 'border-emerald-500 correct-match' : 'border-red-500 incorrect-match'
                   }`}
                 >
-                  <div className="flex items-start gap-3 mb-4">
+                    <div className="flex items-start gap-3 mb-4">
                     <span className="text-3xl">{isCorrect ? '✅' : '❌'}</span>
                     <div className="flex-1">
-                      <p className="text-white mb-2">{scenario.scenario}</p>
+                      <p className="text-white mb-2">{scenario.scenario || scenario.context || scenario.title}</p>
+                      {selectedTask === 'Empower Team' && scenario.factors && (
+                        <div className="mb-2">
+                          <span className="text-xs text-slate-400">Key factors: </span>
+                          <span className="text-xs text-slate-300">{scenario.factors.join(', ')}</span>
+                        </div>
+                      )}
                       <div className="flex items-center gap-2 mb-2">
                         <span className="text-xs text-slate-400">Your match:</span>
                         <span className={`px-2 py-1 rounded text-xs font-semibold ${
@@ -4139,7 +4194,7 @@ const PMPApp = () => {
                         <div className="flex items-center gap-2 mb-2">
                           <span className="text-xs text-slate-400">Correct:</span>
                           <span className="px-2 py-1 rounded text-xs font-semibold bg-emerald-500/20 text-emerald-400">
-                            {scenario.correctStyle || scenario.correctMode}
+                            {scenario.levelName || scenario.correctStyle || scenario.correctMode}
                           </span>
                         </div>
                       )}
@@ -4151,8 +4206,8 @@ const PMPApp = () => {
 
                   <div className="mt-4 space-y-3">
                     <div>
-                      <span className="text-sm font-semibold text-white">Why {scenario.correctStyle || scenario.correctMode}:</span>
-                      <p className="text-sm text-slate-300 mt-1">{scenario.explanation}</p>
+                      <span className="text-sm font-semibold text-white">Why {scenario.levelName || scenario.correctStyle || scenario.correctMode}:</span>
+                      <p className="text-sm text-slate-300 mt-1">{scenario.explanation || scenario.why}</p>
                     </div>
                     {scenario.examTip && (
                       <div className="bg-blue-500/10 p-3 rounded border-l-2 border-blue-500">
@@ -4229,7 +4284,10 @@ const PMPApp = () => {
                       isDragging ? 'dragging' : ''
                     } ${!isMatched ? 'animate-pulse' : ''}`}
                   >
-                    <p className="text-white text-sm">{scenario.scenario}</p>
+                    <p className="text-white text-sm">{scenario.scenario || scenario.context || scenario.title}</p>
+                    {selectedTask === 'Empower Team' && scenario.factors && (
+                      <p className="text-xs text-slate-400 mt-1">Factors: {scenario.factors.join(', ')}</p>
+                    )}
                   </div>
                 );
               })}
@@ -4238,7 +4296,9 @@ const PMPApp = () => {
 
           {/* Right Column - Conflict Modes / Leadership Styles */}
           <div>
-            <h2 className="executive-font text-2xl font-bold text-white mb-4">{selectedTask === 'Lead a Team' ? 'Leadership Styles' : 'Conflict Modes'}</h2>
+            <h2 className="executive-font text-2xl font-bold text-white mb-4">
+              {selectedTask === 'Empower Team' ? 'Delegation Levels' : selectedTask === 'Lead a Team' ? 'Leadership Styles' : 'Conflict Modes'}
+            </h2>
             <div className="space-y-4">
               {conflictModes.map(mode => {
                 const matchedScenarioId = Object.keys(conflictMatcherState.matches).find(
@@ -6311,11 +6371,14 @@ const PMPApp = () => {
         </div>
       );
     }
-    // For Lead a Team, use team_member_perspectives, otherwise empathy_exercise
+    // For Lead a Team, use team_member_perspectives, for Empower Team use empowerment_perspectives, otherwise empathy_exercise
     let dataKey, activityTitle;
     if (selectedTask === 'Lead a Team' || selectedTask === 'Support Performance') {
       dataKey = 'team_member_perspectives';
       activityTitle = 'Team Member Perspectives';
+    } else if (selectedTask === 'Empower Team') {
+      dataKey = 'empowerment_perspectives';
+      activityTitle = 'Empowerment Perspectives';
     } else {
       dataKey = 'empathy_exercise';
       activityTitle = 'Empathy Exercise';
@@ -6407,7 +6470,8 @@ const PMPApp = () => {
       }
     };
 
-    const goToPracticeHub = () => {
+    // Use the top-level goToPracticeHub function, but reset state first
+    const resetAndGoToPracticeHub = () => {
       setEmpathyExerciseState({
         currentScenario: 0,
         currentPerspective: 'personA',
@@ -6417,7 +6481,7 @@ const PMPApp = () => {
         progressRecorded: false,
         lastRecordedScenario: -1
       });
-      setView('practice-hub');
+      goToPracticeHub();
     };
 
     if (!currentScenarioData) {
@@ -7338,7 +7402,7 @@ const PMPApp = () => {
             { name: 'pm-simulator', emoji: '🎯', title: 'PM Simulator', desc: 'Branching scenarios with consequences', color: '#ff6b35', borderColor: '#ff6b35', hoverColor: 'rgba(255, 107, 53, 0.1)', shadowColor: 'rgba(255, 107, 53, 0.2)' },
             { name: 'lightning-round', emoji: '⚡', title: 'Lightning Round', desc: 'Fast-paced quiz - 10 questions', color: '#00d4ff', borderColor: '#00d4ff', hoverColor: 'rgba(0, 212, 255, 0.1)', shadowColor: 'rgba(0, 212, 255, 0.2)' },
             { name: 'document-detective', emoji: '🕵️', title: 'Document Detective', desc: 'Match documents to scenarios', color: '#bf5af2', borderColor: '#bf5af2', hoverColor: 'rgba(191, 90, 242, 0.1)', shadowColor: 'rgba(191, 90, 242, 0.2)' },
-            { name: 'conflict-matcher', emoji: '🧩', title: selectedTask === 'Support Performance' ? 'Feedback Type Matcher' : 'Conflict Mode Matcher', desc: 'Drag-drop matching', color: '#ff6b35', borderColor: '#ff6b35', hoverColor: 'rgba(255, 107, 53, 0.1)', shadowColor: 'rgba(255, 107, 53, 0.2)' },
+            { name: 'conflict-matcher', emoji: '🧩', title: selectedTask === 'Empower Team' ? 'Delegation Level Matcher' : selectedTask === 'Support Performance' ? 'Feedback Type Matcher' : 'Conflict Mode Matcher', desc: 'Drag-drop matching', color: '#ff6b35', borderColor: '#ff6b35', hoverColor: 'rgba(255, 107, 53, 0.1)', shadowColor: 'rgba(255, 107, 53, 0.2)' },
             { name: 'timeline-reconstructor', emoji: '📋', title: 'Timeline Reconstructor', desc: 'Order resolution steps', color: '#00d4ff', borderColor: '#00d4ff', hoverColor: 'rgba(0, 212, 255, 0.1)', shadowColor: 'rgba(0, 212, 255, 0.2)' },
             { name: 'empathy-exercise', emoji: '👥', title: (selectedTask === 'Lead a Team' || selectedTask === 'Support Performance') ? 'Team Member Perspectives' : 'Empathy Exercise', desc: 'See all perspectives', color: '#bf5af2', borderColor: '#bf5af2', hoverColor: 'rgba(191, 90, 242, 0.1)', shadowColor: 'rgba(191, 90, 242, 0.2)' }
           ];
@@ -7365,6 +7429,18 @@ const PMPApp = () => {
                 return { ...activity, title: 'Feedback Type Matcher', desc: 'Match situations to feedback approaches' };
               } else if (activity.name === 'empathy-exercise') {
                 return { ...activity, title: 'Team Member Perspectives', desc: 'Experience feedback from receiving end' };
+              }
+              return activity;
+            });
+          }
+          
+          // For Empower Team, rename specific activities
+          if (selectedTask === 'Empower Team') {
+            return baseActivities.map(activity => {
+              if (activity.name === 'conflict-matcher') {
+                return { ...activity, title: 'Delegation Level Matcher', desc: 'Match scenarios to delegation levels' };
+              } else if (activity.name === 'empathy-exercise') {
+                return { ...activity, title: 'Empowerment Perspectives', desc: 'See empowerment situations from multiple stakeholder viewpoints' };
               }
               return activity;
             });
@@ -9567,6 +9643,217 @@ const PMPApp = () => {
         );
       
       case 'practical-application':
+        // Empower Team structure
+        if (content.delegation_in_practice) {
+          return (
+            <div className="space-y-6">
+              <p className="text-gray-300">
+                These five techniques help you implement empowerment systematically in real projects:
+              </p>
+              
+              {/* Technique 1: Delegation Checklist */}
+              {content.delegation_in_practice.technique_1_delegation_checklist && (
+                <div className="bg-white/5 rounded-xl p-6 border border-white/10">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="bg-emerald-500/20 rounded-full w-8 h-8 flex items-center justify-center text-emerald-400 font-bold">1</div>
+                    <h4 className="text-lg font-semibold text-emerald-400">The Delegation Checklist</h4>
+                  </div>
+                  <p className="text-gray-300 mb-4">
+                    Before delegating any significant task, confirm these five elements:
+                  </p>
+                  <div className="bg-black/30 rounded-lg p-4 space-y-2">
+                    {content.delegation_in_practice.technique_1_delegation_checklist.map((item, idx) => (
+                      <div key={idx} className="flex items-center gap-3 text-gray-300">
+                        <div className="text-emerald-400">□</div>
+                        <span>{item}</span>
+                      </div>
+                    ))}
+                  </div>
+                  <p className="text-amber-400/80 text-sm mt-4 italic">
+                    If you can't check all five boxes, you're setting them up to fail.
+                  </p>
+                </div>
+              )}
+              
+              {/* Technique 2: Completed Staff Work */}
+              {content.delegation_in_practice.technique_2_completed_staff_work && (
+                <div className="bg-white/5 rounded-xl p-6 border border-white/10">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="bg-blue-500/20 rounded-full w-8 h-8 flex items-center justify-center text-blue-400 font-bold">2</div>
+                    <h4 className="text-lg font-semibold text-blue-400">Completed Staff Work</h4>
+                  </div>
+                  {content.delegation_in_practice.technique_2_completed_staff_work.principle && (
+                    <p className="text-gray-300 mb-4">
+                      {content.delegation_in_practice.technique_2_completed_staff_work.principle} The four-level framework:
+                    </p>
+                  )}
+                  <div className="space-y-3">
+                    <div className="flex items-start gap-3 bg-red-500/10 rounded-lg p-3 border border-red-500/20">
+                      <div className="text-red-400 font-mono text-sm">L1</div>
+                      <div>
+                        <span className="text-red-400 font-medium">Investigate</span>
+                        <span className="text-gray-400"> — "Here are the options I found"</span>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-3 bg-orange-500/10 rounded-lg p-3 border border-orange-500/20">
+                      <div className="text-orange-400 font-mono text-sm">L2</div>
+                      <div>
+                        <span className="text-orange-400 font-medium">Recommend</span>
+                        <span className="text-gray-400"> — "Here's what I recommend and why"</span>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-3 bg-blue-500/10 rounded-lg p-3 border border-blue-500/20">
+                      <div className="text-blue-400 font-mono text-sm">L3</div>
+                      <div>
+                        <span className="text-blue-400 font-medium">Decide & Inform</span>
+                        <span className="text-gray-400"> — "I decided X, here's why, FYI"</span>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-3 bg-emerald-500/10 rounded-lg p-3 border border-emerald-500/20">
+                      <div className="text-emerald-400 font-mono text-sm">L4</div>
+                      <div>
+                        <span className="text-emerald-400 font-medium">Decide & Act</span>
+                        <span className="text-gray-400"> — "Done. Results attached."</span>
+                      </div>
+                    </div>
+                  </div>
+                  {content.delegation_in_practice.technique_2_completed_staff_work.before_dependency && (
+                    <div className="mt-4 space-y-2">
+                      <div className="bg-red-500/10 rounded-lg p-3 border border-red-500/20">
+                        <p className="text-red-400 text-sm font-semibold mb-1">Before (Dependency):</p>
+                        <p className="text-gray-300 text-sm italic">{content.delegation_in_practice.technique_2_completed_staff_work.before_dependency}</p>
+                      </div>
+                      <div className="bg-emerald-500/10 rounded-lg p-3 border border-emerald-500/20">
+                        <p className="text-emerald-400 text-sm font-semibold mb-1">After (Empowerment):</p>
+                        <p className="text-gray-300 text-sm italic">{content.delegation_in_practice.technique_2_completed_staff_work.after_empowerment}</p>
+                      </div>
+                    </div>
+                  )}
+                  {content.delegation_in_practice.technique_2_completed_staff_work.builds && (
+                    <p className="text-gray-400 text-sm mt-4">
+                      Progress team members from L1 → L4 as they demonstrate capability.
+                    </p>
+                  )}
+                </div>
+              )}
+              
+              {/* Technique 3: RACI Conversation */}
+              {content.delegation_in_practice.technique_3_raci_conversation && (
+                <div className="bg-white/5 rounded-xl p-6 border border-white/10">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="bg-purple-500/20 rounded-full w-8 h-8 flex items-center justify-center text-purple-400 font-bold">3</div>
+                    <h4 className="text-lg font-semibold text-purple-400">The RACI Conversation</h4>
+                  </div>
+                  <p className="text-gray-300 mb-4">
+                    For ambiguous situations, have an explicit conversation using these prompts:
+                  </p>
+                  <div className="bg-black/30 rounded-lg p-4 space-y-3">
+                    <p className="text-gray-300">
+                      <span className="text-purple-400 font-medium">"For this deliverable..."</span>
+                    </p>
+                    <ul className="text-gray-300 ml-4 space-y-2">
+                      <li>• <span className="text-cyan-400">Who is doing the work?</span> (Responsible)</li>
+                      <li>• <span className="text-cyan-400">Who owns the final outcome?</span> (Accountable)</li>
+                      <li>• <span className="text-cyan-400">Who needs to give input before decisions?</span> (Consulted)</li>
+                      <li>• <span className="text-cyan-400">Who needs to know what was decided?</span> (Informed)</li>
+                    </ul>
+                  </div>
+                  {content.delegation_in_practice.technique_3_raci_conversation.example && (
+                    <div className="mt-4 bg-slate-800/50 p-4 rounded italic text-slate-300">
+                      <p className="text-sm">{content.delegation_in_practice.technique_3_raci_conversation.example}</p>
+                    </div>
+                  )}
+                  <p className="text-gray-400 text-sm mt-4">
+                    Make this conversation part of every delegation, especially cross-functional work.
+                  </p>
+                </div>
+              )}
+              
+              {/* Technique 4: Progressive Delegation */}
+              {content.delegation_in_practice.technique_4_progressive_delegation && (
+                <div className="bg-white/5 rounded-xl p-6 border border-white/10">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="bg-amber-500/20 rounded-full w-8 h-8 flex items-center justify-center text-amber-400 font-bold">4</div>
+                    <h4 className="text-lg font-semibold text-amber-400">Progressive Delegation</h4>
+                  </div>
+                  <p className="text-gray-300 mb-4">
+                    Build capability systematically with this four-stage approach:
+                  </p>
+                  <div className="relative">
+                    <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-gradient-to-b from-amber-500 to-emerald-500"></div>
+                    <div className="space-y-4 ml-8">
+                      {content.delegation_in_practice.technique_4_progressive_delegation.map((stage, idx) => {
+                        const stageColors = [
+                          { bg: 'bg-amber-500/10', border: 'border-amber-500/20', text: 'text-amber-400', dot: 'bg-amber-500' },
+                          { bg: 'bg-orange-500/10', border: 'border-orange-500/20', text: 'text-orange-400', dot: 'bg-orange-500' },
+                          { bg: 'bg-blue-500/10', border: 'border-blue-500/20', text: 'text-blue-400', dot: 'bg-blue-500' },
+                          { bg: 'bg-emerald-500/10', border: 'border-emerald-500/20', text: 'text-emerald-400', dot: 'bg-emerald-500' }
+                        ];
+                        const colors = stageColors[idx % 4];
+                        return (
+                          <div key={idx} className="relative">
+                            <div className={`absolute -left-6 w-3 h-3 ${colors.dot} rounded-full`}></div>
+                            <div className={`${colors.bg} rounded-lg p-3 border ${colors.border}`}>
+                              <span className={`${colors.text} font-semibold`}>Stage {idx + 1}: {stage.phase}</span>
+                              <p className="text-gray-400 text-sm">{stage.authority_given}</p>
+                              <p className="text-gray-500 text-xs mt-1">{stage.support_provided}</p>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                  <p className="text-gray-400 text-sm mt-4">
+                    Progression speed depends on capability growth and stakes involved.
+                  </p>
+                </div>
+              )}
+              
+              {/* Technique 5: Authority Matrix */}
+              {content.delegation_in_practice.technique_5_authority_matrix && (
+                <div className="bg-white/5 rounded-xl p-6 border border-white/10">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="bg-cyan-500/20 rounded-full w-8 h-8 flex items-center justify-center text-cyan-400 font-bold">5</div>
+                    <h4 className="text-lg font-semibold text-cyan-400">The Authority Matrix</h4>
+                  </div>
+                  <p className="text-gray-300 mb-4">
+                    Create explicit documentation of who can decide what. Example structure:
+                  </p>
+                  {content.delegation_in_practice.technique_5_authority_matrix.example && (
+                    <div className="overflow-x-auto">
+                      <table className="w-full text-sm">
+                        <thead>
+                          <tr className="border-b border-white/20">
+                            <th className="text-left p-2 text-gray-400">Decision Type</th>
+                            <th className="text-center p-2 text-gray-400">Team Lead</th>
+                            <th className="text-center p-2 text-gray-400">Dev Lead</th>
+                            <th className="text-center p-2 text-gray-400">PM</th>
+                            <th className="text-center p-2 text-gray-400">Sponsor</th>
+                          </tr>
+                        </thead>
+                        <tbody className="text-gray-300">
+                          {content.delegation_in_practice.technique_5_authority_matrix.example.map((row, idx) => (
+                            <tr key={idx} className="border-b border-white/10">
+                              <td className="p-2">{row.decision_category}</td>
+                              <td className="text-center p-2">{row.team_decides ? <span className="text-emerald-400">✓</span> : '—'}</td>
+                              <td className="text-center p-2">{row.team_recommends_pm_approves ? <span className="text-emerald-400">✓</span> : '—'}</td>
+                              <td className="text-center p-2">{row.pm_decides ? <span className="text-emerald-400">✓</span> : '—'}</td>
+                              <td className="text-center p-2">—</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  )}
+                  <p className="text-gray-400 text-sm mt-4">
+                    Post this visibly. Refer to it. Update it as the project evolves.
+                  </p>
+                </div>
+              )}
+            </div>
+          );
+        }
+        
         // Support Performance structure
         if (content.addressing_underperformance) {
           return (
@@ -9870,6 +10157,110 @@ const PMPApp = () => {
         );
       
       case 'key-frameworks':
+        // Empower Team structure
+        if (content.empowerment_triangle || content.delegation_levels || content.raci_matrix) {
+          return (
+            <div className="space-y-6">
+              <p className="text-gray-300">
+                Three frameworks help you think about empowerment systematically:
+              </p>
+              
+              {/* Empowerment Triangle */}
+              {content.empowerment_triangle && (
+                <div className="bg-white/5 rounded-xl p-6 border border-white/10">
+                  <h4 className="text-lg font-semibold text-emerald-400 mb-4">{content.empowerment_triangle.title}</h4>
+                  <p className="text-gray-300 mb-4">
+                    All three elements must be present. Missing any one creates dysfunction:
+                  </p>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div className="bg-emerald-500/10 rounded-lg p-4 border border-emerald-500/30">
+                      <div className="text-emerald-400 font-semibold mb-2">Authority</div>
+                      <p className="text-gray-400 text-sm">{content.empowerment_triangle.elements?.authority?.definition || 'The power to make decisions and take action within defined boundaries'}</p>
+                      <p className="text-gray-500 text-xs mt-2 italic">Without authority: Responsibility without power = frustration</p>
+                    </div>
+                    <div className="bg-blue-500/10 rounded-lg p-4 border border-blue-500/30">
+                      <div className="text-blue-400 font-semibold mb-2">Accountability</div>
+                      <p className="text-gray-400 text-sm">{content.empowerment_triangle.elements?.accountability?.definition || 'Ownership of outcomes—both credit for success and responsibility for problems'}</p>
+                      <p className="text-gray-500 text-xs mt-2 italic">Without accountability: Authority without ownership = carelessness</p>
+                    </div>
+                    <div className="bg-purple-500/10 rounded-lg p-4 border border-purple-500/30">
+                      <div className="text-purple-400 font-semibold mb-2">Autonomy</div>
+                      <p className="text-gray-400 text-sm">{content.empowerment_triangle.elements?.autonomy?.definition || 'Freedom to choose HOW to accomplish goals within constraints'}</p>
+                      <p className="text-gray-500 text-xs mt-2 italic">Without autonomy: Authority to decide but not to act = paralysis</p>
+                    </div>
+                  </div>
+                </div>
+              )}
+              
+              {/* Delegation Levels */}
+              {content.delegation_levels && (
+                <div className="bg-white/5 rounded-xl p-6 border border-white/10">
+                  <h4 className="text-lg font-semibold text-amber-400 mb-4">{content.delegation_levels.title}</h4>
+                  <p className="text-gray-300 mb-4">
+                    Match your delegation level to the person's capability and the decision's stakes:
+                  </p>
+                  <div className="space-y-3">
+                    {content.delegation_levels.levels && content.delegation_levels.levels.map((level, idx) => {
+                      const levelColors = [
+                        { bg: 'bg-red-500/10', border: 'border-red-500/20', text: 'text-red-400', badge: 'bg-red-500/20' },
+                        { bg: 'bg-orange-500/10', border: 'border-orange-500/20', text: 'text-orange-400', badge: 'bg-orange-500/20' },
+                        { bg: 'bg-blue-500/10', border: 'border-blue-500/20', text: 'text-blue-400', badge: 'bg-blue-500/20' },
+                        { bg: 'bg-emerald-500/10', border: 'border-emerald-500/20', text: 'text-emerald-400', badge: 'bg-emerald-500/20' }
+                      ];
+                      const colors = levelColors[idx % 4];
+                      return (
+                        <div key={idx} className={`flex items-center gap-4 ${colors.bg} rounded-lg p-3 ${colors.border} border`}>
+                          <div className={`${colors.badge} rounded-full px-3 py-1 ${colors.text} text-sm font-mono`}>L{idx + 1}</div>
+                          <div>
+                            <span className={`${colors.text} font-semibold`}>{level.level}</span>
+                            <span className="text-gray-400 ml-2">— {level.pm_role}</span>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+              
+              {/* RACI Matrix */}
+              {content.raci_matrix && (
+                <div className="bg-white/5 rounded-xl p-6 border border-white/10">
+                  <h4 className="text-lg font-semibold text-cyan-400 mb-4">{content.raci_matrix.title}</h4>
+                  <p className="text-gray-300 mb-4">
+                    Use RACI to make authority explicit and prevent confusion:
+                  </p>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                    <div className="bg-cyan-500/10 rounded-lg p-3 border border-cyan-500/20 text-center">
+                      <div className="text-cyan-400 text-2xl font-bold">R</div>
+                      <div className="text-gray-300 text-sm">Responsible</div>
+                      <div className="text-gray-500 text-xs">{content.raci_matrix.roles?.responsible?.definition || 'Does the work'}</div>
+                    </div>
+                    <div className="bg-cyan-500/10 rounded-lg p-3 border border-cyan-500/20 text-center">
+                      <div className="text-cyan-400 text-2xl font-bold">A</div>
+                      <div className="text-gray-300 text-sm">Accountable</div>
+                      <div className="text-gray-500 text-xs">{content.raci_matrix.roles?.accountable?.definition || 'Owns the outcome'}</div>
+                    </div>
+                    <div className="bg-cyan-500/10 rounded-lg p-3 border border-cyan-500/20 text-center">
+                      <div className="text-cyan-400 text-2xl font-bold">C</div>
+                      <div className="text-gray-300 text-sm">Consulted</div>
+                      <div className="text-gray-500 text-xs">{content.raci_matrix.roles?.consulted?.definition || 'Provides input'}</div>
+                    </div>
+                    <div className="bg-cyan-500/10 rounded-lg p-3 border border-cyan-500/20 text-center">
+                      <div className="text-cyan-400 text-2xl font-bold">I</div>
+                      <div className="text-gray-300 text-sm">Informed</div>
+                      <div className="text-gray-500 text-xs">{content.raci_matrix.roles?.informed?.definition || 'Kept in the loop'}</div>
+                    </div>
+                  </div>
+                  <p className="text-amber-400/80 text-sm mt-4 italic">
+                    💡 Key Rule: Only ONE person can be Accountable for any deliverable
+                  </p>
+                </div>
+              )}
+            </div>
+          );
+        }
+        
+        // Fallback to Support Performance structure
         return (
           <div className="space-y-6">
             {content.sbi_model && (
@@ -10207,6 +10598,119 @@ const PMPApp = () => {
         );
       
       case 'exam-strategy':
+        // Empower Team structure
+        if (content.decision_guide) {
+          return (
+            <div className="space-y-6">
+              {/* Decision Guide */}
+              {content.decision_guide && (
+                <div className="bg-white/5 rounded-xl p-6 border border-white/10">
+                  <h4 className="text-lg font-semibold text-emerald-400 mb-4">{content.decision_guide.title}</h4>
+                  <p className="text-gray-300 mb-4">{content.decision_guide.description}</p>
+                  <div className="space-y-3">
+                    {content.decision_guide.checks && content.decision_guide.checks.map((check, idx) => {
+                      const colors = [
+                        { bg: 'bg-emerald-500/10', border: 'border-emerald-500/20', text: 'text-emerald-400' },
+                        { bg: 'bg-blue-500/10', border: 'border-blue-500/20', text: 'text-blue-400' },
+                        { bg: 'bg-purple-500/10', border: 'border-purple-500/20', text: 'text-purple-400' },
+                        { bg: 'bg-amber-500/10', border: 'border-amber-500/20', text: 'text-amber-400' }
+                      ];
+                      const color = colors[idx % 4];
+                      return (
+                        <div key={idx} className={`flex items-center gap-4 ${color.bg} rounded-lg p-4 border ${color.border}`}>
+                          <div className={`${color.text} text-2xl`}>{check.number}</div>
+                          <div>
+                            <span className="text-gray-200 font-medium">{check.question}</span>
+                            <p className="text-gray-400 text-sm">{check.guidance}</p>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+              
+              {/* Phrase Recognition */}
+              {content.phrase_recognition && (
+                <div className="bg-white/5 rounded-xl p-6 border border-white/10">
+                  <h4 className="text-lg font-semibold text-cyan-400 mb-4">{content.phrase_recognition.title}</h4>
+                  <p className="text-gray-300 mb-4">{content.phrase_recognition.description}</p>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <div className="text-cyan-400 font-semibold mb-2">Phrases Suggesting MORE Delegation</div>
+                      <ul className="text-gray-300 text-sm space-y-1">
+                        {content.phrase_recognition.more_delegation_phrases && content.phrase_recognition.more_delegation_phrases.map((phrase, idx) => (
+                          <li key={idx}>• {phrase}</li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div>
+                      <div className="text-orange-400 font-semibold mb-2">Phrases Suggesting LESS Delegation</div>
+                      <ul className="text-gray-300 text-sm space-y-1">
+                        {content.phrase_recognition.less_delegation_phrases && content.phrase_recognition.less_delegation_phrases.map((phrase, idx) => (
+                          <li key={idx}>• {phrase}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              )}
+              
+              {/* DO vs DON'T */}
+              {content.do_vs_dont && (
+                <div className="bg-white/5 rounded-xl p-6 border border-white/10">
+                  <h4 className="text-lg font-semibold text-amber-400 mb-4">{content.do_vs_dont.title}</h4>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="bg-green-500/10 rounded-lg p-4 border border-green-500/20">
+                      <div className="text-green-400 font-semibold mb-3">✓ Choose Answers That…</div>
+                      <ul className="text-gray-300 text-sm space-y-2">
+                        {content.do_vs_dont.do && content.do_vs_dont.do.map((item, idx) => (
+                          <li key={idx}>• {item}</li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div className="bg-red-500/10 rounded-lg p-4 border border-red-500/20">
+                      <div className="text-red-400 font-semibold mb-3">✗ Avoid Answers That…</div>
+                      <ul className="text-gray-300 text-sm space-y-2">
+                        {content.do_vs_dont.dont && content.do_vs_dont.dont.map((item, idx) => (
+                          <li key={idx}>• {item}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              )}
+              
+              {/* Trap Patterns */}
+              {content.trap_patterns && (
+                <div className="bg-white/5 rounded-xl p-6 border border-white/10">
+                  <h4 className="text-lg font-semibold text-red-400 mb-4">{content.trap_patterns.title}</h4>
+                  <div className="space-y-4">
+                    {content.trap_patterns.traps && content.trap_patterns.traps.map((trap, idx) => (
+                      <div key={idx} className="bg-red-500/10 rounded-lg p-4 border border-red-500/20">
+                        <div className="text-red-400 font-semibold mb-2">{trap.name}</div>
+                        <p className="text-gray-400 text-sm">
+                          {trap.description}
+                          <span className="text-red-400"> — {trap.reality}</span>
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+              
+              {/* Memory Aid */}
+              {content.memory_aid && (
+                <div className="bg-gradient-to-r from-emerald-500/10 to-blue-500/10 rounded-xl p-6 border border-emerald-500/20">
+                  <h4 className="text-lg font-semibold text-white mb-3">💡 Quick Memory Aid</h4>
+                  <p className="text-gray-300 text-lg text-center">{content.memory_aid.text}</p>
+                </div>
+              )}
+            </div>
+          );
+        }
+        
+        // Fallback to original structure
         return (
           <div className="space-y-4">
             {content.do && Array.isArray(content.do) && content.do.length > 0 && (
@@ -10335,6 +10839,139 @@ const PMPApp = () => {
         );
       
       case 'how-to-apply':
+        // Empower Team structure
+        if (content.organizing_around_strengths || content.bestowing_decision_making_authority || content.supporting_accountability) {
+          return (
+            <div className="space-y-6">
+              {/* Organizing Around Strengths */}
+              {content.organizing_around_strengths && (
+                <div className="bg-white/5 rounded-xl p-6 border border-white/10">
+                  <h4 className="text-lg font-semibold text-emerald-400 mb-4">Organizing Around Strengths</h4>
+                  <p className="text-gray-300 mb-4">
+                    Empowerment starts with putting people where they can succeed:
+                  </p>
+                  <div className="space-y-3">
+                    {content.organizing_around_strengths.step_1_assess_team_strengths && (
+                      <div className="flex items-start gap-3">
+                        <div className="text-emerald-400 mt-1">✦</div>
+                        <div>
+                          <span className="text-gray-200 font-medium">Know your team's capabilities</span>
+                          <span className="text-gray-400"> — Understand technical skills, experience levels, and growth areas</span>
+                        </div>
+                      </div>
+                    )}
+                    {content.organizing_around_strengths.step_2_match_work_to_strengths && (
+                      <div className="flex items-start gap-3">
+                        <div className="text-emerald-400 mt-1">✦</div>
+                        <div>
+                          <span className="text-gray-200 font-medium">Match assignments to strengths</span>
+                          <span className="text-gray-400"> — Give people work that leverages what they do well</span>
+                        </div>
+                      </div>
+                    )}
+                    {content.organizing_around_strengths.step_3_create_complementary_teams && (
+                      <div className="flex items-start gap-3">
+                        <div className="text-emerald-400 mt-1">✦</div>
+                        <div>
+                          <span className="text-gray-200 font-medium">Create stretch opportunities</span>
+                          <span className="text-gray-400"> — Assign challenging work with appropriate support structure</span>
+                        </div>
+                      </div>
+                    )}
+                    <div className="flex items-start gap-3">
+                      <div className="text-emerald-400 mt-1">✦</div>
+                      <div>
+                        <span className="text-gray-200 font-medium">Balance workload fairly</span>
+                        <span className="text-gray-400"> — Don't overload your best performers; develop everyone</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+              
+              {/* Bestowing Authority */}
+              {content.bestowing_decision_making_authority && (
+                <div className="bg-white/5 rounded-xl p-6 border border-white/10">
+                  <h4 className="text-lg font-semibold text-blue-400 mb-4">Bestowing Decision-Making Authority</h4>
+                  <p className="text-gray-300 mb-4">
+                    Make authority explicit — don't leave people guessing about what they can decide:
+                  </p>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="bg-green-500/10 rounded-lg p-4 border border-green-500/20">
+                      <div className="text-green-400 font-semibold mb-2">✓ DO</div>
+                      <ul className="text-gray-300 text-sm space-y-2">
+                        <li>• Define clear decision boundaries</li>
+                        <li>• State explicitly what they CAN decide</li>
+                        <li>• Specify when to escalate</li>
+                        <li>• Match authority to accountability</li>
+                        <li>• Adjust as capability grows</li>
+                      </ul>
+                    </div>
+                    <div className="bg-red-500/10 rounded-lg p-4 border border-red-500/20">
+                      <div className="text-red-400 font-semibold mb-2">✗ DON'T</div>
+                      <ul className="text-gray-300 text-sm space-y-2">
+                        <li>• Say "use your judgment" without boundaries</li>
+                        <li>• Give responsibility without authority</li>
+                        <li>• Override decisions after delegating</li>
+                        <li>• Change rules without communication</li>
+                        <li>• Delegate to avoid accountability yourself</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              )}
+              
+              {/* Supporting Accountability */}
+              {content.supporting_accountability && (
+                <div className="bg-white/5 rounded-xl p-6 border border-white/10">
+                  <h4 className="text-lg font-semibold text-purple-400 mb-4">Supporting Accountability</h4>
+                  <p className="text-gray-300 mb-4">
+                    Accountability requires ongoing support, not just assignment and hope:
+                  </p>
+                  <div className="space-y-3">
+                    <div className="flex items-start gap-3 bg-purple-500/10 rounded-lg p-3 border border-purple-500/20">
+                      <div className="text-purple-400 font-bold text-lg">1</div>
+                      <div>
+                        <span className="text-gray-200 font-medium">Set clear expectations</span>
+                        <p className="text-gray-400 text-sm">Define what success looks like and by when</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-3 bg-purple-500/10 rounded-lg p-3 border border-purple-500/20">
+                      <div className="text-purple-400 font-bold text-lg">2</div>
+                      <div>
+                        <span className="text-gray-200 font-medium">Provide necessary resources</span>
+                        <p className="text-gray-400 text-sm">Tools, information, access, and budget to succeed</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-3 bg-purple-500/10 rounded-lg p-3 border border-purple-500/20">
+                      <div className="text-purple-400 font-bold text-lg">3</div>
+                      <div>
+                        <span className="text-gray-200 font-medium">Remove obstacles</span>
+                        <p className="text-gray-400 text-sm">Clear organizational barriers they can't remove themselves</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-3 bg-purple-500/10 rounded-lg p-3 border border-purple-500/20">
+                      <div className="text-purple-400 font-bold text-lg">4</div>
+                      <div>
+                        <span className="text-gray-200 font-medium">Monitor outcomes, not activity</span>
+                        <p className="text-gray-400 text-sm">Check results at appropriate intervals; don't micromanage steps</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-3 bg-purple-500/10 rounded-lg p-3 border border-purple-500/20">
+                      <div className="text-purple-400 font-bold text-lg">5</div>
+                      <div>
+                        <span className="text-gray-200 font-medium">Give feedback promptly</span>
+                        <p className="text-gray-400 text-sm">Celebrate wins, address issues early, help them learn</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          );
+        }
+        
+        // Fallback to Support Performance structure
         return (
           <div className="space-y-6">
             {content.delivering_effective_feedback && (
@@ -10954,26 +11591,122 @@ const PMPApp = () => {
         return <p className="text-slate-300">No challenges data available.</p>;
       
       case 'connections-tasks':
+        // Empower Team structure with navigation
+        const taskColors = {
+          'task_2_lead_team': { color: 'emerald', taskName: 'Lead a Team' },
+          'task_3_support_performance': { color: 'blue', taskName: 'Support Team Performance' },
+          'task_5_ensure_training': { color: 'purple', taskName: 'Ensure Training' },
+          'task_7_address_impediments': { color: 'amber', taskName: 'Address Impediments' },
+          'task_9_collaborate_stakeholders': { color: 'cyan', taskName: 'Collaborate with Stakeholders' },
+          'task_1_manage_conflict': { color: 'rose', taskName: 'Manage Conflict' }
+        };
+        
+        const navigateToRelatedTask = (taskId) => {
+          // Map task IDs to task names
+          const taskIdToName = {
+            1: 'Manage Conflict',
+            2: 'Lead a Team',
+            3: 'Support Performance',
+            5: 'Train Team',
+            7: 'Address Obstacles',
+            9: 'Collaborate Stakeholders'
+          };
+          const taskName = taskIdToName[taskId];
+          if (taskName) {
+            setRelatedTaskId(taskId);
+            setReturnToSection('connections');
+            setShowingRelatedTask(true);
+            setSelectedTask(taskName);
+            setView('learn-hub');
+            setSubView('overview');
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }
+        };
+        
+        const returnToConnections = () => {
+          setShowingRelatedTask(false);
+          setRelatedTaskId(null);
+          setSelectedTask('Empower Team');
+          setSubView('deep-dive');
+          // Scroll to connections section
+          setTimeout(() => {
+            const connectionsSection = document.getElementById('connections-section');
+            if (connectionsSection) {
+              connectionsSection.scrollIntoView({ behavior: 'smooth' });
+            }
+          }, 100);
+        };
+        
         return (
-          <div className="space-y-6">
-            {Object.entries(content).map(([taskKey, taskData]) => (
-              <div key={taskKey} className="border-l-4 border-orange-500/50 bg-orange-500/5 p-4 rounded">
-                <h4 className="executive-font text-lg font-semibold text-white mb-2">{taskData.connections ? `Task ${taskKey.split('_')[1]}: ${taskKey.split('_').slice(2).join(' ')}` : taskKey.replace(/_/g, ' ')}</h4>
-                {taskData.connections && Array.isArray(taskData.connections) && (
-                  <ul className="space-y-2 text-slate-300 ml-4 mb-2">
-                    {taskData.connections.map((conn, idx) => (
-                      <li key={idx} className="flex items-start gap-2">
-                        <span className="text-orange-400 mt-1">•</span>
-                        <span>{conn}</span>
-                      </li>
-                    ))}
-                  </ul>
-                )}
-                {taskData.summary && (
-                  <p className="text-slate-400 italic mt-2">Connection: {taskData.summary}</p>
-                )}
+          <div id="connections-section" className="space-y-6">
+            <p className="text-gray-300">
+              Empowerment connects directly to other People Domain tasks. Understanding these relationships 
+              helps you apply empowerment principles holistically.
+            </p>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {Object.entries(content).map(([taskKey, taskData]) => {
+                if (taskKey === 'agile_connection') {
+                  return (
+                    <div key={taskKey} className="md:col-span-2 bg-gradient-to-r from-blue-500/10 to-purple-500/10 rounded-xl p-6 border border-blue-500/20">
+                      <h4 className="text-lg font-semibold text-white mb-3">🔄 {taskData.title || 'Agile Connection'}</h4>
+                      <p className="text-gray-300">{taskData.description}</p>
+                    </div>
+                  );
+                }
+                
+                const taskInfo = taskColors[taskKey] || { color: 'orange', taskName: taskData.task_name || taskKey.replace(/_/g, ' ') };
+                const colorClass = taskInfo.color;
+                const colorClasses = {
+                  emerald: { text: 'text-emerald-400', bg: 'bg-emerald-500/20', hover: 'hover:bg-emerald-500/30', border: 'hover:border-emerald-500/30' },
+                  blue: { text: 'text-blue-400', bg: 'bg-blue-500/20', hover: 'hover:bg-blue-500/30', border: 'hover:border-blue-500/30' },
+                  purple: { text: 'text-purple-400', bg: 'bg-purple-500/20', hover: 'hover:bg-purple-500/30', border: 'hover:border-purple-500/30' },
+                  amber: { text: 'text-amber-400', bg: 'bg-amber-500/20', hover: 'hover:bg-amber-500/30', border: 'hover:border-amber-500/30' },
+                  cyan: { text: 'text-cyan-400', bg: 'bg-cyan-500/20', hover: 'hover:bg-cyan-500/30', border: 'hover:border-cyan-500/30' },
+                  rose: { text: 'text-rose-400', bg: 'bg-rose-500/20', hover: 'hover:bg-rose-500/30', border: 'hover:border-rose-500/30' },
+                  orange: { text: 'text-orange-400', bg: 'bg-orange-500/20', hover: 'hover:bg-orange-500/30', border: 'hover:border-orange-500/30' }
+                };
+                const colors = colorClasses[colorClass] || colorClasses.orange;
+                
+                return (
+                  <div key={taskKey} className={`bg-white/5 rounded-xl p-5 border border-white/10 ${colors.border} transition-colors`}>
+                    <div className="flex items-center justify-between mb-3">
+                      <span className={`${colors.text} font-semibold`}>{taskData.task_name || taskInfo.taskName}</span>
+                      {taskData.task_id && (
+                        <button 
+                          onClick={() => navigateToRelatedTask(taskData.task_id)}
+                          className={`${colors.bg} ${colors.hover} ${colors.text} px-3 py-1.5 rounded-lg text-sm font-medium transition-colors flex items-center gap-2`}
+                        >
+                          Learn More
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                          </svg>
+                        </button>
+                      )}
+                    </div>
+                    <p className="text-gray-400 text-sm">
+                      <span className="text-gray-300 font-medium">Connection:</span> {taskData.connection || taskData.summary}
+                    </p>
+                  </div>
+                );
+              })}
+            </div>
+            
+            {/* Back Button - Show when viewing from another task */}
+            {showingRelatedTask && (
+              <div className="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-50">
+                <button
+                  onClick={returnToConnections}
+                  className="bg-gray-800/90 backdrop-blur-sm hover:bg-gray-700/90 text-white px-6 py-3 rounded-full shadow-lg border border-white/10 flex items-center gap-3 transition-colors"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                  </svg>
+                  <span>Back to Empower Team Connections</span>
+                </button>
               </div>
-            ))}
+            )}
           </div>
         );
       
@@ -10985,6 +11718,104 @@ const PMPApp = () => {
       case 'performance-metrics':
       case 'integration-tasks':
       case 'delegation-continuum':
+        // Empower Team structure with 7 levels
+        if (content.seven_levels && Array.isArray(content.seven_levels)) {
+          const levelColors = [
+            { bg: 'bg-red-500/20', border: 'border-red-500/30', text: 'text-red-400', badge: 'bg-red-500/30' },
+            { bg: 'bg-orange-500/20', border: 'border-orange-500/30', text: 'text-orange-400', badge: 'bg-orange-500/30' },
+            { bg: 'bg-amber-500/20', border: 'border-amber-500/30', text: 'text-amber-400', badge: 'bg-amber-500/30' },
+            { bg: 'bg-yellow-500/20', border: 'border-yellow-500/30', text: 'text-yellow-400', badge: 'bg-yellow-500/30' },
+            { bg: 'bg-blue-500/20', border: 'border-blue-500/30', text: 'text-blue-400', badge: 'bg-blue-500/30' },
+            { bg: 'bg-cyan-500/20', border: 'border-cyan-500/30', text: 'text-cyan-400', badge: 'bg-cyan-500/30' },
+            { bg: 'bg-emerald-500/20', border: 'border-emerald-500/30', text: 'text-emerald-400', badge: 'bg-emerald-500/30' }
+          ];
+          
+          return (
+            <div className="space-y-6">
+              {content.understanding && (
+                <p className="text-gray-300">{content.understanding}</p>
+              )}
+              
+              <div className="bg-white/5 rounded-xl p-6 border border-white/10">
+                <h4 className="text-lg font-semibold text-emerald-400 mb-4">{content.title || 'The Seven Levels of Delegation'}</h4>
+                <div className="space-y-3">
+                  {content.seven_levels.map((level, idx) => {
+                    const colors = levelColors[idx];
+                    return (
+                      <div key={idx} className="group">
+                        <div className={`flex items-center gap-4 ${colors.bg} rounded-lg p-4 border ${colors.border} transition-colors hover:opacity-80`}>
+                          <div className={`${colors.badge} rounded-full w-10 h-10 flex items-center justify-center ${colors.text} font-bold text-lg`}>{level.level}</div>
+                          <div className="flex-1">
+                            <div className="flex items-center gap-3">
+                              <span className={`${colors.text} font-semibold`}>{level.name?.toUpperCase()}</span>
+                              <span className="text-gray-500">|</span>
+                              <span className="text-gray-400 text-sm">{level.pm_does}</span>
+                            </div>
+                            <p className="text-gray-500 text-sm mt-1">Use for: {level.when_to_use}</p>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+              
+              {/* Choosing the Right Level */}
+              {content.choosing_right_level && (
+                <div className="bg-white/5 rounded-xl p-6 border border-white/10">
+                  <h4 className="text-lg font-semibold text-amber-400 mb-4">Choosing the Right Level</h4>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="bg-red-500/10 rounded-lg p-4 border border-red-500/20">
+                      <div className="text-red-400 font-semibold mb-2">↓ Move DOWN (More PM Control)</div>
+                      <ul className="text-gray-300 text-sm space-y-1">
+                        {content.choosing_right_level.factors_move_down_scale && content.choosing_right_level.factors_move_down_scale.map((factor, idx) => (
+                          <li key={idx}>• {factor}</li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div className="bg-emerald-500/10 rounded-lg p-4 border border-emerald-500/20">
+                      <div className="text-emerald-400 font-semibold mb-2">↑ Move UP (More Team Control)</div>
+                      <ul className="text-gray-300 text-sm space-y-1">
+                        {content.choosing_right_level.factors_move_up_scale && content.choosing_right_level.factors_move_up_scale.map((factor, idx) => (
+                          <li key={idx}>• {factor}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              )}
+              
+              {/* Situational Leadership Connection */}
+              {content.situational_leadership_connection && (
+                <div className="bg-white/5 rounded-xl p-6 border border-white/10">
+                  <h4 className="text-lg font-semibold text-purple-400 mb-4">Situational Leadership Connection</h4>
+                  <p className="text-gray-300 mb-4">
+                    The Delegation Continuum aligns with Hersey & Blanchard's Situational Leadership:
+                  </p>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    {content.situational_leadership_connection.map((item, idx) => {
+                      const slColors = [
+                        { bg: 'bg-red-500/10', border: 'border-red-500/20', text: 'text-red-400' },
+                        { bg: 'bg-orange-500/10', border: 'border-orange-500/20', text: 'text-orange-400' },
+                        { bg: 'bg-blue-500/10', border: 'border-blue-500/20', text: 'text-blue-400' },
+                        { bg: 'bg-emerald-500/10', border: 'border-emerald-500/20', text: 'text-emerald-400' }
+                      ];
+                      const colors = slColors[idx % 4];
+                      return (
+                        <div key={idx} className={`${colors.bg} rounded-lg p-3 border ${colors.border}`}>
+                          <div className={`${colors.text} font-semibold`}>{item.team_member_state}</div>
+                          <p className="text-gray-400 text-sm">→ Use Levels {item.delegation_level} = {item.leadership_style} style</p>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+            </div>
+          );
+        }
+        
+        // Fallback to generic renderer
       case 'self-organizing-teams':
       case 'key-takeaways':
         // Render complex nested objects as formatted sections

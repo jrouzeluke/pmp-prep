@@ -7282,113 +7282,99 @@
           ]
         },
         "exam_strategy": {
-          "quick_decision_guide": [
-            {
-              "if_you_see": "Experienced team, PM approving everything",
-              "look_for_answer_that": "Delegates appropriate authority"
-            },
-            {
-              "if_you_see": "Agile team, PM assigning tasks",
-              "look_for_answer_that": "Protects self-organization"
-            },
-            {
-              "if_you_see": "Team member can't access resources",
-              "look_for_answer_that": "Provides access/removes obstacle"
-            },
-            {
-              "if_you_see": "New team member struggling",
-              "look_for_answer_that": "Provides coaching/direction (not full delegation)"
-            },
-            {
-              "if_you_see": "Capable team held back",
-              "look_for_answer_that": "Increases decision authority"
-            },
-            {
-              "if_you_see": "No accountability structure",
-              "look_for_answer_that": "Creates clear ownership and expectations"
-            },
-            {
-              "if_you_see": "PM checking every detail",
-              "look_for_answer_that": "Recommends outcome-based monitoring"
-            },
-            {
-              "if_you_see": "Team succeeds with authority",
-              "look_for_answer_that": "Recognizes and extends empowerment"
-            }
-          ],
-          "key_phrase_recognition": {
-            "empowerment_positive_signals": [
-              "\"Let the team decide\"",
-              "\"Provide authority to match responsibility\"",
-              "\"Trust the team's expertise\"",
-              "\"Enable self-organization\"",
-              "\"Remove obstacles\"",
-              "\"Delegate decision rights\""
+          "decision_guide": {
+            "title": "The Empowerment Decision Guide",
+            "description": "When facing an empowerment question, run through these four checks:",
+            "checks": [
+              {
+                "number": 1,
+                "question": "Does this INCREASE or DECREASE the team's ability to act?",
+                "guidance": "Choose answers that expand capability, not restrict it"
+              },
+              {
+                "number": 2,
+                "question": "Does this BUILD or DIMINISH trust?",
+                "guidance": "PMI values trust-building leadership"
+              },
+              {
+                "number": 3,
+                "question": "Does this CREATE or PREVENT ownership?",
+                "guidance": "Empowerment requires genuine ownership"
+              },
+              {
+                "number": 4,
+                "question": "Does this MATCH authority to capability?",
+                "guidance": "Right level for the right person at the right time"
+              }
+            ]
+          },
+          "phrase_recognition": {
+            "title": "Key Phrase Recognition",
+            "description": "Watch for these trigger phrases that signal empowerment questions:",
+            "more_delegation_phrases": [
+              "Experienced team member...",
+              "Proven track record...",
+              "Senior developer...",
+              "Has successfully delivered...",
+              "Self-organizing team...",
+              "Subject matter expert..."
             ],
-            "empowerment_negative_signals_usually_wrong": [
-              "\"PM should decide\"",
-              "\"Require approval for all decisions\"",
-              "\"Assign specific tasks\" (in agile context)",
-              "\"Review before they can proceed\"",
-              "\"Maintain control\"",
-              "\"Check every step\""
+            "less_delegation_phrases": [
+              "New to the role...",
+              "First time leading...",
+              "Recently joined...",
+              "High-stakes decision...",
+              "Compliance requirement...",
+              "Crisis situation..."
             ]
           },
           "do_vs_dont": {
+            "title": "Answer Selection: DO vs DON'T",
             "do": [
-              "Match authority to demonstrated capability",
-              "Provide resources WITH responsibility",
-              "Let agile teams self-organize",
-              "Define decision boundaries clearly",
-              "Monitor outcomes, stay available",
-              "Build trust through progressive delegation",
-              "Coach when empowered decisions fail",
-              "Recognize success and expand authority"
+              "Trust capable team members with decisions",
+              "Provide authority matching responsibility",
+              "Support self-organization in agile teams",
+              "Monitor outcomes rather than activities",
+              "Clear obstacles the team can't remove",
+              "Adjust delegation as capability grows"
             ],
             "dont": [
-              "Treat everyone the same regardless of experience",
-              "Assign tasks without access/authority",
-              "Assign work to agile team members",
-              "Leave authority ambiguous",
-              "Hover over every activity OR disappear entirely",
-              "Jump straight to full delegation OR never delegate",
-              "Blame or revoke authority on first mistake",
-              "Ignore good performance"
+              "Micromanage experienced professionals",
+              "Require PM approval for routine decisions",
+              "Take over work the team can handle",
+              "Give responsibility without authority",
+              "Abandon without support (abdication)",
+              "Override team decisions unnecessarily"
             ]
           },
-          "common_trap_patterns": [
-            {
-              "trap": "Protect the project through over-control",
-              "sounds_reasonable": "\"Ensure quality by reviewing...\"",
-              "reality": "Capable teams don't need PM review of everything",
-              "better": "Define what actually needs PM input"
-            },
-            {
-              "trap": "Support the team by making decisions for them",
-              "sounds_reasonable": "\"Help by deciding so team can execute...\"",
-              "reality": "Removes ownership and learning",
-              "better": "Coach team to make the decision"
-            },
-            {
-              "trap": "Be available by requiring constant check-ins",
-              "sounds_reasonable": "\"Stay close to help when needed...\"",
-              "reality": "Becomes surveillance, not support",
-              "better": "Schedule touch-points, be responsive between"
-            },
-            {
-              "trap": "Ensure accountability through detailed tracking",
-              "sounds_reasonable": "\"Track progress to ensure delivery...\"",
-              "reality": "Focus on activities vs outcomes",
-              "better": "Clear milestones, verify results"
-            }
-          ],
-          "empowerment_test": [
-            "Does this INCREASE or DECREASE the team's ability to act?",
-            "Does this BUILD or DIMINISH trust?",
-            "Does this CREATE or PREVENT ownership?",
-            "Does this MATCH authority to capability?"
-          ],
-          "test_principle": "Choose answers that increase capability, build trust, create ownership, and appropriately match authority."
+          "trap_patterns": {
+            "title": "Common Trap Patterns",
+            "traps": [
+              {
+                "name": "Trap 1: The \"Helpful\" Takeover",
+                "description": "Wrong answer sounds supportive: \"PM steps in to ensure quality by personally reviewing...\"",
+                "reality": "This is micromanagement disguised as help"
+              },
+              {
+                "name": "Trap 2: The Full Delegation Trap",
+                "description": "Wrong answer for new/struggling team: \"PM delegates full authority to team member...\"",
+                "reality": "Match delegation level to actual capability"
+              },
+              {
+                "name": "Trap 3: The Process Over People Trap",
+                "description": "Wrong answer adds bureaucracy: \"PM creates approval process for all team decisions...\"",
+                "reality": "Process should enable, not constrain"
+              },
+              {
+                "name": "Trap 4: The \"Equal Treatment\" Trap",
+                "description": "Wrong answer applies one-size-fits-all: \"PM applies same oversight to all team members...\"",
+                "reality": "Treat people appropriately to their level"
+              }
+            ]
+          },
+          "memory_aid": {
+            "text": "Empowerment means giving people the authority they need, the accountability they deserve, and the support to succeed."
+          }
         }
       },
       "deep_dive": {
@@ -7829,123 +7815,49 @@
           }
         },
         "connections_to_other_tasks": {
-          "eco_task_2_lead_team": {
-            "connection": "Empowerment is HOW you lead.",
-            "mapping": [
-              {
-                "lead_team_focus": "Set clear vision",
-                "empowerment_application": "Provides the \"what\" and \"why\" for delegated work"
-              },
-              {
-                "lead_team_focus": "Adapt leadership style",
-                "empowerment_application": "Delegation level matches Situational Leadership"
-              },
-              {
-                "lead_team_focus": "Build team cohesion",
-                "empowerment_application": "Shared ownership strengthens team bonds"
-              },
-              {
-                "lead_team_focus": "Support diversity",
-                "empowerment_application": "Different people need different delegation approaches"
-              }
-            ],
-            "exam_angle": "Questions about leadership style often have empowerment in the \"right\" answer. Mature teams + experienced leader = delegation."
+          "task_2_lead_team": {
+            "task_name": "Lead a Team",
+            "task_id": 2,
+            "connection": "Leadership creates the conditions for empowerment. Servant leaders empower by removing obstacles and building trust.",
+            "summary": "Empowerment is HOW you lead."
           },
-          "eco_task_3_support_performance": {
-            "connection": "Empowerment drives performance.",
-            "mapping": [
-              {
-                "support_performance_focus": "Recognize achievements",
-                "empowerment_application": "Acknowledge empowered successes"
-              },
-              {
-                "support_performance_focus": "Provide feedback",
-                "empowerment_application": "Coach when empowered decisions miss mark"
-              },
-              {
-                "support_performance_focus": "Address performance issues",
-                "empowerment_application": "Adjust delegation if capability doesn't match"
-              },
-              {
-                "support_performance_focus": "Support development",
-                "empowerment_application": "Progressive delegation builds capability"
-              }
-            ],
-            "exam_angle": "Poor performance may indicate over- or under-delegation. Investigate root cause—it might be an empowerment gap."
+          "task_3_support_performance": {
+            "task_name": "Support Team Performance",
+            "task_id": 3,
+            "connection": "Empowered teams perform better. Performance support includes progressively expanding authority as capability grows.",
+            "summary": "Empowerment drives performance."
           },
-          "eco_task_5_ensure_training": {
-            "connection": "Training enables empowerment.",
-            "mapping": [
-              {
-                "training_focus": "Identify skill gaps",
-                "empowerment_application": "Delegation requires capability"
-              },
-              {
-                "training_focus": "Provide development",
-                "empowerment_application": "Build skills to expand authority"
-              },
-              {
-                "training_focus": "Measure effectiveness",
-                "empowerment_application": "Can they handle more authority now?"
-              }
-            ],
-            "exam_angle": "If someone can't be empowered because they lack skill, the answer might involve training first."
+          "task_5_ensure_training": {
+            "task_name": "Ensure Training",
+            "task_id": 5,
+            "connection": "Training builds capability that enables empowerment. You can only delegate authority people are prepared to handle.",
+            "summary": "Training enables empowerment."
           },
-          "eco_task_7_remove_impediments": {
-            "connection": "Empowerment requires cleared paths.",
-            "mapping": [
-              {
-                "remove_impediments_focus": "Identify obstacles",
-                "empowerment_application": "Access, permissions, resources"
-              },
-              {
-                "remove_impediments_focus": "Address blockers",
-                "empowerment_application": "Remove what prevents autonomous action"
-              },
-              {
-                "remove_impediments_focus": "Escalate appropriately",
-                "empowerment_application": "Handle what team can't handle themselves"
-              }
-            ],
-            "exam_angle": "The PM's role with empowered teams is removing obstacles. If a question shows an empowered team stuck, the answer is usually \"remove the impediment.\""
+          "task_7_address_impediments": {
+            "task_name": "Address Impediments",
+            "task_id": 7,
+            "connection": "Empowerment requires clearing obstacles teams can't remove themselves. The PM enables by removing what blocks the team.",
+            "summary": "Empowerment requires cleared paths."
           },
-          "eco_task_9_collaborate_stakeholders": {
-            "connection": "Stakeholders must respect team authority.",
-            "mapping": [
-              {
-                "stakeholder_focus": "Set expectations",
-                "empowerment_application": "Stakeholders know team has authority"
-              },
-              {
-                "stakeholder_focus": "Manage engagement",
-                "empowerment_application": "Redirect stakeholders to appropriate team members"
-              },
-              {
-                "stakeholder_focus": "Build relationships",
-                "empowerment_application": "Team interfaces with stakeholders directly"
-              }
-            ],
-            "exam_angle": "Questions where stakeholders bypass the team often require the PM to redirect and reinforce team authority."
+          "task_9_collaborate_stakeholders": {
+            "task_name": "Collaborate with Stakeholders",
+            "task_id": 9,
+            "connection": "Stakeholders need empowerment too. Give them authority appropriate to their role and involvement level.",
+            "summary": "Stakeholders must respect team authority."
           },
-          "agile_scrum_connection": {
-            "connection": "Empowerment is foundational to agile",
-            "mapping": [
-              {
-                "agile_principle": "Self-organizing teams",
-                "empowerment_application": "Full empowerment on \"how\""
-              },
-              {
-                "agile_principle": "Servant leadership",
-                "empowerment_application": "PM removes obstacles, doesn't direct"
-              },
-              {
-                "agile_principle": "Responding to change",
-                "empowerment_application": "Empowered teams can adapt without waiting"
-              },
-              {
-                "agile_principle": "Working software over documentation",
-                "empowerment_application": "Trust team's judgment on delivery"
-              }
+          "task_1_manage_conflict": {
+            "task_name": "Manage Conflict",
+            "task_id": 1,
+            "connection": "Unclear authority creates conflict. Well-defined empowerment with explicit boundaries reduces role confusion and turf battles.",
+            "summary": "Empowerment prevents conflict."
+          },
+          "agile_connection": {
+            "title": "Agile Connection",
+            "description": "Self-organizing teams are the ultimate expression of empowerment. In Agile, the team decides how to accomplish sprint goals. The PM/Scrum Master focuses on what and why, removing obstacles rather than directing work.",
+            "key_points": [
+              "Team decides HOW to accomplish sprint goals",
+              "PM/Scrum Master focuses on WHAT and WHY",
+              "PM removes obstacles rather than directing work"
             ]
           }
         },
@@ -7982,8 +7894,405 @@
         "Decision Log",
         "RACI Matrix"
       ],
-      "reflex_prompts": [],
-      "stress_test": [],
+      "reflex_prompts": [
+        {
+          "id": 1,
+          "question": "A senior developer with 5 years of excellent performance asks if she can decide the technical approach for a low-risk feature. What delegation level is most appropriate?",
+          "options": [
+            "Tell - Direct her on exactly what approach to use",
+            "Consult - Get her input but make the decision yourself",
+            "Delegate - Give her full authority to decide",
+            "Sell - Make the decision and explain your reasoning"
+          ],
+          "correct": 3,
+          "explanation": "Senior developer + excellent track record + low-risk = full delegation. She's earned the authority and the stakes don't require oversight."
+        },
+        {
+          "id": 2,
+          "question": "You gave a team member responsibility for vendor selection but they don't have access to the procurement system or budget information. What's missing?",
+          "options": [
+            "Accountability",
+            "Authority and resources",
+            "Autonomy",
+            "Training"
+          ],
+          "correct": 2,
+          "explanation": "Responsibility without the authority (system access) and resources (budget info) to execute is a recipe for failure. All three must be present."
+        },
+        {
+          "id": 3,
+          "question": "Your agile team asks you to assign tasks to individuals. What should you do?",
+          "options": [
+            "Assign tasks to ensure fair distribution",
+            "Let the team self-organize and choose their own tasks",
+            "Assign senior members and let juniors self-select",
+            "Create a rotation schedule"
+          ],
+          "correct": 2,
+          "explanation": "Self-organizing teams decide how to accomplish their goals. The PM provides the 'what' and 'why'; the team owns the 'how'."
+        },
+        {
+          "id": 4,
+          "question": "A new team member made a technical decision that turned out poorly. How should you respond?",
+          "options": [
+            "Remove their decision-making authority",
+            "Use it as a coaching opportunity and adjust support level",
+            "Make all their future decisions for them",
+            "Ignore it to avoid damaging their confidence"
+          ],
+          "correct": 2,
+          "explanation": "Mistakes are learning opportunities. Adjust support (move down the delegation continuum temporarily) while coaching, don't punish or ignore."
+        },
+        {
+          "id": 5,
+          "question": "Which phrase indicates someone is ready for MORE delegation?",
+          "options": [
+            "First time leading this type of work",
+            "Proven track record on similar projects",
+            "Recently joined the organization",
+            "High-stakes compliance requirement"
+          ],
+          "correct": 2,
+          "explanation": "'Proven track record' signals demonstrated capability—the key factor for increasing delegation level."
+        },
+        {
+          "id": 6,
+          "question": "A team member keeps asking for your approval on routine decisions they're authorized to make. What should you do?",
+          "options": [
+            "Approve quickly to keep things moving",
+            "Refuse to answer until they decide themselves",
+            "Ask 'What would you do?' and affirm their judgment",
+            "Create a checklist of what needs approval"
+          ],
+          "correct": 3,
+          "explanation": "Build confidence by validating their thinking. 'What would you do?' helps them realize they already know the answer."
+        },
+        {
+          "id": 7,
+          "question": "What's the difference between delegation and abdication?",
+          "options": [
+            "Delegation is for experts; abdication is for everyone",
+            "Delegation includes support and follow-up; abdication doesn't",
+            "Delegation is formal; abdication is informal",
+            "There is no difference"
+          ],
+          "correct": 2,
+          "explanation": "Delegation = authority + accountability + support + follow-up. Abdication = 'figure it out' with no support or monitoring."
+        },
+        {
+          "id": 8,
+          "question": "In RACI, why should only ONE person be Accountable for each deliverable?",
+          "options": [
+            "To reduce workload",
+            "To ensure clear ownership and avoid diffusion of responsibility",
+            "Because that's the rule",
+            "To minimize meetings"
+          ],
+          "correct": 2,
+          "explanation": "Multiple accountable parties = no one truly accountable. Single ownership ensures someone is clearly responsible for the outcome."
+        },
+        {
+          "id": 9,
+          "question": "A crisis situation occurs. What delegation level is appropriate even for experienced team members?",
+          "options": [
+            "Delegate - Trust their expertise",
+            "Consult - Get their input first",
+            "Tell/Direct - Clear commands, single coordination point",
+            "Advise - Offer suggestions"
+          ],
+          "correct": 3,
+          "explanation": "Crisis = Tell/Direct. Even capable teams need single-point coordination in emergencies. Return to normal delegation after."
+        },
+        {
+          "id": 10,
+          "question": "You're reviewing every decision a capable team member makes. What is this called?",
+          "options": [
+            "Quality assurance",
+            "Micromanagement",
+            "Due diligence",
+            "Servant leadership"
+          ],
+          "correct": 2,
+          "explanation": "Reviewing every decision of a capable person is micromanagement—it signals distrust and creates bottlenecks."
+        },
+        {
+          "id": 11,
+          "question": "What does 'completed staff work' mean?",
+          "options": [
+            "All team members have finished their tasks",
+            "Bringing solutions and recommendations, not just problems",
+            "Documentation is complete",
+            "The project is done"
+          ],
+          "correct": 2,
+          "explanation": "Completed staff work = 'Here's the problem, here are options, here's my recommendation.' It builds ownership and reduces PM bottlenecks."
+        },
+        {
+          "id": 12,
+          "question": "A stakeholder wants you to assign all tasks personally instead of letting the team self-organize. Team velocity has been excellent. What should you do?",
+          "options": [
+            "Comply with the stakeholder request",
+            "Ignore the stakeholder",
+            "Share performance data and explain the benefits of self-organization",
+            "Compromise by assigning half the tasks"
+          ],
+          "correct": 3,
+          "explanation": "Protect team empowerment with evidence. Address stakeholder concerns while maintaining what's working."
+        },
+        {
+          "id": 13,
+          "question": "Which scenario requires LESS delegation (more PM involvement)?",
+          "options": [
+            "Team member's area of expertise",
+            "High-stakes, irreversible decision",
+            "Routine, repeated decision",
+            "Proven track record on similar work"
+          ],
+          "correct": 2,
+          "explanation": "High stakes + irreversible = move down the delegation scale. The risk warrants more involvement regardless of capability."
+        },
+        {
+          "id": 14,
+          "question": "You delegate a project but the team member fails. What should you examine FIRST?",
+          "options": [
+            "Whether they're competent enough for the role",
+            "Whether you provided adequate preparation and support",
+            "Whether to replace them",
+            "Whether delegation was a mistake"
+          ],
+          "correct": 2,
+          "explanation": "Look first at your delegation: Did they have clear outcomes, authority, resources, timeline, and support? Often failure is setup failure."
+        },
+        {
+          "id": 15,
+          "question": "The Empowerment Equation is: Empowerment = Authority + Accountability + Autonomy + ____",
+          "options": [
+            "Success",
+            "Training",
+            "Support",
+            "Budget"
+          ],
+          "correct": 3,
+          "explanation": "Empowerment = Authority + Accountability + Autonomy + Support. All four elements must be present."
+        }
+      ],
+      "stress_test": [
+        {
+          "id": 1,
+          "title": "The Micromanaged Expert",
+          "setup": "Priya is a senior developer with 8 years of experience. She's delivered complex features flawlessly for the past year. Recently, you've been reviewing all her code before it goes to QA and requiring approval for her technical decisions. She sends you a message: 'Can we talk? I feel like you don't trust my work anymore.'",
+          "context": "Priya has a perfect track record. Your increased oversight started when the project entered a high-visibility phase, but you never explained this to her.",
+          "stakeholders": [
+            { "name": "Priya", "role": "Senior Developer", "concern": "Feels micromanaged and undervalued" },
+            { "name": "VP Engineering", "role": "Executive Sponsor", "concern": "Wants quality deliverables" },
+            { "name": "Team", "role": "Other Developers", "concern": "Watching how you treat top performers" }
+          ],
+          "options": [
+            {
+              "id": "A",
+              "text": "Explain that the project visibility requires extra oversight for everyone",
+              "feedback": "Partially helpful but doesn't address that you're treating an expert like a junior. Equal treatment isn't always fair treatment.",
+              "score": 40,
+              "consequence": "Priya feels the explanation is an excuse. She starts looking at other opportunities."
+            },
+            {
+              "id": "B",
+              "text": "Apologize and immediately restore her full autonomy with no oversight",
+              "feedback": "Good intent but overcorrects. Some communication during high-stakes phases is reasonable.",
+              "score": 60,
+              "consequence": "Priya appreciates the trust but a critical bug slips through that could have been caught with a light touch."
+            },
+            {
+              "id": "C",
+              "text": "Acknowledge the issue, explain the high-visibility context, and collaborate on an appropriate oversight level for this phase",
+              "feedback": "Excellent! You're being transparent about context while respecting her capability. Collaborative recalibration builds trust.",
+              "score": 95,
+              "consequence": "Priya understands the situation and appreciates being consulted. You agree on brief async updates rather than approval gates."
+            },
+            {
+              "id": "D",
+              "text": "Tell her this is standard process and she shouldn't take it personally",
+              "feedback": "Dismissive and untrue—you weren't doing this before. This damages trust with your best performer.",
+              "score": 20,
+              "consequence": "Priya disengages emotionally. Her work quality drops as motivation decreases."
+            }
+          ],
+          "bestAnswer": "C",
+          "keyLesson": "Match oversight to capability, not just project phase. When you need to adjust, communicate why and collaborate on the approach."
+        },
+        {
+          "id": 2,
+          "title": "The Eager Overreach",
+          "setup": "Marcus joined 3 months ago and is enthusiastic and confident. Without consulting anyone, he committed to a client that the team would deliver a major feature by end of month—something that would normally take 6 weeks. He proudly tells you about 'closing the deal' in standup.",
+          "context": "Marcus has good intentions but doesn't yet understand the complexity of your systems or the team's capacity planning process.",
+          "stakeholders": [
+            { "name": "Marcus", "role": "Junior Developer", "concern": "Wants to contribute and impress" },
+            { "name": "Client", "role": "Key Account", "concern": "Expects the commitment to be honored" },
+            { "name": "Team", "role": "Development Team", "concern": "Worried about unrealistic deadline" }
+          ],
+          "options": [
+            {
+              "id": "A",
+              "text": "Publicly correct him in standup to ensure the team knows this commitment isn't valid",
+              "feedback": "Humiliating him publicly will crush his enthusiasm and damage psychological safety for everyone.",
+              "score": 15,
+              "consequence": "Marcus is embarrassed and withdraws. Other team members become afraid to take initiative."
+            },
+            {
+              "id": "B",
+              "text": "Honor his commitment to avoid undermining him, then push the team to deliver",
+              "feedback": "This rewards overreach and burns out the team. You're teaching Marcus that bypassing process works.",
+              "score": 25,
+              "consequence": "Team resents both you and Marcus. Quality suffers under the crunch."
+            },
+            {
+              "id": "C",
+              "text": "Talk privately with Marcus, explain the issue, have him help develop a realistic counter-proposal, then support him in the client conversation",
+              "feedback": "Perfect! You're coaching without humiliating, teaching accountability, and letting him participate in the fix.",
+              "score": 95,
+              "consequence": "Marcus learns about capacity planning and client management. He grows from the experience."
+            },
+            {
+              "id": "D",
+              "text": "Take over the client relationship and tell Marcus to check with you before any external communication",
+              "feedback": "Solves the immediate problem but over-restricts. He'll never learn to handle clients appropriately.",
+              "score": 45,
+              "consequence": "Marcus feels sidelined. His development stalls and he becomes passive."
+            }
+          ],
+          "bestAnswer": "C",
+          "keyLesson": "When someone overreaches, coach them through the correction rather than taking over. Use mistakes as teaching moments."
+        },
+        {
+          "id": 3,
+          "title": "The Authority Gap",
+          "setup": "You assigned Sarah to lead the API redesign. She's technically excellent but keeps coming to you for decisions: 'Should we use REST or GraphQL?', 'Can I schedule a meeting with the platform team?', 'Is it okay to push back the deadline by two days?' You've told her she owns this project.",
+          "context": "Sarah was previously on a team with a controlling manager. She has the skills but not the confidence to use her authority.",
+          "stakeholders": [
+            { "name": "Sarah", "role": "Tech Lead", "concern": "Afraid of making wrong decisions" },
+            { "name": "You", "role": "PM", "concern": "Becoming a bottleneck" },
+            { "name": "Project", "role": "API Redesign", "concern": "Delays from decision bottleneck" }
+          ],
+          "options": [
+            {
+              "id": "A",
+              "text": "Answer her questions quickly to keep the project moving",
+              "feedback": "This perpetuates her dependency. You'll be answering questions forever.",
+              "score": 30,
+              "consequence": "Sarah never builds confidence. You remain the bottleneck."
+            },
+            {
+              "id": "B",
+              "text": "Refuse to answer and tell her to figure it out herself",
+              "feedback": "Too abrupt. This might cause her to freeze or make avoidable mistakes without support.",
+              "score": 35,
+              "consequence": "Sarah feels abandoned. She makes a decision she's unsure about and it goes poorly."
+            },
+            {
+              "id": "C",
+              "text": "For each question, ask 'What would you do?' then affirm her judgment or coach her thinking",
+              "feedback": "Excellent! You're building her confidence incrementally while staying available as a thought partner.",
+              "score": 95,
+              "consequence": "Sarah gradually realizes her instincts are good. Her questions decrease as confidence grows."
+            },
+            {
+              "id": "D",
+              "text": "Create a detailed decision matrix documenting exactly what she can and cannot decide",
+              "feedback": "Over-engineered and sends the message you don't trust her judgment. Authority isn't about checklists.",
+              "score": 40,
+              "consequence": "Sarah follows the matrix rigidly, never developing real judgment."
+            }
+          ],
+          "bestAnswer": "C",
+          "keyLesson": "Empowerment sometimes requires active confidence-building, not just granting authority. Meet people where they are."
+        },
+        {
+          "id": 4,
+          "title": "The Self-Organizing Conflict",
+          "setup": "Your agile team has been self-organizing effectively for 6 months. A senior stakeholder, David, is frustrated with a recent sprint outcome and tells you: 'You need to start assigning tasks directly. This self-organizing thing isn't working. I want you managing who does what.'",
+          "context": "The sprint issue was actually caused by an unclear requirement from David's team, not the self-organization approach. Team velocity has been excellent.",
+          "stakeholders": [
+            { "name": "David", "role": "Senior Stakeholder", "concern": "Wants more control and visibility" },
+            { "name": "Team", "role": "Development Team", "concern": "Values autonomy and self-organization" },
+            { "name": "Scrum Master", "role": "Process Owner", "concern": "Protecting agile principles" }
+          ],
+          "options": [
+            {
+              "id": "A",
+              "text": "Agree to assign tasks directly to satisfy the stakeholder",
+              "feedback": "This undermines your team's autonomy and agile principles based on a misdiagnosis of the problem.",
+              "score": 20,
+              "consequence": "Team morale drops. The actual problem (unclear requirements) continues."
+            },
+            {
+              "id": "B",
+              "text": "Refuse and tell David he doesn't understand agile",
+              "feedback": "Dismissive and confrontational. You need to address his legitimate concern about the outcome.",
+              "score": 25,
+              "consequence": "David escalates. You've made an enemy instead of solving the problem."
+            },
+            {
+              "id": "C",
+              "text": "Acknowledge his concern, share data on team performance, explain the real root cause, and propose a solution for the requirements issue",
+              "feedback": "Perfect! You're addressing his concern with evidence while protecting team autonomy and solving the actual problem.",
+              "score": 95,
+              "consequence": "David understands the real issue. You implement better requirements processes together."
+            },
+            {
+              "id": "D",
+              "text": "Compromise by assigning only the critical path tasks while letting the team self-organize the rest",
+              "feedback": "A middle ground, but based on a false premise. You're partially abandoning a working approach.",
+              "score": 45,
+              "consequence": "Creates confusion about when self-organization applies. Neither fully empowered nor directed."
+            }
+          ],
+          "bestAnswer": "C",
+          "keyLesson": "Protect team empowerment with data and evidence, not ideology. Address stakeholder concerns by solving real problems."
+        },
+        {
+          "id": 5,
+          "title": "The Capability Mismatch",
+          "setup": "You delegated budget authority to your technical lead, James. He's excellent technically but just approved $50K in cloud infrastructure spending without comparing vendors or getting competitive quotes—something finance requires for purchases over $10K. Finance is now questioning the expense.",
+          "context": "James didn't know about the competitive quote policy. You delegated budget authority without explaining the constraints.",
+          "stakeholders": [
+            { "name": "James", "role": "Technical Lead", "concern": "Feels set up to fail" },
+            { "name": "Finance", "role": "Finance Department", "concern": "Policy compliance" },
+            { "name": "You", "role": "PM", "concern": "Delegated without adequate preparation" }
+          ],
+          "options": [
+            {
+              "id": "A",
+              "text": "Revoke James's budget authority since he can't be trusted with it",
+              "feedback": "Unfair—he failed because you didn't prepare him, not because he's untrustworthy.",
+              "score": 20,
+              "consequence": "James feels betrayed. Trust is broken and he becomes risk-averse."
+            },
+            {
+              "id": "B",
+              "text": "Blame finance for unclear policies and defend James's decision",
+              "feedback": "Deflects responsibility and doesn't solve the problem. Finance policies exist for good reasons.",
+              "score": 30,
+              "consequence": "Finance relationship damaged. The compliance issue remains unresolved."
+            },
+            {
+              "id": "C",
+              "text": "Take responsibility for inadequate preparation, work with James to retroactively gather quotes, and create a clear authority matrix together",
+              "feedback": "Excellent! You're owning your part, helping fix the immediate issue, and building proper guardrails for the future.",
+              "score": 95,
+              "consequence": "James appreciates your support. The authority matrix prevents future issues."
+            },
+            {
+              "id": "D",
+              "text": "Handle the finance situation yourself and create detailed approval workflows for all future spending",
+              "feedback": "Solves it but over-corrects with bureaucracy. You're also not involving James in the solution.",
+              "score": 45,
+              "consequence": "James loses ownership of budgets. Process becomes a bottleneck."
+            }
+          ],
+          "bestAnswer": "C",
+          "keyLesson": "Delegation requires preparation—authority, boundaries, and context. When delegation fails, look first at how you set them up."
+        }
+      ],
       "timeline_reconstructor": {
         "title": "Timeline Reconstructor - Empowerment Journey",
         "description": "A project team's journey from dependency to empowerment has been scrambled. Arrange the events in the correct sequence, then analyze the empowerment transformation.",
@@ -8165,237 +8474,266 @@
         "title": "Delegation Level Matcher",
         "description": "Match each scenario to the appropriate delegation level. Consider the team member's capability, the decision's risk/impact, and contextual factors.",
         "delegation_levels": [
-          {
-            "level": 1,
-            "name": "DIRECT (Tell)",
-            "pm_does": "Decides and directs specifically",
-            "team_does": "Executes as directed",
-            "use_when": "Low skill, high stakes, crisis"
-          },
-          {
-            "level": 2,
-            "name": "COACH (Sell)",
-            "pm_does": "Decides and explains reasoning",
-            "team_does": "Executes with understanding",
-            "use_when": "Building capability, moderate risk"
-          },
-          {
-            "level": 3,
-            "name": "SUPPORT (Participate)",
-            "pm_does": "Facilitates, provides input",
-            "team_does": "Decides with PM involvement",
-            "use_when": "High skill, variable confidence"
-          },
-          {
-            "level": 4,
-            "name": "DELEGATE (Entrust)",
-            "pm_does": "Stays available if needed",
-            "team_does": "Full ownership and authority",
-            "use_when": "Proven capability, appropriate scope"
-          }
+          { "level": 1, "name": "TELL (Direct)", "description": "PM decides and directs specifically", "color": "red" },
+          { "level": 2, "name": "SELL (Coach)", "description": "PM decides and explains reasoning", "color": "orange" },
+          { "level": 3, "name": "CONSULT (Support)", "description": "PM gathers input, then decides", "color": "amber" },
+          { "level": 4, "name": "AGREE (Collaborate)", "description": "PM facilitates joint decision", "color": "yellow" },
+          { "level": 5, "name": "ADVISE (Guide)", "description": "PM offers perspective if asked", "color": "blue" },
+          { "level": 6, "name": "INQUIRE (Trust)", "description": "PM asks about decision after", "color": "cyan" },
+          { "level": 7, "name": "DELEGATE (Entrust)", "description": "Full ownership, PM stays out", "color": "emerald" }
         ],
         "situations": [
           {
             "id": 1,
-            "title": "The New Graduate",
-            "context": "Maya just joined your team straight from university. She has strong theoretical knowledge but no practical experience. You need to assign her first real task: creating test cases for a small feature.",
-            "decision": "How much should Maya test? What approach should she use? What's the priority?",
-            "correct_level": 1,
-            "correct_level_name": "DIRECT (Tell)",
-            "why": "First real task = no track record. Strong theory but no practical experience. Needs to learn organizational norms and standards. Low-risk task but formative experience.",
-            "what_to_do": "Maya, here's what I need: Create test cases for the login feature. Use our standard template (here it is). Cover these specific scenarios: [list]. Aim for 15-20 test cases. Check in with me tomorrow afternoon so I can review your progress and answer questions.",
-            "goal": "Set her up for success. Direct now so you can delegate later."
+            "scenario": "Maya just graduated and joined your team. She has strong theoretical knowledge but no practical experience. You need her to create test cases for a small feature.",
+            "factors": ["First real task", "No track record", "Strong theory but no practice", "Low-risk assignment"],
+            "correctLevel": 1,
+            "levelName": "TELL (Direct)",
+            "explanation": "New team member with no practical experience needs clear direction. Set her up for success with specific guidance now so you can delegate more later."
           },
           {
             "id": 2,
-            "title": "The Proven Expert",
-            "context": "Derek has been your senior architect for three years. He has designed four successful system migrations with zero production incidents. A new migration project needs architecture decisions.",
-            "decision": "What architecture approach should be used for the data migration?",
-            "correct_level": 4,
-            "correct_level_name": "DELEGATE (Entrust)",
-            "why": "Three years of proven track record. Four successful migrations. Zero incidents = demonstrated judgment. Within his domain of expertise.",
-            "what_to_do": "Derek, you own the architecture for this migration. Make the calls you think are right. I'd like a quick brief once you have a direction, but that's for my awareness, not my approval. Let me know if you hit any organizational obstacles I can help clear.",
-            "goal": "Trust earned through performance. Don't waste his time or yours with unnecessary oversight."
+            "scenario": "Derek is your senior architect with 3 years on the team. He's successfully led 4 system migrations with zero production incidents. A new migration needs architecture decisions.",
+            "factors": ["3 years proven track record", "4 successful migrations", "Zero incidents", "His domain of expertise"],
+            "correctLevel": 7,
+            "levelName": "DELEGATE (Entrust)",
+            "explanation": "Proven expert with consistent track record in exactly this type of work. Full delegation—don't waste his time or yours with unnecessary oversight."
           },
           {
             "id": 3,
-            "title": "The Risky Decision",
-            "context": "Your team is highly capable and has been self-organizing effectively for months. They want to adopt a new CI/CD tool that would require migrating all existing pipelines. The decision is technically complex and would affect three other teams.",
-            "decision": "Should we switch CI/CD tools and how should we implement it?",
-            "correct_level": 3,
-            "correct_level_name": "SUPPORT (Participate)",
-            "why": "Team is capable (could delegate normally). BUT: High impact decision (affects 3 teams). Cross-functional implications require coordination. PM can add value on organizational navigation.",
-            "what_to_do": "I trust your technical judgment on the tools. Let's work through this together—you evaluate the technical options, I'll help navigate the cross-team implications. Final call on whether to proceed is yours, but let's make sure we've considered the broader impact together.",
-            "goal": "Capable team + high-impact decision = participate together. Don't take over, but don't be absent either."
+            "scenario": "Your highly capable team wants to adopt a new CI/CD tool. The decision would affect 3 other teams and require migrating all existing pipelines.",
+            "factors": ["Capable team", "High cross-functional impact", "Significant change", "Technical complexity"],
+            "correctLevel": 4,
+            "levelName": "AGREE (Collaborate)",
+            "explanation": "Capable team BUT high organizational impact. Work together—they own technical evaluation, you help navigate cross-team implications."
           },
           {
             "id": 4,
-            "title": "The Struggling Performer",
-            "context": "Raj has been on the team for a year. Lately, his work quality has declined—missed details, incomplete deliverables, uncharacteristic mistakes. You've had one coaching conversation but haven't seen improvement yet.",
-            "decision": "How to approach the next assigned feature?",
-            "correct_level": 2,
-            "correct_level_name": "COACH (Sell)",
-            "why": "Has capability (year of experience, previous good work). Currently struggling (recent decline). Needs closer support without micromanaging. Need to understand root cause while providing structure.",
-            "what_to_do": "Raj, here's the approach I'd like you to take for this feature, and let me explain why: [specifics]. I want to set you up for success here. Let's check in at the end of each day this week so I can help you stay on track. What's going on for you that might be affecting things?",
-            "goal": "Coach through the rough patch. Direct enough to ensure success, supportive enough to help recover."
+            "scenario": "Raj has been solid for a year but lately his work quality has declined—missed details, incomplete deliverables, uncharacteristic mistakes. He needs to work on the next feature.",
+            "factors": ["Previous good performance", "Recent decline", "Needs support structure", "Unknown root cause"],
+            "correctLevel": 2,
+            "levelName": "SELL (Coach)",
+            "explanation": "Has capability but is struggling. Move down temporarily to coach through the rough patch—direct enough to ensure success, supportive enough to help recover."
           },
           {
             "id": 5,
-            "title": "The Confident Junior",
-            "context": "Aisha has been on the team for four months and has picked things up quickly. She's eager and confident—sometimes overconfident. She just volunteered to handle a stakeholder negotiation that typically requires senior experience.",
-            "decision": "How should the stakeholder negotiation be approached?",
-            "correct_level": 2,
-            "correct_level_name": "COACH (Sell)",
-            "why": "Four months = still developing. Eager and confident (good!). But possibly overconfident for this specific task. Stakeholder negotiation = high visibility, relationship risk. Good learning opportunity with appropriate support.",
-            "what_to_do": "Aisha, I love that you volunteered for this. Here's my recommended approach based on what I know about this stakeholder: [specifics]. I want you to lead it, but let's role-play the conversation first. I'll observe the actual meeting and we'll debrief after.",
-            "goal": "Channel enthusiasm into learning. Don't crush confidence, but ensure appropriate preparation for high-stakes situation."
+            "scenario": "Production is down, customers are impacted, the CEO wants updates every 15 minutes. Your experienced team knows the system well but emotions are high and people are shouting different theories.",
+            "factors": ["Crisis situation", "High stakes", "Chaos and emotions", "Time pressure"],
+            "correctLevel": 1,
+            "levelName": "TELL (Direct)",
+            "explanation": "Crisis = Direct, even with experienced teams. Cut through chaos with clear roles and single coordination point. Return to normal delegation after."
           },
           {
             "id": 6,
-            "title": "The Crisis Situation",
-            "context": "Production is down. Customers are impacted. The CEO is asking for updates every 15 minutes. Your team is highly experienced and knows the system well, but emotions are running high and multiple people are shouting different theories about the cause.",
-            "decision": "How do we diagnose and fix the production issue?",
-            "correct_level": 1,
-            "correct_level_name": "DIRECT (Tell)",
-            "why": "Crisis = no time for consensus-building. Chaos = need single point of coordination. High stakes = wrong decision is very costly. Even experienced teams need direction in crisis.",
-            "what_to_do": "Stop. Here's what we're doing: Chen, you own database investigation—report in 5 minutes. Priya, you're on network. Marcus, check application logs. Everyone else, stay off the production server. I'll coordinate communication. We'll sync every 10 minutes in this channel. Go.",
-            "goal": "Crisis leadership. Cut through chaos, assign clear roles, maintain coordination. Return to normal delegation when crisis passes."
+            "scenario": "A team member asks whether to use JSON or XML for a configuration file. Your self-organizing team has been effective, there's no strong organizational standard, and either format works fine.",
+            "factors": ["Self-organizing team", "Low-impact decision", "No constraints", "Routine technical choice"],
+            "correctLevel": 7,
+            "levelName": "DELEGATE (Entrust)",
+            "explanation": "Low-stakes routine decision within their expertise. Break the dependency on unnecessary approval—'You decide, it's your code.'"
           },
           {
             "id": 7,
-            "title": "The Routine Decision",
-            "context": "Your team has been self-organizing effectively. A team member asks whether they should use JSON or XML for a configuration file format. There's no strong organizational standard, and either works fine.",
-            "decision": "JSON or XML for config files?",
-            "correct_level": 4,
-            "correct_level_name": "DELEGATE (Entrust)",
-            "why": "Team is self-organizing. Low-impact decision. No significant constraints. Team member is asking out of habit, not necessity.",
-            "what_to_do": "You know what? You should decide this. It's your code. Use whatever makes more sense for the use case. You don't need my input on this.",
-            "goal": "Break dependency on unnecessary approval. Teach team that routine decisions are theirs."
+            "scenario": "Kim is ready for growth after 2 years of solid performance. A medium-complexity project needs a technical lead. It's a stretch assignment but bounded risk.",
+            "factors": ["Development opportunity", "First time in role", "Solid performer", "Medium complexity"],
+            "correctLevel": 3,
+            "levelName": "CONSULT (Support)",
+            "explanation": "Stretch assignment = Support level. Enough autonomy to grow, enough backup to succeed. Be a thought partner, not a decision-maker."
           },
           {
             "id": 8,
-            "title": "The Stretch Assignment",
-            "context": "Kim is ready for growth. She's been a solid performer for two years and has expressed interest in technical leadership. A medium-complexity project needs a technical lead—normally you'd assign a senior, but this could be Kim's development opportunity.",
-            "decision": "How should the technical work be organized and led?",
-            "correct_level": 3,
-            "correct_level_name": "SUPPORT (Participate)",
-            "why": "Development opportunity = some risk accepted. First time in role = needs support structure. Solid performer = has earned the chance. Medium complexity = bounded risk.",
-            "what_to_do": "Kim, I want you to lead this technically. You'll make the key decisions, but I'll be your thought partner—let's talk through major choices together. I won't override you unless there's a serious issue. Check in with me twice a week, and come to me anytime you're stuck.",
-            "goal": "Stretch + support. Enough autonomy to grow, enough backup to succeed."
+            "scenario": "Aisha has been on the team 4 months and picks things up quickly. She's eager but sometimes overconfident. She just volunteered to handle a stakeholder negotiation that typically requires senior experience.",
+            "factors": ["4 months experience", "Eager and confident", "High-visibility task", "Needs development"],
+            "correctLevel": 2,
+            "levelName": "SELL (Coach)",
+            "explanation": "Channel enthusiasm into learning. Don't crush confidence, but provide structure for a high-stakes situation. Role-play first, observe, debrief."
           },
           {
             "id": 9,
-            "title": "The External Constraint",
-            "context": "Your team wants to adopt a new testing framework. They've researched it thoroughly and are confident it's the right choice. However, your organization has a Technology Standards Board that must approve new tools, and the process takes 6-8 weeks.",
-            "decision": "Should the team adopt the new testing framework?",
-            "correct_level": 3,
-            "correct_level_name": "SUPPORT (Participate)",
-            "why": "Team made a good recommendation. But organizational process exists for a reason. PM needs to navigate the approval process. Team can't bypass governance unilaterally.",
-            "what_to_do": "Great analysis on the testing framework. I agree it's the right technical choice. Here's the reality: we need Standards Board approval. Let's work together—you prepare the technical justification, I'll handle the politics and scheduling. Your recommendation drives this, but we need to go through the process.",
-            "goal": "Support team decision through organizational constraints. PM adds value by navigating bureaucracy."
+            "scenario": "Your team recommends adopting a new testing framework. They've researched thoroughly and are confident. However, your Technology Standards Board requires approval for new tools (6-8 week process).",
+            "factors": ["Good team recommendation", "Organizational governance", "External constraint", "Process requirement"],
+            "correctLevel": 3,
+            "levelName": "CONSULT (Support)",
+            "explanation": "Team made a good call but organizational process exists. Support them through the approval process—they can't bypass governance unilaterally."
           },
           {
             "id": 10,
-            "title": "The Reversible Experiment",
-            "context": "Your agile team wants to try a new retrospective format they read about. It's a bit unconventional but interesting. The \"risk\" is that one retrospective might not be as productive as usual.",
-            "decision": "Should the team try the new retrospective format?",
-            "correct_level": 4,
-            "correct_level_name": "DELEGATE (Entrust)",
-            "why": "Low risk (one retro). Fully reversible (can go back next sprint). Team process = team decision. Learning opportunity even if it doesn't work.",
-            "what_to_do": "Try it. It's your retrospective. If it works, great. If not, you'll learn something. Let me know how it goes.",
-            "goal": "Empower experimentation. Reversible, low-risk changes don't need permission."
+            "scenario": "Chen is your most experienced developer. She's handled similar decisions dozens of times. She asks about a technical approach for a routine feature that's entirely within her expertise.",
+            "factors": ["Most experienced", "Routine decision", "Her expertise", "Done many times before"],
+            "correctLevel": 6,
+            "levelName": "INQUIRE (Trust)",
+            "explanation": "Proven expert on routine work. Let her decide, ask about it later for your awareness. Don't create bottlenecks for decisions she's mastered."
           },
           {
             "id": 11,
-            "title": "The Interpersonal Conflict",
-            "context": "Two team members are having a conflict that's starting to affect team dynamics. One has complained to you privately. Both are experienced professionals, and you've encouraged them to work it out directly, but it's not improving.",
-            "decision": "How to resolve the conflict between team members?",
-            "correct_level": 2,
-            "correct_level_name": "COACH (Sell)",
-            "why": "Direct resolution was attempted and failed. Conflict is escalating. PM intervention now appropriate. Need to guide without taking over entirely.",
-            "what_to_do": "I've watched you both try to work this out, and I appreciate the effort. Here's what I think we need to do: [specific approach—maybe a facilitated conversation, clear working agreements, or defined boundaries]. Let me explain why I think this will help. I'll facilitate, but you both own making it work.",
-            "goal": "Step in when self-resolution fails. Coach through conflict, don't dictate the outcome."
+            "scenario": "A junior developer wants to refactor a critical payment processing module. It's complex code with compliance implications.",
+            "factors": ["Junior developer", "Critical system", "Compliance implications", "Complex code"],
+            "correctLevel": 2,
+            "levelName": "SELL (Coach)",
+            "explanation": "High stakes + junior = close involvement. Explain your concerns, teach the context, potentially pair with a senior or defer until they've grown."
           },
           {
             "id": 12,
-            "title": "The Expert Disagreement",
-            "context": "Two senior technical experts on your team disagree about the right approach for a complex feature. Both have strong track records. Both have valid technical arguments. The team is stuck waiting for resolution.",
-            "decision": "Which technical approach should be used?",
-            "correct_level": 3,
-            "correct_level_name": "SUPPORT (Participate)",
-            "why": "Both experts are capable (normally would delegate). But they're deadlocked. Team is stuck, need resolution. PM can facilitate, add decision criteria, break tie if needed.",
-            "what_to_do": "You're both making valid points. Let's structure this: What are the key criteria we should use to decide? What's the risk profile of each approach? If you had to identify the ONE biggest concern with the other option, what is it? [Facilitate discussion] If you still can't agree after this, I'll make the call—but I want your best input first.",
-            "goal": "Facilitate expert resolution. PM breaks tie only if necessary, doesn't substitute judgment for expertise."
+            "scenario": "Your team has been self-organizing for 6 months with excellent velocity. Sprint planning is coming up and they're discussing how to divide the work.",
+            "factors": ["Proven self-organization", "Excellent track record", "Their process", "Routine sprint activity"],
+            "correctLevel": 7,
+            "levelName": "DELEGATE (Entrust)",
+            "explanation": "Self-organizing team with proven success. Stay out of how they divide work—that's the whole point of self-organization."
           }
         ]
       },
       "empowerment_perspectives": {
         "title": "Empowerment Perspectives",
-        "description": "Experience empowerment situations from different viewpoints. Each scenario shows how the SAME situation feels different depending on whether someone is empowered or controlled.",
+        "description": "See empowerment situations from multiple stakeholder viewpoints",
         "scenarios": [
           {
             "id": 1,
-            "title": "The Technical Decision",
-            "situation": "A new feature requires choosing between two technical approaches. Both are viable. The team has a recommendation.",
-            "perspective_a": {
-              "name": "Jordan",
-              "role": "Senior Developer",
-              "experience": "6 years",
-              "internal_monologue": "We've been debating microservices versus monolith for the new feature. The team talked it through—we're going with microservices. It'll be more work upfront, but we've done the analysis, and it fits our scaling needs.\n\nI told Sarah [PM] our recommendation this morning. She asked a few good questions about deployment complexity, which made me think harder about rollback scenarios. Then she said, 'Makes sense. It's your call—you're closer to the technical details than I am.'\n\nThat felt good. She trusted our judgment. And honestly, her questions made the decision better. I hadn't fully thought through the rollback scenario, so we added some safeguards.\n\nI feel ownership over this. If it works, it's because WE made a good call. If it doesn't, I'll own that too—but I know Sarah will help us course-correct rather than blame us.",
-              "experiences": [
-                "Trust and respect",
-                "Ownership and pride",
-                "Accountability accepted willingly",
-                "PM as thought partner, not gatekeeper",
-                "Confidence to make future decisions"
-              ]
-            },
-            "perspective_b": {
-              "name": "Jordan",
-              "role": "Senior Developer",
-              "experience": "6 years",
-              "internal_monologue": "We've been debating microservices versus monolith for the new feature. The team talked it through—we want microservices. We wrote up a detailed recommendation and sent it to Sarah [PM] three days ago.\n\nStill waiting for approval.\n\nI followed up yesterday. She said she's 'reviewing it' and has some concerns about 'complexity' but hasn't had time to discuss. Meanwhile, we can't start the work.\n\nThis happens every time. We have the expertise. We've done the analysis. But every technical decision has to go through Sarah, and she's not even a developer. I don't think she understands the trade-offs as well as we do, but she's the bottleneck.\n\nWhat's the point of having six years of experience if I can't make a technical call? I feel like a junior dev waiting for permission.\n\nA few of us have been updating our LinkedIn profiles. If I wanted to just execute someone else's decisions, I could do that anywhere.",
-              "experiences": [
-                "Frustration and disrespect",
-                "Delayed work, wasted time",
-                "Expertise not valued",
-                "Infantilization despite experience",
-                "Considering leaving"
-              ]
-            },
-            "key_insight": "Same person, same expertise, same recommendation. The difference is authority—and it changes everything about the experience and outcome."
+            "title": "The Competent but Constrained",
+            "situation": "Priya is a senior developer who's been delivering excellent work for 2 years. Recently, all her code now requires PM approval before going to QA. She wasn't told why. Deployment velocity has dropped 40%.",
+            "perspectives": [
+              {
+                "role": "Priya (Senior Developer)",
+                "emoji": "👩‍💻",
+                "thoughts": "What did I do wrong? I've never had a quality issue. Does the PM not trust me anymore? I feel like I'm being treated like a junior. This is insulting after everything I've delivered. Maybe I should look for a team that values my experience.",
+                "feelings": ["Frustrated", "Undervalued", "Confused", "Demotivated"],
+                "needs": "Understanding why oversight increased, acknowledgment of track record, appropriate autonomy for skill level"
+              },
+              {
+                "role": "PM (You)",
+                "emoji": "📋",
+                "thoughts": "The project entered a critical phase with executive visibility. I can't afford any mistakes right now. Priya is great, but I need to make sure everything is perfect. I'm not trying to micromanage—I'm trying to protect the project and her.",
+                "feelings": ["Pressured", "Risk-averse", "Protective"],
+                "needs": "Quality assurance during high-stakes phase, confidence in deliverables, executive confidence"
+              },
+              {
+                "role": "Team Observer",
+                "emoji": "👀",
+                "thoughts": "If Priya—our best performer—is being micromanaged, what does that mean for the rest of us? Is this the new normal? Why would I go above and beyond if this is how top performers get treated?",
+                "feelings": ["Worried", "Cautious", "Demotivated"],
+                "needs": "Understanding that performance is recognized, psychological safety, fair treatment"
+              }
+            ],
+            "insight": "Increased oversight without explanation damages trust with high performers AND sends negative signals to the whole team. When stakes change, communicate why and collaborate on appropriate adjustments.",
+            "betterApproach": "Explain the high-visibility context, acknowledge Priya's track record, and work together on a lighter-touch review process that gives you confidence without creating bottlenecks."
           },
           {
             "id": 2,
-            "title": "The First-Time Lead",
-            "situation": "A team member is given their first leadership opportunity on a small project.",
-            "perspective_a": {
-              "name": "Priya",
-              "role": "Developer → First-time Project Lead",
-              "experience": "3 years as developer",
-              "internal_monologue": "When Marcus [PM] offered me the lead role on the dashboard project, I was terrified and excited. I've never led anything.\n\nBut the way he set it up made me feel like I could do this. He said, 'You'll make the key decisions. I'll be your thought partner—not your approver. Check in with me when you want to talk something through, but I won't second-guess you.'\n\nFirst week, I had to decide on the team's working hours for the project. I was going to ask Marcus, but then I remembered: this is MY call. So I proposed core hours to the team and asked what worked for them. We figured it out.\n\nI did check in with Marcus about the vendor selection—that felt bigger. He asked good questions, helped me think through it, then said, 'Your call. What's your decision?' I chose Vendor B. He supported it.\n\nThe project delivered. Not perfectly—I made some scheduling mistakes early on. But Marcus helped me see them as learning, not failures. He said, 'Every lead makes those mistakes the first time. Now you won't make them again.'\n\nI feel like I actually LED something. It wasn't Marcus's project that I executed. It was mine.",
-              "experiences": [
-                "Genuine ownership and growth",
-                "Support without control",
-                "Safe space to make mistakes",
-                "Confidence building",
-                "Identity shift (developer → leader)"
-              ]
-            },
-            "perspective_b": {
-              "name": "Priya",
-              "role": "Developer → First-time Project Lead",
-              "experience": "3 years as developer",
-              "internal_monologue": "Marcus [PM] said I'm the 'lead' on the dashboard project, but it doesn't feel that way.\n\nEvery decision comes back to him. I proposed core hours for the team—he changed them. I recommended Vendor A—he overruled me and went with Vendor B. I tried to adjust the timeline when we hit an issue—he said no without explanation.\n\nI've stopped making decisions. I just ask Marcus what he wants and do that. It's faster than proposing something just to have it overruled.\n\nThe worst part is, when I ask directly, he says, 'You're the lead, you decide!' But then when I decide, he undoes it. The message is clear: I'm 'lead' in name only.\n\nThe project is going fine, I guess. But I don't feel like I'm learning to lead. I'm learning to execute Marcus's vision while he pretends I'm in charge.\n\nWhen people congratulate me on the project, I feel like a fraud. It wasn't really my work.",
-              "experiences": [
-                "Title without authority",
-                "Confusion about actual role",
-                "Learned helplessness",
-                "Imposter syndrome",
-                "No real development"
-              ]
-            },
-            "key_insight": "Development requires real authority with real consequences. Fake delegation doesn't build capability—it builds cynicism."
+            "title": "The Eager Overreacher",
+            "situation": "Marcus (3 months on the team) committed to a client that the team would deliver a major feature in 2 weeks—work that typically takes 6 weeks. He announced this 'win' proudly in standup. The team is stunned.",
+            "perspectives": [
+              {
+                "role": "Marcus (Junior Developer)",
+                "emoji": "🧑‍💻",
+                "thoughts": "I saw an opportunity to help the team! The client seemed so happy. I wanted to show I can contribute beyond just coding. I thought everyone would be excited that I closed this deal. Why do they look so worried?",
+                "feelings": ["Proud", "Eager", "Confused", "Vulnerable"],
+                "needs": "Recognition for initiative, learning about processes, guidance without humiliation"
+              },
+              {
+                "role": "Senior Team Member",
+                "emoji": "👨‍💻",
+                "thoughts": "Does he have any idea what he just committed us to? That's 4 weeks of overtime minimum. Who gave him authority to make commitments? The PM needs to handle this—we can't just let this slide.",
+                "feelings": ["Frustrated", "Anxious", "Resentful"],
+                "needs": "Realistic commitments, clear authority boundaries, protection from overwork"
+              },
+              {
+                "role": "Client",
+                "emoji": "🤝",
+                "thoughts": "Marcus was so confident and helpful. He really understood our urgency. I've already told my leadership we're getting this feature. If they walk it back now, I'll look foolish.",
+                "feelings": ["Expectant", "Trusting", "Invested"],
+                "needs": "Commitment honored or graceful alternative, not feeling foolish"
+              }
+            ],
+            "insight": "Eagerness without boundaries creates real damage—to client relationships, team morale, and the person's own reputation. But public humiliation destroys psychological safety for everyone.",
+            "betterApproach": "Talk with Marcus privately. Help him understand the impact and develop a realistic counter-proposal. Support him in the client conversation so he learns to manage expectations appropriately."
+          },
+          {
+            "id": 3,
+            "title": "The Dependency Loop",
+            "situation": "Sarah was assigned to lead the API redesign with 'full ownership.' But she keeps coming to the PM for every decision: technical approach, meeting scheduling, minor timeline adjustments. The PM is frustrated; Sarah seems stuck.",
+            "perspectives": [
+              {
+                "role": "Sarah (Tech Lead)",
+                "emoji": "👩‍💻",
+                "thoughts": "I've been told I 'own' this, but what if I make the wrong call? My last PM second-guessed everything I did. I'd rather check than get blamed later. The PM seems annoyed when I ask, but also annoyed when things go wrong. I can't win.",
+                "feelings": ["Anxious", "Uncertain", "Afraid of failure", "Confused"],
+                "needs": "Confidence building, clear boundaries, safety to make mistakes, consistent response"
+              },
+              {
+                "role": "PM (You)",
+                "emoji": "📋",
+                "thoughts": "I gave her ownership—why won't she take it? Every question creates a bottleneck. I don't have time to make decisions she should be making. Maybe I was wrong about her readiness for this role.",
+                "feelings": ["Frustrated", "Impatient", "Overwhelmed"],
+                "needs": "Sarah to act autonomously, fewer interruptions, project progress"
+              },
+              {
+                "role": "Previous Manager (Context)",
+                "emoji": "👔",
+                "thoughts": "(Sarah's former manager was highly controlling, reviewed everything, often overruled decisions after the fact. Sarah learned that 'ownership' was just a word—real decisions needed approval.)",
+                "feelings": ["N/A - Context"],
+                "needs": "N/A - Context"
+              }
+            ],
+            "insight": "Past experiences shape behavior. 'Granting authority' isn't enough when someone has learned that exercising authority leads to problems. Empowerment requires active confidence-building.",
+            "betterApproach": "Instead of answering questions directly, ask 'What would you do?' Affirm her judgment. Gradually she'll realize her instincts are good and the questions will decrease."
+          },
+          {
+            "id": 4,
+            "title": "The Stakeholder Takeover",
+            "situation": "A senior stakeholder, David, is unhappy with a sprint outcome and demands the PM start assigning tasks directly instead of letting the team self-organize. Team velocity has actually been excellent—the issue was an unclear requirement from David's team.",
+            "perspectives": [
+              {
+                "role": "David (Senior Stakeholder)",
+                "emoji": "👔",
+                "thoughts": "This 'self-organizing' thing isn't working. I don't even know who's doing what. The PM should be managing the team, not letting them figure it out themselves. I need more visibility and control.",
+                "feelings": ["Frustrated", "Out of control", "Concerned"],
+                "needs": "Visibility into work, confidence in delivery, feeling heard"
+              },
+              {
+                "role": "Development Team",
+                "emoji": "👥",
+                "thoughts": "We've been crushing it for 6 months. One bad sprint—caused by unclear requirements from David's team—and suddenly we can't be trusted to organize ourselves? If the PM caves on this, we'll all lose autonomy.",
+                "feelings": ["Defensive", "Anxious", "Frustrated"],
+                "needs": "Autonomy preserved, fair assessment, protection from blame"
+              },
+              {
+                "role": "PM (You)",
+                "emoji": "📋",
+                "thoughts": "David has legitimate concerns but his solution would destroy what's working. The real problem is requirements clarity, not self-organization. But David is senior and I can't just tell him he's wrong.",
+                "feelings": ["Caught in middle", "Protective of team", "Diplomatic"],
+                "needs": "Address David's concern while protecting team autonomy, solve real problem"
+              }
+            ],
+            "insight": "Stakeholders often diagnose symptoms, not root causes. Protecting team empowerment requires addressing real concerns with evidence while solving the actual problem.",
+            "betterApproach": "Share velocity data showing excellent performance. Acknowledge the sprint issue and trace it to unclear requirements. Propose a solution for requirements clarity that gives David the visibility he needs without dismantling self-organization."
+          },
+          {
+            "id": 5,
+            "title": "The Setup Failure",
+            "situation": "James, a technical lead, was given budget authority and approved $50K in cloud infrastructure without getting competitive quotes—violating finance policy for purchases over $10K. Finance is questioning the expense. James didn't know about the policy.",
+            "perspectives": [
+              {
+                "role": "James (Technical Lead)",
+                "emoji": "👨‍💻",
+                "thoughts": "I was told I had budget authority. I made a good technical decision. Now I'm being questioned like I did something wrong? Nobody told me about a quote requirement. I feel set up to fail.",
+                "feelings": ["Blindsided", "Defensive", "Betrayed"],
+                "needs": "Clear boundaries upfront, support when process fails, fair treatment"
+              },
+              {
+                "role": "Finance Team",
+                "emoji": "💰",
+                "thoughts": "The policy exists for good reasons—we need competitive pricing and audit trails. This wasn't communicated properly to the technical lead. But we still need compliance.",
+                "feelings": ["Concerned", "Process-focused"],
+                "needs": "Policy compliance, proper documentation, process improvement"
+              },
+              {
+                "role": "PM (You)",
+                "emoji": "📋",
+                "thoughts": "I delegated budget authority but never explained the constraints. This is my failure, not James's. I need to fix this without throwing him under the bus or revoking authority unfairly.",
+                "feelings": ["Responsible", "Guilty", "Problem-solving"],
+                "needs": "Fix immediate issue, create proper guardrails, maintain trust with James"
+              }
+            ],
+            "insight": "Delegation without preparation is setup for failure. When delegation fails, look first at how you set them up—did they have clear outcomes, authority boundaries, and context?",
+            "betterApproach": "Take responsibility for inadequate preparation. Work with James to retroactively gather quotes if possible. Create a clear authority matrix together so boundaries are explicit going forward."
           }
         ]
       }
