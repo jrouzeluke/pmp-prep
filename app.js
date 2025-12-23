@@ -491,11 +491,17 @@ const PMPApp = () => {
   // Show loading only if taskDatabase hasn't been initialized yet (null, not empty object)
   if (taskDatabase === null) {
     return (
-    <div className="text-center p-20 animate-pulse">
-        <h1 className="executive-font text-4xl text-white font-semibold tracking-tight">Initializing PMP Prep Center...</h1>
-        <GlobalNavFooter />
-    </div>
-  );
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 flex items-center justify-center">
+        <div className="text-center p-20">
+          <div className="inline-block animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-blue-500 mb-6"></div>
+          <h1 className="executive-font text-4xl text-white font-semibold tracking-tight mb-4">Initializing PMP Prep Center...</h1>
+          <p className="text-slate-400 text-lg">Loading learning content...</p>
+          <div className="mt-8 w-64 mx-auto bg-slate-800/50 rounded-full h-2 overflow-hidden">
+            <div className="h-full bg-blue-500 animate-pulse" style={{width: '60%'}}></div>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   // Error Display Component
@@ -6383,12 +6389,19 @@ const PMPApp = () => {
       dataKey = 'empathy_exercise';
       activityTitle = 'Empathy Exercise';
     }
-    const empathyScenarios = currentTask.practice?.[dataKey] || currentTask.practice?.empathy_exercise || [];
+    // Extract scenarios - handle both object with scenarios property and direct array
+    const rawData = currentTask.practice?.[dataKey] || currentTask.practice?.empathy_exercise;
+    const empathyScenarios = (rawData?.scenarios || (Array.isArray(rawData) ? rawData : null)) || [];
     const currentScenarioData = empathyScenarios[empathyExerciseState.currentScenario];
 
     const handlePerspectiveView = (perspective) => {
       const scenarioId = currentScenarioData?.id;
       if (!scenarioId) return;
+
+      const isEmpowerTeam = selectedTask === 'Empower Team';
+      const perspectiveKey = isEmpowerTeam 
+        ? (perspective === 'personA' ? 'perspective0' : perspective === 'personB' ? 'perspective1' : 'perspective2')
+        : perspective;
 
       setEmpathyExerciseState(prev => ({
         ...prev,
@@ -6397,15 +6410,17 @@ const PMPApp = () => {
           ...prev.viewedPerspectives,
           [scenarioId]: {
             ...(prev.viewedPerspectives[scenarioId] || {}),
-            [perspective]: true
+            [perspectiveKey]: true
           }
         }
       }));
 
       // Check if all perspectives viewed
       const viewedForScenario = empathyExerciseState.viewedPerspectives[scenarioId] || {};
-      const allViewed = viewedForScenario.personA && viewedForScenario.personB && viewedForScenario.pm;
-      if (allViewed || (perspective === 'pm' && viewedForScenario.personA && viewedForScenario.personB)) {
+      const allViewed = isEmpowerTeam
+        ? viewedForScenario.perspective0 && viewedForScenario.perspective1 && viewedForScenario.perspective2
+        : viewedForScenario.personA && viewedForScenario.personB && viewedForScenario.pm;
+      if (allViewed || (perspective === 'pm' && !isEmpowerTeam && viewedForScenario.personA && viewedForScenario.personB)) {
         setTimeout(() => {
           setEmpathyExerciseState(prev => {
             const newState = { ...prev, showingInsight: true };
@@ -6504,7 +6519,24 @@ const PMPApp = () => {
 
     const scenarioId = currentScenarioData.id;
     const viewedForScenario = empathyExerciseState.viewedPerspectives[scenarioId] || {};
-    const allPerspectivesViewed = viewedForScenario.personA && viewedForScenario.personB && viewedForScenario.pm;
+    
+    // Handle different structure: Empower Team has perspectives array, others have perspective_a/perspective_b/pm
+    const isEmpowerTeam = selectedTask === 'Empower Team';
+    const perspectives = isEmpowerTeam && Array.isArray(currentScenarioData.perspectives) 
+      ? currentScenarioData.perspectives 
+      : null;
+    
+    // For Empower Team, use perspective indices (0, 1, 2) instead of personA/personB/pm
+    const currentPerspectiveIndex = isEmpowerTeam 
+      ? (empathyExerciseState.currentPerspective === 'personA' ? 0 : empathyExerciseState.currentPerspective === 'personB' ? 1 : 2)
+      : null;
+    const currentPerspective = isEmpowerTeam && perspectives && currentPerspectiveIndex !== null
+      ? perspectives[currentPerspectiveIndex] 
+      : null;
+    
+    const allPerspectivesViewed = isEmpowerTeam
+      ? perspectives && perspectives.every((_, idx) => viewedForScenario[`perspective${idx}`])
+      : viewedForScenario.personA && viewedForScenario.personB && viewedForScenario.pm;
 
     return (
       <div className="max-w-6xl w-full p-10 animate-fadeIn text-left">
@@ -6535,145 +6567,273 @@ const PMPApp = () => {
         {/* Perspective Tabs */}
         <div className="mb-6">
           <div className="flex gap-4 border-b border-white/10 mb-4">
-            <button
-              onClick={() => handlePerspectiveView('personA')}
-              className={`px-6 py-3 executive-font text-xs font-semibold uppercase transition-all relative ${
-                empathyExerciseState.currentPerspective === 'personA'
-                  ? 'text-white border-b-2 border-blue-400'
-                  : 'text-slate-500 hover:text-slate-300'
-              }`}
-            >
-              View as {currentScenarioData.perspectives.personA.name} {currentScenarioData.perspectives.personA.emoji}
-              {viewedForScenario.personA && <span className="ml-2 text-emerald-400">✓</span>}
-            </button>
-            <button
-              onClick={() => handlePerspectiveView('personB')}
-              className={`px-6 py-3 executive-font text-xs font-semibold uppercase transition-all relative ${
-                empathyExerciseState.currentPerspective === 'personB'
-                  ? 'text-white border-b-2 border-orange-400'
-                  : 'text-slate-500 hover:text-slate-300'
-              }`}
-            >
-              View as {currentScenarioData.perspectives.personB.name} {currentScenarioData.perspectives.personB.emoji}
-              {viewedForScenario.personB && <span className="ml-2 text-emerald-400">✓</span>}
-            </button>
-            <button
-              onClick={() => handlePerspectiveView('pm')}
-              className={`px-6 py-3 executive-font text-xs font-semibold uppercase transition-all relative ${
-                empathyExerciseState.currentPerspective === 'pm'
-                  ? 'text-white border-b-2 border-purple-400'
-                  : 'text-slate-500 hover:text-slate-300'
-              }`}
-            >
-              View as PM {currentScenarioData.perspectives.pm.emoji}
-              {viewedForScenario.pm && <span className="ml-2 text-emerald-400">✓</span>}
-            </button>
+            {isEmpowerTeam && perspectives ? (
+              // Empower Team: render perspectives from array
+              perspectives.map((perspective, idx) => {
+                const perspectiveKey = idx === 0 ? 'personA' : idx === 1 ? 'personB' : 'pm';
+                const isActive = empathyExerciseState.currentPerspective === perspectiveKey;
+                const borderColors = ['border-blue-400', 'border-orange-400', 'border-purple-400'];
+                return (
+                  <button
+                    key={idx}
+                    onClick={() => handlePerspectiveView(perspectiveKey)}
+                    className={`px-6 py-3 executive-font text-xs font-semibold uppercase transition-all relative ${
+                      isActive
+                        ? `text-white border-b-2 ${borderColors[idx]}`
+                        : 'text-slate-500 hover:text-slate-300'
+                    }`}
+                  >
+                    {perspective.role} {perspective.emoji}
+                    {viewedForScenario[`perspective${idx}`] && <span className="ml-2 text-emerald-400">✓</span>}
+                  </button>
+                );
+              })
+            ) : (
+              // Other tasks: use personA/personB/pm structure
+              <>
+                <button
+                  onClick={() => handlePerspectiveView('personA')}
+                  className={`px-6 py-3 executive-font text-xs font-semibold uppercase transition-all relative ${
+                    empathyExerciseState.currentPerspective === 'personA'
+                      ? 'text-white border-b-2 border-blue-400'
+                      : 'text-slate-500 hover:text-slate-300'
+                  }`}
+                >
+                  View as {currentScenarioData.perspectives?.personA?.name || currentScenarioData.perspective_a?.name} {currentScenarioData.perspectives?.personA?.emoji || currentScenarioData.perspective_a?.emoji}
+                  {viewedForScenario.personA && <span className="ml-2 text-emerald-400">✓</span>}
+                </button>
+                <button
+                  onClick={() => handlePerspectiveView('personB')}
+                  className={`px-6 py-3 executive-font text-xs font-semibold uppercase transition-all relative ${
+                    empathyExerciseState.currentPerspective === 'personB'
+                      ? 'text-white border-b-2 border-orange-400'
+                      : 'text-slate-500 hover:text-slate-300'
+                  }`}
+                >
+                  View as {currentScenarioData.perspectives?.personB?.name || currentScenarioData.perspective_b?.name} {currentScenarioData.perspectives?.personB?.emoji || currentScenarioData.perspective_b?.emoji}
+                  {viewedForScenario.personB && <span className="ml-2 text-emerald-400">✓</span>}
+                </button>
+                <button
+                  onClick={() => handlePerspectiveView('pm')}
+                  className={`px-6 py-3 executive-font text-xs font-semibold uppercase transition-all relative ${
+                    empathyExerciseState.currentPerspective === 'pm'
+                      ? 'text-white border-b-2 border-purple-400'
+                      : 'text-slate-500 hover:text-slate-300'
+                  }`}
+                >
+                  View as PM {currentScenarioData.perspectives?.pm?.emoji || currentScenarioData.perspective_pm?.emoji}
+                  {viewedForScenario.pm && <span className="ml-2 text-emerald-400">✓</span>}
+                </button>
+              </>
+            )}
           </div>
 
           {/* Person A Perspective */}
           {empathyExerciseState.currentPerspective === 'personA' && (
             <div className="glass-card p-8 border-l-4 border-blue-500 bg-blue-500/5 perspective-content">
-              <div className="flex items-center gap-3 mb-6">
-                <span className="text-4xl">{currentScenarioData.perspectives.personA.emoji}</span>
-                <div>
-                  <h3 className="executive-font text-2xl font-bold text-white">{currentScenarioData.perspectives.personA.name}</h3>
-                  <p className="text-slate-400">{currentScenarioData.perspectives.personA.role}</p>
-                </div>
-              </div>
-              <div className="bg-slate-800/50 p-6 rounded border-l-4 border-blue-400 mb-6">
-                <p className="text-white text-lg italic leading-relaxed">"{currentScenarioData.perspectives.personA.thoughts}"</p>
-              </div>
-              <div className="space-y-4">
-                <div>
-                  <h4 className="text-white font-semibold mb-2">Concerns:</h4>
-                  <ul className="list-disc list-inside space-y-1 text-slate-300">
-                    {currentScenarioData.perspectives.personA.concerns.map((concern, idx) => (
-                      <li key={idx}>{concern}</li>
-                    ))}
-                  </ul>
-                </div>
-                <div>
-                  <h4 className="text-white font-semibold mb-2">Fears:</h4>
-                  <p className="text-slate-300">{currentScenarioData.perspectives.personA.fears}</p>
-                </div>
-                <div>
-                  <h4 className="text-white font-semibold mb-2">What they wish others knew:</h4>
-                  <p className="text-slate-300 italic">{currentScenarioData.perspectives.personA.wishesOthersKnew}</p>
-                </div>
-              </div>
+              {isEmpowerTeam && perspectives && perspectives[0] ? (
+                // Empower Team structure
+                <>
+                  <div className="flex items-center gap-3 mb-6">
+                    <span className="text-4xl">{perspectives[0].emoji}</span>
+                    <div>
+                      <h3 className="executive-font text-2xl font-bold text-white">{perspectives[0].role}</h3>
+                    </div>
+                  </div>
+                  <div className="bg-slate-800/50 p-6 rounded border-l-4 border-blue-400 mb-6">
+                    <p className="text-white text-lg italic leading-relaxed">"{perspectives[0].thoughts}"</p>
+                  </div>
+                  <div className="space-y-4">
+                    <div>
+                      <h4 className="text-white font-semibold mb-2">Feelings:</h4>
+                      <div className="flex flex-wrap gap-2">
+                        {perspectives[0].feelings.map((feeling, idx) => (
+                          <span key={idx} className="px-3 py-1 bg-blue-500/20 text-blue-300 rounded-full text-sm">{feeling}</span>
+                        ))}
+                      </div>
+                    </div>
+                    <div>
+                      <h4 className="text-white font-semibold mb-2">Needs:</h4>
+                      <p className="text-slate-300">{perspectives[0].needs}</p>
+                    </div>
+                  </div>
+                </>
+              ) : (
+                // Other tasks structure
+                <>
+                  <div className="flex items-center gap-3 mb-6">
+                    <span className="text-4xl">{currentScenarioData.perspectives?.personA?.emoji || currentScenarioData.perspective_a?.emoji}</span>
+                    <div>
+                      <h3 className="executive-font text-2xl font-bold text-white">{currentScenarioData.perspectives?.personA?.name || currentScenarioData.perspective_a?.name}</h3>
+                      <p className="text-slate-400">{currentScenarioData.perspectives?.personA?.role || currentScenarioData.perspective_a?.role}</p>
+                    </div>
+                  </div>
+                  <div className="bg-slate-800/50 p-6 rounded border-l-4 border-blue-400 mb-6">
+                    <p className="text-white text-lg italic leading-relaxed">"{currentScenarioData.perspectives?.personA?.thoughts || currentScenarioData.perspective_a?.internal_monologue}"</p>
+                  </div>
+                  <div className="space-y-4">
+                    <div>
+                      <h4 className="text-white font-semibold mb-2">Concerns:</h4>
+                      <ul className="list-disc list-inside space-y-1 text-slate-300">
+                        {(currentScenarioData.perspectives?.personA?.concerns || []).map((concern, idx) => (
+                          <li key={idx}>{concern}</li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div>
+                      <h4 className="text-white font-semibold mb-2">Fears:</h4>
+                      <p className="text-slate-300">{currentScenarioData.perspectives?.personA?.fears || ''}</p>
+                    </div>
+                    <div>
+                      <h4 className="text-white font-semibold mb-2">What they wish others knew:</h4>
+                      <p className="text-slate-300 italic">{currentScenarioData.perspectives?.personA?.wishesOthersKnew || ''}</p>
+                    </div>
+                  </div>
+                </>
+              )}
             </div>
           )}
 
           {/* Person B Perspective */}
           {empathyExerciseState.currentPerspective === 'personB' && (
             <div className="glass-card p-8 border-l-4 border-orange-500 bg-orange-500/5 animate-fadeIn">
-              <div className="flex items-center gap-3 mb-6">
-                <span className="text-4xl">{currentScenarioData.perspectives.personB.emoji}</span>
-                <div>
-                  <h3 className="executive-font text-2xl font-bold text-white">{currentScenarioData.perspectives.personB.name}</h3>
-                  <p className="text-slate-400">{currentScenarioData.perspectives.personB.role}</p>
-                </div>
-              </div>
-              <div className="bg-slate-800/50 p-6 rounded border-l-4 border-orange-400 mb-6">
-                <p className="text-white text-lg italic leading-relaxed">"{currentScenarioData.perspectives.personB.thoughts}"</p>
-              </div>
-              <div className="space-y-4">
-                <div>
-                  <h4 className="text-white font-semibold mb-2">Concerns:</h4>
-                  <ul className="list-disc list-inside space-y-1 text-slate-300">
-                    {currentScenarioData.perspectives.personB.concerns.map((concern, idx) => (
-                      <li key={idx}>{concern}</li>
-                    ))}
-                  </ul>
-                </div>
-                <div>
-                  <h4 className="text-white font-semibold mb-2">Fears:</h4>
-                  <p className="text-slate-300">{currentScenarioData.perspectives.personB.fears}</p>
-                </div>
-                <div>
-                  <h4 className="text-white font-semibold mb-2">What they wish others knew:</h4>
-                  <p className="text-slate-300 italic">{currentScenarioData.perspectives.personB.wishesOthersKnew}</p>
-                </div>
-              </div>
+              {isEmpowerTeam && perspectives && perspectives[1] ? (
+                // Empower Team structure
+                <>
+                  <div className="flex items-center gap-3 mb-6">
+                    <span className="text-4xl">{perspectives[1].emoji}</span>
+                    <div>
+                      <h3 className="executive-font text-2xl font-bold text-white">{perspectives[1].role}</h3>
+                    </div>
+                  </div>
+                  <div className="bg-slate-800/50 p-6 rounded border-l-4 border-orange-400 mb-6">
+                    <p className="text-white text-lg italic leading-relaxed">"{perspectives[1].thoughts}"</p>
+                  </div>
+                  <div className="space-y-4">
+                    <div>
+                      <h4 className="text-white font-semibold mb-2">Feelings:</h4>
+                      <div className="flex flex-wrap gap-2">
+                        {perspectives[1].feelings.map((feeling, idx) => (
+                          <span key={idx} className="px-3 py-1 bg-orange-500/20 text-orange-300 rounded-full text-sm">{feeling}</span>
+                        ))}
+                      </div>
+                    </div>
+                    <div>
+                      <h4 className="text-white font-semibold mb-2">Needs:</h4>
+                      <p className="text-slate-300">{perspectives[1].needs}</p>
+                    </div>
+                  </div>
+                </>
+              ) : (
+                // Other tasks structure
+                <>
+                  <div className="flex items-center gap-3 mb-6">
+                    <span className="text-4xl">{currentScenarioData.perspectives?.personB?.emoji || currentScenarioData.perspective_b?.emoji}</span>
+                    <div>
+                      <h3 className="executive-font text-2xl font-bold text-white">{currentScenarioData.perspectives?.personB?.name || currentScenarioData.perspective_b?.name}</h3>
+                      <p className="text-slate-400">{currentScenarioData.perspectives?.personB?.role || currentScenarioData.perspective_b?.role}</p>
+                    </div>
+                  </div>
+                  <div className="bg-slate-800/50 p-6 rounded border-l-4 border-orange-400 mb-6">
+                    <p className="text-white text-lg italic leading-relaxed">"{currentScenarioData.perspectives?.personB?.thoughts || currentScenarioData.perspective_b?.internal_monologue}"</p>
+                  </div>
+                  <div className="space-y-4">
+                    <div>
+                      <h4 className="text-white font-semibold mb-2">Concerns:</h4>
+                      <ul className="list-disc list-inside space-y-1 text-slate-300">
+                        {(currentScenarioData.perspectives?.personB?.concerns || []).map((concern, idx) => (
+                          <li key={idx}>{concern}</li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div>
+                      <h4 className="text-white font-semibold mb-2">Fears:</h4>
+                      <p className="text-slate-300">{currentScenarioData.perspectives?.personB?.fears || ''}</p>
+                    </div>
+                    <div>
+                      <h4 className="text-white font-semibold mb-2">What they wish others knew:</h4>
+                      <p className="text-slate-300 italic">{currentScenarioData.perspectives?.personB?.wishesOthersKnew || ''}</p>
+                    </div>
+                  </div>
+                </>
+              )}
             </div>
           )}
 
           {/* PM Perspective */}
           {empathyExerciseState.currentPerspective === 'pm' && (
             <div className="glass-card p-8 border-l-4 border-purple-500 bg-purple-500/5 perspective-content">
-              <div className="flex items-center gap-3 mb-6">
-                <span className="text-4xl">{currentScenarioData.perspectives.pm.emoji}</span>
-                <h3 className="executive-font text-2xl font-bold text-white">Project Manager's View</h3>
-              </div>
-              <div className="space-y-6">
-                <div>
-                  <h4 className="text-white font-semibold mb-3">Observations:</h4>
-                  <ul className="list-disc list-inside space-y-2 text-slate-300">
-                    {currentScenarioData.perspectives.pm.observations.map((obs, idx) => (
-                      <li key={idx}>{obs}</li>
-                    ))}
-                  </ul>
-                </div>
-                <div>
-                  <h4 className="text-white font-semibold mb-3">Valid Points:</h4>
-                  <div className="space-y-2">
-                    <div className="bg-blue-500/10 p-3 rounded border-l-2 border-blue-400">
-                      <p className="text-slate-300"><span className="font-semibold text-blue-400">{currentScenarioData.perspectives.personA.name}:</span> {currentScenarioData.perspectives.pm.validPoints.architect || currentScenarioData.perspectives.pm.validPoints.personA}</p>
-                    </div>
-                    <div className="bg-orange-500/10 p-3 rounded border-l-2 border-orange-400">
-                      <p className="text-slate-300"><span className="font-semibold text-orange-400">{currentScenarioData.perspectives.personB.name}:</span> {currentScenarioData.perspectives.pm.validPoints.engineer || currentScenarioData.perspectives.pm.validPoints.personB || currentScenarioData.perspectives.pm.validPoints.marketing}</p>
+              {isEmpowerTeam && perspectives && perspectives[2] ? (
+                // Empower Team structure
+                <>
+                  <div className="flex items-center gap-3 mb-6">
+                    <span className="text-4xl">{perspectives[2].emoji}</span>
+                    <div>
+                      <h3 className="executive-font text-2xl font-bold text-white">{perspectives[2].role}</h3>
                     </div>
                   </div>
-                </div>
-                <div>
-                  <h4 className="text-white font-semibold mb-2">The Real Issue:</h4>
-                  <p className="text-slate-300">{currentScenarioData.perspectives.pm.realIssue}</p>
-                </div>
-                <div>
-                  <h4 className="text-white font-semibold mb-2">Solution:</h4>
-                  <p className="text-slate-300">{currentScenarioData.perspectives.pm.solution}</p>
-                </div>
-              </div>
+                  <div className="bg-slate-800/50 p-6 rounded border-l-4 border-purple-400 mb-6">
+                    <p className="text-white text-lg italic leading-relaxed">"{perspectives[2].thoughts}"</p>
+                  </div>
+                  <div className="space-y-4">
+                    <div>
+                      <h4 className="text-white font-semibold mb-2">Feelings:</h4>
+                      <div className="flex flex-wrap gap-2">
+                        {perspectives[2].feelings && perspectives[2].feelings.length > 0 && perspectives[2].feelings[0] !== 'N/A - Context' ? (
+                          perspectives[2].feelings.map((feeling, idx) => (
+                            <span key={idx} className="px-3 py-1 bg-purple-500/20 text-purple-300 rounded-full text-sm">{feeling}</span>
+                          ))
+                        ) : (
+                          <span className="text-slate-400 italic">Context information</span>
+                        )}
+                      </div>
+                    </div>
+                    {perspectives[2].needs && perspectives[2].needs !== 'N/A - Context' && (
+                      <div>
+                        <h4 className="text-white font-semibold mb-2">Needs:</h4>
+                        <p className="text-slate-300">{perspectives[2].needs}</p>
+                      </div>
+                    )}
+                  </div>
+                </>
+              ) : (
+                // Other tasks structure
+                <>
+                  <div className="flex items-center gap-3 mb-6">
+                    <span className="text-4xl">{currentScenarioData.perspectives?.pm?.emoji || currentScenarioData.perspective_pm?.emoji}</span>
+                    <h3 className="executive-font text-2xl font-bold text-white">Project Manager's View</h3>
+                  </div>
+                  <div className="space-y-6">
+                    <div>
+                      <h4 className="text-white font-semibold mb-3">Observations:</h4>
+                      <ul className="list-disc list-inside space-y-2 text-slate-300">
+                        {(currentScenarioData.perspectives?.pm?.observations || []).map((obs, idx) => (
+                          <li key={idx}>{obs}</li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div>
+                      <h4 className="text-white font-semibold mb-3">Valid Points:</h4>
+                      <div className="space-y-2">
+                        <div className="bg-blue-500/10 p-3 rounded border-l-2 border-blue-400">
+                          <p className="text-slate-300"><span className="font-semibold text-blue-400">{currentScenarioData.perspectives?.personA?.name || currentScenarioData.perspective_a?.name}:</span> {currentScenarioData.perspectives?.pm?.validPoints?.architect || currentScenarioData.perspectives?.pm?.validPoints?.personA}</p>
+                        </div>
+                        <div className="bg-orange-500/10 p-3 rounded border-l-2 border-orange-400">
+                          <p className="text-slate-300"><span className="font-semibold text-orange-400">{currentScenarioData.perspectives?.personB?.name || currentScenarioData.perspective_b?.name}:</span> {currentScenarioData.perspectives?.pm?.validPoints?.engineer || currentScenarioData.perspectives?.pm?.validPoints?.personB || currentScenarioData.perspectives?.pm?.validPoints?.marketing}</p>
+                        </div>
+                      </div>
+                    </div>
+                    <div>
+                      <h4 className="text-white font-semibold mb-2">The Real Issue:</h4>
+                      <p className="text-slate-300">{currentScenarioData.perspectives?.pm?.realIssue || ''}</p>
+                    </div>
+                    <div>
+                      <h4 className="text-white font-semibold mb-2">Solution:</h4>
+                      <p className="text-slate-300">{currentScenarioData.perspectives?.pm?.solution || ''}</p>
+                    </div>
+                  </div>
+                </>
+              )}
             </div>
           )}
         </div>
@@ -6686,23 +6846,41 @@ const PMPApp = () => {
               <h2 className="executive-font text-3xl font-bold text-white">KEY INSIGHT</h2>
             </div>
             <div className="space-y-6">
-              <div>
-                <h3 className="text-yellow-400 font-bold text-xl mb-3">{currentScenarioData.insight.title}</h3>
-                <p className="text-white text-lg leading-relaxed">{currentScenarioData.insight.revelation}</p>
-              </div>
-              <div>
-                <h4 className="text-white font-semibold mb-2">Best Approach:</h4>
-                <p className="text-slate-300 leading-relaxed">{currentScenarioData.insight.bestApproach}</p>
-              </div>
-              <div className="bg-blue-500/10 p-4 rounded border-l-2 border-blue-400">
-                <h4 className="text-blue-400 font-semibold mb-2">Emotional Intelligence Connection:</h4>
-                <p className="text-slate-300">{currentScenarioData.insight.eiConnection}</p>
-              </div>
-              {currentScenarioData.insight.examTip && (
-                <div className="bg-emerald-500/10 p-4 rounded border-l-2 border-emerald-400">
-                  <h4 className="text-emerald-400 font-semibold mb-2">Exam Tip:</h4>
-                  <p className="text-slate-300">{currentScenarioData.insight.examTip}</p>
-                </div>
+              {isEmpowerTeam ? (
+                // Empower Team structure: insight and betterApproach are strings
+                <>
+                  <div>
+                    <p className="text-white text-lg leading-relaxed">{currentScenarioData.insight}</p>
+                  </div>
+                  <div>
+                    <h4 className="text-white font-semibold mb-2">Better Approach:</h4>
+                    <p className="text-slate-300 leading-relaxed">{currentScenarioData.betterApproach}</p>
+                  </div>
+                </>
+              ) : (
+                // Other tasks structure: insight is an object
+                <>
+                  <div>
+                    <h3 className="text-yellow-400 font-bold text-xl mb-3">{currentScenarioData.insight?.title || currentScenarioData.key_insight}</h3>
+                    <p className="text-white text-lg leading-relaxed">{currentScenarioData.insight?.revelation || currentScenarioData.insight || currentScenarioData.key_insight}</p>
+                  </div>
+                  <div>
+                    <h4 className="text-white font-semibold mb-2">Best Approach:</h4>
+                    <p className="text-slate-300 leading-relaxed">{currentScenarioData.insight?.bestApproach || ''}</p>
+                  </div>
+                  {currentScenarioData.insight?.eiConnection && (
+                    <div className="bg-blue-500/10 p-4 rounded border-l-2 border-blue-400">
+                      <h4 className="text-blue-400 font-semibold mb-2">Emotional Intelligence Connection:</h4>
+                      <p className="text-slate-300">{currentScenarioData.insight.eiConnection}</p>
+                    </div>
+                  )}
+                  {currentScenarioData.insight?.examTip && (
+                    <div className="bg-emerald-500/10 p-4 rounded border-l-2 border-emerald-400">
+                      <h4 className="text-emerald-400 font-semibold mb-2">Exam Tip:</h4>
+                      <p className="text-slate-300">{currentScenarioData.insight.examTip}</p>
+                    </div>
+                  )}
+                </>
               )}
             </div>
           </div>
