@@ -9859,18 +9859,18 @@ const PMPApp = () => {
         if (selectedTask === 'Manage Conflict' && typeof content === 'object' && content !== null && content.enhanced === true) {
           const def = content;
           return (
-            <div className="space-y-6">
+            <div className="space-y-6 max-w-full overflow-hidden">
               {/* Official ECO Definition */}
-              <div className="bg-gradient-to-r from-emerald-500/10 to-blue-500/10 rounded-xl p-6 border border-emerald-500/20">
-                <div className="flex items-start gap-4">
-                  <div className="bg-emerald-500/20 rounded-full p-3">
+              <div className="bg-gradient-to-r from-emerald-500/10 to-blue-500/10 rounded-xl p-6 border border-emerald-500/20 max-w-full overflow-hidden">
+                <div className="flex items-start gap-4 max-w-full">
+                  <div className="bg-emerald-500/20 rounded-full p-3 flex-shrink-0">
                     <svg className="w-6 h-6 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                   </div>
-                  <div>
-                    <div className="text-emerald-400 text-sm font-semibold uppercase tracking-wide mb-2">ECO Task Definition</div>
-                    <p className="text-xl text-gray-200 italic break-words">
+                  <div className="min-w-0 flex-1 overflow-hidden">
+                    <div className="text-emerald-400 text-sm font-semibold uppercase tracking-wide mb-2 break-words">ECO Task Definition</div>
+                    <p className="text-xl text-gray-200 italic break-words overflow-hidden">
                       "{def.eco_definition || 'Apply emotional intelligence and interpersonal skills to navigate disagreements, reach consensus, and maintain team productivity while preserving relationships.'}"
                     </p>
                   </div>
@@ -9879,36 +9879,36 @@ const PMPApp = () => {
 
               {/* Core Principle */}
               {def.core_principle && (
-                <div className="bg-white/5 rounded-xl p-6 border border-white/10">
-                  <h4 className="text-lg font-semibold text-amber-400 mb-4">Core Principle</h4>
-                  <p className="text-gray-300 text-lg leading-relaxed break-words" dangerouslySetInnerHTML={{__html: def.core_principle.replace(/className/g, 'class')}} />
+                <div className="bg-white/5 rounded-xl p-6 border border-white/10 max-w-full overflow-hidden">
+                  <h4 className="text-lg font-semibold text-amber-400 mb-4 break-words">Core Principle</h4>
+                  <p className="text-gray-300 text-lg leading-relaxed break-words overflow-hidden" dangerouslySetInnerHTML={{__html: def.core_principle.replace(/className/g, 'class')}} />
                 </div>
               )}
 
               {/* The Conflict Equation */}
               {def.conflict_equation && (
-                <div className="bg-gradient-to-br from-purple-500/10 to-pink-500/10 rounded-xl p-6 border border-purple-500/20">
-                  <h4 className="text-lg font-semibold text-purple-400 mb-4">The Conflict Management Equation</h4>
-                  <div className="flex flex-wrap items-center justify-center gap-3 text-xl py-4">
-                    <span className="bg-blue-500/20 px-4 py-2 rounded-lg text-blue-400 font-semibold">Early Detection</span>
+                <div className="bg-gradient-to-br from-purple-500/10 to-pink-500/10 rounded-xl p-6 border border-purple-500/20 max-w-full overflow-hidden">
+                  <h4 className="text-lg font-semibold text-purple-400 mb-4 break-words">The Conflict Management Equation</h4>
+                  <div className="flex flex-wrap items-center justify-center gap-3 text-xl py-4 max-w-full">
+                    <span className="bg-blue-500/20 px-4 py-2 rounded-lg text-blue-400 font-semibold break-words">Early Detection</span>
                     <span className="text-gray-500">+</span>
-                    <span className="bg-emerald-500/20 px-4 py-2 rounded-lg text-emerald-400 font-semibold">Right Approach</span>
+                    <span className="bg-emerald-500/20 px-4 py-2 rounded-lg text-emerald-400 font-semibold break-words">Right Approach</span>
                     <span className="text-gray-500">+</span>
-                    <span className="bg-amber-500/20 px-4 py-2 rounded-lg text-amber-400 font-semibold">Emotional Intelligence</span>
+                    <span className="bg-amber-500/20 px-4 py-2 rounded-lg text-amber-400 font-semibold break-words">Emotional Intelligence</span>
                     <span className="text-gray-500">=</span>
-                    <span className="bg-gradient-to-r from-emerald-500/30 to-blue-500/30 px-4 py-2 rounded-lg text-white font-bold">Resolution + Stronger Relationships</span>
+                    <span className="bg-gradient-to-r from-emerald-500/30 to-blue-500/30 px-4 py-2 rounded-lg text-white font-bold break-words">Resolution + Stronger Relationships</span>
                   </div>
                   {def.conflict_equation_note && (
-                    <p className="text-gray-400 text-center text-sm mt-2 break-words">{def.conflict_equation_note}</p>
+                    <p className="text-gray-400 text-center text-sm mt-2 break-words overflow-hidden">{def.conflict_equation_note}</p>
                   )}
                 </div>
               )}
 
               {/* Three Truths About Conflict */}
               {def.three_truths && Array.isArray(def.three_truths) && (
-                <div className="bg-white/5 rounded-xl p-6 border border-white/10">
-                  <h4 className="text-lg font-semibold text-cyan-400 mb-4">Three Truths PMI Wants You to Know</h4>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="bg-white/5 rounded-xl p-6 border border-white/10 max-w-full overflow-hidden">
+                  <h4 className="text-lg font-semibold text-cyan-400 mb-4 break-words">Three Truths PMI Wants You to Know</h4>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-full">
                     {def.three_truths.map((truth, idx) => {
                       const getColorClasses = (color) => {
                         switch(color) {
@@ -9924,10 +9924,10 @@ const PMPApp = () => {
                       };
                       const colors = getColorClasses(truth.color);
                       return (
-                        <div key={idx} className={`${colors.bg} rounded-lg p-4 border ${colors.border} text-center`}>
+                        <div key={idx} className={`${colors.bg} rounded-lg p-4 border ${colors.border} text-center max-w-full overflow-hidden`}>
                           <div className="text-3xl mb-2">{truth.emoji}</div>
-                          <div className={`${colors.text} font-semibold mb-2`}>{truth.title}</div>
-                          <p className="text-gray-400 text-sm break-words">{truth.description}</p>
+                          <div className={`${colors.text} font-semibold mb-2 break-words`}>{truth.title}</div>
+                          <p className="text-gray-400 text-sm break-words overflow-hidden">{truth.description}</p>
                         </div>
                       );
                     })}
@@ -9937,9 +9937,9 @@ const PMPApp = () => {
 
               {/* What This Looks Like in Practice */}
               {def.practice_comparison && (
-                <div className="bg-white/5 rounded-xl p-6 border border-white/10">
-                  <h4 className="text-lg font-semibold text-rose-400 mb-4">What This Looks Like in Practice</h4>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="bg-white/5 rounded-xl p-6 border border-white/10 max-w-full overflow-hidden">
+                  <h4 className="text-lg font-semibold text-rose-400 mb-4 break-words">What This Looks Like in Practice</h4>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-full">
                     <div className="space-y-3">
                       <div className="text-emerald-400 font-semibold flex items-center gap-2">
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -9972,9 +9972,9 @@ const PMPApp = () => {
 
               {/* Why This Matters */}
               {def.why_matters && (
-                <div className="bg-gradient-to-r from-red-500/10 to-amber-500/10 rounded-xl p-6 border border-red-500/20">
-                  <h4 className="text-lg font-semibold text-red-400 mb-3">Why This Matters</h4>
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+                <div className="bg-gradient-to-r from-red-500/10 to-amber-500/10 rounded-xl p-6 border border-red-500/20 max-w-full overflow-hidden">
+                  <h4 className="text-lg font-semibold text-red-400 mb-3 break-words">Why This Matters</h4>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center max-w-full">
                     {def.why_matters.stats && def.why_matters.stats.map((stat, idx) => {
                       const colorClasses = {
                         red: 'text-red-400',
@@ -9999,8 +9999,8 @@ const PMPApp = () => {
 
               {/* Bottom Line Callout */}
               {def.bottom_line && (
-                <div className="bg-black/40 rounded-xl p-5 border-l-4 border-emerald-500">
-                  <p className="text-gray-200 text-lg break-words" dangerouslySetInnerHTML={{__html: def.bottom_line.replace(/className/g, 'class')}} />
+                <div className="bg-black/40 rounded-xl p-5 border-l-4 border-emerald-500 max-w-full overflow-hidden">
+                  <p className="text-gray-200 text-lg break-words overflow-hidden" dangerouslySetInnerHTML={{__html: def.bottom_line.replace(/className/g, 'class')}} />
                 </div>
               )}
             </div>
@@ -10027,9 +10027,9 @@ const PMPApp = () => {
         if (selectedTask === 'Manage Conflict' && section.key === 'exam_triggers' && typeof content === 'object' && content !== null && content.enhanced === true) {
           const triggers = content;
           return (
-            <div className="space-y-6">
+            <div className="space-y-6 max-w-full overflow-hidden">
               {/* Intro */}
-              <div className="bg-gradient-to-r from-amber-500/10 to-orange-500/10 rounded-xl p-5 border border-amber-500/20">
+              <div className="bg-gradient-to-r from-amber-500/10 to-orange-500/10 rounded-xl p-5 border border-amber-500/20 max-w-full overflow-hidden">
                 <div className="flex items-center gap-3 mb-2">
                   <div className="text-2xl">🎯</div>
                   <p className="text-gray-200 text-lg break-words" dangerouslySetInnerHTML={{__html: triggers.intro.replace(/className/g, 'class')}} />
@@ -10037,9 +10037,9 @@ const PMPApp = () => {
               </div>
 
               {/* Trigger Words Grid */}
-              <div className="bg-white/5 rounded-xl p-6 border border-white/10">
-                <h4 className="text-lg font-semibold text-red-400 mb-4">🚨 High-Alert Trigger Words</h4>
-                <div className="flex flex-wrap gap-2">
+              <div className="bg-white/5 rounded-xl p-6 border border-white/10 max-w-full overflow-hidden">
+                <h4 className="text-lg font-semibold text-red-400 mb-4 break-words">🚨 High-Alert Trigger Words</h4>
+                <div className="flex flex-wrap gap-2 max-w-full">
                   {triggers.high_alert_words && triggers.high_alert_words.map((word, i) => (
                     <span key={i} className="bg-red-500/20 text-red-400 px-3 py-1.5 rounded-full text-sm font-medium border border-red-500/30">
                       {word}
@@ -10048,9 +10048,9 @@ const PMPApp = () => {
                 </div>
               </div>
 
-              <div className="bg-white/5 rounded-xl p-6 border border-white/10">
-                <h4 className="text-lg font-semibold text-amber-400 mb-4">⚠️ Situation Triggers</h4>
-                <div className="flex flex-wrap gap-2">
+              <div className="bg-white/5 rounded-xl p-6 border border-white/10 max-w-full overflow-hidden">
+                <h4 className="text-lg font-semibold text-amber-400 mb-4 break-words">⚠️ Situation Triggers</h4>
+                <div className="flex flex-wrap gap-2 max-w-full">
                   {triggers.situation_triggers && triggers.situation_triggers.map((word, i) => (
                     <span key={i} className="bg-amber-500/20 text-amber-400 px-3 py-1.5 rounded-full text-sm font-medium border border-amber-500/30">
                       {word}
@@ -10059,9 +10059,9 @@ const PMPApp = () => {
                 </div>
               </div>
 
-              <div className="bg-white/5 rounded-xl p-6 border border-white/10">
-                <h4 className="text-lg font-semibold text-blue-400 mb-4">💭 Resolution Triggers</h4>
-                <div className="flex flex-wrap gap-2">
+              <div className="bg-white/5 rounded-xl p-6 border border-white/10 max-w-full overflow-hidden">
+                <h4 className="text-lg font-semibold text-blue-400 mb-4 break-words">💭 Resolution Triggers</h4>
+                <div className="flex flex-wrap gap-2 max-w-full">
                   {triggers.resolution_triggers && triggers.resolution_triggers.map((word, i) => (
                     <span key={i} className="bg-blue-500/20 text-blue-400 px-3 py-1.5 rounded-full text-sm font-medium border border-blue-500/30">
                       {word}
@@ -10072,11 +10072,11 @@ const PMPApp = () => {
 
               {/* Pattern Recognition */}
               {triggers.question_patterns && Array.isArray(triggers.question_patterns) && (
-                <div className="bg-gradient-to-br from-purple-500/10 to-pink-500/10 rounded-xl p-6 border border-purple-500/20">
-                  <h4 className="text-lg font-semibold text-purple-400 mb-4">🧠 Question Pattern Recognition</h4>
-                  <div className="space-y-3">
+                <div className="bg-gradient-to-br from-purple-500/10 to-pink-500/10 rounded-xl p-6 border border-purple-500/20 max-w-full overflow-hidden">
+                  <h4 className="text-lg font-semibold text-purple-400 mb-4 break-words">🧠 Question Pattern Recognition</h4>
+                  <div className="space-y-3 max-w-full">
                     {triggers.question_patterns.map((pattern, idx) => (
-                      <div key={idx} className="flex items-start gap-3 bg-black/20 rounded-lg p-4">
+                      <div key={idx} className="flex items-start gap-3 bg-black/20 rounded-lg p-4 max-w-full overflow-hidden">
                         <div className="text-purple-400 font-mono text-sm bg-purple-500/20 px-2 py-1 rounded">{pattern.pattern}</div>
                         <div className="break-words">
                           <p className="text-gray-300 break-words">{pattern.question}</p>
@@ -10090,8 +10090,8 @@ const PMPApp = () => {
 
               {/* Quick Decision Tree */}
               {triggers.pro_tip && (
-                <div className="bg-black/40 rounded-xl p-5 border-l-4 border-amber-500">
-                  <p className="text-gray-200 break-words" dangerouslySetInnerHTML={{__html: triggers.pro_tip.replace(/className/g, 'class')}} />
+                <div className="bg-black/40 rounded-xl p-5 border-l-4 border-amber-500 max-w-full overflow-hidden">
+                  <p className="text-gray-200 break-words overflow-hidden" dangerouslySetInnerHTML={{__html: triggers.pro_tip.replace(/className/g, 'class')}} />
                 </div>
               )}
             </div>
@@ -10123,13 +10123,13 @@ const PMPApp = () => {
         if (selectedTask === 'Manage Conflict' && section.key === 'key_takeaways' && typeof content === 'object' && content !== null && content.enhanced === true) {
           const takeaways = content;
           return (
-            <div className="space-y-6">
+            <div className="space-y-6 max-w-full overflow-hidden">
               {/* The Big 5 */}
               {takeaways.big_5 && (
-                <div className="bg-gradient-to-br from-emerald-500/10 to-blue-500/10 rounded-xl p-6 border border-emerald-500/20">
-                  <h4 className="text-xl font-bold text-white mb-6 text-center">🏆 {takeaways.big_5.title}</h4>
+                <div className="bg-gradient-to-br from-emerald-500/10 to-blue-500/10 rounded-xl p-6 border border-emerald-500/20 max-w-full overflow-hidden">
+                  <h4 className="text-xl font-bold text-white mb-6 text-center break-words">🏆 {takeaways.big_5.title}</h4>
                   
-                  <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-5 gap-4 max-w-full">
                     {takeaways.big_5.items && takeaways.big_5.items.map((item, idx) => {
                       const getItemColor = (color) => {
                         switch(color) {
@@ -10142,10 +10142,10 @@ const PMPApp = () => {
                         }
                       };
                       return (
-                        <div key={idx} className="bg-black/30 rounded-xl p-4 text-center transform hover:scale-105 transition-transform">
+                        <div key={idx} className="bg-black/30 rounded-xl p-4 text-center transform hover:scale-105 transition-transform max-w-full overflow-hidden">
                           <div className="text-4xl mb-3">{item.emoji}</div>
-                          <div className={`${getItemColor(item.color)} font-bold`}>{item.name}</div>
-                          <p className="text-gray-400 text-xs mt-2 break-words">{item.description}</p>
+                          <div className={`${getItemColor(item.color)} font-bold break-words`}>{item.name}</div>
+                          <p className="text-gray-400 text-xs mt-2 break-words overflow-hidden">{item.description}</p>
                         </div>
                       );
                     })}
@@ -10155,10 +10155,10 @@ const PMPApp = () => {
 
               {/* Thomas-Kilmann Cheat Sheet */}
               {takeaways.thomas_kilmann_cheat_sheet && (
-                <div className="bg-white/5 rounded-xl p-6 border border-white/10">
-                  <h4 className="text-lg font-semibold text-cyan-400 mb-4">📋 {takeaways.thomas_kilmann_cheat_sheet.title}</h4>
+                <div className="bg-white/5 rounded-xl p-6 border border-white/10 max-w-full overflow-hidden">
+                  <h4 className="text-lg font-semibold text-cyan-400 mb-4 break-words">📋 {takeaways.thomas_kilmann_cheat_sheet.title}</h4>
                   
-                  <div className="overflow-x-auto">
+                  <div className="overflow-x-auto max-w-full">
                     <table className="w-full text-sm">
                       <thead>
                         <tr className="border-b border-white/20">
@@ -10946,27 +10946,27 @@ const PMPApp = () => {
         if (selectedTask === 'Manage Conflict' && typeof content === 'object' && content !== null && content.enhanced === true) {
           const mistakes = content;
           return (
-            <div className="space-y-6">
+            <div className="space-y-6 max-w-full overflow-hidden">
               {mistakes.intro && (
-                <div className="bg-gradient-to-r from-red-500/10 to-orange-500/10 rounded-xl p-5 border border-red-500/20">
+                <div className="bg-gradient-to-r from-red-500/10 to-orange-500/10 rounded-xl p-5 border border-red-500/20 max-w-full overflow-hidden">
                   <p className="text-gray-200 break-words overflow-hidden" dangerouslySetInnerHTML={{__html: mistakes.intro.replace(/className/g, 'class')}} />
                 </div>
               )}
 
               {/* Mistake Cards */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-full">
                 {mistakes.mistakes && mistakes.mistakes.map((mistake, idx) => (
-                  <div key={idx} className="bg-white/5 rounded-xl p-5 border border-white/10 hover:border-red-500/30 transition-colors">
-                    <div className="flex items-center gap-3 mb-3">
-                      <div className="bg-red-500/20 rounded-full p-2">
+                  <div key={idx} className="bg-white/5 rounded-xl p-5 border border-white/10 hover:border-red-500/30 transition-colors max-w-full overflow-hidden">
+                    <div className="flex items-center gap-3 mb-3 max-w-full">
+                      <div className="bg-red-500/20 rounded-full p-2 flex-shrink-0">
                         <span className="text-xl">{mistake.emoji}</span>
                       </div>
-                      <h4 className="text-red-400 font-semibold">{mistake.name}</h4>
+                      <h4 className="text-red-400 font-semibold break-words min-w-0 flex-1">{mistake.name}</h4>
                     </div>
-                    <p className="text-gray-300 text-sm mb-3 break-words">{mistake.description}</p>
-                    <div className="bg-red-500/10 rounded-lg p-3 border border-red-500/20">
-                      <p className="text-red-400 text-xs font-semibold mb-1">WHY IT FAILS:</p>
-                      <p className="text-gray-400 text-xs break-words">{mistake.why_fails}</p>
+                    <p className="text-gray-300 text-sm mb-3 break-words overflow-hidden">{mistake.description}</p>
+                    <div className="bg-red-500/10 rounded-lg p-3 border border-red-500/20 max-w-full overflow-hidden">
+                      <p className="text-red-400 text-xs font-semibold mb-1 break-words">WHY IT FAILS:</p>
+                      <p className="text-gray-400 text-xs break-words overflow-hidden">{mistake.why_fails}</p>
                     </div>
                   </div>
                 ))}
@@ -10974,9 +10974,9 @@ const PMPApp = () => {
 
               {/* What PMI Prefers */}
               {mistakes.pmi_preferences && (
-                <div className="bg-gradient-to-br from-emerald-500/10 to-blue-500/10 rounded-xl p-6 border border-emerald-500/20">
-                  <h4 className="text-lg font-semibold text-emerald-400 mb-4">✅ {mistakes.pmi_preferences.title}</h4>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="bg-gradient-to-br from-emerald-500/10 to-blue-500/10 rounded-xl p-6 border border-emerald-500/20 max-w-full overflow-hidden">
+                  <h4 className="text-lg font-semibold text-emerald-400 mb-4 break-words">✅ {mistakes.pmi_preferences.title}</h4>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-full">
                     {mistakes.pmi_preferences.preferences && mistakes.pmi_preferences.preferences.map((pref, idx) => (
                       <div key={idx} className="text-center">
                         <div className="text-3xl mb-2">{pref.emoji}</div>
@@ -10990,7 +10990,7 @@ const PMPApp = () => {
 
               {/* Exam Trap Alert */}
               {mistakes.exam_trap && (
-                <div className="bg-black/40 rounded-xl p-5 border-l-4 border-amber-500">
+                <div className="bg-black/40 rounded-xl p-5 border-l-4 border-amber-500 max-w-full overflow-hidden">
                   <p className="text-gray-200 break-words overflow-hidden" dangerouslySetInnerHTML={{__html: mistakes.exam_trap.replace(/className/g, 'class')}} />
                 </div>
               )}
@@ -11063,10 +11063,10 @@ const PMPApp = () => {
         if (selectedTask === 'Manage Conflict' && typeof content === 'object' && content !== null && content.enhanced === true) {
           const frameworks = content;
           return (
-            <div className="space-y-6">
+            <div className="space-y-6 max-w-full overflow-hidden">
               {/* Thomas-Kilmann Model */}
               {frameworks.thomas_kilmann && (
-                <div className="bg-gradient-to-br from-blue-500/10 to-purple-500/10 rounded-xl p-6 border border-blue-500/20">
+                <div className="bg-gradient-to-br from-blue-500/10 to-purple-500/10 rounded-xl p-6 border border-blue-500/20 max-w-full overflow-hidden">
                   <div className="flex items-center gap-3 mb-4">
                     <div className="text-2xl">⭐</div>
                     <h4 className="text-xl font-bold text-blue-400">{frameworks.thomas_kilmann.title}</h4>
@@ -11129,11 +11129,11 @@ const PMPApp = () => {
 
               {/* Conflict Escalation Ladder */}
               {frameworks.escalation_ladder && (
-                <div className="bg-white/5 rounded-xl p-6 border border-white/10">
-                  <h4 className="text-lg font-semibold text-orange-400 mb-4">📈 {frameworks.escalation_ladder.title}</h4>
+                <div className="bg-white/5 rounded-xl p-6 border border-white/10 max-w-full overflow-hidden">
+                  <h4 className="text-lg font-semibold text-orange-400 mb-4 break-words">📈 {frameworks.escalation_ladder.title}</h4>
                   <p className="text-gray-300 mb-4 break-words overflow-hidden">{frameworks.escalation_ladder.description}</p>
                   
-                  <div className="relative">
+                  <div className="relative max-w-full overflow-hidden">
                     <div className="absolute left-6 top-0 bottom-0 w-1 bg-gradient-to-b from-emerald-500 via-amber-500 to-red-500 rounded-full"></div>
                     
                     <div className="space-y-4 ml-12">
@@ -11169,11 +11169,11 @@ const PMPApp = () => {
 
               {/* Sources of Conflict */}
               {frameworks.sources_of_conflict && (
-                <div className="bg-white/5 rounded-xl p-6 border border-white/10">
-                  <h4 className="text-lg font-semibold text-cyan-400 mb-4">🔍 {frameworks.sources_of_conflict.title}</h4>
+                <div className="bg-white/5 rounded-xl p-6 border border-white/10 max-w-full overflow-hidden">
+                  <h4 className="text-lg font-semibold text-cyan-400 mb-4 break-words">🔍 {frameworks.sources_of_conflict.title}</h4>
                   <p className="text-gray-400 text-sm mb-4 break-words overflow-hidden">{frameworks.sources_of_conflict.description}</p>
                   
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3 max-w-full">
                     {frameworks.sources_of_conflict.sources && frameworks.sources_of_conflict.sources.map((source, idx) => (
                       <div key={idx} className="bg-cyan-500/10 rounded-lg p-3 border border-cyan-500/20 text-center">
                         <div className="text-2xl mb-1">{source.emoji}</div>
@@ -11194,7 +11194,7 @@ const PMPApp = () => {
 
               {/* Memory Aid */}
               {frameworks.memory_aid && (
-                <div className="bg-black/40 rounded-xl p-5 border-l-4 border-blue-500">
+                <div className="bg-black/40 rounded-xl p-5 border-l-4 border-blue-500 max-w-full overflow-hidden">
                   <p className="text-gray-200 break-words overflow-hidden" dangerouslySetInnerHTML={{__html: frameworks.memory_aid.replace(/className/g, 'class')}} />
                 </div>
               )}
@@ -11646,13 +11646,13 @@ const PMPApp = () => {
         if (selectedTask === 'Manage Conflict' && typeof content === 'object' && content !== null && content.enhanced === true) {
           const strategy = content;
           return (
-            <div className="space-y-6">
+            <div className="space-y-6 max-w-full overflow-hidden">
               {/* The Conflict Question Decision Tree */}
               {strategy.decision_tree && (
-                <div className="bg-gradient-to-br from-emerald-500/10 to-blue-500/10 rounded-xl p-6 border border-emerald-500/20">
-                  <h4 className="text-xl font-bold text-white mb-6 text-center">🌳 {strategy.decision_tree.title}</h4>
+                <div className="bg-gradient-to-br from-emerald-500/10 to-blue-500/10 rounded-xl p-6 border border-emerald-500/20 max-w-full overflow-hidden">
+                  <h4 className="text-xl font-bold text-white mb-6 text-center break-words">🌳 {strategy.decision_tree.title}</h4>
                   
-                  <div className="space-y-4">
+                  <div className="space-y-4 max-w-full">
                     {strategy.decision_tree.steps && strategy.decision_tree.steps.map((step, idx) => {
                       const getStepColor = (color) => {
                         switch(color) {
@@ -11674,14 +11674,14 @@ const PMPApp = () => {
                         }
                       };
                       return (
-                        <div key={idx} className="bg-black/30 rounded-xl p-4">
-                          <div className="flex items-center gap-3 mb-3">
-                            <div className={`${stepColors.bg} rounded-full w-8 h-8 flex items-center justify-center ${stepColors.text} font-bold`}>
+                        <div key={idx} className="bg-black/30 rounded-xl p-4 max-w-full overflow-hidden">
+                          <div className="flex items-center gap-3 mb-3 max-w-full">
+                            <div className={`${stepColors.bg} rounded-full w-8 h-8 flex items-center justify-center ${stepColors.text} font-bold flex-shrink-0`}>
                               {step.number}
                             </div>
-                            <span className={`${stepColors.text} font-semibold`}>{step.question}</span>
+                            <span className={`${stepColors.text} font-semibold break-words min-w-0 flex-1`}>{step.question}</span>
                           </div>
-                          <div className="grid grid-cols-2 gap-4 ml-11">
+                          <div className="grid grid-cols-2 gap-4 ml-11 max-w-full">
                             {step.yes && (
                               <div className={`${getAnswerColor(step.yes.color).bg} rounded-lg p-3 border ${getAnswerColor(step.yes.color).border}`}>
                                 <span className={`${getAnswerColor(step.yes.color).text} font-semibold`}>YES →</span>
@@ -11704,10 +11704,10 @@ const PMPApp = () => {
 
               {/* Quick Reference: Word Triggers */}
               {strategy.keyword_reference && (
-                <div className="bg-white/5 rounded-xl p-6 border border-white/10">
-                  <h4 className="text-lg font-semibold text-cyan-400 mb-4">⚡ {strategy.keyword_reference.title}</h4>
+                <div className="bg-white/5 rounded-xl p-6 border border-white/10 max-w-full overflow-hidden">
+                  <h4 className="text-lg font-semibold text-cyan-400 mb-4 break-words">⚡ {strategy.keyword_reference.title}</h4>
                   
-                  <div className="overflow-x-auto">
+                  <div className="overflow-x-auto max-w-full">
                     <table className="w-full text-sm">
                       <thead>
                         <tr className="border-b border-white/20">
@@ -11744,10 +11744,10 @@ const PMPApp = () => {
 
               {/* DO vs DON'T */}
               {strategy.do_vs_dont && (
-                <div className="bg-white/5 rounded-xl p-6 border border-white/10">
-                  <h4 className="text-lg font-semibold text-amber-400 mb-4">✅ DO vs ❌ DON'T</h4>
+                <div className="bg-white/5 rounded-xl p-6 border border-white/10 max-w-full overflow-hidden">
+                  <h4 className="text-lg font-semibold text-amber-400 mb-4 break-words">✅ DO vs ❌ DON'T</h4>
                   
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-full">
                     <div className="bg-emerald-500/10 rounded-xl p-5 border border-emerald-500/20">
                       <div className="text-emerald-400 font-bold text-lg mb-3">✅ DO Choose Answers That...</div>
                       <ul className="text-gray-300 text-sm space-y-2">
@@ -11777,17 +11777,17 @@ const PMPApp = () => {
 
               {/* Common Traps */}
               {strategy.common_traps && Array.isArray(strategy.common_traps) && (
-                <div className="bg-gradient-to-br from-red-500/10 to-orange-500/10 rounded-xl p-6 border border-red-500/20">
-                  <h4 className="text-lg font-semibold text-red-400 mb-4">🪤 Common Exam Traps</h4>
+                <div className="bg-gradient-to-br from-red-500/10 to-orange-500/10 rounded-xl p-6 border border-red-500/20 max-w-full overflow-hidden">
+                  <h4 className="text-lg font-semibold text-red-400 mb-4 break-words">🪤 Common Exam Traps</h4>
                   
-                  <div className="space-y-4">
+                  <div className="space-y-4 max-w-full">
                     {strategy.common_traps.map((trap, idx) => (
-                      <div key={idx} className="bg-black/30 rounded-lg p-4">
-                        <div className="flex items-start gap-3">
-                          <span className="text-red-400 text-xl">⚠️</span>
-                          <div>
-                            <div className="text-white font-semibold">{trap.title}</div>
-                            <p className="text-gray-400 text-sm mt-1 break-words">{trap.description}</p>
+                      <div key={idx} className="bg-black/30 rounded-lg p-4 max-w-full overflow-hidden">
+                        <div className="flex items-start gap-3 max-w-full">
+                          <span className="text-red-400 text-xl flex-shrink-0">⚠️</span>
+                          <div className="min-w-0 flex-1 overflow-hidden">
+                            <div className="text-white font-semibold break-words">{trap.title}</div>
+                            <p className="text-gray-400 text-sm mt-1 break-words overflow-hidden">{trap.description}</p>
                           </div>
                         </div>
                       </div>
@@ -11798,9 +11798,9 @@ const PMPApp = () => {
 
               {/* Final Memory Aid */}
               {strategy.memory_mantra && (
-                <div className="bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-xl p-6 border border-purple-500/30">
-                  <h4 className="text-lg font-semibold text-white mb-3 text-center">🧠 {strategy.memory_mantra.title}</h4>
-                  <p className="text-3xl text-center font-light">
+                <div className="bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-xl p-6 border border-purple-500/30 max-w-full overflow-hidden">
+                  <h4 className="text-lg font-semibold text-white mb-3 text-center break-words">🧠 {strategy.memory_mantra.title}</h4>
+                  <p className="text-3xl text-center font-light max-w-full overflow-hidden break-words">
                     {strategy.memory_mantra.words && strategy.memory_mantra.words.map((word, idx) => {
                       const getWordColor = (color) => {
                         switch(color) {
@@ -11812,20 +11812,20 @@ const PMPApp = () => {
                         }
                       };
                       return (
-                        <span key={idx}>
-                          <span className={`${getWordColor(word.color)} font-semibold`}>{word.word}</span>
+                        <span key={idx} className="break-words">
+                          <span className={`${getWordColor(word.color)} font-semibold break-words`}>{word.word}</span>
                           {idx < strategy.memory_mantra.words.length - 1 && <span className="text-gray-500 mx-2">→</span>}
                         </span>
                       );
                     })}
                   </p>
-                  <p className="text-gray-400 text-center text-sm mt-3 break-words">{strategy.memory_mantra.subtitle}</p>
+                  <p className="text-gray-400 text-center text-sm mt-3 break-words overflow-hidden">{strategy.memory_mantra.subtitle}</p>
                 </div>
               )}
 
               {/* Bottom Line */}
               {strategy.bottom_line && (
-                <div className="bg-black/40 rounded-xl p-5 border-l-4 border-emerald-500">
+                <div className="bg-black/40 rounded-xl p-5 border-l-4 border-emerald-500 max-w-full overflow-hidden">
                   <p className="text-gray-200 text-lg break-words overflow-hidden" dangerouslySetInnerHTML={{__html: strategy.bottom_line.replace(/className/g, 'class')}} />
                 </div>
               )}
@@ -12077,10 +12077,10 @@ const PMPApp = () => {
         if (selectedTask === 'Manage Conflict' && typeof content === 'object' && content !== null && content.enhanced === true) {
           const howTo = content;
           return (
-            <div className="space-y-6">
+            <div className="space-y-6 max-w-full overflow-hidden">
               {/* The PAUSE Method */}
               {howTo.pause_method && (
-                <div className="bg-gradient-to-br from-emerald-500/10 to-teal-500/10 rounded-xl p-6 border border-emerald-500/20">
+                <div className="bg-gradient-to-br from-emerald-500/10 to-teal-500/10 rounded-xl p-6 border border-emerald-500/20 max-w-full overflow-hidden">
                   <div className="flex items-center gap-3 mb-4">
                     <div className="text-2xl">⏸️</div>
                     <h4 className="text-xl font-bold text-emerald-400">{howTo.pause_method.title}</h4>
@@ -12113,10 +12113,10 @@ const PMPApp = () => {
 
               {/* Step-by-Step Process */}
               {howTo.step_by_step_process && (
-                <div className="bg-white/5 rounded-xl p-6 border border-white/10">
-                  <h4 className="text-lg font-semibold text-amber-400 mb-4">📋 {howTo.step_by_step_process.title}</h4>
+                <div className="bg-white/5 rounded-xl p-6 border border-white/10 max-w-full overflow-hidden">
+                  <h4 className="text-lg font-semibold text-amber-400 mb-4 break-words">📋 {howTo.step_by_step_process.title}</h4>
                   
-                  <div className="relative">
+                  <div className="relative max-w-full overflow-hidden">
                     <div className="absolute left-4 top-8 bottom-8 w-0.5 bg-gradient-to-b from-amber-500 to-emerald-500"></div>
                     
                     <div className="space-y-6 ml-10">
@@ -12157,10 +12157,10 @@ const PMPApp = () => {
 
               {/* Facilitation Phrases */}
               {howTo.power_phrases && (
-                <div className="bg-white/5 rounded-xl p-6 border border-white/10">
-                  <h4 className="text-lg font-semibold text-cyan-400 mb-4">💬 {howTo.power_phrases.title}</h4>
+                <div className="bg-white/5 rounded-xl p-6 border border-white/10 max-w-full overflow-hidden">
+                  <h4 className="text-lg font-semibold text-cyan-400 mb-4 break-words">💬 {howTo.power_phrases.title}</h4>
                   
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-full">
                     {howTo.power_phrases.categories && howTo.power_phrases.categories.map((category, idx) => {
                       const getCategoryColor = (color) => {
                         switch(color) {
@@ -12189,7 +12189,7 @@ const PMPApp = () => {
 
               {/* Pro Tip */}
               {howTo.pro_tip && (
-                <div className="bg-black/40 rounded-xl p-5 border-l-4 border-emerald-500">
+                <div className="bg-black/40 rounded-xl p-5 border-l-4 border-emerald-500 max-w-full overflow-hidden">
                   <p className="text-gray-200 break-words overflow-hidden" dangerouslySetInnerHTML={{__html: howTo.pro_tip.replace(/className/g, 'class')}} />
                 </div>
               )}
@@ -12385,11 +12385,11 @@ const PMPApp = () => {
         if (selectedTask === 'Manage Conflict' && typeof content === 'object' && content !== null && content.enhanced === true) {
           const tested = content;
           return (
-            <div className="space-y-6">
+            <div className="space-y-6 max-w-full overflow-hidden">
               {/* Intro Stats */}
               {tested.stats && (
-                <div className="bg-gradient-to-r from-blue-500/10 to-purple-500/10 rounded-xl p-6 border border-blue-500/20">
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+                <div className="bg-gradient-to-r from-blue-500/10 to-purple-500/10 rounded-xl p-6 border border-blue-500/20 max-w-full overflow-hidden">
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center max-w-full">
                     <div>
                       <div className="text-3xl font-bold text-blue-400">{tested.stats.questions_on_exam}</div>
                       <div className="text-gray-400 text-sm">Questions on Exam</div>
@@ -12412,10 +12412,10 @@ const PMPApp = () => {
 
               {/* Question Patterns */}
               {tested.question_patterns && Array.isArray(tested.question_patterns) && (
-                <div className="bg-white/5 rounded-xl p-6 border border-white/10">
-                  <h4 className="text-lg font-semibold text-cyan-400 mb-4">📊 Six Question Patterns You'll See</h4>
+                <div className="bg-white/5 rounded-xl p-6 border border-white/10 max-w-full overflow-hidden">
+                  <h4 className="text-lg font-semibold text-cyan-400 mb-4 break-words">📊 Six Question Patterns You'll See</h4>
                   
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-full">
                     {tested.question_patterns.map((pattern, idx) => {
                       const getColorClasses = (color) => {
                         switch(color) {
@@ -12430,13 +12430,13 @@ const PMPApp = () => {
                       };
                       const colors = getColorClasses(pattern.color);
                       return (
-                        <div key={idx} className={`${colors.bg} rounded-lg p-4 border ${colors.border}`}>
-                          <div className="flex items-center gap-2 mb-2">
-                            <span className={`${colors.badge} ${colors.text} text-xs font-bold px-2 py-1 rounded`}>{pattern.pattern}</span>
-                            <span className="text-white font-semibold">{pattern.name}</span>
+                        <div key={idx} className={`${colors.bg} rounded-lg p-4 border ${colors.border} max-w-full overflow-hidden`}>
+                          <div className="flex items-center gap-2 mb-2 max-w-full">
+                            <span className={`${colors.badge} ${colors.text} text-xs font-bold px-2 py-1 rounded break-words`}>{pattern.pattern}</span>
+                            <span className="text-white font-semibold break-words min-w-0 flex-1">{pattern.name}</span>
                           </div>
-                          <p className="text-gray-400 text-sm break-words">{pattern.question}</p>
-                          <p className={`${colors.text} text-xs mt-2 break-words`}>→ {pattern.tests}</p>
+                          <p className="text-gray-400 text-sm break-words overflow-hidden">{pattern.question}</p>
+                          <p className={`${colors.text} text-xs mt-2 break-words overflow-hidden`}>→ {pattern.tests}</p>
                         </div>
                       );
                     })}
@@ -12446,10 +12446,10 @@ const PMPApp = () => {
 
               {/* What PMI Expects */}
               {tested.pmi_expectations && Array.isArray(tested.pmi_expectations) && (
-                <div className="bg-white/5 rounded-xl p-6 border border-white/10">
-                  <h4 className="text-lg font-semibold text-emerald-400 mb-4">🎯 What PMI Expects You to Demonstrate</h4>
+                <div className="bg-white/5 rounded-xl p-6 border border-white/10 max-w-full overflow-hidden">
+                  <h4 className="text-lg font-semibold text-emerald-400 mb-4 break-words">🎯 What PMI Expects You to Demonstrate</h4>
                   
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-full">
                     {tested.pmi_expectations.map((expectation, idx) => {
                       const getExpColor = (color) => {
                         switch(color) {
@@ -12461,12 +12461,12 @@ const PMPApp = () => {
                       };
                       const expColors = getExpColor(expectation.color);
                       return (
-                        <div key={idx} className={`${expColors.bg} rounded-xl p-5 border ${expColors.border}`}>
+                        <div key={idx} className={`${expColors.bg} rounded-xl p-5 border ${expColors.border} max-w-full overflow-hidden`}>
                           <div className="text-3xl mb-3 text-center">{expectation.emoji}</div>
-                          <h5 className={`${expColors.text} font-semibold text-center mb-2`}>{expectation.title}</h5>
-                          <ul className="text-gray-400 text-sm space-y-1">
+                          <h5 className={`${expColors.text} font-semibold text-center mb-2 break-words`}>{expectation.title}</h5>
+                          <ul className="text-gray-400 text-sm space-y-1 max-w-full">
                             {expectation.items && expectation.items.map((item, iIdx) => (
-                              <li key={iIdx} className="break-words">• {item}</li>
+                              <li key={iIdx} className="break-words overflow-hidden">• {item}</li>
                             ))}
                           </ul>
                         </div>
@@ -12478,13 +12478,13 @@ const PMPApp = () => {
 
               {/* The PMI Mindset */}
               {tested.pmi_mindset && (
-                <div className="bg-gradient-to-br from-amber-500/10 to-orange-500/10 rounded-xl p-6 border border-amber-500/20">
-                  <h4 className="text-lg font-semibold text-amber-400 mb-4">💭 The PMI Mindset for Conflict Questions</h4>
+                <div className="bg-gradient-to-br from-amber-500/10 to-orange-500/10 rounded-xl p-6 border border-amber-500/20 max-w-full overflow-hidden">
+                  <h4 className="text-lg font-semibold text-amber-400 mb-4 break-words">💭 The PMI Mindset for Conflict Questions</h4>
                   
-                  <div className="bg-black/30 rounded-lg p-5">
+                  <div className="bg-black/30 rounded-lg p-5 max-w-full overflow-hidden">
                     <p className="text-gray-200 text-lg leading-relaxed break-words overflow-hidden" dangerouslySetInnerHTML={{__html: tested.pmi_mindset.intro.replace(/className/g, 'class')}} />
                     
-                    <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-3 max-w-full">
                       {tested.pmi_mindset.checklist && tested.pmi_mindset.checklist.map((item, idx) => (
                         <div key={idx} className="flex items-center gap-2 text-gray-300">
                           <span className="text-emerald-400">✓</span>
@@ -12498,7 +12498,7 @@ const PMPApp = () => {
 
               {/* Pro Tip */}
               {tested.pro_tip && (
-                <div className="bg-black/40 rounded-xl p-5 border-l-4 border-blue-500">
+                <div className="bg-black/40 rounded-xl p-5 border-l-4 border-blue-500 max-w-full overflow-hidden">
                   <p className="text-gray-200 break-words overflow-hidden" dangerouslySetInnerHTML={{__html: tested.pro_tip.replace(/className/g, 'class')}} />
                 </div>
               )}
@@ -12577,60 +12577,60 @@ const PMPApp = () => {
           const correctIndex = question.correct_answer === 'B' ? 1 : (question.correct_answer === 'A' ? 0 : (question.correct_answer === 'C' ? 2 : 3));
           
           return (
-            <div className="space-y-6">
+            <div className="space-y-6 max-w-full overflow-hidden">
               {/* Question Card */}
-              <div className={`bg-gradient-to-br ${getGradient(questionNum)} rounded-xl border ${headerColors.border} overflow-hidden`}>
-                <div className={`${headerColors.bg} px-6 py-3 border-b ${headerColors.border}`}>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <span className={`${headerColors.badge} ${headerColors.text} font-bold px-3 py-1 rounded-full text-sm`}>
+              <div className={`bg-gradient-to-br ${getGradient(questionNum)} rounded-xl border ${headerColors.border} overflow-hidden max-w-full`}>
+                <div className={`${headerColors.bg} px-6 py-3 border-b ${headerColors.border} max-w-full overflow-hidden`}>
+                  <div className="flex items-center justify-between max-w-full">
+                    <div className="flex items-center gap-3 min-w-0 flex-1">
+                      <span className={`${headerColors.badge} ${headerColors.text} font-bold px-3 py-1 rounded-full text-sm flex-shrink-0`}>
                         Question {questionNum}
                       </span>
-                      <span className="text-gray-400 text-sm break-words">{question.title}</span>
+                      <span className="text-gray-400 text-sm break-words min-w-0 flex-1">{question.title}</span>
                     </div>
-                    <span className="text-gray-500 text-sm">Difficulty: {question.difficulty}</span>
+                    <span className="text-gray-500 text-sm flex-shrink-0 ml-2">Difficulty: {question.difficulty}</span>
                   </div>
                 </div>
                 
-                <div className="p-6">
-                  <p className="text-gray-200 text-lg leading-relaxed break-words" dangerouslySetInnerHTML={{__html: question.question.replace(/className/g, 'class')}} />
+                <div className="p-6 max-w-full overflow-hidden">
+                  <p className="text-gray-200 text-lg leading-relaxed break-words overflow-hidden" dangerouslySetInnerHTML={{__html: question.question.replace(/className/g, 'class')}} />
                 </div>
               </div>
 
               {/* Answer Options */}
-              <div className="space-y-3">
+              <div className="space-y-3 max-w-full">
                 {question.options && question.options.map((opt, optIdx) => (
-                  <div key={optIdx} className="bg-white/5 rounded-lg p-4 border border-white/10 hover:border-white/20 transition-colors cursor-pointer">
-                    <div className="flex items-start gap-3">
-                      <span className="bg-gray-500/30 text-gray-400 font-bold px-3 py-1 rounded-full text-sm">
+                  <div key={optIdx} className="bg-white/5 rounded-lg p-4 border border-white/10 hover:border-white/20 transition-colors cursor-pointer max-w-full overflow-hidden">
+                    <div className="flex items-start gap-3 max-w-full">
+                      <span className="bg-gray-500/30 text-gray-400 font-bold px-3 py-1 rounded-full text-sm flex-shrink-0">
                         {String.fromCharCode(65 + optIdx)}
                       </span>
-                      <p className="text-gray-300 break-words">{opt}</p>
+                      <p className="text-gray-300 break-words min-w-0 flex-1 overflow-hidden">{opt}</p>
                     </div>
                   </div>
                 ))}
               </div>
 
               {/* Answer Reveal */}
-              <div className="bg-emerald-500/10 rounded-xl p-6 border border-emerald-500/30">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="bg-emerald-500/30 rounded-full p-2">
+              <div className="bg-emerald-500/10 rounded-xl p-6 border border-emerald-500/30 max-w-full overflow-hidden">
+                <div className="flex items-center gap-3 mb-4 max-w-full">
+                  <div className="bg-emerald-500/30 rounded-full p-2 flex-shrink-0">
                     <svg className="w-6 h-6 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                     </svg>
                   </div>
-                  <span className="text-emerald-400 font-bold text-xl">Correct Answer: {question.correct_answer}</span>
+                  <span className="text-emerald-400 font-bold text-xl break-words min-w-0 flex-1">Correct Answer: {question.correct_answer}</span>
                 </div>
                 
-                <p className="text-gray-300 mb-4 break-words">{question.correct_text}</p>
+                <p className="text-gray-300 mb-4 break-words overflow-hidden">{question.correct_text}</p>
                 
-                <div className="bg-black/30 rounded-lg p-4">
-                  <h5 className="text-white font-semibold mb-2">Why This Is Correct:</h5>
-                  <ul className="text-gray-400 text-sm space-y-2">
-                        {question.why_correct && question.why_correct.map((item, idx) => (
-                      <li key={idx} className="flex items-start gap-2">
-                        <span className="text-emerald-400 mt-1">✓</span>
-                        <span className="break-words"><strong className="text-gray-300 break-words">{item.point}</strong> {item.detail}</span>
+                <div className="bg-black/30 rounded-lg p-4 max-w-full overflow-hidden">
+                  <h5 className="text-white font-semibold mb-2 break-words">Why This Is Correct:</h5>
+                  <ul className="text-gray-400 text-sm space-y-2 max-w-full">
+                    {question.why_correct && question.why_correct.map((item, idx) => (
+                      <li key={idx} className="flex items-start gap-2 max-w-full">
+                        <span className="text-emerald-400 mt-1 flex-shrink-0">✓</span>
+                        <span className="break-words min-w-0 flex-1 overflow-hidden"><strong className="text-gray-300 break-words">{item.point}</strong> {item.detail}</span>
                       </li>
                     ))}
                   </ul>
@@ -12639,10 +12639,10 @@ const PMPApp = () => {
 
               {/* Positions vs Interests (Question 2 only) */}
               {questionNum === 2 && question.positions_vs_interests && (
-                <div className="bg-gradient-to-br from-amber-500/10 to-orange-500/10 rounded-xl p-6 border border-amber-500/20">
-                  <h4 className="text-lg font-semibold text-amber-400 mb-4">💡 {question.positions_vs_interests.title}</h4>
+                <div className="bg-gradient-to-br from-amber-500/10 to-orange-500/10 rounded-xl p-6 border border-amber-500/20 max-w-full overflow-hidden">
+                  <h4 className="text-lg font-semibold text-amber-400 mb-4 break-words">💡 {question.positions_vs_interests.title}</h4>
                   
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4 max-w-full">
                     <div className="bg-black/30 rounded-lg p-4">
                       <div className="text-red-400 font-semibold mb-2">{question.positions_vs_interests.positions.title}</div>
                       <ul className="text-gray-400 text-sm space-y-1">
@@ -12671,10 +12671,10 @@ const PMPApp = () => {
 
               {/* Observation-Based Feedback (Question 3 only) */}
               {questionNum === 3 && question.observation_feedback && (
-                <div className="bg-gradient-to-br from-cyan-500/10 to-blue-500/10 rounded-xl p-6 border border-cyan-500/20">
-                  <h4 className="text-lg font-semibold text-cyan-400 mb-4">🎯 {question.observation_feedback.title}</h4>
+                <div className="bg-gradient-to-br from-cyan-500/10 to-blue-500/10 rounded-xl p-6 border border-cyan-500/20 max-w-full overflow-hidden">
+                  <h4 className="text-lg font-semibold text-cyan-400 mb-4 break-words">🎯 {question.observation_feedback.title}</h4>
                   
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-full">
                     <div className="bg-red-500/10 rounded-lg p-4 border border-red-500/20">
                       <div className="text-red-400 font-semibold mb-2">{question.observation_feedback.vague.title}</div>
                       <ul className="text-gray-400 text-sm space-y-2">
@@ -12699,16 +12699,16 @@ const PMPApp = () => {
 
               {/* Why Other Answers Are Wrong */}
               {question.why_wrong && Array.isArray(question.why_wrong) && (
-                <div className="bg-white/5 rounded-xl p-6 border border-white/10">
-                  <h4 className="text-lg font-semibold text-red-400 mb-4">❌ Why Other Answers Are Wrong</h4>
+                <div className="bg-white/5 rounded-xl p-6 border border-white/10 max-w-full overflow-hidden">
+                  <h4 className="text-lg font-semibold text-red-400 mb-4 break-words">❌ Why Other Answers Are Wrong</h4>
                   
-                  <div className="space-y-4">
+                  <div className="space-y-4 max-w-full">
                     {question.why_wrong.map((wrong, idx) => (
-                      <div key={idx} className="bg-red-500/10 rounded-lg p-4 border border-red-500/20">
-                        <div className="flex items-center gap-2 mb-2">
-                          <span className="text-red-400 font-bold">{wrong.letter}</span>
-                          <span className="text-gray-400">|</span>
-                          <span className="text-gray-300">{wrong.text}</span>
+                      <div key={idx} className="bg-red-500/10 rounded-lg p-4 border border-red-500/20 max-w-full overflow-hidden">
+                        <div className="flex items-center gap-2 mb-2 max-w-full">
+                          <span className="text-red-400 font-bold flex-shrink-0">{wrong.letter}</span>
+                          <span className="text-gray-400 flex-shrink-0">|</span>
+                          <span className="text-gray-300 break-words min-w-0 flex-1">{wrong.text}</span>
                         </div>
                         <p className="text-gray-400 text-sm break-words overflow-hidden" dangerouslySetInnerHTML={{__html: wrong.reason.replace(/className/g, 'class')}} />
                       </div>
@@ -12719,7 +12719,7 @@ const PMPApp = () => {
 
               {/* Key Takeaway */}
               {question.key_takeaway && (
-                <div className="bg-black/40 rounded-xl p-5 border-l-4 border-blue-500">
+                <div className="bg-black/40 rounded-xl p-5 border-l-4 border-blue-500 max-w-full overflow-hidden">
                   <p className="text-gray-200 break-words overflow-hidden" dangerouslySetInnerHTML={{__html: question.key_takeaway.replace(/className/g, 'class')}} />
                 </div>
               )}
@@ -13507,13 +13507,13 @@ const PMPApp = () => {
         if (selectedTask === 'Manage Conflict' && typeof content === 'object' && content !== null && content.enhanced === true) {
           const intro = content;
           return (
-            <div className="space-y-6">
+            <div className="space-y-6 max-w-full overflow-hidden">
               {/* Hero Statement */}
               {intro.hero_statement && (
-                <div className="bg-gradient-to-br from-purple-500/10 to-blue-500/10 rounded-xl p-8 border border-purple-500/20">
-                  <div className="text-center">
+                <div className="bg-gradient-to-br from-purple-500/10 to-blue-500/10 rounded-xl p-8 border border-purple-500/20 max-w-full overflow-hidden">
+                  <div className="text-center max-w-full">
                     <div className="text-5xl mb-4">{intro.hero_statement.emoji}</div>
-                    <h3 className="text-2xl font-bold text-white mb-4">{intro.hero_statement.title}</h3>
+                    <h3 className="text-2xl font-bold text-white mb-4 break-words">{intro.hero_statement.title}</h3>
                     <p className="text-xl text-gray-300 leading-relaxed max-w-3xl mx-auto break-words overflow-hidden" dangerouslySetInnerHTML={{__html: intro.hero_statement.text.replace(/className/g, 'class')}} />
                   </div>
                 </div>
@@ -13521,10 +13521,10 @@ const PMPApp = () => {
 
               {/* Why This Matters */}
               {intro.why_matters && (
-                <div className="bg-white/5 rounded-xl p-6 border border-white/10">
-                  <h4 className="text-lg font-semibold text-amber-400 mb-4">{intro.why_matters.title}</h4>
+                <div className="bg-white/5 rounded-xl p-6 border border-white/10 max-w-full overflow-hidden">
+                  <h4 className="text-lg font-semibold text-amber-400 mb-4 break-words">{intro.why_matters.title}</h4>
                   
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-full">
                     {intro.why_matters.high_conflict_teams && (
                       <div>
                         <h5 className="text-emerald-400 font-semibold mb-3">{intro.why_matters.high_conflict_teams.title}</h5>
@@ -13718,22 +13718,22 @@ const PMPApp = () => {
         if (selectedTask === 'Manage Conflict' && typeof content === 'object' && content !== null && content.enhanced === true) {
           const ei = content;
           return (
-            <div className="space-y-6">
+            <div className="space-y-6 max-w-full overflow-hidden">
               {/* EI Framework */}
               {ei.framework && (
-                <div className="bg-gradient-to-br from-pink-500/10 to-purple-500/10 rounded-xl p-6 border border-pink-500/20">
-                  <div className="flex items-center gap-3 mb-4">
-                    <div className="text-3xl">{ei.framework.emoji}</div>
-                    <div>
-                      <h4 className="text-xl font-bold text-white">{ei.framework.title}</h4>
-                      <p className="text-gray-400 text-sm">{ei.framework.subtitle}</p>
+                <div className="bg-gradient-to-br from-pink-500/10 to-purple-500/10 rounded-xl p-6 border border-pink-500/20 max-w-full overflow-hidden">
+                  <div className="flex items-center gap-3 mb-4 max-w-full">
+                    <div className="text-3xl flex-shrink-0">{ei.framework.emoji}</div>
+                    <div className="min-w-0 flex-1 overflow-hidden">
+                      <h4 className="text-xl font-bold text-white break-words">{ei.framework.title}</h4>
+                      <p className="text-gray-400 text-sm break-words overflow-hidden">{ei.framework.subtitle}</p>
                     </div>
                   </div>
                   
                   <p className="text-gray-300 mb-6 break-words overflow-hidden">{ei.framework.intro}</p>
 
                   {/* Four Quadrants */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-full">
                     {ei.quadrants && ei.quadrants.map((quadrant, idx) => {
                       const getQuadColor = (color) => {
                         switch(color) {
