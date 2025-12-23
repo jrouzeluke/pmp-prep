@@ -9870,7 +9870,7 @@ const PMPApp = () => {
                   </div>
                   <div>
                     <div className="text-emerald-400 text-sm font-semibold uppercase tracking-wide mb-2">ECO Task Definition</div>
-                    <p className="text-xl text-gray-200 italic">
+                    <p className="text-xl text-gray-200 italic break-words">
                       "{def.eco_definition || 'Apply emotional intelligence and interpersonal skills to navigate disagreements, reach consensus, and maintain team productivity while preserving relationships.'}"
                     </p>
                   </div>
@@ -9881,7 +9881,7 @@ const PMPApp = () => {
               {def.core_principle && (
                 <div className="bg-white/5 rounded-xl p-6 border border-white/10">
                   <h4 className="text-lg font-semibold text-amber-400 mb-4">Core Principle</h4>
-                  <p className="text-gray-300 text-lg leading-relaxed" dangerouslySetInnerHTML={{__html: def.core_principle.replace(/className/g, 'class')}} />
+                  <p className="text-gray-300 text-lg leading-relaxed break-words" dangerouslySetInnerHTML={{__html: def.core_principle.replace(/className/g, 'class')}} />
                 </div>
               )}
 
@@ -9899,7 +9899,7 @@ const PMPApp = () => {
                     <span className="bg-gradient-to-r from-emerald-500/30 to-blue-500/30 px-4 py-2 rounded-lg text-white font-bold">Resolution + Stronger Relationships</span>
                   </div>
                   {def.conflict_equation_note && (
-                    <p className="text-gray-400 text-center text-sm mt-2">{def.conflict_equation_note}</p>
+                    <p className="text-gray-400 text-center text-sm mt-2 break-words">{def.conflict_equation_note}</p>
                   )}
                 </div>
               )}
@@ -9927,7 +9927,7 @@ const PMPApp = () => {
                         <div key={idx} className={`${colors.bg} rounded-lg p-4 border ${colors.border} text-center`}>
                           <div className="text-3xl mb-2">{truth.emoji}</div>
                           <div className={`${colors.text} font-semibold mb-2`}>{truth.title}</div>
-                          <p className="text-gray-400 text-sm">{truth.description}</p>
+                          <p className="text-gray-400 text-sm break-words">{truth.description}</p>
                         </div>
                       );
                     })}
@@ -9947,9 +9947,9 @@ const PMPApp = () => {
                         </svg>
                         Effective Conflict Management
                       </div>
-                      <ul className="text-gray-300 text-sm space-y-2 ml-7">
+                      <ul className="text-gray-300 text-sm space-y-2 ml-7 break-words">
                         {def.practice_comparison.effective && def.practice_comparison.effective.map((item, idx) => (
-                          <li key={idx}>• {item}</li>
+                          <li key={idx} className="break-words">• {item}</li>
                         ))}
                       </ul>
                     </div>
@@ -9960,9 +9960,9 @@ const PMPApp = () => {
                         </svg>
                         Ineffective Approaches
                       </div>
-                      <ul className="text-gray-400 text-sm space-y-2 ml-7">
+                      <ul className="text-gray-400 text-sm space-y-2 ml-7 break-words">
                         {def.practice_comparison.ineffective && def.practice_comparison.ineffective.map((item, idx) => (
-                          <li key={idx}>• {item}</li>
+                          <li key={idx} className="break-words">• {item}</li>
                         ))}
                       </ul>
                     </div>
@@ -9992,7 +9992,7 @@ const PMPApp = () => {
                     })}
                   </div>
                   {def.why_matters.note && (
-                    <p className="text-gray-400 text-sm text-center mt-4 italic">{def.why_matters.note}</p>
+                    <p className="text-gray-400 text-sm text-center mt-4 italic break-words">{def.why_matters.note}</p>
                   )}
                 </div>
               )}
@@ -10000,7 +10000,7 @@ const PMPApp = () => {
               {/* Bottom Line Callout */}
               {def.bottom_line && (
                 <div className="bg-black/40 rounded-xl p-5 border-l-4 border-emerald-500">
-                  <p className="text-gray-200 text-lg" dangerouslySetInnerHTML={{__html: def.bottom_line.replace(/className/g, 'class')}} />
+                  <p className="text-gray-200 text-lg break-words" dangerouslySetInnerHTML={{__html: def.bottom_line.replace(/className/g, 'class')}} />
                 </div>
               )}
             </div>
@@ -10032,7 +10032,7 @@ const PMPApp = () => {
               <div className="bg-gradient-to-r from-amber-500/10 to-orange-500/10 rounded-xl p-5 border border-amber-500/20">
                 <div className="flex items-center gap-3 mb-2">
                   <div className="text-2xl">🎯</div>
-                  <p className="text-gray-200 text-lg" dangerouslySetInnerHTML={{__html: triggers.intro.replace(/className/g, 'class')}} />
+                  <p className="text-gray-200 text-lg break-words" dangerouslySetInnerHTML={{__html: triggers.intro.replace(/className/g, 'class')}} />
                 </div>
               </div>
 
@@ -10078,9 +10078,9 @@ const PMPApp = () => {
                     {triggers.question_patterns.map((pattern, idx) => (
                       <div key={idx} className="flex items-start gap-3 bg-black/20 rounded-lg p-4">
                         <div className="text-purple-400 font-mono text-sm bg-purple-500/20 px-2 py-1 rounded">{pattern.pattern}</div>
-                        <div>
-                          <p className="text-gray-300">{pattern.question}</p>
-                          <p className="text-purple-400 text-sm mt-1">→ {pattern.look_for}</p>
+                        <div className="break-words">
+                          <p className="text-gray-300 break-words">{pattern.question}</p>
+                          <p className="text-purple-400 text-sm mt-1 break-words">→ {pattern.look_for}</p>
                         </div>
                       </div>
                     ))}
@@ -10091,7 +10091,7 @@ const PMPApp = () => {
               {/* Quick Decision Tree */}
               {triggers.pro_tip && (
                 <div className="bg-black/40 rounded-xl p-5 border-l-4 border-amber-500">
-                  <p className="text-gray-200" dangerouslySetInnerHTML={{__html: triggers.pro_tip.replace(/className/g, 'class')}} />
+                  <p className="text-gray-200 break-words" dangerouslySetInnerHTML={{__html: triggers.pro_tip.replace(/className/g, 'class')}} />
                 </div>
               )}
             </div>
@@ -10145,7 +10145,7 @@ const PMPApp = () => {
                         <div key={idx} className="bg-black/30 rounded-xl p-4 text-center transform hover:scale-105 transition-transform">
                           <div className="text-4xl mb-3">{item.emoji}</div>
                           <div className={`${getItemColor(item.color)} font-bold`}>{item.name}</div>
-                          <p className="text-gray-400 text-xs mt-2">{item.description}</p>
+                          <p className="text-gray-400 text-xs mt-2 break-words">{item.description}</p>
                         </div>
                       );
                     })}
@@ -10185,8 +10185,8 @@ const PMPApp = () => {
                           return (
                             <tr key={idx} className={`border-b border-white/10 ${rowColors.bg}`}>
                               <td className={`p-3 ${rowColors.text} font-semibold`}>{row.approach}</td>
-                              <td className="p-3 text-gray-300">{row.when}</td>
-                              <td className="p-3 text-gray-300">{row.outcome}</td>
+                              <td className="p-3 text-gray-300 break-words">{row.when}</td>
+                              <td className="p-3 text-gray-300 break-words">{row.outcome}</td>
                               <td className="p-3 text-center"><span className={`${rowColors.stars} text-lg`}>{stars}</span></td>
                             </tr>
                           );
@@ -10217,7 +10217,7 @@ const PMPApp = () => {
                       return (
                         <div key={idx} className={`${refColors.bg} rounded-lg p-4 border ${refColors.border}`}>
                           <div className={`${refColors.text} font-semibold mb-2`}>{item.condition}</div>
-                          <p className="text-gray-300 text-sm">{item.answer}</p>
+                          <p className="text-gray-300 text-sm break-words">{item.answer}</p>
                         </div>
                       );
                     })}
@@ -10229,14 +10229,14 @@ const PMPApp = () => {
               {takeaways.memory_hook && (
                 <div className="bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-xl p-6 border border-purple-500/30">
                   <h4 className="text-lg font-semibold text-white mb-4 text-center">🧠 Memory Hook</h4>
-                  <p className="text-2xl text-center text-gray-200 font-light" dangerouslySetInnerHTML={{__html: takeaways.memory_hook.replace(/className/g, 'class')}} />
+                  <p className="text-2xl text-center text-gray-200 font-light break-words" dangerouslySetInnerHTML={{__html: takeaways.memory_hook.replace(/className/g, 'class')}} />
                 </div>
               )}
 
               {/* Bottom Line */}
               {takeaways.bottom_line && (
                 <div className="bg-black/40 rounded-xl p-5 border-l-4 border-emerald-500">
-                  <p className="text-gray-200 text-lg" dangerouslySetInnerHTML={{__html: takeaways.bottom_line.replace(/className/g, 'class')}} />
+                  <p className="text-gray-200 text-lg break-words" dangerouslySetInnerHTML={{__html: takeaways.bottom_line.replace(/className/g, 'class')}} />
                 </div>
               )}
             </div>
@@ -10262,7 +10262,7 @@ const PMPApp = () => {
             <div className="space-y-6">
               {scenarios.intro && (
                 <div className="bg-gradient-to-r from-purple-500/10 to-pink-500/10 rounded-xl p-5 border border-purple-500/20">
-                  <p className="text-gray-200" dangerouslySetInnerHTML={{__html: scenarios.intro.replace(/className/g, 'class')}} />
+                  <p className="text-gray-200 break-words" dangerouslySetInnerHTML={{__html: scenarios.intro.replace(/className/g, 'class')}} />
                 </div>
               )}
 
@@ -10277,7 +10277,7 @@ const PMPApp = () => {
                           <span className="bg-blue-500/30 text-blue-400 font-bold px-3 py-1 rounded-full text-sm">
                             {scenario.number}
                           </span>
-                          <span className="text-white font-semibold">{scenario.scenario}</span>
+                          <span className="text-white font-semibold break-words">{scenario.scenario}</span>
                         </div>
                       </div>
                       <div className="p-4 grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -10288,7 +10288,7 @@ const PMPApp = () => {
                             </svg>
                             RIGHT
                           </div>
-                          <p className="text-gray-300 text-sm">{scenario.right_answer}</p>
+                          <p className="text-gray-300 text-sm break-words">{scenario.right_answer}</p>
                         </div>
                         <div className="bg-red-500/10 rounded-lg p-4 border border-red-500/20">
                           <div className="text-red-400 font-semibold mb-2 flex items-center gap-2">
@@ -10297,7 +10297,7 @@ const PMPApp = () => {
                             </svg>
                             WRONG
                           </div>
-                          <p className="text-gray-300 text-sm">{scenario.wrong_answer}</p>
+                          <p className="text-gray-300 text-sm break-words">{scenario.wrong_answer}</p>
                         </div>
                       </div>
                     </div>
@@ -10308,7 +10308,7 @@ const PMPApp = () => {
               {/* Key Takeaway */}
               {scenarios.pattern_note && (
                 <div className="bg-black/40 rounded-xl p-5 border-l-4 border-purple-500">
-                  <p className="text-gray-200" dangerouslySetInnerHTML={{__html: scenarios.pattern_note.replace(/className/g, 'class')}} />
+                  <p className="text-gray-200 break-words" dangerouslySetInnerHTML={{__html: scenarios.pattern_note.replace(/className/g, 'class')}} />
                 </div>
               )}
             </div>
@@ -10494,7 +10494,7 @@ const PMPApp = () => {
         if (content.delegation_in_practice) {
           return (
             <div className="space-y-6">
-              <p className="text-gray-300">
+              <p className="text-gray-300 break-words">
                 These five techniques help you implement empowerment systematically in real projects:
               </p>
               
@@ -10505,12 +10505,12 @@ const PMPApp = () => {
                     <div className="bg-emerald-500/20 rounded-full w-8 h-8 flex items-center justify-center text-emerald-400 font-bold">1</div>
                     <h4 className="text-lg font-semibold text-emerald-400">The Delegation Checklist</h4>
                   </div>
-                  <p className="text-gray-300 mb-4">
+                  <p className="text-gray-300 mb-4 break-words">
                     Before delegating any significant task, confirm these five elements:
                   </p>
                   <div className="bg-black/30 rounded-lg p-4 space-y-2">
                     {content.delegation_in_practice.technique_1_delegation_checklist.map((item, idx) => (
-                      <div key={idx} className="flex items-center gap-3 text-gray-300">
+                      <div key={idx} className="flex items-center gap-3 text-gray-300 break-words">
                         <div className="text-emerald-400">□</div>
                         <span>{item}</span>
                       </div>
@@ -10530,7 +10530,7 @@ const PMPApp = () => {
                     <h4 className="text-lg font-semibold text-blue-400">Completed Staff Work</h4>
                   </div>
                   {content.delegation_in_practice.technique_2_completed_staff_work.principle && (
-                    <p className="text-gray-300 mb-4">
+                    <p className="text-gray-300 mb-4 break-words">
                       {content.delegation_in_practice.technique_2_completed_staff_work.principle} The four-level framework:
                     </p>
                   )}
@@ -10568,11 +10568,11 @@ const PMPApp = () => {
                     <div className="mt-4 space-y-2">
                       <div className="bg-red-500/10 rounded-lg p-3 border border-red-500/20">
                         <p className="text-red-400 text-sm font-semibold mb-1">Before (Dependency):</p>
-                        <p className="text-gray-300 text-sm italic">{content.delegation_in_practice.technique_2_completed_staff_work.before_dependency}</p>
+                        <p className="text-gray-300 text-sm italic break-words">{content.delegation_in_practice.technique_2_completed_staff_work.before_dependency}</p>
                       </div>
                       <div className="bg-emerald-500/10 rounded-lg p-3 border border-emerald-500/20">
                         <p className="text-emerald-400 text-sm font-semibold mb-1">After (Empowerment):</p>
-                        <p className="text-gray-300 text-sm italic">{content.delegation_in_practice.technique_2_completed_staff_work.after_empowerment}</p>
+                        <p className="text-gray-300 text-sm italic break-words">{content.delegation_in_practice.technique_2_completed_staff_work.after_empowerment}</p>
                       </div>
                     </div>
                   )}
@@ -10949,7 +10949,7 @@ const PMPApp = () => {
             <div className="space-y-6">
               {mistakes.intro && (
                 <div className="bg-gradient-to-r from-red-500/10 to-orange-500/10 rounded-xl p-5 border border-red-500/20">
-                  <p className="text-gray-200" dangerouslySetInnerHTML={{__html: mistakes.intro.replace(/className/g, 'class')}} />
+                  <p className="text-gray-200 break-words overflow-hidden" dangerouslySetInnerHTML={{__html: mistakes.intro.replace(/className/g, 'class')}} />
                 </div>
               )}
 
@@ -10963,10 +10963,10 @@ const PMPApp = () => {
                       </div>
                       <h4 className="text-red-400 font-semibold">{mistake.name}</h4>
                     </div>
-                    <p className="text-gray-300 text-sm mb-3">{mistake.description}</p>
+                    <p className="text-gray-300 text-sm mb-3 break-words">{mistake.description}</p>
                     <div className="bg-red-500/10 rounded-lg p-3 border border-red-500/20">
                       <p className="text-red-400 text-xs font-semibold mb-1">WHY IT FAILS:</p>
-                      <p className="text-gray-400 text-xs">{mistake.why_fails}</p>
+                      <p className="text-gray-400 text-xs break-words">{mistake.why_fails}</p>
                     </div>
                   </div>
                 ))}
@@ -10981,7 +10981,7 @@ const PMPApp = () => {
                       <div key={idx} className="text-center">
                         <div className="text-3xl mb-2">{pref.emoji}</div>
                         <div className="text-white font-semibold">{pref.name}</div>
-                        <p className="text-gray-400 text-sm mt-1">{pref.description}</p>
+                        <p className="text-gray-400 text-sm mt-1 break-words">{pref.description}</p>
                       </div>
                     ))}
                   </div>
@@ -10991,7 +10991,7 @@ const PMPApp = () => {
               {/* Exam Trap Alert */}
               {mistakes.exam_trap && (
                 <div className="bg-black/40 rounded-xl p-5 border-l-4 border-amber-500">
-                  <p className="text-gray-200" dangerouslySetInnerHTML={{__html: mistakes.exam_trap.replace(/className/g, 'class')}} />
+                  <p className="text-gray-200 break-words overflow-hidden" dangerouslySetInnerHTML={{__html: mistakes.exam_trap.replace(/className/g, 'class')}} />
                 </div>
               )}
             </div>
@@ -11072,7 +11072,7 @@ const PMPApp = () => {
                     <h4 className="text-xl font-bold text-blue-400">{frameworks.thomas_kilmann.title}</h4>
                     <span className="bg-blue-500/20 text-blue-400 text-xs px-2 py-1 rounded-full">PRIMARY FRAMEWORK</span>
                   </div>
-                  <p className="text-gray-300 mb-6">{frameworks.thomas_kilmann.subtitle}</p>
+                  <p className="text-gray-300 mb-6 break-words overflow-hidden">{frameworks.thomas_kilmann.subtitle}</p>
                   
                   {/* 5 Approaches Visual */}
                   <div className="grid grid-cols-1 md:grid-cols-5 gap-3">
@@ -11096,7 +11096,7 @@ const PMPApp = () => {
                             <div className={`${colors.text}/60 text-xs uppercase tracking-wide mt-1`}>{approach.subtitle}</div>
                           </div>
                           <div className={`mt-3 pt-3 border-t ${colors.border}`}>
-                            <p className="text-gray-400 text-xs text-center">{approach.assertiveness}</p>
+                            <p className="text-gray-400 text-xs text-center break-words">{approach.assertiveness}</p>
                           </div>
                           <div className={`mt-2 ${colors.badge} rounded-lg p-2`}>
                             <p className={`${colors.text} text-xs text-center font-semibold`}>{approach.badge}</p>
@@ -11115,7 +11115,7 @@ const PMPApp = () => {
                           <span className={approach.color === 'emerald' ? 'text-emerald-400' : approach.color === 'amber' ? 'text-amber-400' : approach.color === 'blue' ? 'text-blue-400' : approach.color === 'red' ? 'text-red-400' : 'text-gray-400'}>
                             {approach.emoji}
                           </span>
-                          <span className="text-gray-300">
+                          <span className="text-gray-300 break-words">
                             <strong className={approach.color === 'emerald' ? 'text-emerald-400' : approach.color === 'amber' ? 'text-amber-400' : approach.color === 'blue' ? 'text-blue-400' : approach.color === 'red' ? 'text-red-400' : 'text-gray-400'}>
                               {approach.name}:
                             </strong> {approach.when_to_use}
@@ -11131,7 +11131,7 @@ const PMPApp = () => {
               {frameworks.escalation_ladder && (
                 <div className="bg-white/5 rounded-xl p-6 border border-white/10">
                   <h4 className="text-lg font-semibold text-orange-400 mb-4">📈 {frameworks.escalation_ladder.title}</h4>
-                  <p className="text-gray-300 mb-4">{frameworks.escalation_ladder.description}</p>
+                  <p className="text-gray-300 mb-4 break-words overflow-hidden">{frameworks.escalation_ladder.description}</p>
                   
                   <div className="relative">
                     <div className="absolute left-6 top-0 bottom-0 w-1 bg-gradient-to-b from-emerald-500 via-amber-500 to-red-500 rounded-full"></div>
@@ -11157,7 +11157,7 @@ const PMPApp = () => {
                                 <span className={`${levelColors.text} font-semibold`}>Level {level.level}: {level.name}</span>
                                 {level.badge && <span className={`${levelColors.text}/60 text-xs`}>{level.badge}</span>}
                               </div>
-                              <p className="text-gray-400 text-sm mt-1">{level.description}</p>
+                              <p className="text-gray-400 text-sm mt-1 break-words">{level.description}</p>
                             </div>
                           </div>
                         );
@@ -11171,7 +11171,7 @@ const PMPApp = () => {
               {frameworks.sources_of_conflict && (
                 <div className="bg-white/5 rounded-xl p-6 border border-white/10">
                   <h4 className="text-lg font-semibold text-cyan-400 mb-4">🔍 {frameworks.sources_of_conflict.title}</h4>
-                  <p className="text-gray-400 text-sm mb-4">{frameworks.sources_of_conflict.description}</p>
+                  <p className="text-gray-400 text-sm mb-4 break-words overflow-hidden">{frameworks.sources_of_conflict.description}</p>
                   
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                     {frameworks.sources_of_conflict.sources && frameworks.sources_of_conflict.sources.map((source, idx) => (
@@ -11195,7 +11195,7 @@ const PMPApp = () => {
               {/* Memory Aid */}
               {frameworks.memory_aid && (
                 <div className="bg-black/40 rounded-xl p-5 border-l-4 border-blue-500">
-                  <p className="text-gray-200" dangerouslySetInnerHTML={{__html: frameworks.memory_aid.replace(/className/g, 'class')}} />
+                  <p className="text-gray-200 break-words overflow-hidden" dangerouslySetInnerHTML={{__html: frameworks.memory_aid.replace(/className/g, 'class')}} />
                 </div>
               )}
             </div>
@@ -11685,13 +11685,13 @@ const PMPApp = () => {
                             {step.yes && (
                               <div className={`${getAnswerColor(step.yes.color).bg} rounded-lg p-3 border ${getAnswerColor(step.yes.color).border}`}>
                                 <span className={`${getAnswerColor(step.yes.color).text} font-semibold`}>YES →</span>
-                                <span className="text-gray-300 text-sm"> {step.yes.text}</span>
+                                <span className="text-gray-300 text-sm break-words"> {step.yes.text}</span>
                               </div>
                             )}
                             {step.no && (
                               <div className={`${getAnswerColor(step.no.color).bg} rounded-lg p-3 border ${getAnswerColor(step.no.color).border}`}>
                                 <span className={`${getAnswerColor(step.no.color).text} font-semibold`}>NO →</span>
-                                <span className="text-gray-300 text-sm"> {step.no.text}</span>
+                                <span className="text-gray-300 text-sm break-words"> {step.no.text}</span>
                               </div>
                             )}
                           </div>
@@ -11732,7 +11732,7 @@ const PMPApp = () => {
                           return (
                             <tr key={idx} className="border-b border-white/10">
                               <td className={`p-3 ${getKeywordColor(row.color)} font-semibold`}>{row.keyword}</td>
-                              <td className="p-3 text-gray-300">{row.answer}</td>
+                              <td className="p-3 text-gray-300 break-words">{row.answer}</td>
                             </tr>
                           );
                         })}
@@ -11754,7 +11754,7 @@ const PMPApp = () => {
                         {strategy.do_vs_dont.do && strategy.do_vs_dont.do.map((item, idx) => (
                           <li key={idx} className="flex items-start gap-2">
                             <span className="text-emerald-400">✓</span>
-                            <span>{item}</span>
+                            <span className="break-words">{item}</span>
                           </li>
                         ))}
                       </ul>
@@ -11766,7 +11766,7 @@ const PMPApp = () => {
                         {strategy.do_vs_dont.dont && strategy.do_vs_dont.dont.map((item, idx) => (
                           <li key={idx} className="flex items-start gap-2">
                             <span className="text-red-400">✗</span>
-                            <span>{item}</span>
+                            <span className="break-words">{item}</span>
                           </li>
                         ))}
                       </ul>
@@ -11787,7 +11787,7 @@ const PMPApp = () => {
                           <span className="text-red-400 text-xl">⚠️</span>
                           <div>
                             <div className="text-white font-semibold">{trap.title}</div>
-                            <p className="text-gray-400 text-sm mt-1">{trap.description}</p>
+                            <p className="text-gray-400 text-sm mt-1 break-words">{trap.description}</p>
                           </div>
                         </div>
                       </div>
@@ -11819,14 +11819,14 @@ const PMPApp = () => {
                       );
                     })}
                   </p>
-                  <p className="text-gray-400 text-center text-sm mt-3">{strategy.memory_mantra.subtitle}</p>
+                  <p className="text-gray-400 text-center text-sm mt-3 break-words">{strategy.memory_mantra.subtitle}</p>
                 </div>
               )}
 
               {/* Bottom Line */}
               {strategy.bottom_line && (
                 <div className="bg-black/40 rounded-xl p-5 border-l-4 border-emerald-500">
-                  <p className="text-gray-200 text-lg" dangerouslySetInnerHTML={{__html: strategy.bottom_line.replace(/className/g, 'class')}} />
+                  <p className="text-gray-200 text-lg break-words overflow-hidden" dangerouslySetInnerHTML={{__html: strategy.bottom_line.replace(/className/g, 'class')}} />
                 </div>
               )}
             </div>
@@ -12004,7 +12004,7 @@ const PMPApp = () => {
                       {content.signal_words.correct.map((item, idx) => (
                         <li key={idx} className="text-slate-300 flex items-start gap-2">
                           <span className="text-cyan-400 mt-1">•</span>
-                          <span>{item}</span>
+                          <span className="break-words">{item}</span>
                         </li>
                       ))}
                     </ul>
@@ -12017,7 +12017,7 @@ const PMPApp = () => {
                       {content.signal_words.wrong.map((item, idx) => (
                         <li key={idx} className="text-slate-300 flex items-start gap-2">
                           <span className="text-orange-400 mt-1">•</span>
-                          <span>{item}</span>
+                          <span className="break-words">{item}</span>
                         </li>
                       ))}
                     </ul>
@@ -12103,7 +12103,7 @@ const PMPApp = () => {
                         <div key={idx} className="bg-black/30 rounded-xl p-4 text-center">
                           <div className={`text-4xl font-bold ${getColor(step.color)} mb-2`}>{step.letter}</div>
                           <div className="text-white font-semibold">{step.name}</div>
-                          <p className="text-gray-400 text-sm mt-2">{step.description}</p>
+                          <p className="text-gray-400 text-sm mt-2 break-words">{step.description}</p>
                         </div>
                       );
                     })}
@@ -12140,10 +12140,10 @@ const PMPApp = () => {
                             </div>
                             <div>
                               <h5 className={`${stepColors.text} font-semibold`}>{step.title}</h5>
-                              <p className="text-gray-400 text-sm mt-1">{step.description}</p>
+                              <p className="text-gray-400 text-sm mt-1 break-words">{step.description}</p>
                               {step.example && (
                                 <div className={`${stepColors.card} rounded-lg p-3 mt-2 border ${stepColors.border}`}>
-                                  <p className="text-gray-300 text-sm italic">{step.example}</p>
+                                  <p className="text-gray-300 text-sm italic break-words">{step.example}</p>
                                 </div>
                               )}
                             </div>
@@ -12177,7 +12177,7 @@ const PMPApp = () => {
                           <div className={`${catColors.text} font-semibold mb-2`}>{category.name}</div>
                           <ul className="text-gray-300 text-sm space-y-2">
                             {category.phrases && category.phrases.map((phrase, pIdx) => (
-                              <li key={pIdx}>{phrase}</li>
+                              <li key={pIdx} className="break-words">{phrase}</li>
                             ))}
                           </ul>
                         </div>
@@ -12190,7 +12190,7 @@ const PMPApp = () => {
               {/* Pro Tip */}
               {howTo.pro_tip && (
                 <div className="bg-black/40 rounded-xl p-5 border-l-4 border-emerald-500">
-                  <p className="text-gray-200" dangerouslySetInnerHTML={{__html: howTo.pro_tip.replace(/className/g, 'class')}} />
+                  <p className="text-gray-200 break-words overflow-hidden" dangerouslySetInnerHTML={{__html: howTo.pro_tip.replace(/className/g, 'class')}} />
                 </div>
               )}
             </div>
@@ -12435,8 +12435,8 @@ const PMPApp = () => {
                             <span className={`${colors.badge} ${colors.text} text-xs font-bold px-2 py-1 rounded`}>{pattern.pattern}</span>
                             <span className="text-white font-semibold">{pattern.name}</span>
                           </div>
-                          <p className="text-gray-400 text-sm">{pattern.question}</p>
-                          <p className={`${colors.text} text-xs mt-2`}>→ {pattern.tests}</p>
+                          <p className="text-gray-400 text-sm break-words">{pattern.question}</p>
+                          <p className={`${colors.text} text-xs mt-2 break-words`}>→ {pattern.tests}</p>
                         </div>
                       );
                     })}
@@ -12466,7 +12466,7 @@ const PMPApp = () => {
                           <h5 className={`${expColors.text} font-semibold text-center mb-2`}>{expectation.title}</h5>
                           <ul className="text-gray-400 text-sm space-y-1">
                             {expectation.items && expectation.items.map((item, iIdx) => (
-                              <li key={iIdx}>• {item}</li>
+                              <li key={iIdx} className="break-words">• {item}</li>
                             ))}
                           </ul>
                         </div>
@@ -12482,13 +12482,13 @@ const PMPApp = () => {
                   <h4 className="text-lg font-semibold text-amber-400 mb-4">💭 The PMI Mindset for Conflict Questions</h4>
                   
                   <div className="bg-black/30 rounded-lg p-5">
-                    <p className="text-gray-200 text-lg leading-relaxed" dangerouslySetInnerHTML={{__html: tested.pmi_mindset.intro.replace(/className/g, 'class')}} />
+                    <p className="text-gray-200 text-lg leading-relaxed break-words overflow-hidden" dangerouslySetInnerHTML={{__html: tested.pmi_mindset.intro.replace(/className/g, 'class')}} />
                     
                     <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-3">
                       {tested.pmi_mindset.checklist && tested.pmi_mindset.checklist.map((item, idx) => (
                         <div key={idx} className="flex items-center gap-2 text-gray-300">
                           <span className="text-emerald-400">✓</span>
-                          <span>{item}</span>
+                          <span className="break-words">{item}</span>
                         </div>
                       ))}
                     </div>
@@ -12499,7 +12499,7 @@ const PMPApp = () => {
               {/* Pro Tip */}
               {tested.pro_tip && (
                 <div className="bg-black/40 rounded-xl p-5 border-l-4 border-blue-500">
-                  <p className="text-gray-200" dangerouslySetInnerHTML={{__html: tested.pro_tip.replace(/className/g, 'class')}} />
+                  <p className="text-gray-200 break-words overflow-hidden" dangerouslySetInnerHTML={{__html: tested.pro_tip.replace(/className/g, 'class')}} />
                 </div>
               )}
             </div>
@@ -12586,14 +12586,14 @@ const PMPApp = () => {
                       <span className={`${headerColors.badge} ${headerColors.text} font-bold px-3 py-1 rounded-full text-sm`}>
                         Question {questionNum}
                       </span>
-                      <span className="text-gray-400 text-sm">{question.title}</span>
+                      <span className="text-gray-400 text-sm break-words">{question.title}</span>
                     </div>
                     <span className="text-gray-500 text-sm">Difficulty: {question.difficulty}</span>
                   </div>
                 </div>
                 
                 <div className="p-6">
-                  <p className="text-gray-200 text-lg leading-relaxed" dangerouslySetInnerHTML={{__html: question.question.replace(/className/g, 'class')}} />
+                  <p className="text-gray-200 text-lg leading-relaxed break-words" dangerouslySetInnerHTML={{__html: question.question.replace(/className/g, 'class')}} />
                 </div>
               </div>
 
@@ -12605,7 +12605,7 @@ const PMPApp = () => {
                       <span className="bg-gray-500/30 text-gray-400 font-bold px-3 py-1 rounded-full text-sm">
                         {String.fromCharCode(65 + optIdx)}
                       </span>
-                      <p className="text-gray-300">{opt}</p>
+                      <p className="text-gray-300 break-words">{opt}</p>
                     </div>
                   </div>
                 ))}
@@ -12622,15 +12622,15 @@ const PMPApp = () => {
                   <span className="text-emerald-400 font-bold text-xl">Correct Answer: {question.correct_answer}</span>
                 </div>
                 
-                <p className="text-gray-300 mb-4">{question.correct_text}</p>
+                <p className="text-gray-300 mb-4 break-words">{question.correct_text}</p>
                 
                 <div className="bg-black/30 rounded-lg p-4">
                   <h5 className="text-white font-semibold mb-2">Why This Is Correct:</h5>
                   <ul className="text-gray-400 text-sm space-y-2">
-                    {question.why_correct && question.why_correct.map((item, idx) => (
+                        {question.why_correct && question.why_correct.map((item, idx) => (
                       <li key={idx} className="flex items-start gap-2">
                         <span className="text-emerald-400 mt-1">✓</span>
-                        <span><strong className="text-gray-300">{item.point}</strong> {item.detail}</span>
+                        <span className="break-words"><strong className="text-gray-300 break-words">{item.point}</strong> {item.detail}</span>
                       </li>
                     ))}
                   </ul>
@@ -12647,7 +12647,7 @@ const PMPApp = () => {
                       <div className="text-red-400 font-semibold mb-2">{question.positions_vs_interests.positions.title}</div>
                       <ul className="text-gray-400 text-sm space-y-1">
                         {question.positions_vs_interests.positions.examples && question.positions_vs_interests.positions.examples.map((ex, idx) => (
-                          <li key={idx}>• {ex}</li>
+                          <li key={idx} className="break-words">• {ex}</li>
                         ))}
                       </ul>
                       <p className="text-red-400/70 text-xs mt-2">{question.positions_vs_interests.positions.note}</p>
@@ -12656,14 +12656,14 @@ const PMPApp = () => {
                       <div className="text-emerald-400 font-semibold mb-2">{question.positions_vs_interests.interests.title}</div>
                       <ul className="text-gray-400 text-sm space-y-1">
                         {question.positions_vs_interests.interests.examples && question.positions_vs_interests.interests.examples.map((ex, idx) => (
-                          <li key={idx}>• {ex}</li>
+                          <li key={idx} className="break-words">• {ex}</li>
                         ))}
                       </ul>
                       <p className="text-emerald-400/70 text-xs mt-2">{question.positions_vs_interests.interests.note}</p>
                     </div>
                   </div>
                   
-                  <p className="text-gray-300 text-sm">
+                  <p className="text-gray-300 text-sm break-words">
                     <strong className="text-amber-400">Solution:</strong> {question.positions_vs_interests.solution}
                   </p>
                 </div>
@@ -12679,7 +12679,7 @@ const PMPApp = () => {
                       <div className="text-red-400 font-semibold mb-2">{question.observation_feedback.vague.title}</div>
                       <ul className="text-gray-400 text-sm space-y-2">
                         {question.observation_feedback.vague.examples && question.observation_feedback.vague.examples.map((ex, idx) => (
-                          <li key={idx}>{ex}</li>
+                          <li key={idx} className="break-words">{ex}</li>
                         ))}
                       </ul>
                       <p className="text-red-400/70 text-xs mt-2">{question.observation_feedback.vague.note}</p>
@@ -12688,7 +12688,7 @@ const PMPApp = () => {
                       <div className="text-emerald-400 font-semibold mb-2">{question.observation_feedback.specific.title}</div>
                       <ul className="text-gray-400 text-sm space-y-2">
                         {question.observation_feedback.specific.examples && question.observation_feedback.specific.examples.map((ex, idx) => (
-                          <li key={idx}>{ex}</li>
+                          <li key={idx} className="break-words">{ex}</li>
                         ))}
                       </ul>
                       <p className="text-emerald-400/70 text-xs mt-2">{question.observation_feedback.specific.note}</p>
@@ -12710,7 +12710,7 @@ const PMPApp = () => {
                           <span className="text-gray-400">|</span>
                           <span className="text-gray-300">{wrong.text}</span>
                         </div>
-                        <p className="text-gray-400 text-sm" dangerouslySetInnerHTML={{__html: wrong.reason.replace(/className/g, 'class')}} />
+                        <p className="text-gray-400 text-sm break-words overflow-hidden" dangerouslySetInnerHTML={{__html: wrong.reason.replace(/className/g, 'class')}} />
                       </div>
                     ))}
                   </div>
@@ -12720,7 +12720,7 @@ const PMPApp = () => {
               {/* Key Takeaway */}
               {question.key_takeaway && (
                 <div className="bg-black/40 rounded-xl p-5 border-l-4 border-blue-500">
-                  <p className="text-gray-200" dangerouslySetInnerHTML={{__html: question.key_takeaway.replace(/className/g, 'class')}} />
+                  <p className="text-gray-200 break-words overflow-hidden" dangerouslySetInnerHTML={{__html: question.key_takeaway.replace(/className/g, 'class')}} />
                 </div>
               )}
             </div>
@@ -13514,7 +13514,7 @@ const PMPApp = () => {
                   <div className="text-center">
                     <div className="text-5xl mb-4">{intro.hero_statement.emoji}</div>
                     <h3 className="text-2xl font-bold text-white mb-4">{intro.hero_statement.title}</h3>
-                    <p className="text-xl text-gray-300 leading-relaxed max-w-3xl mx-auto" dangerouslySetInnerHTML={{__html: intro.hero_statement.text.replace(/className/g, 'class')}} />
+                    <p className="text-xl text-gray-300 leading-relaxed max-w-3xl mx-auto break-words overflow-hidden" dangerouslySetInnerHTML={{__html: intro.hero_statement.text.replace(/className/g, 'class')}} />
                   </div>
                 </div>
               )}
@@ -13532,7 +13532,7 @@ const PMPApp = () => {
                           {intro.why_matters.high_conflict_teams.items && intro.why_matters.high_conflict_teams.items.map((item, idx) => (
                             <li key={idx} className="flex items-start gap-2">
                               <span className="text-emerald-400">→</span>
-                              <span>{item}</span>
+                              <span className="break-words">{item}</span>
                             </li>
                           ))}
                         </ul>
@@ -13545,7 +13545,7 @@ const PMPApp = () => {
                           {intro.why_matters.low_conflict_teams.items && intro.why_matters.low_conflict_teams.items.map((item, idx) => (
                             <li key={idx} className="flex items-start gap-2">
                               <span className="text-red-400">→</span>
-                              <span>{item}</span>
+                              <span className="break-words">{item}</span>
                             </li>
                           ))}
                         </ul>
@@ -13560,7 +13560,7 @@ const PMPApp = () => {
                 <div className="bg-white/5 rounded-xl p-6 border border-white/10">
                   <h4 className="text-lg font-semibold text-cyan-400 mb-4">{intro.pm_role.title}</h4>
                   
-                  <p className="text-gray-300 mb-4" dangerouslySetInnerHTML={{__html: intro.pm_role.intro.replace(/className/g, 'class')}} />
+                  <p className="text-gray-300 mb-4 break-words overflow-hidden" dangerouslySetInnerHTML={{__html: intro.pm_role.intro.replace(/className/g, 'class')}} />
                   
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     {intro.pm_role.roles && intro.pm_role.roles.map((role, idx) => {
@@ -13577,7 +13577,7 @@ const PMPApp = () => {
                         <div key={idx} className={`${roleColors.bg} rounded-lg p-4 border ${roleColors.border} text-center`}>
                           <div className="text-3xl mb-2">{role.emoji}</div>
                           <div className={`${roleColors.text} font-semibold`}>{role.title}</div>
-                          <p className="text-gray-400 text-sm mt-2">{role.description}</p>
+                          <p className="text-gray-400 text-sm mt-2 break-words">{role.description}</p>
                         </div>
                       );
                     })}
@@ -13636,7 +13636,7 @@ const PMPApp = () => {
                     </div>
                   </div>
                   
-                  <p className="text-gray-300 mb-4" dangerouslySetInnerHTML={{__html: tk.framework_overview.description.replace(/className/g, 'class')}} />
+                  <p className="text-gray-300 mb-4 break-words overflow-hidden" dangerouslySetInnerHTML={{__html: tk.framework_overview.description.replace(/className/g, 'class')}} />
                 </div>
               )}
 
@@ -13673,25 +13673,25 @@ const PMPApp = () => {
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                           <div className="bg-black/30 rounded-lg p-4">
                             <div className="text-white font-semibold mb-2">When to Use</div>
-                            <ul className="text-gray-400 text-sm space-y-1">
+                            <ul className="text-gray-400 text-sm space-y-1 break-words">
                               {mode.when_to_use && mode.when_to_use.map((item, iIdx) => (
-                                <li key={iIdx}>• {item}</li>
+                                <li key={iIdx} className="break-words">• {item}</li>
                               ))}
                             </ul>
                           </div>
                           <div className="bg-black/30 rounded-lg p-4">
                             <div className="text-white font-semibold mb-2">What It Sounds Like</div>
-                            <ul className="text-gray-400 text-sm space-y-1 italic">
+                            <ul className="text-gray-400 text-sm space-y-1 italic break-words">
                               {mode.what_it_sounds_like && mode.what_it_sounds_like.map((item, iIdx) => (
-                                <li key={iIdx}>{item}</li>
+                                <li key={iIdx} className="break-words">{item}</li>
                               ))}
                             </ul>
                           </div>
                           <div className="bg-black/30 rounded-lg p-4">
                             <div className="text-white font-semibold mb-2">Watch Out For</div>
-                            <ul className="text-gray-400 text-sm space-y-1">
+                            <ul className="text-gray-400 text-sm space-y-1 break-words">
                               {mode.watch_out_for && mode.watch_out_for.map((item, iIdx) => (
-                                <li key={iIdx}>• {item}</li>
+                                <li key={iIdx} className="break-words">• {item}</li>
                               ))}
                             </ul>
                           </div>
@@ -13705,7 +13705,7 @@ const PMPApp = () => {
               {/* Selection Guide */}
               {tk.selection_rule && (
                 <div className="bg-black/40 rounded-xl p-5 border-l-4 border-blue-500">
-                  <p className="text-gray-200" dangerouslySetInnerHTML={{__html: tk.selection_rule.replace(/className/g, 'class')}} />
+                  <p className="text-gray-200 break-words overflow-hidden" dangerouslySetInnerHTML={{__html: tk.selection_rule.replace(/className/g, 'class')}} />
                 </div>
               )}
             </div>
@@ -13730,7 +13730,7 @@ const PMPApp = () => {
                     </div>
                   </div>
                   
-                  <p className="text-gray-300 mb-6">{ei.framework.intro}</p>
+                  <p className="text-gray-300 mb-6 break-words overflow-hidden">{ei.framework.intro}</p>
 
                   {/* Four Quadrants */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -13751,13 +13751,13 @@ const PMPApp = () => {
                             <span className={`${quadColors.badge} ${quadColors.text} px-2 py-1 rounded text-xs font-bold`}>{quadrant.category}</span>
                             <span className={`${quadColors.text} font-semibold`}>{quadrant.title}</span>
                           </div>
-                          <p className="text-gray-400 text-sm mb-3">{quadrant.description}</p>
+                          <p className="text-gray-400 text-sm mb-3 break-words">{quadrant.description}</p>
                           {quadrant.in_conflict && (
                             <div className="bg-black/30 rounded-lg p-3">
                               <p className="text-gray-300 text-sm font-medium mb-2">{quadrant.in_conflict.title}</p>
-                              <ul className="text-gray-400 text-xs space-y-1">
+                              <ul className="text-gray-400 text-xs space-y-1 break-words">
                                 {quadrant.in_conflict.items && quadrant.in_conflict.items.map((item, iIdx) => (
-                                  <li key={iIdx}>• {item}</li>
+                                  <li key={iIdx} className="break-words">• {item}</li>
                                 ))}
                               </ul>
                             </div>
@@ -13774,14 +13774,14 @@ const PMPApp = () => {
                 <div className="bg-white/5 rounded-xl p-6 border border-white/10">
                   <h4 className="text-lg font-semibold text-red-400 mb-4">{ei.emotional_triggers.title}</h4>
                   
-                  <p className="text-gray-300 mb-4">{ei.emotional_triggers.intro}</p>
+                  <p className="text-gray-300 mb-4 break-words overflow-hidden">{ei.emotional_triggers.intro}</p>
                   
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                     {ei.emotional_triggers.triggers && ei.emotional_triggers.triggers.map((trigger, idx) => (
                       <div key={idx} className="bg-red-500/10 rounded-lg p-3 border border-red-500/20 text-center">
                         <div className="text-xl mb-1">{trigger.emoji}</div>
-                        <div className="text-red-400 text-sm font-semibold">{trigger.title}</div>
-                        <div className="text-gray-500 text-xs">{trigger.example}</div>
+                        <div className="text-red-400 text-sm font-semibold break-words">{trigger.title}</div>
+                        <div className="text-gray-500 text-xs break-words">{trigger.example}</div>
                       </div>
                     ))}
                   </div>
@@ -13815,7 +13815,7 @@ const PMPApp = () => {
                           <span className="text-cyan-400 text-xl">{technique.emoji}</span>
                           <span className="text-white font-semibold">{technique.title}</span>
                         </div>
-                        <p className="text-gray-400 text-sm">{technique.description}</p>
+                        <p className="text-gray-400 text-sm break-words">{technique.description}</p>
                       </div>
                     ))}
                   </div>
@@ -13825,7 +13825,7 @@ const PMPApp = () => {
               {/* Pro Tip */}
               {ei.pro_tip && (
                 <div className="bg-black/40 rounded-xl p-5 border-l-4 border-pink-500">
-                  <p className="text-gray-200" dangerouslySetInnerHTML={{__html: ei.pro_tip.replace(/className/g, 'class')}} />
+                  <p className="text-gray-200 break-words overflow-hidden" dangerouslySetInnerHTML={{__html: ei.pro_tip.replace(/className/g, 'class')}} />
                 </div>
               )}
             </div>
@@ -13868,7 +13868,7 @@ const PMPApp = () => {
                           <div className="text-white font-semibold mb-2">{step.title}</div>
                           <p className="text-gray-400 text-sm">{step.description}</p>
                           <div className={`mt-3 ${coinColors.bg} rounded-lg p-2`}>
-                            <p className={`${coinColors.text} text-xs italic`}>{step.example}</p>
+                            <p className={`${coinColors.text} text-xs italic break-words`}>{step.example}</p>
                           </div>
                         </div>
                       );
@@ -13901,8 +13901,8 @@ const PMPApp = () => {
                           </div>
                           <div>
                             <div className="text-white font-semibold">{step.title}</div>
-                            <p className="text-gray-400 text-sm">{step.description}</p>
-                            <p className={`${descColors.text} text-sm italic mt-1`}>{step.example}</p>
+                            <p className="text-gray-400 text-sm break-words">{step.description}</p>
+                            <p className={`${descColors.text} text-sm italic mt-1 break-words`}>{step.example}</p>
                           </div>
                         </div>
                       );
@@ -13931,9 +13931,9 @@ const PMPApp = () => {
                       return (
                         <div key={idx} className={`${catColors.bg} rounded-lg p-4 border ${catColors.border}`}>
                           <div className={`${catColors.text} font-semibold mb-3`}>{category.title}</div>
-                          <ul className="text-gray-300 text-sm space-y-2">
+                          <ul className="text-gray-300 text-sm space-y-2 break-words">
                             {category.questions && category.questions.map((q, qIdx) => (
-                              <li key={qIdx}>{q}</li>
+                              <li key={qIdx} className="break-words">{q}</li>
                             ))}
                           </ul>
                         </div>
@@ -13946,7 +13946,7 @@ const PMPApp = () => {
               {/* Pro Tip */}
               {dc.pro_tip && (
                 <div className="bg-black/40 rounded-xl p-5 border-l-4 border-amber-500">
-                  <p className="text-gray-200" dangerouslySetInnerHTML={{__html: dc.pro_tip.replace(/className/g, 'class')}} />
+                  <p className="text-gray-200 break-words overflow-hidden" dangerouslySetInnerHTML={{__html: dc.pro_tip.replace(/className/g, 'class')}} />
                 </div>
               )}
             </div>
@@ -13962,7 +13962,7 @@ const PMPApp = () => {
             <div className="space-y-6">
               {cc.intro && (
                 <div className="bg-gradient-to-r from-red-500/10 to-orange-500/10 rounded-xl p-5 border border-red-500/20">
-                  <p className="text-gray-200" dangerouslySetInnerHTML={{__html: cc.intro.replace(/className/g, 'class')}} />
+                  <p className="text-gray-200 break-words overflow-hidden" dangerouslySetInnerHTML={{__html: cc.intro.replace(/className/g, 'class')}} />
                 </div>
               )}
 
@@ -13993,25 +13993,25 @@ const PMPApp = () => {
                           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                             <div className="bg-red-500/10 rounded-lg p-3">
                               <div className="text-red-400 font-semibold text-sm mb-2">Signs</div>
-                              <ul className="text-gray-400 text-xs space-y-1">
+                              <ul className="text-gray-400 text-xs space-y-1 break-words">
                                 {challenge.signs && challenge.signs.map((sign, sIdx) => (
-                                  <li key={sIdx}>• {sign}</li>
+                                  <li key={sIdx} className="break-words">• {sign}</li>
                                 ))}
                               </ul>
                             </div>
                             <div className="bg-blue-500/10 rounded-lg p-3">
                               <div className="text-blue-400 font-semibold text-sm mb-2">Why It Happens</div>
-                              <ul className="text-gray-400 text-xs space-y-1">
+                              <ul className="text-gray-400 text-xs space-y-1 break-words">
                                 {challenge.why && challenge.why.map((reason, rIdx) => (
-                                  <li key={rIdx}>• {reason}</li>
+                                  <li key={rIdx} className="break-words">• {reason}</li>
                                 ))}
                               </ul>
                             </div>
                             <div className="bg-emerald-500/10 rounded-lg p-3">
                               <div className="text-emerald-400 font-semibold text-sm mb-2">What to Do</div>
-                              <ul className="text-gray-400 text-xs space-y-1">
+                              <ul className="text-gray-400 text-xs space-y-1 break-words">
                                 {challenge.what_to_do && challenge.what_to_do.map((action, aIdx) => (
-                                  <li key={aIdx}>• {action}</li>
+                                  <li key={aIdx} className="break-words">• {action}</li>
                                 ))}
                               </ul>
                             </div>
@@ -14028,13 +14028,13 @@ const PMPApp = () => {
                 <div className="bg-gradient-to-br from-red-500/10 to-purple-500/10 rounded-xl p-6 border border-red-500/20">
                   <h4 className="text-lg font-semibold text-red-400 mb-4">{cc.when_to_escalate.title}</h4>
                   
-                  <p className="text-gray-300 mb-4">{cc.when_to_escalate.intro}</p>
+                  <p className="text-gray-300 mb-4 break-words overflow-hidden">{cc.when_to_escalate.intro}</p>
                   
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                     {cc.when_to_escalate.criteria && cc.when_to_escalate.criteria.map((criterion, idx) => (
                       <div key={idx} className="bg-black/30 rounded-lg p-3 text-center">
                         <div className="text-xl mb-1">{criterion.emoji}</div>
-                        <div className="text-gray-300 text-sm">{criterion.text}</div>
+                        <div className="text-gray-300 text-sm break-words">{criterion.text}</div>
                       </div>
                     ))}
                   </div>
@@ -14053,7 +14053,7 @@ const PMPApp = () => {
             <div className="space-y-6">
               {conn.intro && (
                 <div className="bg-gradient-to-r from-blue-500/10 to-purple-500/10 rounded-xl p-5 border border-blue-500/20">
-                  <p className="text-gray-200" dangerouslySetInnerHTML={{__html: conn.intro.replace(/className/g, 'class')}} />
+                  <p className="text-gray-200 break-words overflow-hidden" dangerouslySetInnerHTML={{__html: conn.intro.replace(/className/g, 'class')}} />
                 </div>
               )}
 
@@ -14097,7 +14097,7 @@ const PMPApp = () => {
                             Learn More →
                           </button>
                         </div>
-                        <p className="text-gray-400 text-sm">
+                        <p className="text-gray-400 text-sm break-words">
                           <span className="text-gray-300 font-medium">Connection:</span> {connection.connection}
                         </p>
                       </div>
@@ -14110,7 +14110,7 @@ const PMPApp = () => {
               {conn.agile_connection && (
                 <div className="bg-gradient-to-r from-blue-500/10 to-purple-500/10 rounded-xl p-6 border border-blue-500/20">
                   <h4 className="text-lg font-semibold text-white mb-3">{conn.agile_connection.title}</h4>
-                  <p className="text-gray-300" dangerouslySetInnerHTML={{__html: conn.agile_connection.text.replace(/className/g, 'class')}} />
+                  <p className="text-gray-300 break-words overflow-hidden" dangerouslySetInnerHTML={{__html: conn.agile_connection.text.replace(/className/g, 'class')}} />
                 </div>
               )}
             </div>
@@ -14133,7 +14133,7 @@ const PMPApp = () => {
                     {kt.ten_commandments.commandments && kt.ten_commandments.commandments.map((cmd, idx) => (
                       <div key={idx} className="flex items-start gap-3 bg-black/30 rounded-lg p-3">
                         <span className="bg-purple-500/30 text-purple-400 font-bold px-2 py-1 rounded text-sm">{cmd.number}</span>
-                        <span className="text-gray-300" dangerouslySetInnerHTML={{__html: cmd.text.replace(/className/g, 'class')}} />
+                        <span className="text-gray-300 break-words" dangerouslySetInnerHTML={{__html: cmd.text.replace(/className/g, 'class')}} />
                       </div>
                     ))}
                   </div>
@@ -14160,7 +14160,7 @@ const PMPApp = () => {
                         <div key={idx} className={`${cardColors.bg} rounded-lg p-4 border ${cardColors.border} text-center`}>
                           <div className="text-sm text-gray-400 mb-2">{card.label}</div>
                           <div className={`text-2xl font-bold ${cardColors.text}`}>{card.answer}</div>
-                          <div className="text-gray-500 text-xs mt-2">{card.detail}</div>
+                          <div className="text-gray-500 text-xs mt-2 break-words">{card.detail}</div>
                         </div>
                       );
                     })}
@@ -14173,8 +14173,8 @@ const PMPApp = () => {
                 <div className="bg-gradient-to-r from-emerald-500/20 to-blue-500/20 rounded-xl p-6 border border-emerald-500/30">
                   <h4 className="text-lg font-semibold text-white mb-4 text-center">{kt.ultimate_memory_hook.title}</h4>
                   <div className="text-center">
-                    <p className="text-2xl font-light mb-4" dangerouslySetInnerHTML={{__html: kt.ultimate_memory_hook.quote.replace(/className/g, 'class')}} />
-                    <p className="text-gray-400">{kt.ultimate_memory_hook.subtitle}</p>
+                    <p className="text-2xl font-light mb-4 break-words overflow-hidden" dangerouslySetInnerHTML={{__html: kt.ultimate_memory_hook.quote.replace(/className/g, 'class')}} />
+                    <p className="text-gray-400 break-words overflow-hidden">{kt.ultimate_memory_hook.subtitle}</p>
                   </div>
                 </div>
               )}
@@ -14182,7 +14182,7 @@ const PMPApp = () => {
               {/* Bottom Line */}
               {kt.bottom_line && (
                 <div className="bg-black/40 rounded-xl p-6 border-l-4 border-emerald-500">
-                  <p className="text-gray-200 text-lg" dangerouslySetInnerHTML={{__html: kt.bottom_line.replace(/className/g, 'class')}} />
+                  <p className="text-gray-200 text-lg break-words overflow-hidden" dangerouslySetInnerHTML={{__html: kt.bottom_line.replace(/className/g, 'class')}} />
                 </div>
               )}
             </div>
