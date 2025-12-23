@@ -71,13 +71,31 @@
           },
           "bottom_line": "<span className=\"text-emerald-400 font-bold\">Bottom Line:</span> The best project managers don't avoid conflict—they <span className=\"text-white font-semibold\"> create environments where disagreements lead to better outcomes</span>, not damaged relationships."
         },
-        "exam_triggers": [
-          "Two team members disagree",
-          "Stakeholder conflict",
-          "Resource allocation dispute",
-          "Technical approach disagreement",
-          "Scope change argument"
-        ],
+        "exam_triggers": {
+          "enhanced": true,
+          "intro": "When you see these <span className=\"text-amber-400 font-semibold\">trigger words</span> in a question, your brain should immediately shift into <span className=\"text-orange-400 font-semibold\">conflict management mode</span>.",
+          "high_alert_words": ["disagree", "argument", "tension", "heated", "frustrated", "clash", "dispute", "hostile", "confrontation", "resistance"],
+          "situation_triggers": ["two team members", "refuses to", "won't speak to", "avoiding each other", "complained about", "blame", "not cooperating", "personality conflict", "raised voices"],
+          "resolution_triggers": ["resolve", "mediate", "facilitate", "consensus", "common ground", "compromise", "collaborate", "negotiate", "de-escalate", "reconcile"],
+          "question_patterns": [
+            {
+              "pattern": "Pattern 1",
+              "question": "\"Two team members disagree about [technical approach]. What should the PM do FIRST?\"",
+              "look_for": "Look for: Understand root cause before acting"
+            },
+            {
+              "pattern": "Pattern 2",
+              "question": "\"A stakeholder is frustrated and confrontational in meetings. The PM should...\"",
+              "look_for": "Look for: Private conversation, understand concerns"
+            },
+            {
+              "pattern": "Pattern 3",
+              "question": "\"Team members are avoiding each other after a disagreement. What's the BEST approach?\"",
+              "look_for": "Look for: Facilitate dialogue, address underlying issues"
+            }
+          ],
+          "pro_tip": "When you see conflict triggers, ask yourself: <span className=\"text-white font-semibold\">\"What would a calm, emotionally intelligent PM do?\"</span> The answer is almost never \"escalate,\" \"avoid,\" or \"force a decision.\""
+        },
         "pmi_hierarchy": [
           {
             "rank": 1,
@@ -122,27 +140,344 @@
             "exam_tip": "Almost always the wrong answer"
           }
         ],
-        "quick_scenarios": [
-          {
-            "scenario": "Two developers argue over database architecture during Sprint planning",
-            "wrong_answer": "Let them work it out (Avoid)",
-            "right_answer": "Facilitate technical discussion to evaluate both approaches (Collaborate)",
-            "why": "Technical decisions benefit from collaborative problem-solving"
+        "quick_scenarios": {
+          "enhanced": true,
+          "intro": "<span className=\"text-purple-400 font-semibold\">Test your instincts:</span> For each scenario, identify the RIGHT approach and the WRONG approach. Think before revealing!",
+          "scenarios": [
+            {
+              "number": 1,
+              "scenario": "Two developers argue about code architecture in a team meeting.",
+              "right_answer": "Acknowledge both perspectives, take the detailed discussion offline, facilitate a focused technical review with relevant stakeholders.",
+              "wrong_answer": "Let the argument continue publicly, pick a winner on the spot, or dismiss the disagreement as unimportant.",
+              "gradient": "from-blue-500/20 to-purple-500/20"
+            },
+            {
+              "number": 2,
+              "scenario": "A stakeholder sends an angry email blaming your team for a delay.",
+              "right_answer": "Respond calmly, acknowledge their frustration, request a call to discuss and understand their concerns, then address the root cause.",
+              "wrong_answer": "Reply-all with a defensive response, ignore the email, or immediately escalate without attempting direct conversation.",
+              "gradient": "from-amber-500/20 to-orange-500/20"
+            },
+            {
+              "number": 3,
+              "scenario": "Two team members refuse to speak to each other after a disagreement.",
+              "right_answer": "Meet with each individually first to understand perspectives, then facilitate a structured conversation focused on moving forward.",
+              "wrong_answer": "Hope it resolves itself, force them into a room unprepared, or reassign one to avoid dealing with it.",
+              "gradient": "from-emerald-500/20 to-teal-500/20"
+            },
+            {
+              "number": 4,
+              "scenario": "A heated argument breaks out during sprint planning.",
+              "right_answer": "Call a brief break, let emotions cool, then resume with ground rules. Address the underlying issue separately if needed.",
+              "wrong_answer": "Let the argument continue, take sides publicly, or pretend nothing is happening and push through the agenda.",
+              "gradient": "from-red-500/20 to-pink-500/20"
+            },
+            {
+              "number": 5,
+              "scenario": "You discover a conflict exists but both parties deny there's a problem.",
+              "right_answer": "Share specific observations (not accusations), express concern for team dynamics, and create safety for honest conversation.",
+              "wrong_answer": "Accuse them of lying, drop it entirely, or gossip with others about the \"real\" situation.",
+              "gradient": "from-cyan-500/20 to-blue-500/20"
+            }
+          ],
+          "pattern_note": "Notice that the RIGHT approach always involves <span className=\"text-white font-semibold\"> understanding before acting</span>, <span className=\"text-white font-semibold\"> private before public</span>, and <span className=\"text-white font-semibold\"> facilitating rather than judging</span>."
+        },
+        "visual_note": "Display hierarchy as vertical flowchart with color coding: Green (Collaborate), Blue (Confront), Yellow (Compromise), Orange (Smooth), Red (Force), Gray (Avoid)",
+        "key_frameworks": {
+          "enhanced": true,
+          "thomas_kilmann": {
+            "title": "Thomas-Kilmann Conflict Model",
+            "subtitle": "The #1 framework for the PMP exam. Know these five approaches cold—when to use each, and what PMI prefers.",
+            "approaches": [
+              {
+                "name": "Collaborate",
+                "emoji": "🤝",
+                "subtitle": "Win-Win",
+                "assertiveness": "High assertiveness + High cooperation",
+                "badge": "⭐ PMI'S FAVORITE",
+                "color": "emerald",
+                "when_to_use": "Important issues, time available, need buy-in"
+              },
+              {
+                "name": "Compromise",
+                "emoji": "⚖️",
+                "subtitle": "Lose-Lose (Partial)",
+                "assertiveness": "Medium assertiveness + Medium cooperation",
+                "badge": "TIME-PRESSURED",
+                "color": "amber",
+                "when_to_use": "Moderate importance, time pressure, equal power"
+              },
+              {
+                "name": "Accommodate",
+                "emoji": "🎁",
+                "subtitle": "Lose-Win",
+                "assertiveness": "Low assertiveness + High cooperation",
+                "badge": "RELATIONSHIP PRIORITY",
+                "color": "blue",
+                "when_to_use": "Issue matters more to them, preserving relationship"
+              },
+              {
+                "name": "Force/Direct",
+                "emoji": "💪",
+                "subtitle": "Win-Lose",
+                "assertiveness": "High assertiveness + Low cooperation",
+                "badge": "EMERGENCIES ONLY",
+                "color": "red",
+                "when_to_use": "Emergency, safety, unpopular but necessary decisions"
+              },
+              {
+                "name": "Avoid/Withdraw",
+                "emoji": "🚶",
+                "subtitle": "Lose-Lose",
+                "assertiveness": "Low assertiveness + Low cooperation",
+                "badge": "COOLING OFF",
+                "color": "gray",
+                "when_to_use": "Trivial issue, need cool-down time, no chance of winning"
+              }
+            ]
           },
-          {
-            "scenario": "Team member consistently misses daily standup",
-            "wrong_answer": "Ignore it to avoid confrontation (Avoid)",
-            "right_answer": "Private conversation to understand root cause (Confront)",
-            "why": "Address issues directly with facts and empathy"
+          "escalation_ladder": {
+            "title": "Conflict Escalation Ladder",
+            "description": "Conflict escalates predictably. Recognize the stage to choose the right intervention:",
+            "levels": [
+              {
+                "level": 1,
+                "name": "Discomfort",
+                "color": "emerald",
+                "description": "Something feels off but nothing specific yet. Gut feeling.",
+                "badge": "EASIEST TO RESOLVE"
+              },
+              {
+                "level": 2,
+                "name": "Incidents",
+                "color": "lime",
+                "description": "Short, sharp exchanges. Might be isolated or recurring."
+              },
+              {
+                "level": 3,
+                "name": "Misunderstanding",
+                "color": "amber",
+                "description": "Motives are questioned. Assumptions fill information gaps."
+              },
+              {
+                "level": 4,
+                "name": "Tension",
+                "color": "orange",
+                "description": "Relationship is strained. Negative attitudes solidify."
+              },
+              {
+                "level": 5,
+                "name": "Crisis",
+                "color": "red",
+                "description": "Open hostility. Normal work is impossible. May need intervention.",
+                "badge": "HARDEST TO RESOLVE"
+              }
+            ]
           },
-          {
-            "scenario": "Client demands feature outside approved scope",
-            "wrong_answer": "Add it to keep client happy (Smooth)",
-            "right_answer": "Discuss scope, timeline, budget impact with client (Confront)",
-            "why": "Scope changes require honest discussion of trade-offs"
-          }
-        ],
-        "visual_note": "Display hierarchy as vertical flowchart with color coding: Green (Collaborate), Blue (Confront), Yellow (Compromise), Orange (Smooth), Red (Force), Gray (Avoid)"
+          "sources_of_conflict": {
+            "title": "Seven Sources of Project Conflict",
+            "description": "PMI identifies these as the most common conflict sources. Know them for the exam:",
+            "sources": [
+              {"emoji": "📅", "name": "Schedules", "rank": "#1 Source"},
+              {"emoji": "🎯", "name": "Priorities", "rank": "#2 Source"},
+              {"emoji": "👥", "name": "Resources", "rank": "#3 Source"},
+              {"emoji": "⚙️", "name": "Technical", "rank": "#4 Source"},
+              {"emoji": "📋", "name": "Admin", "rank": "#5 Source"},
+              {"emoji": "💰", "name": "Cost", "rank": "#6 Source"},
+              {"emoji": "😤", "name": "Personality", "rank": "#7 Source"}
+            ],
+            "exam_tip": {"emoji": "💡", "name": "Exam Tip", "description": "Focus on issue, not person"}
+          },
+          "memory_aid": "<span className=\"text-blue-400 font-bold\">Memory Aid:</span> For Thomas-Kilmann, think <span className=\"text-emerald-400 font-semibold\"> \"Collaborate First, Compromise if Rushed, Accommodate to Save Relationships, Force Only in Emergencies, Avoid to Cool Down.\"</span>"
+        },
+        "how_to_apply_it": {
+          "enhanced": true,
+          "pause_method": {
+            "title": "The PAUSE Method",
+            "subtitle": "YOUR GO-TO APPROACH",
+            "steps": [
+              {"letter": "P", "name": "Perceive", "description": "Notice the conflict early. Don't ignore warning signs.", "color": "emerald"},
+              {"letter": "A", "name": "Analyze", "description": "Understand root cause. What's really driving this?", "color": "teal"},
+              {"letter": "U", "name": "Understand", "description": "Get all perspectives. Listen before acting.", "color": "cyan"},
+              {"letter": "S", "name": "Strategize", "description": "Choose the right approach. Match to situation.", "color": "blue"},
+              {"letter": "E", "name": "Execute", "description": "Act decisively. Follow through completely.", "color": "purple"}
+            ]
+          },
+          "step_by_step_process": {
+            "title": "Step-by-Step Conflict Resolution",
+            "steps": [
+              {
+                "number": 1,
+                "title": "Acknowledge the Conflict",
+                "description": "Don't pretend it doesn't exist. Name it directly but neutrally.",
+                "example": "\"I've noticed some tension around the deployment timeline. Let's address it directly.\"",
+                "color": "amber"
+              },
+              {
+                "number": 2,
+                "title": "Create Safe Space",
+                "description": "Private setting. Neutral ground. No audience, no ambush.",
+                "example": "\"Can we grab a room and talk through this? Just the three of us, no agenda.\"",
+                "color": "orange"
+              },
+              {
+                "number": 3,
+                "title": "Listen to All Sides",
+                "description": "Equal airtime. No interruptions. Reflect back what you hear.",
+                "example": "\"Help me understand your perspective. What matters most to you here?\"",
+                "color": "blue"
+              },
+              {
+                "number": 4,
+                "title": "Find Common Ground",
+                "description": "What do both parties actually agree on? Start there.",
+                "example": "\"It sounds like you both want the release to succeed. You just disagree on how to get there.\"",
+                "color": "purple"
+              },
+              {
+                "number": 5,
+                "title": "Develop Options Together",
+                "description": "Brainstorm solutions. They create, you facilitate.",
+                "example": "\"What would need to be true for both of you to feel good about the outcome?\"",
+                "color": "emerald"
+              },
+              {
+                "number": 6,
+                "title": "Agree on Action & Follow Up",
+                "description": "Document the agreement. Schedule a check-in. Don't declare victory too soon.",
+                "example": "\"Let's capture what we agreed to. I'll check in with both of you next week to see how it's going.\"",
+                "color": "teal"
+              }
+            ]
+          },
+          "power_phrases": {
+            "title": "Power Phrases for Conflict Resolution",
+            "categories": [
+              {
+                "name": "Opening the Conversation",
+                "color": "cyan",
+                "phrases": [
+                  "\"Help me understand your perspective...\"",
+                  "\"I've noticed some tension and want to address it...\"",
+                  "\"What's most important to you in this situation?\""
+                ]
+              },
+              {
+                "name": "Finding Common Ground",
+                "color": "emerald",
+                "phrases": [
+                  "\"It sounds like you both want...\"",
+                  "\"What do you agree on?\"",
+                  "\"Where is there flexibility?\""
+                ]
+              },
+              {
+                "name": "De-escalating",
+                "color": "purple",
+                "phrases": [
+                  "\"Let's take a step back...\"",
+                  "\"I hear that this is frustrating...\"",
+                  "\"Can we focus on the problem, not each other?\""
+                ]
+              },
+              {
+                "name": "Moving Forward",
+                "color": "amber",
+                "phrases": [
+                  "\"What would a good outcome look like?\"",
+                  "\"What's one thing we can try?\"",
+                  "\"How will we know this is resolved?\""
+                ]
+              }
+            ]
+          },
+          "pro_tip": "The goal isn't to be the <span className=\"text-white font-semibold\"> judge </span>who decides who's right. It's to be the <span className=\"text-emerald-400 font-semibold\">facilitator</span> who helps them find a solution together."
+        },
+        "common_mistakes": {
+          "enhanced": true,
+          "intro": "These mistakes appear as <span className=\"text-white font-semibold\"> tempting but wrong </span> answer choices on the exam—and they'll derail you in real projects too.",
+          "mistakes": [
+            {
+              "emoji": "🙈",
+              "name": "The Avoider",
+              "description": "Hoping conflict will resolve itself. Ignoring tension. Pretending everything is fine.",
+              "why_fails": "Conflict festers and escalates. Small issues become major rifts. Trust erodes."
+            },
+            {
+              "emoji": "⚖️",
+              "name": "The Judge",
+              "description": "Quickly deciding who's right and wrong. Taking sides. Declaring winners and losers.",
+              "why_fails": "The \"loser\" disengages or retaliates. You're now part of the conflict. Future issues get hidden."
+            },
+            {
+              "emoji": "📢",
+              "name": "The Public Resolver",
+              "description": "Addressing personal conflicts in group settings. Calling people out in meetings.",
+              "why_fails": "Humiliates people. Forces defensive reactions. Damages psychological safety for everyone."
+            },
+            {
+              "emoji": "🚀",
+              "name": "The Escalator",
+              "description": "Immediately escalating to management before trying to resolve directly.",
+              "why_fails": "Makes you look ineffective. Damages your relationship with parties. Escalation should be last resort."
+            },
+            {
+              "emoji": "💨",
+              "name": "The Quick Fixer",
+              "description": "Jumping to solutions before understanding the real problem. \"Let's just split the difference.\"",
+              "why_fails": "Surface symptoms get addressed, root causes don't. Conflict resurfaces repeatedly."
+            },
+            {
+              "emoji": "🎭",
+              "name": "The Peacekeeper",
+              "description": "Smoothing over everything. \"Let's all just get along.\" Suppressing healthy disagreement.",
+              "why_fails": "Real issues go underground. Team loses ability to have productive disagreements. Groupthink sets in."
+            }
+          ],
+          "pmi_preferences": {
+            "title": "What PMI Prefers Instead",
+            "preferences": [
+              {"emoji": "🔍", "name": "Investigate First", "description": "Understand root cause before choosing an approach"},
+              {"emoji": "🤝", "name": "Facilitate, Don't Judge", "description": "Help parties find their own solution"},
+              {"emoji": "🎯", "name": "Address Early", "description": "Deal with issues when they're still small"}
+            ]
+          },
+          "exam_trap": "Wrong answers often sound decisive and action-oriented: <span className=\"text-gray-400 italic\"> \"Tell them to work it out,\" \"Escalate to HR,\" \"Make the decision for them.\"</span> The right answer usually involves <span className=\"text-emerald-400 font-semibold\">understanding first, then facilitating a collaborative solution</span>."
+        },
+        "key_takeaways": {
+          "enhanced": true,
+          "big_5": {
+            "title": "The Big 5: What You MUST Remember",
+            "items": [
+              {"emoji": "🤝", "name": "Collaborate First", "description": "PMI's preferred approach when time allows", "color": "emerald"},
+              {"emoji": "⏰", "name": "Early Is Better", "description": "Address conflict before it escalates", "color": "blue"},
+              {"emoji": "🔍", "name": "Understand First", "description": "Root cause before resolution", "color": "purple"},
+              {"emoji": "🚪", "name": "Private Settings", "description": "Personal conflicts need private space", "color": "amber"},
+              {"emoji": "❤️", "name": "Protect Relationships", "description": "Long-term collaboration > short-term win", "color": "rose"}
+            ]
+          },
+          "thomas_kilmann_cheat_sheet": {
+            "title": "Thomas-Kilmann Cheat Sheet",
+            "rows": [
+              {"approach": "Collaborate", "when": "Important issue, time available, need buy-in", "outcome": "Win-Win", "stars": 3, "color": "emerald"},
+              {"approach": "Compromise", "when": "Moderate importance, time pressure", "outcome": "Partial Win-Win", "stars": 2, "color": "amber"},
+              {"approach": "Accommodate", "when": "Issue matters more to them, save relationship", "outcome": "Lose-Win", "stars": 2, "color": "blue"},
+              {"approach": "Force", "when": "Emergency, safety, unpopular necessity", "outcome": "Win-Lose", "stars": 1, "color": "red"},
+              {"approach": "Avoid", "when": "Trivial issue, need cool-down, no chance", "outcome": "Lose-Lose", "stars": 1, "color": "gray"}
+            ]
+          },
+          "exam_quick_reference": {
+            "title": "Exam Quick Reference",
+            "items": [
+              {"condition": "If the question asks \"FIRST\"...", "answer": "Usually: Understand the situation, investigate root cause, or meet privately with parties.", "color": "emerald"},
+              {"condition": "If the question asks \"BEST\"...", "answer": "Usually: Collaborate or facilitate. Look for win-win approaches.", "color": "blue"},
+              {"condition": "If it's time-pressured...", "answer": "Compromise may be acceptable. Quick resolution over perfect resolution.", "color": "amber"},
+              {"condition": "If it's a safety/emergency...", "answer": "Force/Direct is acceptable. Crisis situations justify command decisions.", "color": "red"}
+            ]
+          },
+          "memory_hook": "<span className=\"text-emerald-400 font-semibold\">Understand</span> before you act. <span className=\"text-blue-400 font-semibold\">Facilitate</span>, don't judge. <span className=\"text-purple-400 font-semibold\">Collaborate</span> when you can. <span className=\"text-amber-400 font-semibold\">Protect</span> the relationship.",
+          "bottom_line": "On the exam and in real life, the best conflict managers are <span className=\"text-white font-semibold\">emotionally intelligent facilitators</span> who help people find solutions together—not judges who pick winners."
+        }
       },
       "pmp_application": {
         "exam_strategy": "The current PMP exam (ECO 2021) focuses on situational judgment. 70% of conflict questions have multiple 'acceptable' answers - you must choose the BEST one. PMI strongly prefers collaborative, servant-leadership approaches over directive/controlling responses.",

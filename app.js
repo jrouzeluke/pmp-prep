@@ -179,6 +179,65 @@ const PMPApp = () => {
     }
   };
 
+  const getQuizData = () => {
+    try {
+      const stored = localStorage.getItem('pmp-quiz-history-v1');
+      if (!stored) {
+        return {
+          quizzes: [],
+          totalQuizzes: 0,
+          totalQuestions: 0,
+          totalCorrect: 0,
+          bestScore: 0,
+          averageScore: 0,
+          totalTimeSpent: 0
+        };
+      }
+      const data = JSON.parse(stored);
+      // Calculate stats from quiz history
+      if (data.quizzes && data.quizzes.length > 0) {
+        const totalQuestions = data.quizzes.reduce((sum, q) => sum + (q.total || 0), 0);
+        const totalCorrect = data.quizzes.reduce((sum, q) => sum + (q.correct || 0), 0);
+        const bestScore = Math.max(...data.quizzes.map(q => {
+          const total = q.total || 1;
+          return Math.round((q.correct || 0) / total * 100);
+        }), 0);
+        const averageScore = data.quizzes.length > 0 
+          ? Math.round(totalCorrect / totalQuestions * 100) 
+          : 0;
+        
+        return {
+          ...data,
+          totalQuizzes: data.quizzes.length,
+          totalQuestions,
+          totalCorrect,
+          bestScore,
+          averageScore
+        };
+      }
+      return {
+        quizzes: [],
+        totalQuizzes: 0,
+        totalQuestions: 0,
+        totalCorrect: 0,
+        bestScore: 0,
+        averageScore: 0,
+        totalTimeSpent: 0
+      };
+    } catch (e) {
+      console.error('Error reading quiz data:', e);
+      return {
+        quizzes: [],
+        totalQuizzes: 0,
+        totalQuestions: 0,
+        totalCorrect: 0,
+        bestScore: 0,
+        averageScore: 0,
+        totalTimeSpent: 0
+      };
+    }
+  };
+
   const saveScoreData = (data) => {
     try {
       data.lastActive = new Date().toISOString();
@@ -810,6 +869,24 @@ const PMPApp = () => {
     
     setQuizResults(results);
     setQuizView('results');
+    
+    // Save quiz results to localStorage
+    try {
+      const quizHistory = getQuizData();
+      quizHistory.quizzes = quizHistory.quizzes || [];
+      quizHistory.quizzes.push({
+        ...results,
+        date: new Date().toISOString(),
+        percentage: Math.round((results.correct / results.total) * 100)
+      });
+      // Keep only last 100 quizzes
+      if (quizHistory.quizzes.length > 100) {
+        quizHistory.quizzes = quizHistory.quizzes.slice(-100);
+      }
+      localStorage.setItem('pmp-quiz-history-v1', JSON.stringify(quizHistory));
+    } catch (e) {
+      console.error('Error saving quiz history:', e);
+    }
   };
   
   // Reusable Page Wrapper Component with consistent styling
@@ -9045,6 +9122,9 @@ const PMPApp = () => {
     const studyStreak = calculateStreak();
     const totalTimeHours = Math.floor((scoreData.totalTimeSpent || 0) / 3600);
     const totalTimeMinutes = Math.floor(((scoreData.totalTimeSpent || 0) % 3600) / 60);
+    
+    // Get quiz statistics
+    const quizData = getQuizData();
 
     // Activity type statistics
     const activityStats = {
@@ -9289,7 +9369,7 @@ const PMPApp = () => {
               📥 Export Progress
             </button>
           </div>
-          <h1 className="executive-font text-5xl font-bold text-white tracking-tight mb-2">📊 Personal Statistics</h1>
+          <h1 className="executive-font text-5xl font-bold text-white tracking-tight mb-2">📊 Detailed Analytics</h1>
           <p className="text-slate-400 text-lg">Comprehensive performance analytics and insights</p>
           <div className="mt-4 glass-card p-4 bg-blue-500/10 border-l-4 border-blue-500">
             <p className="text-sm text-slate-300">
@@ -9326,6 +9406,35 @@ const PMPApp = () => {
             <div className="text-xs text-slate-500 mt-2">Days in a row</div>
           </div>
         </div>
+
+        {/* Quiz Statistics */}
+        {quizData.totalQuizzes > 0 && (
+          <div className="glass-card p-6 mb-6">
+            <h2 className="executive-font text-2xl font-bold text-white mb-4">📝 Quiz Statistics</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              <div className="glass-card p-4 bg-slate-800/30 border-l-4 border-cyan-500">
+                <h3 className="text-white font-semibold mb-3">Total Quizzes</h3>
+                <div className="text-3xl font-bold text-cyan-400 mb-1">{quizData.totalQuizzes}</div>
+                <div className="text-xs text-slate-400">Quizzes completed</div>
+              </div>
+              <div className="glass-card p-4 bg-slate-800/30 border-l-4 border-emerald-500">
+                <h3 className="text-white font-semibold mb-3">Best Score</h3>
+                <div className="text-3xl font-bold text-emerald-400 mb-1">{quizData.bestScore}%</div>
+                <div className="text-xs text-slate-400">Highest percentage</div>
+              </div>
+              <div className="glass-card p-4 bg-slate-800/30 border-l-4 border-blue-500">
+                <h3 className="text-white font-semibold mb-3">Average Score</h3>
+                <div className="text-3xl font-bold text-blue-400 mb-1">{quizData.averageScore}%</div>
+                <div className="text-xs text-slate-400">Overall average</div>
+              </div>
+              <div className="glass-card p-4 bg-slate-800/30 border-l-4 border-purple-500">
+                <h3 className="text-white font-semibold mb-3">Questions Answered</h3>
+                <div className="text-3xl font-bold text-purple-400 mb-1">{quizData.totalQuestions}</div>
+                <div className="text-xs text-slate-400">{quizData.totalCorrect} correct</div>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Per Activity Type Stats */}
         <div className="glass-card p-6 mb-6">
@@ -9591,19 +9700,43 @@ const PMPApp = () => {
       if (overview.eco_enablers && overview.eco_enablers.length > 0) sections.push({ key: 'eco_enablers', title: 'ECO Enablers', content: overview.eco_enablers, type: 'list' });
       if (overview.core_principle) sections.push({ key: 'core_principle', title: 'Core Principle', content: overview.core_principle, type: 'text' });
       if (overview.module_introduction) sections.push({ key: 'module_introduction', title: 'Module Introduction', content: overview.module_introduction, type: 'text' });
-      if (overview.key_frameworks) sections.push({ key: 'key_frameworks', title: 'Key Frameworks', content: overview.key_frameworks, type: 'key-frameworks' });
-      if (overview.how_to_apply_it) sections.push({ key: 'how_to_apply_it', title: 'How To Apply It', content: overview.how_to_apply_it, type: 'how-to-apply' });
+      if (overview.key_frameworks) {
+        const isEnhanced = typeof overview.key_frameworks === 'object' && overview.key_frameworks !== null && overview.key_frameworks.enhanced === true;
+        sections.push({ key: 'key_frameworks', title: 'Key Frameworks', content: overview.key_frameworks, type: 'key-frameworks' });
+      }
+      if (overview.how_to_apply_it) {
+        const isEnhanced = typeof overview.how_to_apply_it === 'object' && overview.how_to_apply_it !== null && overview.how_to_apply_it.enhanced === true;
+        sections.push({ key: 'how_to_apply_it', title: 'How To Apply It', content: overview.how_to_apply_it, type: 'how-to-apply' });
+      }
       if (overview.what_youll_learn && overview.what_youll_learn.length > 0) sections.push({ key: 'what_youll_learn', title: "What You'll Learn", content: overview.what_youll_learn, type: 'list' });
       if (overview.key_learning_objectives && overview.key_learning_objectives.length > 0) sections.push({ key: 'key_learning_objectives', title: 'Key Learning Objectives', content: overview.key_learning_objectives, type: 'numbered-list' });
       if (overview.why_this_matters) sections.push({ key: 'why_this_matters', title: 'Why This Matters', content: overview.why_this_matters, type: 'text' });
-      if (overview.exam_triggers && overview.exam_triggers.length > 0) sections.push({ key: 'exam_triggers', title: 'Exam Triggers', content: overview.exam_triggers, type: 'list' });
+      if (overview.exam_triggers) {
+        const isEnhanced = typeof overview.exam_triggers === 'object' && overview.exam_triggers !== null && overview.exam_triggers.enhanced === true;
+        const isArray = Array.isArray(overview.exam_triggers) && overview.exam_triggers.length > 0;
+        if (isEnhanced || isArray) {
+          sections.push({ key: 'exam_triggers', title: 'Exam Triggers', content: overview.exam_triggers, type: 'list' });
+        }
+      }
       if (overview.performance_management_framework) sections.push({ key: 'performance_management_framework', title: 'Performance Management Framework', content: overview.performance_management_framework, type: 'performance-framework' });
       if (overview.sbi_examples) sections.push({ key: 'sbi_examples', title: 'SBI Feedback Examples', content: overview.sbi_examples, type: 'sbi-examples' });
       if (overview.recognition_best_practices) sections.push({ key: 'recognition_best_practices', title: 'Recognition Best Practices', content: overview.recognition_best_practices, type: 'recognition-practices' });
-      if (overview.quick_scenarios && overview.quick_scenarios.length > 0) sections.push({ key: 'quick_scenarios', title: 'Quick Scenarios', content: overview.quick_scenarios, type: 'scenarios' });
+      if (overview.quick_scenarios) {
+        const isEnhanced = typeof overview.quick_scenarios === 'object' && overview.quick_scenarios !== null && overview.quick_scenarios.enhanced === true;
+        const isArray = Array.isArray(overview.quick_scenarios) && overview.quick_scenarios.length > 0;
+        if (isEnhanced || isArray) {
+          sections.push({ key: 'quick_scenarios', title: 'Quick Scenarios', content: overview.quick_scenarios, type: 'scenarios' });
+        }
+      }
       if (overview.key_exam_principles) sections.push({ key: 'key_exam_principles', title: 'Key Exam Principles', content: overview.key_exam_principles, type: 'exam-principles' });
       if (overview.common_wrong_answers && overview.common_wrong_answers.length > 0) sections.push({ key: 'common_wrong_answers', title: 'Common Wrong Answers', content: overview.common_wrong_answers, type: 'list' });
-      if (overview.common_mistakes) sections.push({ key: 'common_mistakes', title: 'Common Mistakes', content: overview.common_mistakes, type: 'common-mistakes' });
+      if (overview.common_mistakes) {
+        const isEnhanced = typeof overview.common_mistakes === 'object' && overview.common_mistakes !== null && overview.common_mistakes.enhanced === true;
+        sections.push({ key: 'common_mistakes', title: 'Common Mistakes', content: overview.common_mistakes, type: 'common-mistakes' });
+      }
+      if (overview.key_takeaways) {
+        sections.push({ key: 'key_takeaways', title: 'Key Takeaways', content: overview.key_takeaways, type: 'numbered-list' });
+      }
       if (overview.pmi_hierarchy && overview.pmi_hierarchy.length > 0) sections.push({ key: 'pmi_hierarchy', title: 'PMI Hierarchy', content: overview.pmi_hierarchy, type: 'hierarchy' });
     } else if (subView === 'pmp-application' && currentTask.learn.pmp_application) {
       const pmp = currentTask.learn.pmp_application;
@@ -9858,36 +9991,301 @@ const PMPApp = () => {
         return <p className="text-slate-300 leading-relaxed">{content}</p>;
       
       case 'list':
+        // Enhanced Exam Triggers for Manage Conflict
+        if (selectedTask === 'Manage Conflict' && section.key === 'exam_triggers' && typeof content === 'object' && content !== null && content.enhanced === true) {
+          const triggers = content;
+          return (
+            <div className="space-y-6">
+              {/* Intro */}
+              <div className="bg-gradient-to-r from-amber-500/10 to-orange-500/10 rounded-xl p-5 border border-amber-500/20">
+                <div className="flex items-center gap-3 mb-2">
+                  <div className="text-2xl">🎯</div>
+                  <p className="text-gray-200 text-lg" dangerouslySetInnerHTML={{__html: triggers.intro.replace(/className/g, 'class')}} />
+                </div>
+              </div>
+
+              {/* Trigger Words Grid */}
+              <div className="bg-white/5 rounded-xl p-6 border border-white/10">
+                <h4 className="text-lg font-semibold text-red-400 mb-4">🚨 High-Alert Trigger Words</h4>
+                <div className="flex flex-wrap gap-2">
+                  {triggers.high_alert_words && triggers.high_alert_words.map((word, i) => (
+                    <span key={i} className="bg-red-500/20 text-red-400 px-3 py-1.5 rounded-full text-sm font-medium border border-red-500/30">
+                      {word}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              <div className="bg-white/5 rounded-xl p-6 border border-white/10">
+                <h4 className="text-lg font-semibold text-amber-400 mb-4">⚠️ Situation Triggers</h4>
+                <div className="flex flex-wrap gap-2">
+                  {triggers.situation_triggers && triggers.situation_triggers.map((word, i) => (
+                    <span key={i} className="bg-amber-500/20 text-amber-400 px-3 py-1.5 rounded-full text-sm font-medium border border-amber-500/30">
+                      {word}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              <div className="bg-white/5 rounded-xl p-6 border border-white/10">
+                <h4 className="text-lg font-semibold text-blue-400 mb-4">💭 Resolution Triggers</h4>
+                <div className="flex flex-wrap gap-2">
+                  {triggers.resolution_triggers && triggers.resolution_triggers.map((word, i) => (
+                    <span key={i} className="bg-blue-500/20 text-blue-400 px-3 py-1.5 rounded-full text-sm font-medium border border-blue-500/30">
+                      {word}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              {/* Pattern Recognition */}
+              {triggers.question_patterns && Array.isArray(triggers.question_patterns) && (
+                <div className="bg-gradient-to-br from-purple-500/10 to-pink-500/10 rounded-xl p-6 border border-purple-500/20">
+                  <h4 className="text-lg font-semibold text-purple-400 mb-4">🧠 Question Pattern Recognition</h4>
+                  <div className="space-y-3">
+                    {triggers.question_patterns.map((pattern, idx) => (
+                      <div key={idx} className="flex items-start gap-3 bg-black/20 rounded-lg p-4">
+                        <div className="text-purple-400 font-mono text-sm bg-purple-500/20 px-2 py-1 rounded">{pattern.pattern}</div>
+                        <div>
+                          <p className="text-gray-300">{pattern.question}</p>
+                          <p className="text-purple-400 text-sm mt-1">→ {pattern.look_for}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Quick Decision Tree */}
+              {triggers.pro_tip && (
+                <div className="bg-black/40 rounded-xl p-5 border-l-4 border-amber-500">
+                  <p className="text-gray-200" dangerouslySetInnerHTML={{__html: triggers.pro_tip.replace(/className/g, 'class')}} />
+                </div>
+              )}
+            </div>
+          );
+        }
         // Check if this is ECO enablers section (show checkmarks)
         const isEcoEnablers = section.key === 'eco_enablers';
-        return (
-          <ul className="space-y-2">
-            {content.map((item, idx) => (
-              <li key={idx} className="text-slate-300 flex items-start gap-2">
-                {isEcoEnablers ? (
-                  <span className="text-emerald-400 mt-1 font-bold">✓</span>
-                ) : (
-                  <span className="text-purple-400 mt-1">•</span>
-                )}
-                <span>{item}</span>
-              </li>
-            ))}
-          </ul>
-        );
+        // Handle array content (old format)
+        if (Array.isArray(content)) {
+          return (
+            <ul className="space-y-2">
+              {content.map((item, idx) => (
+                <li key={idx} className="text-slate-300 flex items-start gap-2">
+                  {isEcoEnablers ? (
+                    <span className="text-emerald-400 mt-1 font-bold">✓</span>
+                  ) : (
+                    <span className="text-purple-400 mt-1">•</span>
+                  )}
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          );
+        }
+        return null;
       
       case 'numbered-list':
-        return (
-          <ol className="space-y-2 list-decimal list-inside">
-            {content.map((item, idx) => (
-              <li key={idx} className="text-slate-300">{item}</li>
-            ))}
-          </ol>
-        );
+        // Enhanced Key Takeaways for Manage Conflict
+        if (selectedTask === 'Manage Conflict' && section.key === 'key_takeaways' && typeof content === 'object' && content !== null && content.enhanced === true) {
+          const takeaways = content;
+          return (
+            <div className="space-y-6">
+              {/* The Big 5 */}
+              {takeaways.big_5 && (
+                <div className="bg-gradient-to-br from-emerald-500/10 to-blue-500/10 rounded-xl p-6 border border-emerald-500/20">
+                  <h4 className="text-xl font-bold text-white mb-6 text-center">🏆 {takeaways.big_5.title}</h4>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+                    {takeaways.big_5.items && takeaways.big_5.items.map((item, idx) => {
+                      const getItemColor = (color) => {
+                        switch(color) {
+                          case 'emerald': return 'text-emerald-400';
+                          case 'blue': return 'text-blue-400';
+                          case 'purple': return 'text-purple-400';
+                          case 'amber': return 'text-amber-400';
+                          case 'rose': return 'text-rose-400';
+                          default: return 'text-emerald-400';
+                        }
+                      };
+                      return (
+                        <div key={idx} className="bg-black/30 rounded-xl p-4 text-center transform hover:scale-105 transition-transform">
+                          <div className="text-4xl mb-3">{item.emoji}</div>
+                          <div className={`${getItemColor(item.color)} font-bold`}>{item.name}</div>
+                          <p className="text-gray-400 text-xs mt-2">{item.description}</p>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
+              {/* Thomas-Kilmann Cheat Sheet */}
+              {takeaways.thomas_kilmann_cheat_sheet && (
+                <div className="bg-white/5 rounded-xl p-6 border border-white/10">
+                  <h4 className="text-lg font-semibold text-cyan-400 mb-4">📋 {takeaways.thomas_kilmann_cheat_sheet.title}</h4>
+                  
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-sm">
+                      <thead>
+                        <tr className="border-b border-white/20">
+                          <th className="text-left p-3 text-gray-400">Approach</th>
+                          <th className="text-left p-3 text-gray-400">When to Use</th>
+                          <th className="text-left p-3 text-gray-400">Outcome</th>
+                          <th className="text-center p-3 text-gray-400">PMI Preference</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {takeaways.thomas_kilmann_cheat_sheet.rows && takeaways.thomas_kilmann_cheat_sheet.rows.map((row, idx) => {
+                          const getRowColor = (color) => {
+                            switch(color) {
+                              case 'emerald': return { bg: 'bg-emerald-500/5', text: 'text-emerald-400', stars: 'text-emerald-400' };
+                              case 'amber': return { bg: '', text: 'text-amber-400', stars: 'text-amber-400' };
+                              case 'blue': return { bg: '', text: 'text-blue-400', stars: 'text-blue-400' };
+                              case 'red': return { bg: '', text: 'text-red-400', stars: 'text-red-400' };
+                              case 'gray': return { bg: '', text: 'text-gray-400', stars: 'text-gray-400' };
+                              default: return { bg: '', text: 'text-cyan-400', stars: 'text-cyan-400' };
+                            }
+                          };
+                          const rowColors = getRowColor(row.color);
+                          const stars = '⭐'.repeat(row.stars);
+                          return (
+                            <tr key={idx} className={`border-b border-white/10 ${rowColors.bg}`}>
+                              <td className={`p-3 ${rowColors.text} font-semibold`}>{row.approach}</td>
+                              <td className="p-3 text-gray-300">{row.when}</td>
+                              <td className="p-3 text-gray-300">{row.outcome}</td>
+                              <td className="p-3 text-center"><span className={`${rowColors.stars} text-lg`}>{stars}</span></td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              )}
+
+              {/* Exam Quick Reference */}
+              {takeaways.exam_quick_reference && (
+                <div className="bg-white/5 rounded-xl p-6 border border-white/10">
+                  <h4 className="text-lg font-semibold text-purple-400 mb-4">🎯 {takeaways.exam_quick_reference.title}</h4>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {takeaways.exam_quick_reference.items && takeaways.exam_quick_reference.items.map((item, idx) => {
+                      const getRefColor = (color) => {
+                        switch(color) {
+                          case 'emerald': return { bg: 'bg-emerald-500/10', border: 'border-emerald-500/20', text: 'text-emerald-400' };
+                          case 'blue': return { bg: 'bg-blue-500/10', border: 'border-blue-500/20', text: 'text-blue-400' };
+                          case 'amber': return { bg: 'bg-amber-500/10', border: 'border-amber-500/20', text: 'text-amber-400' };
+                          case 'red': return { bg: 'bg-red-500/10', border: 'border-red-500/20', text: 'text-red-400' };
+                          default: return { bg: 'bg-cyan-500/10', border: 'border-cyan-500/20', text: 'text-cyan-400' };
+                        }
+                      };
+                      const refColors = getRefColor(item.color);
+                      return (
+                        <div key={idx} className={`${refColors.bg} rounded-lg p-4 border ${refColors.border}`}>
+                          <div className={`${refColors.text} font-semibold mb-2`}>{item.condition}</div>
+                          <p className="text-gray-300 text-sm">{item.answer}</p>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
+              {/* Final Memory Hook */}
+              {takeaways.memory_hook && (
+                <div className="bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-xl p-6 border border-purple-500/30">
+                  <h4 className="text-lg font-semibold text-white mb-4 text-center">🧠 Memory Hook</h4>
+                  <p className="text-2xl text-center text-gray-200 font-light" dangerouslySetInnerHTML={{__html: takeaways.memory_hook.replace(/className/g, 'class')}} />
+                </div>
+              )}
+
+              {/* Bottom Line */}
+              {takeaways.bottom_line && (
+                <div className="bg-black/40 rounded-xl p-5 border-l-4 border-emerald-500">
+                  <p className="text-gray-200 text-lg" dangerouslySetInnerHTML={{__html: takeaways.bottom_line.replace(/className/g, 'class')}} />
+                </div>
+              )}
+            </div>
+          );
+        }
+        // Default numbered list
+        if (Array.isArray(content)) {
+          return (
+            <ol className="space-y-2 list-decimal list-inside">
+              {content.map((item, idx) => (
+                <li key={idx} className="text-slate-300">{item}</li>
+              ))}
+            </ol>
+          );
+        }
+        return null;
       
       case 'scenarios':
+        // Enhanced Quick Scenarios for Manage Conflict
+        if (selectedTask === 'Manage Conflict' && section.key === 'quick_scenarios' && typeof content === 'object' && content !== null && content.enhanced === true) {
+          const scenarios = content;
+          return (
+            <div className="space-y-6">
+              {scenarios.intro && (
+                <div className="bg-gradient-to-r from-purple-500/10 to-pink-500/10 rounded-xl p-5 border border-purple-500/20">
+                  <p className="text-gray-200" dangerouslySetInnerHTML={{__html: scenarios.intro.replace(/className/g, 'class')}} />
+                </div>
+              )}
+
+              {/* Scenario Cards */}
+              <div className="space-y-4">
+                {scenarios.scenarios && scenarios.scenarios.map((scenario, idx) => {
+                  const gradientClass = scenario.gradient || 'from-blue-500/20 to-purple-500/20';
+                  return (
+                    <div key={idx} className="bg-white/5 rounded-xl border border-white/10 overflow-hidden">
+                      <div className={`bg-gradient-to-r ${gradientClass} p-4 border-b border-white/10`}>
+                        <div className="flex items-center gap-3">
+                          <span className="bg-blue-500/30 text-blue-400 font-bold px-3 py-1 rounded-full text-sm">
+                            {scenario.number}
+                          </span>
+                          <span className="text-white font-semibold">{scenario.scenario}</span>
+                        </div>
+                      </div>
+                      <div className="p-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="bg-emerald-500/10 rounded-lg p-4 border border-emerald-500/20">
+                          <div className="text-emerald-400 font-semibold mb-2 flex items-center gap-2">
+                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                            </svg>
+                            RIGHT
+                          </div>
+                          <p className="text-gray-300 text-sm">{scenario.right_answer}</p>
+                        </div>
+                        <div className="bg-red-500/10 rounded-lg p-4 border border-red-500/20">
+                          <div className="text-red-400 font-semibold mb-2 flex items-center gap-2">
+                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                            WRONG
+                          </div>
+                          <p className="text-gray-300 text-sm">{scenario.wrong_answer}</p>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+
+              {/* Key Takeaway */}
+              {scenarios.pattern_note && (
+                <div className="bg-black/40 rounded-xl p-5 border-l-4 border-purple-500">
+                  <p className="text-gray-200" dangerouslySetInnerHTML={{__html: scenarios.pattern_note.replace(/className/g, 'class')}} />
+                </div>
+              )}
+            </div>
+          );
+        }
+        // Default scenarios rendering
         return (
           <div className="space-y-4">
-            {content.map((scenario, idx) => {
+            {Array.isArray(content) && content.map((scenario, idx) => {
               const isRight = scenario.right_wrong === 'Right';
               return (
                 <div key={idx} className="border-l-2 border-cyan-500/50 pl-4">
@@ -10512,6 +10910,61 @@ const PMPApp = () => {
         );
       
       case 'common-mistakes':
+        // Enhanced Common Mistakes for Manage Conflict
+        if (selectedTask === 'Manage Conflict' && typeof content === 'object' && content !== null && content.enhanced === true) {
+          const mistakes = content;
+          return (
+            <div className="space-y-6">
+              {mistakes.intro && (
+                <div className="bg-gradient-to-r from-red-500/10 to-orange-500/10 rounded-xl p-5 border border-red-500/20">
+                  <p className="text-gray-200" dangerouslySetInnerHTML={{__html: mistakes.intro.replace(/className/g, 'class')}} />
+                </div>
+              )}
+
+              {/* Mistake Cards */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {mistakes.mistakes && mistakes.mistakes.map((mistake, idx) => (
+                  <div key={idx} className="bg-white/5 rounded-xl p-5 border border-white/10 hover:border-red-500/30 transition-colors">
+                    <div className="flex items-center gap-3 mb-3">
+                      <div className="bg-red-500/20 rounded-full p-2">
+                        <span className="text-xl">{mistake.emoji}</span>
+                      </div>
+                      <h4 className="text-red-400 font-semibold">{mistake.name}</h4>
+                    </div>
+                    <p className="text-gray-300 text-sm mb-3">{mistake.description}</p>
+                    <div className="bg-red-500/10 rounded-lg p-3 border border-red-500/20">
+                      <p className="text-red-400 text-xs font-semibold mb-1">WHY IT FAILS:</p>
+                      <p className="text-gray-400 text-xs">{mistake.why_fails}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* What PMI Prefers */}
+              {mistakes.pmi_preferences && (
+                <div className="bg-gradient-to-br from-emerald-500/10 to-blue-500/10 rounded-xl p-6 border border-emerald-500/20">
+                  <h4 className="text-lg font-semibold text-emerald-400 mb-4">✅ {mistakes.pmi_preferences.title}</h4>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    {mistakes.pmi_preferences.preferences && mistakes.pmi_preferences.preferences.map((pref, idx) => (
+                      <div key={idx} className="text-center">
+                        <div className="text-3xl mb-2">{pref.emoji}</div>
+                        <div className="text-white font-semibold">{pref.name}</div>
+                        <p className="text-gray-400 text-sm mt-1">{pref.description}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Exam Trap Alert */}
+              {mistakes.exam_trap && (
+                <div className="bg-black/40 rounded-xl p-5 border-l-4 border-amber-500">
+                  <p className="text-gray-200" dangerouslySetInnerHTML={{__html: mistakes.exam_trap.replace(/className/g, 'class')}} />
+                </div>
+              )}
+            </div>
+          );
+        }
         // Support Performance uses object structure with wrong_answer_patterns
         if (content.wrong_answer_patterns) {
           return (
@@ -10574,6 +11027,148 @@ const PMPApp = () => {
         );
       
       case 'key-frameworks':
+        // Enhanced Key Frameworks for Manage Conflict
+        if (selectedTask === 'Manage Conflict' && typeof content === 'object' && content !== null && content.enhanced === true) {
+          const frameworks = content;
+          return (
+            <div className="space-y-6">
+              {/* Thomas-Kilmann Model */}
+              {frameworks.thomas_kilmann && (
+                <div className="bg-gradient-to-br from-blue-500/10 to-purple-500/10 rounded-xl p-6 border border-blue-500/20">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="text-2xl">⭐</div>
+                    <h4 className="text-xl font-bold text-blue-400">{frameworks.thomas_kilmann.title}</h4>
+                    <span className="bg-blue-500/20 text-blue-400 text-xs px-2 py-1 rounded-full">PRIMARY FRAMEWORK</span>
+                  </div>
+                  <p className="text-gray-300 mb-6">{frameworks.thomas_kilmann.subtitle}</p>
+                  
+                  {/* 5 Approaches Visual */}
+                  <div className="grid grid-cols-1 md:grid-cols-5 gap-3">
+                    {frameworks.thomas_kilmann.approaches && frameworks.thomas_kilmann.approaches.map((approach, idx) => {
+                      const getColorClasses = (color) => {
+                        switch(color) {
+                          case 'emerald': return { bg: 'bg-emerald-500/10', border: 'border-emerald-500/30', hover: 'hover:border-emerald-500/50', text: 'text-emerald-400', badge: 'bg-emerald-500/20' };
+                          case 'amber': return { bg: 'bg-amber-500/10', border: 'border-amber-500/30', hover: 'hover:border-amber-500/50', text: 'text-amber-400', badge: 'bg-amber-500/20' };
+                          case 'blue': return { bg: 'bg-blue-500/10', border: 'border-blue-500/30', hover: 'hover:border-blue-500/50', text: 'text-blue-400', badge: 'bg-blue-500/20' };
+                          case 'red': return { bg: 'bg-red-500/10', border: 'border-red-500/30', hover: 'hover:border-red-500/50', text: 'text-red-400', badge: 'bg-red-500/20' };
+                          case 'gray': return { bg: 'bg-gray-500/10', border: 'border-gray-500/30', hover: 'hover:border-gray-500/50', text: 'text-gray-400', badge: 'bg-gray-500/20' };
+                          default: return { bg: 'bg-cyan-500/10', border: 'border-cyan-500/30', hover: 'hover:border-cyan-500/50', text: 'text-cyan-400', badge: 'bg-cyan-500/20' };
+                        }
+                      };
+                      const colors = getColorClasses(approach.color);
+                      return (
+                        <div key={idx} className={`${colors.bg} rounded-xl p-4 border ${colors.border} ${colors.hover} transition-all hover:scale-105`}>
+                          <div className="text-center">
+                            <div className="text-3xl mb-2">{approach.emoji}</div>
+                            <div className={`${colors.text} font-bold text-lg`}>{approach.name}</div>
+                            <div className={`${colors.text}/60 text-xs uppercase tracking-wide mt-1`}>{approach.subtitle}</div>
+                          </div>
+                          <div className={`mt-3 pt-3 border-t ${colors.border}`}>
+                            <p className="text-gray-400 text-xs text-center">{approach.assertiveness}</p>
+                          </div>
+                          <div className={`mt-2 ${colors.badge} rounded-lg p-2`}>
+                            <p className={`${colors.text} text-xs text-center font-semibold`}>{approach.badge}</p>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+
+                  {/* When to Use Each */}
+                  <div className="mt-6 bg-black/30 rounded-lg p-4">
+                    <h5 className="text-white font-semibold mb-3">When to Use Each Approach:</h5>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
+                      {frameworks.thomas_kilmann.approaches && frameworks.thomas_kilmann.approaches.map((approach, idx) => (
+                        <div key={idx} className="flex items-start gap-2">
+                          <span className={approach.color === 'emerald' ? 'text-emerald-400' : approach.color === 'amber' ? 'text-amber-400' : approach.color === 'blue' ? 'text-blue-400' : approach.color === 'red' ? 'text-red-400' : 'text-gray-400'}>
+                            {approach.emoji}
+                          </span>
+                          <span className="text-gray-300">
+                            <strong className={approach.color === 'emerald' ? 'text-emerald-400' : approach.color === 'amber' ? 'text-amber-400' : approach.color === 'blue' ? 'text-blue-400' : approach.color === 'red' ? 'text-red-400' : 'text-gray-400'}>
+                              {approach.name}:
+                            </strong> {approach.when_to_use}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Conflict Escalation Ladder */}
+              {frameworks.escalation_ladder && (
+                <div className="bg-white/5 rounded-xl p-6 border border-white/10">
+                  <h4 className="text-lg font-semibold text-orange-400 mb-4">📈 {frameworks.escalation_ladder.title}</h4>
+                  <p className="text-gray-300 mb-4">{frameworks.escalation_ladder.description}</p>
+                  
+                  <div className="relative">
+                    <div className="absolute left-6 top-0 bottom-0 w-1 bg-gradient-to-b from-emerald-500 via-amber-500 to-red-500 rounded-full"></div>
+                    
+                    <div className="space-y-4 ml-12">
+                      {frameworks.escalation_ladder.levels && frameworks.escalation_ladder.levels.map((level, idx) => {
+                        const getLevelColor = (color) => {
+                          switch(color) {
+                            case 'emerald': return { bg: 'bg-emerald-500', card: 'bg-emerald-500/10', border: 'border-emerald-500/20', text: 'text-emerald-400' };
+                            case 'lime': return { bg: 'bg-lime-500', card: 'bg-lime-500/10', border: 'border-lime-500/20', text: 'text-lime-400' };
+                            case 'amber': return { bg: 'bg-amber-500', card: 'bg-amber-500/10', border: 'border-amber-500/20', text: 'text-amber-400' };
+                            case 'orange': return { bg: 'bg-orange-500', card: 'bg-orange-500/10', border: 'border-orange-500/20', text: 'text-orange-400' };
+                            case 'red': return { bg: 'bg-red-500', card: 'bg-red-500/10', border: 'border-red-500/20', text: 'text-red-400' };
+                            default: return { bg: 'bg-gray-500', card: 'bg-gray-500/10', border: 'border-gray-500/20', text: 'text-gray-400' };
+                          }
+                        };
+                        const levelColors = getLevelColor(level.color);
+                        return (
+                          <div key={idx} className="relative">
+                            <div className={`absolute -left-8 w-4 h-4 ${levelColors.bg} rounded-full border-2 border-black`}></div>
+                            <div className={`${levelColors.card} rounded-lg p-3 border ${levelColors.border}`}>
+                              <div className="flex items-center justify-between">
+                                <span className={`${levelColors.text} font-semibold`}>Level {level.level}: {level.name}</span>
+                                {level.badge && <span className={`${levelColors.text}/60 text-xs`}>{level.badge}</span>}
+                              </div>
+                              <p className="text-gray-400 text-sm mt-1">{level.description}</p>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Sources of Conflict */}
+              {frameworks.sources_of_conflict && (
+                <div className="bg-white/5 rounded-xl p-6 border border-white/10">
+                  <h4 className="text-lg font-semibold text-cyan-400 mb-4">🔍 {frameworks.sources_of_conflict.title}</h4>
+                  <p className="text-gray-400 text-sm mb-4">{frameworks.sources_of_conflict.description}</p>
+                  
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                    {frameworks.sources_of_conflict.sources && frameworks.sources_of_conflict.sources.map((source, idx) => (
+                      <div key={idx} className="bg-cyan-500/10 rounded-lg p-3 border border-cyan-500/20 text-center">
+                        <div className="text-2xl mb-1">{source.emoji}</div>
+                        <div className="text-cyan-400 font-semibold text-sm">{source.name}</div>
+                        <div className="text-gray-500 text-xs mt-1">{source.rank}</div>
+                      </div>
+                    ))}
+                    {frameworks.sources_of_conflict.exam_tip && (
+                      <div className="bg-purple-500/10 rounded-lg p-3 border border-purple-500/20 text-center">
+                        <div className="text-2xl mb-1">{frameworks.sources_of_conflict.exam_tip.emoji}</div>
+                        <div className="text-purple-400 font-semibold text-sm">{frameworks.sources_of_conflict.exam_tip.name}</div>
+                        <div className="text-gray-500 text-xs mt-1">{frameworks.sources_of_conflict.exam_tip.description}</div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {/* Memory Aid */}
+              {frameworks.memory_aid && (
+                <div className="bg-black/40 rounded-xl p-5 border-l-4 border-blue-500">
+                  <p className="text-gray-200" dangerouslySetInnerHTML={{__html: frameworks.memory_aid.replace(/className/g, 'class')}} />
+                </div>
+              )}
+            </div>
+          );
+        }
         // Empower Team structure
         if (content.empowerment_triangle || content.delegation_levels || content.raci_matrix) {
           return (
@@ -11256,6 +11851,129 @@ const PMPApp = () => {
         );
       
       case 'how-to-apply':
+        // Enhanced How to Apply It for Manage Conflict
+        if (selectedTask === 'Manage Conflict' && typeof content === 'object' && content !== null && content.enhanced === true) {
+          const howTo = content;
+          return (
+            <div className="space-y-6">
+              {/* The PAUSE Method */}
+              {howTo.pause_method && (
+                <div className="bg-gradient-to-br from-emerald-500/10 to-teal-500/10 rounded-xl p-6 border border-emerald-500/20">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="text-2xl">⏸️</div>
+                    <h4 className="text-xl font-bold text-emerald-400">{howTo.pause_method.title}</h4>
+                    <span className="bg-emerald-500/20 text-emerald-400 text-xs px-2 py-1 rounded-full">{howTo.pause_method.subtitle}</span>
+                  </div>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mt-4">
+                    {howTo.pause_method.steps && howTo.pause_method.steps.map((step, idx) => {
+                      const getColor = (color) => {
+                        switch(color) {
+                          case 'emerald': return 'text-emerald-400';
+                          case 'teal': return 'text-teal-400';
+                          case 'cyan': return 'text-cyan-400';
+                          case 'blue': return 'text-blue-400';
+                          case 'purple': return 'text-purple-400';
+                          default: return 'text-emerald-400';
+                        }
+                      };
+                      return (
+                        <div key={idx} className="bg-black/30 rounded-xl p-4 text-center">
+                          <div className={`text-4xl font-bold ${getColor(step.color)} mb-2`}>{step.letter}</div>
+                          <div className="text-white font-semibold">{step.name}</div>
+                          <p className="text-gray-400 text-sm mt-2">{step.description}</p>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
+              {/* Step-by-Step Process */}
+              {howTo.step_by_step_process && (
+                <div className="bg-white/5 rounded-xl p-6 border border-white/10">
+                  <h4 className="text-lg font-semibold text-amber-400 mb-4">📋 {howTo.step_by_step_process.title}</h4>
+                  
+                  <div className="relative">
+                    <div className="absolute left-4 top-8 bottom-8 w-0.5 bg-gradient-to-b from-amber-500 to-emerald-500"></div>
+                    
+                    <div className="space-y-6 ml-10">
+                      {howTo.step_by_step_process.steps && howTo.step_by_step_process.steps.map((step, idx) => {
+                        const getStepColor = (color) => {
+                          switch(color) {
+                            case 'amber': return { bg: 'bg-amber-500', text: 'text-amber-400', card: 'bg-amber-500/10', border: 'border-amber-500/20' };
+                            case 'orange': return { bg: 'bg-orange-500', text: 'text-orange-400', card: 'bg-orange-500/10', border: 'border-orange-500/20' };
+                            case 'blue': return { bg: 'bg-blue-500', text: 'text-blue-400', card: 'bg-blue-500/10', border: 'border-blue-500/20' };
+                            case 'purple': return { bg: 'bg-purple-500', text: 'text-purple-400', card: 'bg-purple-500/10', border: 'border-purple-500/20' };
+                            case 'emerald': return { bg: 'bg-emerald-500', text: 'text-emerald-400', card: 'bg-emerald-500/10', border: 'border-emerald-500/20' };
+                            case 'teal': return { bg: 'bg-teal-500', text: 'text-teal-400', card: 'bg-teal-500/10', border: 'border-teal-500/20' };
+                            default: return { bg: 'bg-amber-500', text: 'text-amber-400', card: 'bg-amber-500/10', border: 'border-amber-500/20' };
+                          }
+                        };
+                        const stepColors = getStepColor(step.color);
+                        return (
+                          <div key={idx} className="relative">
+                            <div className={`absolute -left-8 w-6 h-6 ${stepColors.bg} rounded-full flex items-center justify-center text-black font-bold text-sm`}>
+                              {step.number}
+                            </div>
+                            <div>
+                              <h5 className={`${stepColors.text} font-semibold`}>{step.title}</h5>
+                              <p className="text-gray-400 text-sm mt-1">{step.description}</p>
+                              {step.example && (
+                                <div className={`${stepColors.card} rounded-lg p-3 mt-2 border ${stepColors.border}`}>
+                                  <p className="text-gray-300 text-sm italic">{step.example}</p>
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Facilitation Phrases */}
+              {howTo.power_phrases && (
+                <div className="bg-white/5 rounded-xl p-6 border border-white/10">
+                  <h4 className="text-lg font-semibold text-cyan-400 mb-4">💬 {howTo.power_phrases.title}</h4>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {howTo.power_phrases.categories && howTo.power_phrases.categories.map((category, idx) => {
+                      const getCategoryColor = (color) => {
+                        switch(color) {
+                          case 'cyan': return { bg: 'bg-cyan-500/10', border: 'border-cyan-500/20', text: 'text-cyan-400' };
+                          case 'emerald': return { bg: 'bg-emerald-500/10', border: 'border-emerald-500/20', text: 'text-emerald-400' };
+                          case 'purple': return { bg: 'bg-purple-500/10', border: 'border-purple-500/20', text: 'text-purple-400' };
+                          case 'amber': return { bg: 'bg-amber-500/10', border: 'border-amber-500/20', text: 'text-amber-400' };
+                          default: return { bg: 'bg-cyan-500/10', border: 'border-cyan-500/20', text: 'text-cyan-400' };
+                        }
+                      };
+                      const catColors = getCategoryColor(category.color);
+                      return (
+                        <div key={idx} className={`${catColors.bg} rounded-lg p-4 border ${catColors.border}`}>
+                          <div className={`${catColors.text} font-semibold mb-2`}>{category.name}</div>
+                          <ul className="text-gray-300 text-sm space-y-2">
+                            {category.phrases && category.phrases.map((phrase, pIdx) => (
+                              <li key={pIdx}>{phrase}</li>
+                            ))}
+                          </ul>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
+              {/* Pro Tip */}
+              {howTo.pro_tip && (
+                <div className="bg-black/40 rounded-xl p-5 border-l-4 border-emerald-500">
+                  <p className="text-gray-200" dangerouslySetInnerHTML={{__html: howTo.pro_tip.replace(/className/g, 'class')}} />
+                </div>
+              )}
+            </div>
+          );
+        }
         // Empower Team structure
         if (content.organizing_around_strengths || content.bestowing_decision_making_authority || content.supporting_accountability) {
           return (
