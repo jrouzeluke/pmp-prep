@@ -9742,9 +9742,18 @@ const PMPApp = () => {
       const pmp = currentTask.learn.pmp_application;
       // Support Performance uses 5-section structure: How This Task Is Tested, Sample Question 1, Sample Question 2, Sample Question 3, Exam Strategy
       if (pmp.how_this_task_is_tested) sections.push({ key: 'how_this_task_is_tested', title: 'How This Task Is Tested', content: pmp.how_this_task_is_tested, type: 'how-task-tested' });
-      if (pmp.sample_question_1) sections.push({ key: 'sample_question_1', title: 'Sample Question 1', content: pmp.sample_question_1, type: 'sample-question', correctAnswer: 'B' });
-      if (pmp.sample_question_2) sections.push({ key: 'sample_question_2', title: 'Sample Question 2', content: pmp.sample_question_2, type: 'sample-question', correctAnswer: 'B' });
-      if (pmp.sample_question_3) sections.push({ key: 'sample_question_3', title: 'Sample Question 3', content: pmp.sample_question_3, type: 'sample-question', correctAnswer: 'B' });
+      if (pmp.sample_question_1) {
+        const correctAnswer = pmp.sample_question_1.enhanced ? pmp.sample_question_1.correct_answer : 'B';
+        sections.push({ key: 'sample_question_1', title: 'Sample Question 1', content: pmp.sample_question_1, type: 'sample-question', correctAnswer });
+      }
+      if (pmp.sample_question_2) {
+        const correctAnswer = pmp.sample_question_2.enhanced ? pmp.sample_question_2.correct_answer : 'B';
+        sections.push({ key: 'sample_question_2', title: 'Sample Question 2', content: pmp.sample_question_2, type: 'sample-question', correctAnswer });
+      }
+      if (pmp.sample_question_3) {
+        const correctAnswer = pmp.sample_question_3.enhanced ? pmp.sample_question_3.correct_answer : 'B';
+        sections.push({ key: 'sample_question_3', title: 'Sample Question 3', content: pmp.sample_question_3, type: 'sample-question', correctAnswer });
+      }
       if (pmp.connection_to_pmp) sections.push({ key: 'connection_to_pmp', title: 'Connection to PMP Certification', content: pmp.connection_to_pmp, domain: pmp.domain, type: 'text' });
       if (pmp.related_tasks && pmp.related_tasks.length > 0) sections.push({ key: 'related_tasks', title: 'Related PMP Tasks', content: pmp.related_tasks, type: 'related-tasks' });
       if (pmp.exam_strategy) sections.push({ key: 'exam_strategy', title: 'Exam Strategy', content: pmp.exam_strategy, type: 'exam-strategy' });
@@ -9770,6 +9779,29 @@ const PMPApp = () => {
         if (deep.common_challenges && deep.common_challenges.length > 0) sections.push({ key: 'common_challenges', title: 'Common Challenges', content: deep.common_challenges, type: 'common-challenges' });
         if (deep.connections_to_other_tasks) sections.push({ key: 'connections_to_other_tasks', title: 'Connections to Other Tasks', content: deep.connections_to_other_tasks, type: 'connections-tasks' });
         if (deep.key_takeaways && deep.key_takeaways.length > 0) sections.push({ key: 'key_takeaways', title: 'Key Takeaways', content: deep.key_takeaways, type: 'numbered-list' });
+      } else if (selectedTask === 'Manage Conflict') {
+        // Enhanced Deep Dive structure for Manage Conflict
+        if (deep.introduction && deep.introduction.enhanced) {
+          sections.push({ key: 'introduction', title: 'Introduction', content: deep.introduction, type: 'introduction-enhanced' });
+        }
+        if (deep.thomas_kilmann_deep_dive && deep.thomas_kilmann_deep_dive.enhanced) {
+          sections.push({ key: 'thomas_kilmann_deep_dive', title: 'Thomas-Kilmann Deep Dive', content: deep.thomas_kilmann_deep_dive, type: 'thomas-kilmann-enhanced' });
+        }
+        if (deep.emotional_intelligence && deep.emotional_intelligence.enhanced) {
+          sections.push({ key: 'emotional_intelligence', title: 'Emotional Intelligence', content: deep.emotional_intelligence, type: 'emotional-intelligence-enhanced' });
+        }
+        if (deep.difficult_conversation_techniques && deep.difficult_conversation_techniques.enhanced) {
+          sections.push({ key: 'difficult_conversation_techniques', title: 'Difficult Conversation Techniques', content: deep.difficult_conversation_techniques, type: 'difficult-conversations-enhanced' });
+        }
+        if (deep.common_challenges && deep.common_challenges.enhanced) {
+          sections.push({ key: 'common_challenges', title: 'Common Challenges', content: deep.common_challenges, type: 'common-challenges-enhanced' });
+        }
+        if (deep.connections_to_other_tasks && deep.connections_to_other_tasks.enhanced) {
+          sections.push({ key: 'connections_to_other_tasks', title: 'Connections to Other Tasks', content: deep.connections_to_other_tasks, type: 'connections-tasks-enhanced' });
+        }
+        if (deep.key_takeaways && deep.key_takeaways.enhanced) {
+          sections.push({ key: 'key_takeaways', title: 'Key Takeaways', content: deep.key_takeaways, type: 'key-takeaways-enhanced' });
+        }
       } else if (selectedTask === 'Empower Team') {
         // Exact 7 sections for Empower Team: Introduction, Delegation Continuum, Building Self-Organizing Teams, Practical Application, Common Challenges, Connections to Other Tasks, Key Takeaways
         if (deep.introduction) {
@@ -11610,6 +11642,196 @@ const PMPApp = () => {
         );
       
       case 'exam-strategy':
+        // Enhanced Exam Strategy for Manage Conflict
+        if (selectedTask === 'Manage Conflict' && typeof content === 'object' && content !== null && content.enhanced === true) {
+          const strategy = content;
+          return (
+            <div className="space-y-6">
+              {/* The Conflict Question Decision Tree */}
+              {strategy.decision_tree && (
+                <div className="bg-gradient-to-br from-emerald-500/10 to-blue-500/10 rounded-xl p-6 border border-emerald-500/20">
+                  <h4 className="text-xl font-bold text-white mb-6 text-center">🌳 {strategy.decision_tree.title}</h4>
+                  
+                  <div className="space-y-4">
+                    {strategy.decision_tree.steps && strategy.decision_tree.steps.map((step, idx) => {
+                      const getStepColor = (color) => {
+                        switch(color) {
+                          case 'amber': return { bg: 'bg-amber-500/30', text: 'text-amber-400' };
+                          case 'blue': return { bg: 'bg-blue-500/30', text: 'text-blue-400' };
+                          case 'purple': return { bg: 'bg-purple-500/30', text: 'text-purple-400' };
+                          case 'cyan': return { bg: 'bg-cyan-500/30', text: 'text-cyan-400' };
+                          default: return { bg: 'bg-amber-500/30', text: 'text-amber-400' };
+                        }
+                      };
+                      const stepColors = getStepColor(step.color);
+                      const getAnswerColor = (color) => {
+                        switch(color) {
+                          case 'red': return { bg: 'bg-red-500/10', border: 'border-red-500/20', text: 'text-red-400' };
+                          case 'orange': return { bg: 'bg-orange-500/10', border: 'border-orange-500/20', text: 'text-orange-400' };
+                          case 'emerald': return { bg: 'bg-emerald-500/10', border: 'border-emerald-500/20', text: 'text-emerald-400' };
+                          case 'amber': return { bg: 'bg-amber-500/10', border: 'border-amber-500/20', text: 'text-amber-400' };
+                          default: return { bg: 'bg-cyan-500/10', border: 'border-cyan-500/20', text: 'text-cyan-400' };
+                        }
+                      };
+                      return (
+                        <div key={idx} className="bg-black/30 rounded-xl p-4">
+                          <div className="flex items-center gap-3 mb-3">
+                            <div className={`${stepColors.bg} rounded-full w-8 h-8 flex items-center justify-center ${stepColors.text} font-bold`}>
+                              {step.number}
+                            </div>
+                            <span className={`${stepColors.text} font-semibold`}>{step.question}</span>
+                          </div>
+                          <div className="grid grid-cols-2 gap-4 ml-11">
+                            {step.yes && (
+                              <div className={`${getAnswerColor(step.yes.color).bg} rounded-lg p-3 border ${getAnswerColor(step.yes.color).border}`}>
+                                <span className={`${getAnswerColor(step.yes.color).text} font-semibold`}>YES →</span>
+                                <span className="text-gray-300 text-sm"> {step.yes.text}</span>
+                              </div>
+                            )}
+                            {step.no && (
+                              <div className={`${getAnswerColor(step.no.color).bg} rounded-lg p-3 border ${getAnswerColor(step.no.color).border}`}>
+                                <span className={`${getAnswerColor(step.no.color).text} font-semibold`}>NO →</span>
+                                <span className="text-gray-300 text-sm"> {step.no.text}</span>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
+              {/* Quick Reference: Word Triggers */}
+              {strategy.keyword_reference && (
+                <div className="bg-white/5 rounded-xl p-6 border border-white/10">
+                  <h4 className="text-lg font-semibold text-cyan-400 mb-4">⚡ {strategy.keyword_reference.title}</h4>
+                  
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-sm">
+                      <thead>
+                        <tr className="border-b border-white/20">
+                          <th className="text-left p-3 text-gray-400">If Question Says...</th>
+                          <th className="text-left p-3 text-gray-400">Likely Best Answer Involves...</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {strategy.keyword_reference.rows && strategy.keyword_reference.rows.map((row, idx) => {
+                          const getKeywordColor = (color) => {
+                            switch(color) {
+                              case 'amber': return 'text-amber-400';
+                              case 'emerald': return 'text-emerald-400';
+                              case 'blue': return 'text-blue-400';
+                              case 'red': return 'text-red-400';
+                              case 'purple': return 'text-purple-400';
+                              case 'orange': return 'text-orange-400';
+                              case 'pink': return 'text-pink-400';
+                              default: return 'text-cyan-400';
+                            }
+                          };
+                          return (
+                            <tr key={idx} className="border-b border-white/10">
+                              <td className={`p-3 ${getKeywordColor(row.color)} font-semibold`}>{row.keyword}</td>
+                              <td className="p-3 text-gray-300">{row.answer}</td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              )}
+
+              {/* DO vs DON'T */}
+              {strategy.do_vs_dont && (
+                <div className="bg-white/5 rounded-xl p-6 border border-white/10">
+                  <h4 className="text-lg font-semibold text-amber-400 mb-4">✅ DO vs ❌ DON'T</h4>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="bg-emerald-500/10 rounded-xl p-5 border border-emerald-500/20">
+                      <div className="text-emerald-400 font-bold text-lg mb-3">✅ DO Choose Answers That...</div>
+                      <ul className="text-gray-300 text-sm space-y-2">
+                        {strategy.do_vs_dont.do && strategy.do_vs_dont.do.map((item, idx) => (
+                          <li key={idx} className="flex items-start gap-2">
+                            <span className="text-emerald-400">✓</span>
+                            <span>{item}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+
+                    <div className="bg-red-500/10 rounded-xl p-5 border border-red-500/20">
+                      <div className="text-red-400 font-bold text-lg mb-3">❌ DON'T Choose Answers That...</div>
+                      <ul className="text-gray-300 text-sm space-y-2">
+                        {strategy.do_vs_dont.dont && strategy.do_vs_dont.dont.map((item, idx) => (
+                          <li key={idx} className="flex items-start gap-2">
+                            <span className="text-red-400">✗</span>
+                            <span>{item}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Common Traps */}
+              {strategy.common_traps && Array.isArray(strategy.common_traps) && (
+                <div className="bg-gradient-to-br from-red-500/10 to-orange-500/10 rounded-xl p-6 border border-red-500/20">
+                  <h4 className="text-lg font-semibold text-red-400 mb-4">🪤 Common Exam Traps</h4>
+                  
+                  <div className="space-y-4">
+                    {strategy.common_traps.map((trap, idx) => (
+                      <div key={idx} className="bg-black/30 rounded-lg p-4">
+                        <div className="flex items-start gap-3">
+                          <span className="text-red-400 text-xl">⚠️</span>
+                          <div>
+                            <div className="text-white font-semibold">{trap.title}</div>
+                            <p className="text-gray-400 text-sm mt-1">{trap.description}</p>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Final Memory Aid */}
+              {strategy.memory_mantra && (
+                <div className="bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-xl p-6 border border-purple-500/30">
+                  <h4 className="text-lg font-semibold text-white mb-3 text-center">🧠 {strategy.memory_mantra.title}</h4>
+                  <p className="text-3xl text-center font-light">
+                    {strategy.memory_mantra.words && strategy.memory_mantra.words.map((word, idx) => {
+                      const getWordColor = (color) => {
+                        switch(color) {
+                          case 'emerald': return 'text-emerald-400';
+                          case 'blue': return 'text-blue-400';
+                          case 'purple': return 'text-purple-400';
+                          case 'amber': return 'text-amber-400';
+                          default: return 'text-cyan-400';
+                        }
+                      };
+                      return (
+                        <span key={idx}>
+                          <span className={`${getWordColor(word.color)} font-semibold`}>{word.word}</span>
+                          {idx < strategy.memory_mantra.words.length - 1 && <span className="text-gray-500 mx-2">→</span>}
+                        </span>
+                      );
+                    })}
+                  </p>
+                  <p className="text-gray-400 text-center text-sm mt-3">{strategy.memory_mantra.subtitle}</p>
+                </div>
+              )}
+
+              {/* Bottom Line */}
+              {strategy.bottom_line && (
+                <div className="bg-black/40 rounded-xl p-5 border-l-4 border-emerald-500">
+                  <p className="text-gray-200 text-lg" dangerouslySetInnerHTML={{__html: strategy.bottom_line.replace(/className/g, 'class')}} />
+                </div>
+              )}
+            </div>
+          );
+        }
         // Empower Team structure
         if (content.decision_guide) {
           return (
@@ -12159,6 +12381,131 @@ const PMPApp = () => {
         );
       
       case 'how-task-tested':
+        // Enhanced How This Task Is Tested for Manage Conflict
+        if (selectedTask === 'Manage Conflict' && typeof content === 'object' && content !== null && content.enhanced === true) {
+          const tested = content;
+          return (
+            <div className="space-y-6">
+              {/* Intro Stats */}
+              {tested.stats && (
+                <div className="bg-gradient-to-r from-blue-500/10 to-purple-500/10 rounded-xl p-6 border border-blue-500/20">
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+                    <div>
+                      <div className="text-3xl font-bold text-blue-400">{tested.stats.questions_on_exam}</div>
+                      <div className="text-gray-400 text-sm">Questions on Exam</div>
+                    </div>
+                    <div>
+                      <div className="text-3xl font-bold text-purple-400">{tested.stats.frequency}</div>
+                      <div className="text-gray-400 text-sm">Frequency Topic</div>
+                    </div>
+                    <div>
+                      <div className="text-3xl font-bold text-emerald-400">{tested.stats.situational_format}</div>
+                      <div className="text-gray-400 text-sm">Situational Format</div>
+                    </div>
+                    <div>
+                      <div className="text-3xl font-bold text-amber-400">{tested.stats.primary_framework}</div>
+                      <div className="text-gray-400 text-sm">Primary Framework</div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Question Patterns */}
+              {tested.question_patterns && Array.isArray(tested.question_patterns) && (
+                <div className="bg-white/5 rounded-xl p-6 border border-white/10">
+                  <h4 className="text-lg font-semibold text-cyan-400 mb-4">📊 Six Question Patterns You'll See</h4>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {tested.question_patterns.map((pattern, idx) => {
+                      const getColorClasses = (color) => {
+                        switch(color) {
+                          case 'cyan': return { bg: 'bg-cyan-500/10', border: 'border-cyan-500/20', text: 'text-cyan-400', badge: 'bg-cyan-500/30' };
+                          case 'emerald': return { bg: 'bg-emerald-500/10', border: 'border-emerald-500/20', text: 'text-emerald-400', badge: 'bg-emerald-500/30' };
+                          case 'purple': return { bg: 'bg-purple-500/10', border: 'border-purple-500/20', text: 'text-purple-400', badge: 'bg-purple-500/30' };
+                          case 'amber': return { bg: 'bg-amber-500/10', border: 'border-amber-500/20', text: 'text-amber-400', badge: 'bg-amber-500/30' };
+                          case 'rose': return { bg: 'bg-rose-500/10', border: 'border-rose-500/20', text: 'text-rose-400', badge: 'bg-rose-500/30' };
+                          case 'blue': return { bg: 'bg-blue-500/10', border: 'border-blue-500/20', text: 'text-blue-400', badge: 'bg-blue-500/30' };
+                          default: return { bg: 'bg-cyan-500/10', border: 'border-cyan-500/20', text: 'text-cyan-400', badge: 'bg-cyan-500/30' };
+                        }
+                      };
+                      const colors = getColorClasses(pattern.color);
+                      return (
+                        <div key={idx} className={`${colors.bg} rounded-lg p-4 border ${colors.border}`}>
+                          <div className="flex items-center gap-2 mb-2">
+                            <span className={`${colors.badge} ${colors.text} text-xs font-bold px-2 py-1 rounded`}>{pattern.pattern}</span>
+                            <span className="text-white font-semibold">{pattern.name}</span>
+                          </div>
+                          <p className="text-gray-400 text-sm">{pattern.question}</p>
+                          <p className={`${colors.text} text-xs mt-2`}>→ {pattern.tests}</p>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
+              {/* What PMI Expects */}
+              {tested.pmi_expectations && Array.isArray(tested.pmi_expectations) && (
+                <div className="bg-white/5 rounded-xl p-6 border border-white/10">
+                  <h4 className="text-lg font-semibold text-emerald-400 mb-4">🎯 What PMI Expects You to Demonstrate</h4>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    {tested.pmi_expectations.map((expectation, idx) => {
+                      const getExpColor = (color) => {
+                        switch(color) {
+                          case 'emerald': return { bg: 'bg-emerald-500/10', border: 'border-emerald-500/20', text: 'text-emerald-400' };
+                          case 'blue': return { bg: 'bg-blue-500/10', border: 'border-blue-500/20', text: 'text-blue-400' };
+                          case 'purple': return { bg: 'bg-purple-500/10', border: 'border-purple-500/20', text: 'text-purple-400' };
+                          default: return { bg: 'bg-cyan-500/10', border: 'border-cyan-500/20', text: 'text-cyan-400' };
+                        }
+                      };
+                      const expColors = getExpColor(expectation.color);
+                      return (
+                        <div key={idx} className={`${expColors.bg} rounded-xl p-5 border ${expColors.border}`}>
+                          <div className="text-3xl mb-3 text-center">{expectation.emoji}</div>
+                          <h5 className={`${expColors.text} font-semibold text-center mb-2`}>{expectation.title}</h5>
+                          <ul className="text-gray-400 text-sm space-y-1">
+                            {expectation.items && expectation.items.map((item, iIdx) => (
+                              <li key={iIdx}>• {item}</li>
+                            ))}
+                          </ul>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
+              {/* The PMI Mindset */}
+              {tested.pmi_mindset && (
+                <div className="bg-gradient-to-br from-amber-500/10 to-orange-500/10 rounded-xl p-6 border border-amber-500/20">
+                  <h4 className="text-lg font-semibold text-amber-400 mb-4">💭 The PMI Mindset for Conflict Questions</h4>
+                  
+                  <div className="bg-black/30 rounded-lg p-5">
+                    <p className="text-gray-200 text-lg leading-relaxed" dangerouslySetInnerHTML={{__html: tested.pmi_mindset.intro.replace(/className/g, 'class')}} />
+                    
+                    <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-3">
+                      {tested.pmi_mindset.checklist && tested.pmi_mindset.checklist.map((item, idx) => (
+                        <div key={idx} className="flex items-center gap-2 text-gray-300">
+                          <span className="text-emerald-400">✓</span>
+                          <span>{item}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Pro Tip */}
+              {tested.pro_tip && (
+                <div className="bg-black/40 rounded-xl p-5 border-l-4 border-blue-500">
+                  <p className="text-gray-200" dangerouslySetInnerHTML={{__html: tested.pro_tip.replace(/className/g, 'class')}} />
+                </div>
+              )}
+            </div>
+          );
+        }
+        // Default rendering
         return (
           <div className="space-y-4">
             {content.description && (
@@ -12206,6 +12553,180 @@ const PMPApp = () => {
         );
       
       case 'sample-question':
+        // Enhanced Sample Questions for Manage Conflict
+        if (selectedTask === 'Manage Conflict' && typeof content === 'object' && content !== null && content.enhanced === true) {
+          const question = content;
+          const getGradient = (num) => {
+            switch(num) {
+              case 1: return 'from-blue-500/10 to-indigo-500/10';
+              case 2: return 'from-purple-500/10 to-pink-500/10';
+              case 3: return 'from-amber-500/10 to-red-500/10';
+              default: return 'from-blue-500/10 to-indigo-500/10';
+            }
+          };
+          const getHeaderColor = (num) => {
+            switch(num) {
+              case 1: return { bg: 'bg-blue-500/20', border: 'border-blue-500/20', badge: 'bg-blue-500/30', text: 'text-blue-400' };
+              case 2: return { bg: 'bg-purple-500/20', border: 'border-purple-500/20', badge: 'bg-purple-500/30', text: 'text-purple-400' };
+              case 3: return { bg: 'bg-amber-500/20', border: 'border-amber-500/20', badge: 'bg-amber-500/30', text: 'text-amber-400' };
+              default: return { bg: 'bg-blue-500/20', border: 'border-blue-500/20', badge: 'bg-blue-500/30', text: 'text-blue-400' };
+            }
+          };
+          const questionNum = section.key === 'sample_question_1' ? 1 : (section.key === 'sample_question_2' ? 2 : 3);
+          const headerColors = getHeaderColor(questionNum);
+          const correctIndex = question.correct_answer === 'B' ? 1 : (question.correct_answer === 'A' ? 0 : (question.correct_answer === 'C' ? 2 : 3));
+          
+          return (
+            <div className="space-y-6">
+              {/* Question Card */}
+              <div className={`bg-gradient-to-br ${getGradient(questionNum)} rounded-xl border ${headerColors.border} overflow-hidden`}>
+                <div className={`${headerColors.bg} px-6 py-3 border-b ${headerColors.border}`}>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <span className={`${headerColors.badge} ${headerColors.text} font-bold px-3 py-1 rounded-full text-sm`}>
+                        Question {questionNum}
+                      </span>
+                      <span className="text-gray-400 text-sm">{question.title}</span>
+                    </div>
+                    <span className="text-gray-500 text-sm">Difficulty: {question.difficulty}</span>
+                  </div>
+                </div>
+                
+                <div className="p-6">
+                  <p className="text-gray-200 text-lg leading-relaxed" dangerouslySetInnerHTML={{__html: question.question.replace(/className/g, 'class')}} />
+                </div>
+              </div>
+
+              {/* Answer Options */}
+              <div className="space-y-3">
+                {question.options && question.options.map((opt, optIdx) => (
+                  <div key={optIdx} className="bg-white/5 rounded-lg p-4 border border-white/10 hover:border-white/20 transition-colors cursor-pointer">
+                    <div className="flex items-start gap-3">
+                      <span className="bg-gray-500/30 text-gray-400 font-bold px-3 py-1 rounded-full text-sm">
+                        {String.fromCharCode(65 + optIdx)}
+                      </span>
+                      <p className="text-gray-300">{opt}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Answer Reveal */}
+              <div className="bg-emerald-500/10 rounded-xl p-6 border border-emerald-500/30">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="bg-emerald-500/30 rounded-full p-2">
+                    <svg className="w-6 h-6 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                  </div>
+                  <span className="text-emerald-400 font-bold text-xl">Correct Answer: {question.correct_answer}</span>
+                </div>
+                
+                <p className="text-gray-300 mb-4">{question.correct_text}</p>
+                
+                <div className="bg-black/30 rounded-lg p-4">
+                  <h5 className="text-white font-semibold mb-2">Why This Is Correct:</h5>
+                  <ul className="text-gray-400 text-sm space-y-2">
+                    {question.why_correct && question.why_correct.map((item, idx) => (
+                      <li key={idx} className="flex items-start gap-2">
+                        <span className="text-emerald-400 mt-1">✓</span>
+                        <span><strong className="text-gray-300">{item.point}</strong> {item.detail}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+
+              {/* Positions vs Interests (Question 2 only) */}
+              {questionNum === 2 && question.positions_vs_interests && (
+                <div className="bg-gradient-to-br from-amber-500/10 to-orange-500/10 rounded-xl p-6 border border-amber-500/20">
+                  <h4 className="text-lg font-semibold text-amber-400 mb-4">💡 {question.positions_vs_interests.title}</h4>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <div className="bg-black/30 rounded-lg p-4">
+                      <div className="text-red-400 font-semibold mb-2">{question.positions_vs_interests.positions.title}</div>
+                      <ul className="text-gray-400 text-sm space-y-1">
+                        {question.positions_vs_interests.positions.examples && question.positions_vs_interests.positions.examples.map((ex, idx) => (
+                          <li key={idx}>• {ex}</li>
+                        ))}
+                      </ul>
+                      <p className="text-red-400/70 text-xs mt-2">{question.positions_vs_interests.positions.note}</p>
+                    </div>
+                    <div className="bg-black/30 rounded-lg p-4">
+                      <div className="text-emerald-400 font-semibold mb-2">{question.positions_vs_interests.interests.title}</div>
+                      <ul className="text-gray-400 text-sm space-y-1">
+                        {question.positions_vs_interests.interests.examples && question.positions_vs_interests.interests.examples.map((ex, idx) => (
+                          <li key={idx}>• {ex}</li>
+                        ))}
+                      </ul>
+                      <p className="text-emerald-400/70 text-xs mt-2">{question.positions_vs_interests.interests.note}</p>
+                    </div>
+                  </div>
+                  
+                  <p className="text-gray-300 text-sm">
+                    <strong className="text-amber-400">Solution:</strong> {question.positions_vs_interests.solution}
+                  </p>
+                </div>
+              )}
+
+              {/* Observation-Based Feedback (Question 3 only) */}
+              {questionNum === 3 && question.observation_feedback && (
+                <div className="bg-gradient-to-br from-cyan-500/10 to-blue-500/10 rounded-xl p-6 border border-cyan-500/20">
+                  <h4 className="text-lg font-semibold text-cyan-400 mb-4">🎯 {question.observation_feedback.title}</h4>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="bg-red-500/10 rounded-lg p-4 border border-red-500/20">
+                      <div className="text-red-400 font-semibold mb-2">{question.observation_feedback.vague.title}</div>
+                      <ul className="text-gray-400 text-sm space-y-2">
+                        {question.observation_feedback.vague.examples && question.observation_feedback.vague.examples.map((ex, idx) => (
+                          <li key={idx}>{ex}</li>
+                        ))}
+                      </ul>
+                      <p className="text-red-400/70 text-xs mt-2">{question.observation_feedback.vague.note}</p>
+                    </div>
+                    <div className="bg-emerald-500/10 rounded-lg p-4 border border-emerald-500/20">
+                      <div className="text-emerald-400 font-semibold mb-2">{question.observation_feedback.specific.title}</div>
+                      <ul className="text-gray-400 text-sm space-y-2">
+                        {question.observation_feedback.specific.examples && question.observation_feedback.specific.examples.map((ex, idx) => (
+                          <li key={idx}>{ex}</li>
+                        ))}
+                      </ul>
+                      <p className="text-emerald-400/70 text-xs mt-2">{question.observation_feedback.specific.note}</p>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Why Other Answers Are Wrong */}
+              {question.why_wrong && Array.isArray(question.why_wrong) && (
+                <div className="bg-white/5 rounded-xl p-6 border border-white/10">
+                  <h4 className="text-lg font-semibold text-red-400 mb-4">❌ Why Other Answers Are Wrong</h4>
+                  
+                  <div className="space-y-4">
+                    {question.why_wrong.map((wrong, idx) => (
+                      <div key={idx} className="bg-red-500/10 rounded-lg p-4 border border-red-500/20">
+                        <div className="flex items-center gap-2 mb-2">
+                          <span className="text-red-400 font-bold">{wrong.letter}</span>
+                          <span className="text-gray-400">|</span>
+                          <span className="text-gray-300">{wrong.text}</span>
+                        </div>
+                        <p className="text-gray-400 text-sm" dangerouslySetInnerHTML={{__html: wrong.reason.replace(/className/g, 'class')}} />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Key Takeaway */}
+              {question.key_takeaway && (
+                <div className="bg-black/40 rounded-xl p-5 border-l-4 border-blue-500">
+                  <p className="text-gray-200" dangerouslySetInnerHTML={{__html: question.key_takeaway.replace(/className/g, 'class')}} />
+                </div>
+              )}
+            </div>
+          );
+        }
+        // Default sample question rendering
         const correctIndex = section.correctAnswer === 'B' ? 1 : (section.correctAnswer === 'A' ? 0 : (section.correctAnswer === 'C' ? 2 : 3));
         return (
           <div className="space-y-4">
@@ -12981,6 +13502,694 @@ const PMPApp = () => {
           </div>
         );
       
+      case 'introduction-enhanced':
+        // Enhanced Introduction for Manage Conflict Deep Dive
+        if (selectedTask === 'Manage Conflict' && typeof content === 'object' && content !== null && content.enhanced === true) {
+          const intro = content;
+          return (
+            <div className="space-y-6">
+              {/* Hero Statement */}
+              {intro.hero_statement && (
+                <div className="bg-gradient-to-br from-purple-500/10 to-blue-500/10 rounded-xl p-8 border border-purple-500/20">
+                  <div className="text-center">
+                    <div className="text-5xl mb-4">{intro.hero_statement.emoji}</div>
+                    <h3 className="text-2xl font-bold text-white mb-4">{intro.hero_statement.title}</h3>
+                    <p className="text-xl text-gray-300 leading-relaxed max-w-3xl mx-auto" dangerouslySetInnerHTML={{__html: intro.hero_statement.text.replace(/className/g, 'class')}} />
+                  </div>
+                </div>
+              )}
+
+              {/* Why This Matters */}
+              {intro.why_matters && (
+                <div className="bg-white/5 rounded-xl p-6 border border-white/10">
+                  <h4 className="text-lg font-semibold text-amber-400 mb-4">{intro.why_matters.title}</h4>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {intro.why_matters.high_conflict_teams && (
+                      <div>
+                        <h5 className="text-emerald-400 font-semibold mb-3">{intro.why_matters.high_conflict_teams.title}</h5>
+                        <ul className="text-gray-300 text-sm space-y-2">
+                          {intro.why_matters.high_conflict_teams.items && intro.why_matters.high_conflict_teams.items.map((item, idx) => (
+                            <li key={idx} className="flex items-start gap-2">
+                              <span className="text-emerald-400">→</span>
+                              <span>{item}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                    {intro.why_matters.low_conflict_teams && (
+                      <div>
+                        <h5 className="text-red-400 font-semibold mb-3">{intro.why_matters.low_conflict_teams.title}</h5>
+                        <ul className="text-gray-300 text-sm space-y-2">
+                          {intro.why_matters.low_conflict_teams.items && intro.why_matters.low_conflict_teams.items.map((item, idx) => (
+                            <li key={idx} className="flex items-start gap-2">
+                              <span className="text-red-400">→</span>
+                              <span>{item}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {/* The PM's Role */}
+              {intro.pm_role && (
+                <div className="bg-white/5 rounded-xl p-6 border border-white/10">
+                  <h4 className="text-lg font-semibold text-cyan-400 mb-4">{intro.pm_role.title}</h4>
+                  
+                  <p className="text-gray-300 mb-4" dangerouslySetInnerHTML={{__html: intro.pm_role.intro.replace(/className/g, 'class')}} />
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    {intro.pm_role.roles && intro.pm_role.roles.map((role, idx) => {
+                      const getRoleColor = (color) => {
+                        switch(color) {
+                          case 'cyan': return { bg: 'bg-cyan-500/10', border: 'border-cyan-500/20', text: 'text-cyan-400' };
+                          case 'purple': return { bg: 'bg-purple-500/10', border: 'border-purple-500/20', text: 'text-purple-400' };
+                          case 'emerald': return { bg: 'bg-emerald-500/10', border: 'border-emerald-500/20', text: 'text-emerald-400' };
+                          default: return { bg: 'bg-cyan-500/10', border: 'border-cyan-500/20', text: 'text-cyan-400' };
+                        }
+                      };
+                      const roleColors = getRoleColor(role.color);
+                      return (
+                        <div key={idx} className={`${roleColors.bg} rounded-lg p-4 border ${roleColors.border} text-center`}>
+                          <div className="text-3xl mb-2">{role.emoji}</div>
+                          <div className={`${roleColors.text} font-semibold`}>{role.title}</div>
+                          <p className="text-gray-400 text-sm mt-2">{role.description}</p>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
+              {/* What You'll Master */}
+              {intro.what_youll_master && (
+                <div className="bg-gradient-to-r from-emerald-500/10 to-blue-500/10 rounded-xl p-6 border border-emerald-500/20">
+                  <h4 className="text-lg font-semibold text-white mb-4">{intro.what_youll_master.title}</h4>
+                  
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                    {intro.what_youll_master.topics && intro.what_youll_master.topics.map((topic, idx) => {
+                      const getTopicColor = (color) => {
+                        switch(color) {
+                          case 'emerald': return 'text-emerald-400';
+                          case 'blue': return 'text-blue-400';
+                          case 'purple': return 'text-purple-400';
+                          case 'amber': return 'text-amber-400';
+                          case 'rose': return 'text-rose-400';
+                          case 'cyan': return 'text-cyan-400';
+                          default: return 'text-cyan-400';
+                        }
+                      };
+                      return (
+                        <div key={idx} className="bg-black/30 rounded-lg p-3 text-center">
+                          <div className={`${getTopicColor(topic.color)} font-semibold text-sm`}>{topic.title}</div>
+                          <div className="text-gray-500 text-xs">{topic.subtitle}</div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+            </div>
+          );
+        }
+        // Fallback
+        return <p className="text-slate-300">{typeof content === 'string' ? content : JSON.stringify(content)}</p>;
+
+      case 'thomas-kilmann-enhanced':
+        // Enhanced Thomas-Kilmann Deep Dive for Manage Conflict
+        if (selectedTask === 'Manage Conflict' && typeof content === 'object' && content !== null && content.enhanced === true) {
+          const tk = content;
+          return (
+            <div className="space-y-6">
+              {/* Framework Overview */}
+              {tk.framework_overview && (
+                <div className="bg-gradient-to-br from-blue-500/10 to-purple-500/10 rounded-xl p-6 border border-blue-500/20">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="text-3xl">{tk.framework_overview.emoji}</div>
+                    <div>
+                      <h4 className="text-xl font-bold text-white">{tk.framework_overview.title}</h4>
+                      <p className="text-gray-400 text-sm">{tk.framework_overview.subtitle}</p>
+                    </div>
+                  </div>
+                  
+                  <p className="text-gray-300 mb-4" dangerouslySetInnerHTML={{__html: tk.framework_overview.description.replace(/className/g, 'class')}} />
+                </div>
+              )}
+
+              {/* Deep Dive into Each Mode */}
+              {tk.modes && Array.isArray(tk.modes) && (
+                <div className="space-y-4">
+                  {tk.modes.map((mode, idx) => {
+                    const getModeColor = (color) => {
+                      switch(color) {
+                        case 'emerald': return { bg: 'bg-emerald-500/10', border: 'border-emerald-500/20', text: 'text-emerald-400', badge: 'bg-emerald-500/30' };
+                        case 'amber': return { bg: 'bg-amber-500/10', border: 'border-amber-500/20', text: 'text-amber-400', badge: 'bg-amber-500/30' };
+                        case 'blue': return { bg: 'bg-blue-500/10', border: 'border-blue-500/20', text: 'text-blue-400', badge: 'bg-blue-500/30' };
+                        case 'red': return { bg: 'bg-red-500/10', border: 'border-red-500/20', text: 'text-red-400', badge: 'bg-red-500/30' };
+                        case 'gray': return { bg: 'bg-gray-500/10', border: 'border-gray-500/20', text: 'text-gray-400', badge: 'bg-gray-500/30' };
+                        default: return { bg: 'bg-cyan-500/10', border: 'border-cyan-500/20', text: 'text-cyan-400', badge: 'bg-cyan-500/30' };
+                      }
+                    };
+                    const modeColors = getModeColor(mode.color);
+                    return (
+                      <div key={idx} className={`${modeColors.bg} rounded-xl p-6 border ${modeColors.border}`}>
+                        <div className="flex items-center justify-between mb-4">
+                          <div className="flex items-center gap-3">
+                            <div className="text-3xl">{mode.emoji}</div>
+                            <div>
+                              <h5 className={`text-xl font-bold ${modeColors.text}`}>{mode.mode}</h5>
+                              <p className={`${modeColors.text}/60 text-sm`}>{mode.description}</p>
+                            </div>
+                          </div>
+                          {mode.badge && (
+                            <span className={`${modeColors.badge} ${modeColors.text} px-3 py-1 rounded-full text-sm font-semibold`}>{mode.badge}</span>
+                          )}
+                        </div>
+                        
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                          <div className="bg-black/30 rounded-lg p-4">
+                            <div className="text-white font-semibold mb-2">When to Use</div>
+                            <ul className="text-gray-400 text-sm space-y-1">
+                              {mode.when_to_use && mode.when_to_use.map((item, iIdx) => (
+                                <li key={iIdx}>• {item}</li>
+                              ))}
+                            </ul>
+                          </div>
+                          <div className="bg-black/30 rounded-lg p-4">
+                            <div className="text-white font-semibold mb-2">What It Sounds Like</div>
+                            <ul className="text-gray-400 text-sm space-y-1 italic">
+                              {mode.what_it_sounds_like && mode.what_it_sounds_like.map((item, iIdx) => (
+                                <li key={iIdx}>{item}</li>
+                              ))}
+                            </ul>
+                          </div>
+                          <div className="bg-black/30 rounded-lg p-4">
+                            <div className="text-white font-semibold mb-2">Watch Out For</div>
+                            <ul className="text-gray-400 text-sm space-y-1">
+                              {mode.watch_out_for && mode.watch_out_for.map((item, iIdx) => (
+                                <li key={iIdx}>• {item}</li>
+                              ))}
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+
+              {/* Selection Guide */}
+              {tk.selection_rule && (
+                <div className="bg-black/40 rounded-xl p-5 border-l-4 border-blue-500">
+                  <p className="text-gray-200" dangerouslySetInnerHTML={{__html: tk.selection_rule.replace(/className/g, 'class')}} />
+                </div>
+              )}
+            </div>
+          );
+        }
+        return <p className="text-slate-300">{typeof content === 'string' ? content : JSON.stringify(content)}</p>;
+
+      case 'emotional-intelligence-enhanced':
+        // Enhanced Emotional Intelligence for Manage Conflict Deep Dive
+        if (selectedTask === 'Manage Conflict' && typeof content === 'object' && content !== null && content.enhanced === true) {
+          const ei = content;
+          return (
+            <div className="space-y-6">
+              {/* EI Framework */}
+              {ei.framework && (
+                <div className="bg-gradient-to-br from-pink-500/10 to-purple-500/10 rounded-xl p-6 border border-pink-500/20">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="text-3xl">{ei.framework.emoji}</div>
+                    <div>
+                      <h4 className="text-xl font-bold text-white">{ei.framework.title}</h4>
+                      <p className="text-gray-400 text-sm">{ei.framework.subtitle}</p>
+                    </div>
+                  </div>
+                  
+                  <p className="text-gray-300 mb-6">{ei.framework.intro}</p>
+
+                  {/* Four Quadrants */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {ei.quadrants && ei.quadrants.map((quadrant, idx) => {
+                      const getQuadColor = (color) => {
+                        switch(color) {
+                          case 'purple': return { bg: 'bg-purple-500/10', border: 'border-purple-500/20', text: 'text-purple-400', badge: 'bg-purple-500/30' };
+                          case 'blue': return { bg: 'bg-blue-500/10', border: 'border-blue-500/20', text: 'text-blue-400', badge: 'bg-blue-500/30' };
+                          case 'emerald': return { bg: 'bg-emerald-500/10', border: 'border-emerald-500/20', text: 'text-emerald-400', badge: 'bg-emerald-500/30' };
+                          case 'amber': return { bg: 'bg-amber-500/10', border: 'border-amber-500/20', text: 'text-amber-400', badge: 'bg-amber-500/30' };
+                          default: return { bg: 'bg-cyan-500/10', border: 'border-cyan-500/20', text: 'text-cyan-400', badge: 'bg-cyan-500/30' };
+                        }
+                      };
+                      const quadColors = getQuadColor(quadrant.color);
+                      return (
+                        <div key={idx} className={`${quadColors.bg} rounded-xl p-5 border ${quadColors.border}`}>
+                          <div className="flex items-center gap-2 mb-3">
+                            <span className={`${quadColors.badge} ${quadColors.text} px-2 py-1 rounded text-xs font-bold`}>{quadrant.category}</span>
+                            <span className={`${quadColors.text} font-semibold`}>{quadrant.title}</span>
+                          </div>
+                          <p className="text-gray-400 text-sm mb-3">{quadrant.description}</p>
+                          {quadrant.in_conflict && (
+                            <div className="bg-black/30 rounded-lg p-3">
+                              <p className="text-gray-300 text-sm font-medium mb-2">{quadrant.in_conflict.title}</p>
+                              <ul className="text-gray-400 text-xs space-y-1">
+                                {quadrant.in_conflict.items && quadrant.in_conflict.items.map((item, iIdx) => (
+                                  <li key={iIdx}>• {item}</li>
+                                ))}
+                              </ul>
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
+              {/* Emotional Triggers */}
+              {ei.emotional_triggers && (
+                <div className="bg-white/5 rounded-xl p-6 border border-white/10">
+                  <h4 className="text-lg font-semibold text-red-400 mb-4">{ei.emotional_triggers.title}</h4>
+                  
+                  <p className="text-gray-300 mb-4">{ei.emotional_triggers.intro}</p>
+                  
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                    {ei.emotional_triggers.triggers && ei.emotional_triggers.triggers.map((trigger, idx) => (
+                      <div key={idx} className="bg-red-500/10 rounded-lg p-3 border border-red-500/20 text-center">
+                        <div className="text-xl mb-1">{trigger.emoji}</div>
+                        <div className="text-red-400 text-sm font-semibold">{trigger.title}</div>
+                        <div className="text-gray-500 text-xs">{trigger.example}</div>
+                      </div>
+                    ))}
+                  </div>
+
+                  {ei.emotional_triggers.when_triggered && (
+                    <div className="bg-emerald-500/10 rounded-lg p-4 mt-4 border border-emerald-500/20">
+                      <p className="text-emerald-400 font-semibold mb-2">When Triggered:</p>
+                      <div className="grid grid-cols-1 md:grid-cols-4 gap-2 text-sm">
+                        {ei.emotional_triggers.when_triggered.steps && ei.emotional_triggers.when_triggered.steps.map((step, idx) => (
+                          <div key={idx} className="text-center">
+                            <div className="text-2xl mb-1">{step.number}</div>
+                            <div className="text-gray-300">{step.action}</div>
+                            <div className="text-gray-500 text-xs">{step.detail}</div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* De-escalation Techniques */}
+              {ei.deescalation_techniques && (
+                <div className="bg-white/5 rounded-xl p-6 border border-white/10">
+                  <h4 className="text-lg font-semibold text-cyan-400 mb-4">{ei.deescalation_techniques.title}</h4>
+                  
+                  <div className="space-y-4">
+                    {ei.deescalation_techniques.techniques && ei.deescalation_techniques.techniques.map((technique, idx) => (
+                      <div key={idx} className="bg-cyan-500/10 rounded-lg p-4 border border-cyan-500/20">
+                        <div className="flex items-center gap-3 mb-2">
+                          <span className="text-cyan-400 text-xl">{technique.emoji}</span>
+                          <span className="text-white font-semibold">{technique.title}</span>
+                        </div>
+                        <p className="text-gray-400 text-sm">{technique.description}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Pro Tip */}
+              {ei.pro_tip && (
+                <div className="bg-black/40 rounded-xl p-5 border-l-4 border-pink-500">
+                  <p className="text-gray-200" dangerouslySetInnerHTML={{__html: ei.pro_tip.replace(/className/g, 'class')}} />
+                </div>
+              )}
+            </div>
+          );
+        }
+        return <p className="text-slate-300">{typeof content === 'string' ? content : JSON.stringify(content)}</p>;
+
+      case 'difficult-conversations-enhanced':
+        // Enhanced Difficult Conversation Techniques for Manage Conflict Deep Dive
+        if (selectedTask === 'Manage Conflict' && typeof content === 'object' && content !== null && content.enhanced === true) {
+          const dc = content;
+          return (
+            <div className="space-y-6">
+              {/* The COIN Model */}
+              {dc.coin_model && (
+                <div className="bg-gradient-to-br from-amber-500/10 to-orange-500/10 rounded-xl p-6 border border-amber-500/20">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="text-3xl">{dc.coin_model.emoji}</div>
+                    <div>
+                      <h4 className="text-xl font-bold text-white">{dc.coin_model.title}</h4>
+                      <p className="text-gray-400 text-sm">{dc.coin_model.subtitle}</p>
+                    </div>
+                  </div>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    {dc.coin_model.steps && dc.coin_model.steps.map((step, idx) => {
+                      const getCoinColor = (color) => {
+                        switch(color) {
+                          case 'amber': return { bg: 'bg-amber-500/10', text: 'text-amber-400', big: 'text-amber-400' };
+                          case 'orange': return { bg: 'bg-orange-500/10', text: 'text-orange-400', big: 'text-orange-400' };
+                          case 'red': return { bg: 'bg-red-500/10', text: 'text-red-400', big: 'text-red-400' };
+                          case 'emerald': return { bg: 'bg-emerald-500/10', text: 'text-emerald-400', big: 'text-emerald-400' };
+                          default: return { bg: 'bg-cyan-500/10', text: 'text-cyan-400', big: 'text-cyan-400' };
+                        }
+                      };
+                      const coinColors = getCoinColor(step.color);
+                      return (
+                        <div key={idx} className="bg-black/30 rounded-xl p-5 text-center">
+                          <div className={`text-4xl font-bold ${coinColors.big} mb-2`}>{step.letter}</div>
+                          <div className="text-white font-semibold mb-2">{step.title}</div>
+                          <p className="text-gray-400 text-sm">{step.description}</p>
+                          <div className={`mt-3 ${coinColors.bg} rounded-lg p-2`}>
+                            <p className={`${coinColors.text} text-xs italic`}>{step.example}</p>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
+              {/* The DESC Script */}
+              {dc.desc_script && (
+                <div className="bg-white/5 rounded-xl p-6 border border-white/10">
+                  <h4 className="text-lg font-semibold text-purple-400 mb-4">{dc.desc_script.title}</h4>
+                  
+                  <div className="space-y-4">
+                    {dc.desc_script.steps && dc.desc_script.steps.map((step, idx) => {
+                      const getDescColor = (color) => {
+                        switch(color) {
+                          case 'purple': return { bg: 'bg-purple-500/20', text: 'text-purple-400' };
+                          case 'blue': return { bg: 'bg-blue-500/20', text: 'text-blue-400' };
+                          case 'emerald': return { bg: 'bg-emerald-500/20', text: 'text-emerald-400' };
+                          case 'amber': return { bg: 'bg-amber-500/20', text: 'text-amber-400' };
+                          default: return { bg: 'bg-cyan-500/20', text: 'text-cyan-400' };
+                        }
+                      };
+                      const descColors = getDescColor(step.color);
+                      return (
+                        <div key={idx} className="flex items-start gap-4">
+                          <div className={`${descColors.bg} rounded-full w-12 h-12 flex items-center justify-center ${descColors.text} font-bold text-xl shrink-0`}>
+                            {step.letter}
+                          </div>
+                          <div>
+                            <div className="text-white font-semibold">{step.title}</div>
+                            <p className="text-gray-400 text-sm">{step.description}</p>
+                            <p className={`${descColors.text} text-sm italic mt-1`}>{step.example}</p>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
+              {/* Powerful Questions */}
+              {dc.powerful_questions && (
+                <div className="bg-white/5 rounded-xl p-6 border border-white/10">
+                  <h4 className="text-lg font-semibold text-cyan-400 mb-4">{dc.powerful_questions.title}</h4>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {dc.powerful_questions.categories && dc.powerful_questions.categories.map((category, idx) => {
+                      const getCatColor = (color) => {
+                        switch(color) {
+                          case 'cyan': return { bg: 'bg-cyan-500/10', border: 'border-cyan-500/20', text: 'text-cyan-400' };
+                          case 'emerald': return { bg: 'bg-emerald-500/10', border: 'border-emerald-500/20', text: 'text-emerald-400' };
+                          case 'purple': return { bg: 'bg-purple-500/10', border: 'border-purple-500/20', text: 'text-purple-400' };
+                          case 'amber': return { bg: 'bg-amber-500/10', border: 'border-amber-500/20', text: 'text-amber-400' };
+                          default: return { bg: 'bg-cyan-500/10', border: 'border-cyan-500/20', text: 'text-cyan-400' };
+                        }
+                      };
+                      const catColors = getCatColor(category.color);
+                      return (
+                        <div key={idx} className={`${catColors.bg} rounded-lg p-4 border ${catColors.border}`}>
+                          <div className={`${catColors.text} font-semibold mb-3`}>{category.title}</div>
+                          <ul className="text-gray-300 text-sm space-y-2">
+                            {category.questions && category.questions.map((q, qIdx) => (
+                              <li key={qIdx}>{q}</li>
+                            ))}
+                          </ul>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
+              {/* Pro Tip */}
+              {dc.pro_tip && (
+                <div className="bg-black/40 rounded-xl p-5 border-l-4 border-amber-500">
+                  <p className="text-gray-200" dangerouslySetInnerHTML={{__html: dc.pro_tip.replace(/className/g, 'class')}} />
+                </div>
+              )}
+            </div>
+          );
+        }
+        return <p className="text-slate-300">{typeof content === 'string' ? content : JSON.stringify(content)}</p>;
+
+      case 'common-challenges-enhanced':
+        // Enhanced Common Challenges for Manage Conflict Deep Dive
+        if (selectedTask === 'Manage Conflict' && typeof content === 'object' && content !== null && content.enhanced === true) {
+          const cc = content;
+          return (
+            <div className="space-y-6">
+              {cc.intro && (
+                <div className="bg-gradient-to-r from-red-500/10 to-orange-500/10 rounded-xl p-5 border border-red-500/20">
+                  <p className="text-gray-200" dangerouslySetInnerHTML={{__html: cc.intro.replace(/className/g, 'class')}} />
+                </div>
+              )}
+
+              {/* Challenge Cards */}
+              {cc.challenges && Array.isArray(cc.challenges) && (
+                <div className="space-y-4">
+                  {cc.challenges.map((challenge, idx) => {
+                    const getChallengeColor = (color) => {
+                      switch(color) {
+                        case 'red': return { bg: 'bg-red-500/10', border: 'border-white/10' };
+                        case 'orange': return { bg: 'bg-orange-500/10', border: 'border-white/10' };
+                        case 'purple': return { bg: 'bg-purple-500/10', border: 'border-white/10' };
+                        case 'cyan': return { bg: 'bg-cyan-500/10', border: 'border-white/10' };
+                        case 'amber': return { bg: 'bg-amber-500/10', border: 'border-white/10' };
+                        default: return { bg: 'bg-red-500/10', border: 'border-white/10' };
+                      }
+                    };
+                    const challengeColors = getChallengeColor(challenge.color);
+                    return (
+                      <div key={idx} className="bg-white/5 rounded-xl border border-white/10 overflow-hidden">
+                        <div className={`${challengeColors.bg} px-5 py-3 border-b border-white/10`}>
+                          <div className="flex items-center gap-3">
+                            <span className="text-2xl">{challenge.emoji}</span>
+                            <span className="text-white font-semibold">{challenge.title}</span>
+                          </div>
+                        </div>
+                        <div className="p-5">
+                          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div className="bg-red-500/10 rounded-lg p-3">
+                              <div className="text-red-400 font-semibold text-sm mb-2">Signs</div>
+                              <ul className="text-gray-400 text-xs space-y-1">
+                                {challenge.signs && challenge.signs.map((sign, sIdx) => (
+                                  <li key={sIdx}>• {sign}</li>
+                                ))}
+                              </ul>
+                            </div>
+                            <div className="bg-blue-500/10 rounded-lg p-3">
+                              <div className="text-blue-400 font-semibold text-sm mb-2">Why It Happens</div>
+                              <ul className="text-gray-400 text-xs space-y-1">
+                                {challenge.why && challenge.why.map((reason, rIdx) => (
+                                  <li key={rIdx}>• {reason}</li>
+                                ))}
+                              </ul>
+                            </div>
+                            <div className="bg-emerald-500/10 rounded-lg p-3">
+                              <div className="text-emerald-400 font-semibold text-sm mb-2">What to Do</div>
+                              <ul className="text-gray-400 text-xs space-y-1">
+                                {challenge.what_to_do && challenge.what_to_do.map((action, aIdx) => (
+                                  <li key={aIdx}>• {action}</li>
+                                ))}
+                              </ul>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+
+              {/* When to Escalate */}
+              {cc.when_to_escalate && (
+                <div className="bg-gradient-to-br from-red-500/10 to-purple-500/10 rounded-xl p-6 border border-red-500/20">
+                  <h4 className="text-lg font-semibold text-red-400 mb-4">{cc.when_to_escalate.title}</h4>
+                  
+                  <p className="text-gray-300 mb-4">{cc.when_to_escalate.intro}</p>
+                  
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                    {cc.when_to_escalate.criteria && cc.when_to_escalate.criteria.map((criterion, idx) => (
+                      <div key={idx} className="bg-black/30 rounded-lg p-3 text-center">
+                        <div className="text-xl mb-1">{criterion.emoji}</div>
+                        <div className="text-gray-300 text-sm">{criterion.text}</div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          );
+        }
+        return <p className="text-slate-300">{typeof content === 'string' ? content : JSON.stringify(content)}</p>;
+
+      case 'connections-tasks-enhanced':
+        // Enhanced Connections to Other Tasks for Manage Conflict Deep Dive
+        if (selectedTask === 'Manage Conflict' && typeof content === 'object' && content !== null && content.enhanced === true) {
+          const conn = content;
+          return (
+            <div className="space-y-6">
+              {conn.intro && (
+                <div className="bg-gradient-to-r from-blue-500/10 to-purple-500/10 rounded-xl p-5 border border-blue-500/20">
+                  <p className="text-gray-200" dangerouslySetInnerHTML={{__html: conn.intro.replace(/className/g, 'class')}} />
+                </div>
+              )}
+
+              {/* Connection Cards */}
+              {conn.connections && Array.isArray(conn.connections) && (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {conn.connections.map((connection, idx) => {
+                    const getConnColor = (color) => {
+                      switch(color) {
+                        case 'emerald': return { border: 'border-emerald-500/30', bg: 'bg-emerald-500/20', text: 'text-emerald-400', hover: 'hover:bg-emerald-500/30' };
+                        case 'blue': return { border: 'border-blue-500/30', bg: 'bg-blue-500/20', text: 'text-blue-400', hover: 'hover:bg-blue-500/30' };
+                        case 'purple': return { border: 'border-purple-500/30', bg: 'bg-purple-500/20', text: 'text-purple-400', hover: 'hover:bg-purple-500/30' };
+                        case 'amber': return { border: 'border-amber-500/30', bg: 'bg-amber-500/20', text: 'text-amber-400', hover: 'hover:bg-amber-500/30' };
+                        case 'cyan': return { border: 'border-cyan-500/30', bg: 'bg-cyan-500/20', text: 'text-cyan-400', hover: 'hover:bg-cyan-500/30' };
+                        case 'rose': return { border: 'border-rose-500/30', bg: 'bg-rose-500/20', text: 'text-rose-400', hover: 'hover:bg-rose-500/30' };
+                        default: return { border: 'border-cyan-500/30', bg: 'bg-cyan-500/20', text: 'text-cyan-400', hover: 'hover:bg-cyan-500/30' };
+                      }
+                    };
+                    const connColors = getConnColor(connection.color);
+                    return (
+                      <div key={idx} className={`bg-white/5 rounded-xl p-5 border border-white/10 hover:${connColors.border.replace('/30', '/30')} transition-colors`}>
+                        <div className="flex items-center justify-between mb-3">
+                          <span className={`${connColors.text} font-semibold`}>{connection.task}</span>
+                          <button 
+                            onClick={() => {
+                              const taskMap = {
+                                'Task 2: Lead a Team': 'Lead a Team',
+                                'Task 3: Support Team Performance': 'Support Performance',
+                                'Task 4: Empower Team Members': 'Empower Team',
+                                'Task 8: Negotiate Agreements': 'Negotiate Project Agreements',
+                                'Task 9: Collaborate with Stakeholders': 'Collaborate with Stakeholders',
+                                'Task 12: Define Team Ground Rules': 'Define Team Ground Rules'
+                              };
+                              const taskName = taskMap[connection.task] || connection.task;
+                              setSelectedTask(taskName);
+                              setSubView('learn');
+                              setView('learn-hub');
+                            }}
+                            className={`${connColors.bg} ${connColors.hover} ${connColors.text} px-3 py-1.5 rounded-lg text-sm font-medium transition-colors flex items-center gap-2`}
+                          >
+                            Learn More →
+                          </button>
+                        </div>
+                        <p className="text-gray-400 text-sm">
+                          <span className="text-gray-300 font-medium">Connection:</span> {connection.connection}
+                        </p>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+
+              {/* Agile Connection */}
+              {conn.agile_connection && (
+                <div className="bg-gradient-to-r from-blue-500/10 to-purple-500/10 rounded-xl p-6 border border-blue-500/20">
+                  <h4 className="text-lg font-semibold text-white mb-3">{conn.agile_connection.title}</h4>
+                  <p className="text-gray-300" dangerouslySetInnerHTML={{__html: conn.agile_connection.text.replace(/className/g, 'class')}} />
+                </div>
+              )}
+            </div>
+          );
+        }
+        return <p className="text-slate-300">{typeof content === 'string' ? content : JSON.stringify(content)}</p>;
+
+      case 'key-takeaways-enhanced':
+        // Enhanced Key Takeaways for Manage Conflict Deep Dive
+        if (selectedTask === 'Manage Conflict' && typeof content === 'object' && content !== null && content.enhanced === true) {
+          const kt = content;
+          return (
+            <div className="space-y-6">
+              {/* The 10 Commandments */}
+              {kt.ten_commandments && (
+                <div className="bg-gradient-to-br from-purple-500/10 to-pink-500/10 rounded-xl p-6 border border-purple-500/20">
+                  <h4 className="text-xl font-bold text-white mb-6 text-center">{kt.ten_commandments.title}</h4>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {kt.ten_commandments.commandments && kt.ten_commandments.commandments.map((cmd, idx) => (
+                      <div key={idx} className="flex items-start gap-3 bg-black/30 rounded-lg p-3">
+                        <span className="bg-purple-500/30 text-purple-400 font-bold px-2 py-1 rounded text-sm">{cmd.number}</span>
+                        <span className="text-gray-300" dangerouslySetInnerHTML={{__html: cmd.text.replace(/className/g, 'class')}} />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Quick Memory Cards */}
+              {kt.quick_memory_cards && (
+                <div className="bg-white/5 rounded-xl p-6 border border-white/10">
+                  <h4 className="text-lg font-semibold text-cyan-400 mb-4">{kt.quick_memory_cards.title}</h4>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    {kt.quick_memory_cards.cards && kt.quick_memory_cards.cards.map((card, idx) => {
+                      const getCardColor = (color) => {
+                        switch(color) {
+                          case 'cyan': return { bg: 'bg-cyan-500/10', border: 'border-cyan-500/20', text: 'text-cyan-400' };
+                          case 'amber': return { bg: 'bg-amber-500/10', border: 'border-amber-500/20', text: 'text-amber-400' };
+                          case 'red': return { bg: 'bg-red-500/10', border: 'border-red-500/20', text: 'text-red-400' };
+                          default: return { bg: 'bg-cyan-500/10', border: 'border-cyan-500/20', text: 'text-cyan-400' };
+                        }
+                      };
+                      const cardColors = getCardColor(card.color);
+                      return (
+                        <div key={idx} className={`${cardColors.bg} rounded-lg p-4 border ${cardColors.border} text-center`}>
+                          <div className="text-sm text-gray-400 mb-2">{card.label}</div>
+                          <div className={`text-2xl font-bold ${cardColors.text}`}>{card.answer}</div>
+                          <div className="text-gray-500 text-xs mt-2">{card.detail}</div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
+              {/* Ultimate Memory Hook */}
+              {kt.ultimate_memory_hook && (
+                <div className="bg-gradient-to-r from-emerald-500/20 to-blue-500/20 rounded-xl p-6 border border-emerald-500/30">
+                  <h4 className="text-lg font-semibold text-white mb-4 text-center">{kt.ultimate_memory_hook.title}</h4>
+                  <div className="text-center">
+                    <p className="text-2xl font-light mb-4" dangerouslySetInnerHTML={{__html: kt.ultimate_memory_hook.quote.replace(/className/g, 'class')}} />
+                    <p className="text-gray-400">{kt.ultimate_memory_hook.subtitle}</p>
+                  </div>
+                </div>
+              )}
+
+              {/* Bottom Line */}
+              {kt.bottom_line && (
+                <div className="bg-black/40 rounded-xl p-6 border-l-4 border-emerald-500">
+                  <p className="text-gray-200 text-lg" dangerouslySetInnerHTML={{__html: kt.bottom_line.replace(/className/g, 'class')}} />
+                </div>
+              )}
+            </div>
+          );
+        }
+        return <p className="text-slate-300">{typeof content === 'string' ? content : JSON.stringify(content)}</p>;
+
       default:
         return <p className="text-slate-300">{typeof content === 'string' ? content : JSON.stringify(content)}</p>;
     }
