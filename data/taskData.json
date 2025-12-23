@@ -919,7 +919,95 @@
             "subtitle": "Understand the situation → Facilitate dialogue → Collaborate on solutions → Protect relationships"
           },
           "bottom_line": "When in doubt, choose the answer that shows <span className=\"text-white font-semibold\"> emotional intelligence, seeks understanding, and facilitates rather than dictates</span>. PMI wants PMs who resolve conflicts thoughtfully, not reactively."
-        }
+        },
+        "question_patterns": [
+          {
+            "pattern": "Pattern 1: Approach Selection",
+            "setup": "Two team members disagree about [technical approach]. What should the PM do?",
+            "distractor_1": "Make the decision yourself (Force)",
+            "why_wrong_1": "Removes team empowerment and may miss best solution",
+            "distractor_2": "Let them figure it out (Avoid)",
+            "why_wrong_2": "Abdicates PM responsibility to facilitate",
+            "distractor_3": "Split the difference (Compromise)",
+            "why_wrong_3": "May result in suboptimal hybrid solution",
+            "correct": "Facilitate discussion to find best technical solution (Collaborate)",
+            "why_correct": "Leverages team expertise, builds consensus, finds optimal solution"
+          },
+          {
+            "pattern": "Pattern 2: First Action",
+            "setup": "Conflict has escalated between parties. What should the PM do FIRST?",
+            "distractor_1": "Escalate immediately",
+            "why_wrong_1": "Premature escalation—PM should attempt resolution first",
+            "distractor_2": "Ignore and hope it resolves",
+            "why_wrong_2": "Avoidance—conflicts escalate when ignored",
+            "distractor_3": "Force a decision",
+            "why_wrong_3": "Damages relationships, removes team empowerment",
+            "correct": "Investigate root cause through private conversations (Understand before acting)",
+            "why_correct": "PMI expects PMs to understand situation before taking action"
+          },
+          {
+            "pattern": "Pattern 3: Escalation Decision",
+            "setup": "After multiple attempts, conflict remains. What should the PM do?",
+            "distractor_1": "Continue trying the same approach",
+            "why_wrong_1": "Insanity—doing same thing expecting different result",
+            "distractor_2": "Give up and let them handle it",
+            "why_wrong_2": "Abdicates PM responsibility",
+            "distractor_3": "Document and ignore",
+            "why_wrong_3": "Passive—doesn't resolve the issue",
+            "correct": "Escalate to appropriate authority after documented attempts (Escalate when needed)",
+            "why_correct": "After genuine attempts, escalation is appropriate"
+          },
+          {
+            "pattern": "Pattern 4: Prevention",
+            "setup": "How can the PM PREVENT conflicts during the project?",
+            "distractor_1": "Avoid all disagreements",
+            "why_wrong_1": "Unrealistic and unhealthy—conflict is natural",
+            "distractor_2": "Make all decisions yourself",
+            "why_wrong_2": "Creates dependency, removes team empowerment",
+            "distractor_3": "Only work with agreeable people",
+            "why_wrong_3": "Not realistic, diversity creates better outcomes",
+            "correct": "Establish ground rules, team charter, clear communication protocols (Prevention through structure)",
+            "why_correct": "Proactive prevention through clear expectations and processes"
+          },
+          {
+            "pattern": "Pattern 5: Stakeholder Conflict",
+            "setup": "A stakeholder disagrees with the project approach. The PM should...",
+            "distractor_1": "Ignore the stakeholder",
+            "why_wrong_1": "Damages relationship, may escalate",
+            "distractor_2": "Change approach immediately",
+            "why_wrong_2": "Scope creep, sets bad precedent",
+            "distractor_3": "Escalate to sponsor without discussion",
+            "why_wrong_3": "Premature escalation—should attempt resolution first",
+            "correct": "Meet privately to understand concerns, explore options (Stakeholder engagement + conflict skills)",
+            "why_correct": "Combines stakeholder management with conflict resolution"
+          },
+          {
+            "pattern": "Pattern 6: Agile Context",
+            "setup": "During a retrospective, team members argue. The Scrum Master should...",
+            "distractor_1": "Make the decision",
+            "why_wrong_1": "Violates Agile principle of team self-organization",
+            "distractor_2": "Cancel the retrospective",
+            "why_wrong_2": "Avoids the issue—retrospectives are for addressing problems",
+            "distractor_3": "Escalate to Product Owner",
+            "why_wrong_3": "PO owns product, not team dynamics",
+            "correct": "Facilitate the discussion, help team find resolution (Facilitation + servant leadership)",
+            "why_correct": "Scrum Master role is to facilitate, not dictate"
+          }
+        ],
+        "agile_vs_traditional": {
+          "traditional_context": {
+            "pm_role": "Decision maker, conflict resolver",
+            "approach": "May use more directive approaches when appropriate",
+            "escalation": "More hierarchical, may escalate to sponsor faster"
+          },
+          "agile_context": {
+            "pm_role": "Servant leader, facilitator, impediment remover",
+            "approach": "Always prefer collaboration and team empowerment",
+            "escalation": "Team self-resolves when possible, retrospectives for systemic issues"
+          },
+          "exam_tip": "When question mentions 'Agile,' 'Scrum,' 'iterative,' or 'self-organizing team,' ALWAYS favor collaborative, facilitative answers over directive ones."
+        },
+        "decision_tree_visual": "START → Is it safety/legal/ethical? YES→Force (document!) | NO→ Time available for discussion? YES→Collaborate (facilitate meeting) | LIMITED→ Confront (direct discussion with data) or Compromise (if both can give ground) | NEVER→ Avoid (almost always wrong)"
       },
       "deep_dive": {
         "introduction": {
