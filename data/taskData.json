@@ -74,9 +74,41 @@
         "exam_triggers": {
           "enhanced": true,
           "intro": "When you see these <span className=\"text-amber-400 font-semibold\">trigger words</span> in a question, your brain should immediately shift into <span className=\"text-orange-400 font-semibold\">conflict management mode</span>.",
-          "high_alert_words": ["disagree", "argument", "tension", "heated", "frustrated", "clash", "dispute", "hostile", "confrontation", "resistance"],
-          "situation_triggers": ["two team members", "refuses to", "won't speak to", "avoiding each other", "complained about", "blame", "not cooperating", "personality conflict", "raised voices"],
-          "resolution_triggers": ["resolve", "mediate", "facilitate", "consensus", "common ground", "compromise", "collaborate", "negotiate", "de-escalate", "reconcile"],
+          "high_alert_words": [
+            "disagree",
+            "argument",
+            "tension",
+            "heated",
+            "frustrated",
+            "clash",
+            "dispute",
+            "hostile",
+            "confrontation",
+            "resistance"
+          ],
+          "situation_triggers": [
+            "two team members",
+            "refuses to",
+            "won't speak to",
+            "avoiding each other",
+            "complained about",
+            "blame",
+            "not cooperating",
+            "personality conflict",
+            "raised voices"
+          ],
+          "resolution_triggers": [
+            "resolve",
+            "mediate",
+            "facilitate",
+            "consensus",
+            "common ground",
+            "compromise",
+            "collaborate",
+            "negotiate",
+            "de-escalate",
+            "reconcile"
+          ],
           "question_patterns": [
             {
               "pattern": "Pattern 1",
@@ -278,15 +310,47 @@
             "title": "Seven Sources of Project Conflict",
             "description": "PMI identifies these as the most common conflict sources. Know them for the exam:",
             "sources": [
-              {"emoji": "📅", "name": "Schedules", "rank": "#1 Source"},
-              {"emoji": "🎯", "name": "Priorities", "rank": "#2 Source"},
-              {"emoji": "👥", "name": "Resources", "rank": "#3 Source"},
-              {"emoji": "⚙️", "name": "Technical", "rank": "#4 Source"},
-              {"emoji": "📋", "name": "Admin", "rank": "#5 Source"},
-              {"emoji": "💰", "name": "Cost", "rank": "#6 Source"},
-              {"emoji": "😤", "name": "Personality", "rank": "#7 Source"}
+              {
+                "emoji": "📅",
+                "name": "Schedules",
+                "rank": "#1 Source"
+              },
+              {
+                "emoji": "🎯",
+                "name": "Priorities",
+                "rank": "#2 Source"
+              },
+              {
+                "emoji": "👥",
+                "name": "Resources",
+                "rank": "#3 Source"
+              },
+              {
+                "emoji": "⚙️",
+                "name": "Technical",
+                "rank": "#4 Source"
+              },
+              {
+                "emoji": "📋",
+                "name": "Admin",
+                "rank": "#5 Source"
+              },
+              {
+                "emoji": "💰",
+                "name": "Cost",
+                "rank": "#6 Source"
+              },
+              {
+                "emoji": "😤",
+                "name": "Personality",
+                "rank": "#7 Source"
+              }
             ],
-            "exam_tip": {"emoji": "💡", "name": "Exam Tip", "description": "Focus on issue, not person"}
+            "exam_tip": {
+              "emoji": "💡",
+              "name": "Exam Tip",
+              "description": "Focus on issue, not person"
+            }
           },
           "memory_aid": "<span className=\"text-blue-400 font-bold\">Memory Aid:</span> For Thomas-Kilmann, think <span className=\"text-emerald-400 font-semibold\"> \"Collaborate First, Compromise if Rushed, Accommodate to Save Relationships, Force Only in Emergencies, Avoid to Cool Down.\"</span>"
         },
@@ -296,11 +360,36 @@
             "title": "The PAUSE Method",
             "subtitle": "YOUR GO-TO APPROACH",
             "steps": [
-              {"letter": "P", "name": "Perceive", "description": "Notice the conflict early. Don't ignore warning signs.", "color": "emerald"},
-              {"letter": "A", "name": "Analyze", "description": "Understand root cause. What's really driving this?", "color": "teal"},
-              {"letter": "U", "name": "Understand", "description": "Get all perspectives. Listen before acting.", "color": "cyan"},
-              {"letter": "S", "name": "Strategize", "description": "Choose the right approach. Match to situation.", "color": "blue"},
-              {"letter": "E", "name": "Execute", "description": "Act decisively. Follow through completely.", "color": "purple"}
+              {
+                "letter": "P",
+                "name": "Perceive",
+                "description": "Notice the conflict early. Don't ignore warning signs.",
+                "color": "emerald"
+              },
+              {
+                "letter": "A",
+                "name": "Analyze",
+                "description": "Understand root cause. What's really driving this?",
+                "color": "teal"
+              },
+              {
+                "letter": "U",
+                "name": "Understand",
+                "description": "Get all perspectives. Listen before acting.",
+                "color": "cyan"
+              },
+              {
+                "letter": "S",
+                "name": "Strategize",
+                "description": "Choose the right approach. Match to situation.",
+                "color": "blue"
+              },
+              {
+                "letter": "E",
+                "name": "Execute",
+                "description": "Act decisively. Follow through completely.",
+                "color": "purple"
+              }
             ]
           },
           "step_by_step_process": {
@@ -437,9 +526,21 @@
           "pmi_preferences": {
             "title": "What PMI Prefers Instead",
             "preferences": [
-              {"emoji": "🔍", "name": "Investigate First", "description": "Understand root cause before choosing an approach"},
-              {"emoji": "🤝", "name": "Facilitate, Don't Judge", "description": "Help parties find their own solution"},
-              {"emoji": "🎯", "name": "Address Early", "description": "Deal with issues when they're still small"}
+              {
+                "emoji": "🔍",
+                "name": "Investigate First",
+                "description": "Understand root cause before choosing an approach"
+              },
+              {
+                "emoji": "🤝",
+                "name": "Facilitate, Don't Judge",
+                "description": "Help parties find their own solution"
+              },
+              {
+                "emoji": "🎯",
+                "name": "Address Early",
+                "description": "Deal with issues when they're still small"
+              }
             ]
           },
           "exam_trap": "Wrong answers often sound decisive and action-oriented: <span className=\"text-gray-400 italic\"> \"Tell them to work it out,\" \"Escalate to HR,\" \"Make the decision for them.\"</span> The right answer usually involves <span className=\"text-emerald-400 font-semibold\">understanding first, then facilitating a collaborative solution</span>."
@@ -449,30 +550,101 @@
           "big_5": {
             "title": "The Big 5: What You MUST Remember",
             "items": [
-              {"emoji": "🤝", "name": "Collaborate First", "description": "PMI's preferred approach when time allows", "color": "emerald"},
-              {"emoji": "⏰", "name": "Early Is Better", "description": "Address conflict before it escalates", "color": "blue"},
-              {"emoji": "🔍", "name": "Understand First", "description": "Root cause before resolution", "color": "purple"},
-              {"emoji": "🚪", "name": "Private Settings", "description": "Personal conflicts need private space", "color": "amber"},
-              {"emoji": "❤️", "name": "Protect Relationships", "description": "Long-term collaboration > short-term win", "color": "rose"}
+              {
+                "emoji": "🤝",
+                "name": "Collaborate First",
+                "description": "PMI's preferred approach when time allows",
+                "color": "emerald"
+              },
+              {
+                "emoji": "⏰",
+                "name": "Early Is Better",
+                "description": "Address conflict before it escalates",
+                "color": "blue"
+              },
+              {
+                "emoji": "🔍",
+                "name": "Understand First",
+                "description": "Root cause before resolution",
+                "color": "purple"
+              },
+              {
+                "emoji": "🚪",
+                "name": "Private Settings",
+                "description": "Personal conflicts need private space",
+                "color": "amber"
+              },
+              {
+                "emoji": "❤️",
+                "name": "Protect Relationships",
+                "description": "Long-term collaboration > short-term win",
+                "color": "rose"
+              }
             ]
           },
           "thomas_kilmann_cheat_sheet": {
             "title": "Thomas-Kilmann Cheat Sheet",
             "rows": [
-              {"approach": "Collaborate", "when": "Important issue, time available, need buy-in", "outcome": "Win-Win", "stars": 3, "color": "emerald"},
-              {"approach": "Compromise", "when": "Moderate importance, time pressure", "outcome": "Partial Win-Win", "stars": 2, "color": "amber"},
-              {"approach": "Accommodate", "when": "Issue matters more to them, save relationship", "outcome": "Lose-Win", "stars": 2, "color": "blue"},
-              {"approach": "Force", "when": "Emergency, safety, unpopular necessity", "outcome": "Win-Lose", "stars": 1, "color": "red"},
-              {"approach": "Avoid", "when": "Trivial issue, need cool-down, no chance", "outcome": "Lose-Lose", "stars": 1, "color": "gray"}
+              {
+                "approach": "Collaborate",
+                "when": "Important issue, time available, need buy-in",
+                "outcome": "Win-Win",
+                "stars": 3,
+                "color": "emerald"
+              },
+              {
+                "approach": "Compromise",
+                "when": "Moderate importance, time pressure",
+                "outcome": "Partial Win-Win",
+                "stars": 2,
+                "color": "amber"
+              },
+              {
+                "approach": "Accommodate",
+                "when": "Issue matters more to them, save relationship",
+                "outcome": "Lose-Win",
+                "stars": 2,
+                "color": "blue"
+              },
+              {
+                "approach": "Force",
+                "when": "Emergency, safety, unpopular necessity",
+                "outcome": "Win-Lose",
+                "stars": 1,
+                "color": "red"
+              },
+              {
+                "approach": "Avoid",
+                "when": "Trivial issue, need cool-down, no chance",
+                "outcome": "Lose-Lose",
+                "stars": 1,
+                "color": "gray"
+              }
             ]
           },
           "exam_quick_reference": {
             "title": "Exam Quick Reference",
             "items": [
-              {"condition": "If the question asks \"FIRST\"...", "answer": "Usually: Understand the situation, investigate root cause, or meet privately with parties.", "color": "emerald"},
-              {"condition": "If the question asks \"BEST\"...", "answer": "Usually: Collaborate or facilitate. Look for win-win approaches.", "color": "blue"},
-              {"condition": "If it's time-pressured...", "answer": "Compromise may be acceptable. Quick resolution over perfect resolution.", "color": "amber"},
-              {"condition": "If it's a safety/emergency...", "answer": "Force/Direct is acceptable. Crisis situations justify command decisions.", "color": "red"}
+              {
+                "condition": "If the question asks \"FIRST\"...",
+                "answer": "Usually: Understand the situation, investigate root cause, or meet privately with parties.",
+                "color": "emerald"
+              },
+              {
+                "condition": "If the question asks \"BEST\"...",
+                "answer": "Usually: Collaborate or facilitate. Look for win-win approaches.",
+                "color": "blue"
+              },
+              {
+                "condition": "If it's time-pressured...",
+                "answer": "Compromise may be acceptable. Quick resolution over perfect resolution.",
+                "color": "amber"
+              },
+              {
+                "condition": "If it's a safety/emergency...",
+                "answer": "Force/Direct is acceptable. Crisis situations justify command decisions.",
+                "color": "red"
+              }
             ]
           },
           "memory_hook": "<span className=\"text-emerald-400 font-semibold\">Understand</span> before you act. <span className=\"text-blue-400 font-semibold\">Facilitate</span>, don't judge. <span className=\"text-purple-400 font-semibold\">Collaborate</span> when you can. <span className=\"text-amber-400 font-semibold\">Protect</span> the relationship.",
@@ -911,10 +1083,22 @@
           "memory_mantra": {
             "title": "The 4-Word Conflict Mantra",
             "words": [
-              {"word": "Understand", "color": "emerald"},
-              {"word": "Facilitate", "color": "blue"},
-              {"word": "Collaborate", "color": "purple"},
-              {"word": "Protect", "color": "amber"}
+              {
+                "word": "Understand",
+                "color": "emerald"
+              },
+              {
+                "word": "Facilitate",
+                "color": "blue"
+              },
+              {
+                "word": "Collaborate",
+                "color": "purple"
+              },
+              {
+                "word": "Protect",
+                "color": "amber"
+              }
             ],
             "subtitle": "Understand the situation → Facilitate dialogue → Collaborate on solutions → Protect relationships"
           },
@@ -1007,7 +1191,561 @@
           },
           "exam_tip": "When question mentions 'Agile,' 'Scrum,' 'iterative,' or 'self-organizing team,' ALWAYS favor collaborative, facilitative answers over directive ones."
         },
-        "decision_tree_visual": "START → Is it safety/legal/ethical? YES→Force (document!) | NO→ Time available for discussion? YES→Collaborate (facilitate meeting) | LIMITED→ Confront (direct discussion with data) or Compromise (if both can give ground) | NEVER→ Avoid (almost always wrong)"
+        "decision_tree_visual": "START → Is it safety/legal/ethical? YES→Force (document!) | NO→ Time available for discussion? YES→Collaborate (facilitate meeting) | LIMITED→ Confront (direct discussion with data) or Compromise (if both can give ground) | NEVER→ Avoid (almost always wrong)",
+        "exam_focus": {
+          "sample_questions": [
+            {
+              "question": "Two senior developers on an agile team are in a heated debate over the technical architecture of a new feature. The disagreement is beginning to affect the sprint velocity. What should the project manager do first?",
+              "options": [
+                "Facilitate a meeting between the two developers to help them reach a consensus.",
+                "Make a final decision on the architecture to ensure the sprint stays on track.",
+                "Escalate the issue to the functional manager to decide on the best technical approach.",
+                "Separate the developers by assigning them to different tasks for the remainder of the sprint."
+              ],
+              "correct": 0,
+              "explanation": "In agile, the PM (or Scrum Master) should facilitate communication and empower the team to resolve technical conflicts internally before intervening authoritatively."
+            },
+            {
+              "question": "A project manager is overseeing a global project. Two stakeholders from different regions have conflicting requirements for a key deliverable. The project manager realizes this is due to a cultural misunderstanding. What is the best approach?",
+              "options": [
+                "Identify the source of the conflict and facilitate a discussion to find a win-win solution.",
+                "Request that the project sponsor decide which regional requirement takes precedence.",
+                "Adhere strictly to the initial project charter and reject any requirements that deviate.",
+                "Ignore the conflict and hope the stakeholders resolve it during the next status meeting."
+              ],
+              "correct": 0,
+              "explanation": "Collaborating/Problem Solving is the most effective way to address root causes and ensure long-term stakeholder satisfaction."
+            },
+            {
+              "question": "During a project meeting, a team member continuously interrupts others and dismisses their ideas, causing visible tension. Which conflict management style is the team member exhibiting?",
+              "options": [
+                "Compromising",
+                "Forcing/Competing",
+                "Smoothing/Accommodating",
+                "Collaborating"
+              ],
+              "correct": 1,
+              "explanation": "Forcing involves pushing one's own viewpoint at the expense of others, often resulting in a win-lose situation."
+            },
+            {
+              "question": "A project manager decides to delay testing by two days to satisfy a production manager’s immediate need, even though it increases the risk of late defects. Which technique was used?",
+              "options": [
+                "Withdrawal",
+                "Smoothing/Accommodating",
+                "Problem Solving",
+                "Compromising"
+              ],
+              "correct": 1,
+              "explanation": "Smoothing emphasizes areas of agreement or yields to the position of others to maintain harmony or meet an immediate need."
+            },
+            {
+              "question": "In an agile environment, the Product Owner and the Team disagree on the definition of 'Done'. How should the Scrum Master handle this?",
+              "options": [
+                "Update the Definition of Done based on personal experience and inform the team.",
+                "Facilitate a discussion during the next retrospective to reach a shared understanding.",
+                "Tell the team to follow the Product Owner’s instructions.",
+                "Ask the Project Sponsor to mediate the dispute."
+              ],
+              "correct": 1,
+              "explanation": "Agile conflicts regarding process are best handled through collaborative facilitation and shared team agreements."
+            },
+            {
+              "question": "A PM notices two team members have stopped speaking after a disagreement. The PM decides to wait and see if they work it out. Which technique is this?",
+              "options": [
+                "Compromising",
+                "Collaborating",
+                "Avoiding/Withdrawing",
+                "Forcing"
+              ],
+              "correct": 2,
+              "explanation": "Avoiding involves retreating from a conflict or postponing the issue to a later time."
+            },
+            {
+              "question": "You meet with a chronically late team member privately to discuss the impact of their delays and listen to their challenges. This is:",
+              "options": [
+                "Forcing a resolution",
+                "Collaborative problem-solving",
+                "Smoothing the conflict",
+                "Avoiding the issue"
+              ],
+              "correct": 1,
+              "explanation": "Addressing root causes through direct, private communication is a hallmark of the problem-solving approach."
+            },
+            {
+              "question": "Two functional managers want the same resource. What should the PM do?",
+              "options": [
+                "Split the resource 50/50 between both tasks.",
+                "Analyze project priorities and discuss needs with managers to find an optimal schedule.",
+                "Escalate to the PMO immediately.",
+                "Tell the resource to decide which project they prefer."
+              ],
+              "correct": 1,
+              "explanation": "Using data and priorities to facilitate a resolution is the most professional and effective approach."
+            },
+            {
+              "question": "Which is a positive outcome of conflict if managed correctly?",
+              "options": [
+                "Increased groupthink",
+                "Improved creativity and better decision making",
+                "A clearer hierarchy of power",
+                "Reduced project documentation"
+              ],
+              "correct": 1,
+              "explanation": "Constructive conflict allows different perspectives to be aired, leading to more innovative solutions."
+            },
+            {
+              "question": "A PM asks two parties to each give up something to reach a temporary solution. Which technique is this?",
+              "options": [
+                "Collaborating",
+                "Compromising",
+                "Forcing",
+                "Avoiding"
+              ],
+              "correct": 1,
+              "explanation": "Compromising involves finding a middle ground where both parties concede certain points."
+            },
+            {
+              "question": "A team is in the \"Storming\" phase of development. Conflicts over roles and responsibilities are frequent. What should the PM do?",
+              "options": [
+                "Reassign the team members to different projects.",
+                "Guide the team in establishing clear ground rules and role definitions.",
+                "Allow the team to fail so they learn from the experience.",
+                "Step back and let the team self-organize without any intervention."
+              ],
+              "correct": 1,
+              "explanation": "During Storming, the PM should provide high levels of guidance to help the team establish norms."
+            },
+            {
+              "question": "A stakeholder is unhappy with the project's progress and expresses this aggressively in a meeting. The PM acknowledges the stakeholder's concerns but refocuses the group on the items they currently agree on. This is:",
+              "options": [
+                "Forcing",
+                "Compromising",
+                "Smoothing",
+                "Collaborating"
+              ],
+              "correct": 2,
+              "explanation": "Smoothing downplays the differences and emphasizes areas of agreement."
+            },
+            {
+              "question": "Two team members are arguing over which software tool to use. The PM directs them to use Tool A because it is the company standard, despite Tool B having better features for this specific task. This is:",
+              "options": [
+                "Problem Solving",
+                "Forcing",
+                "Withdrawal",
+                "Compromise"
+              ],
+              "correct": 1,
+              "explanation": "Using authority or a mandate to resolve a conflict is Forcing."
+            },
+            {
+              "question": "Which conflict resolution technique is most likely to result in a permanent solution?",
+              "options": [
+                "Smoothing",
+                "Compromising",
+                "Forcing",
+                "Collaborating"
+              ],
+              "correct": 3,
+              "explanation": "Collaboration addresses the root cause through consensus, making the solution more sustainable."
+            },
+            {
+              "question": "Conflict is most often caused by which of the following in a project environment?",
+              "options": [
+                "Personalities",
+                "Cost",
+                "Schedules",
+                "Management styles"
+              ],
+              "correct": 2,
+              "explanation": "Statistically, schedule priorities are the most common source of conflict in projects."
+            },
+            {
+              "question": "An agile team is experiencing internal friction regarding who should perform testing. The PM suggests they try a \"pair testing\" approach for one sprint to see if it helps. This is:",
+              "options": [
+                "Collaborative problem solving",
+                "Forcing",
+                "Avoiding",
+                "Smoothing"
+              ],
+              "correct": 0,
+              "explanation": "Experimenting with a solution based on team input is a collaborative way to solve a process problem."
+            },
+            {
+              "question": "A project manager is mediating a conflict. They ask each person to describe the other person's perspective. This is a technique to build:",
+              "options": [
+                "Authority",
+                "Empathy and understanding",
+                "A paper trail",
+                "A reason to terminate a member"
+              ],
+              "correct": 1,
+              "explanation": "Active listening and perspective-sharing are key to resolving interpersonal conflicts."
+            },
+            {
+              "question": "When is \"Avoiding\" an appropriate conflict management strategy?",
+              "options": [
+                "When the issue is trivial or more important issues are pressing.",
+                "When you need a permanent solution.",
+                "When you have more power than the other party.",
+                "When the project is behind schedule."
+              ],
+              "correct": 0,
+              "explanation": "Avoiding is acceptable for low-impact issues where the effort to resolve exceeds the benefit."
+            },
+            {
+              "question": "A PM is working in a matrix organization. A functional manager pulls a resource off the project without notice. What is the PM's first step?",
+              "options": [
+                "Replace the resource with a contractor.",
+                "Complain to the sponsor.",
+                "Meet with the functional manager to understand the reason and discuss project impact.",
+                "Update the risk register and do nothing else."
+              ],
+              "correct": 2,
+              "explanation": "Direct communication to resolve the conflict and understand the constraint is the first step."
+            },
+            {
+              "question": "A team's ground rules were established but are now being ignored. This has led to several small conflicts. What should the PM do?",
+              "options": [
+                "Discipline the team members.",
+                "Write new ground rules and distribute them.",
+                "Facilitate a team meeting to review and recommit to the ground rules.",
+                "Ignore it as it is a natural part of team evolution."
+              ],
+              "correct": 2,
+              "explanation": "Ground rules are a team contract; the team must be involved in reviewing and enforcing them."
+            },
+            {
+              "question": "In a hybrid project, the agile development team and the predictive marketing team are at odds over delivery dates. The PM facilitates a session to align the two schedules. What is this?",
+              "options": [
+                "Forcing",
+                "Withdrawal",
+                "Problem Solving",
+                "Smoothing"
+              ],
+              "correct": 2,
+              "explanation": "Aligning different perspectives to meet project goals is problem solving/collaboration."
+            },
+            {
+              "question": "A project manager uses their position of power to end an argument about a technical detail. What is the likely result?",
+              "options": [
+                "A win-win outcome.",
+                "A win-lose outcome and potential resentment.",
+                "A long-term technical solution.",
+                "Increased team cohesion."
+              ],
+              "correct": 1,
+              "explanation": "Forcing creates a winner and a loser, which often damages morale."
+            },
+            {
+              "question": "A customer wants a change that the lead engineer says is impossible. The PM brings them together to look at the data and requirements. What are they doing?",
+              "options": [
+                "Collaborating to find a solution.",
+                "Compromising on the scope.",
+                "Avoiding a difficult conversation.",
+                "Smoothing over the customer's anger."
+              ],
+              "correct": 0,
+              "explanation": "Bringing parties together to look at facts and find a way forward is collaboration."
+            },
+            {
+              "question": "Which of the following is an example of a \"Project Manager as a Facilitator\" in conflict?",
+              "options": [
+                "Telling the team how to work.",
+                "Helping the team identify the pros and cons of different options.",
+                "Assigning blame when a deadline is missed.",
+                "Making all technical decisions."
+              ],
+              "correct": 1,
+              "explanation": "Facilitation involves guiding the process of decision-making without dictating the outcome."
+            },
+            {
+              "question": "Conflict management is part of which process group?",
+              "options": [
+                "Planning",
+                "Executing",
+                "Closing",
+                "Initiating"
+              ],
+              "correct": 1,
+              "explanation": "Managing conflict occurs during the \"Manage Team\" process in the Executing phase."
+            },
+            {
+              "question": "A team member is upset because they feel their contributions are not recognized. The PM listens and validates their feelings. This is an application of:",
+              "options": [
+                "Technical skills",
+                "Emotional Intelligence",
+                "Administrative skills",
+                "Forcing"
+              ],
+              "correct": 1,
+              "explanation": "Recognizing and responding to the emotions of others is a core part of Emotional Intelligence in conflict."
+            },
+            {
+              "question": "Two team members have a personality clash that is disrupting the office. The PM moves one to a different floor. This is:",
+              "options": [
+                "Problem Solving",
+                "Withdrawal/Avoidance",
+                "Compromise",
+                "Collaboration"
+              ],
+              "correct": 1,
+              "explanation": "Physically separating people to avoid the conflict is a form of withdrawal/avoidance."
+            },
+            {
+              "question": "Which conflict resolution technique is most likely to be used when a project manager has little time and needs the team to just move forward?",
+              "options": [
+                "Collaboration",
+                "Forcing",
+                "Problem Solving",
+                "Negotiating"
+              ],
+              "correct": 1,
+              "explanation": "Forcing is often used in emergencies when a quick decision is required."
+            },
+            {
+              "question": "A PM encourages the team to handle their own conflicts but steps in when the conflict becomes personal or destructive. This PM is practicing:",
+              "options": [
+                "Laissez-faire leadership",
+                "Servant leadership",
+                "Dictatorial leadership",
+                "Transactional leadership"
+              ],
+              "correct": 1,
+              "explanation": "Servant leaders empower teams to resolve issues but provide a safety net when needed."
+            },
+            {
+              "question": "A project manager is dealing with a conflict between the vendor and the internal team regarding the definition of a \"bug.\" The PM refers to the Service Level Agreement (SLA). This is:",
+              "options": [
+                "Smoothing",
+                "Avoiding",
+                "Forcing",
+                "Problem Solving/Collaboration (using a shared fact base)"
+              ],
+              "correct": 3,
+              "explanation": "Using the contract or SLA as a \"single source of truth\" helps resolve the conflict based on objective criteria.# PMP Exam Bank 1: People - Managing Conflict (Continued)\n# ECO Alignment: Domain I, Task 1\n# Questions 31-50"
+            },
+            {
+              "question": "A project manager notices that two team members who previously collaborated well are now communicating only through email and avoiding eye contact in meetings. When asked individually, both say \"everything is fine.\" What should the project manager do FIRST?",
+              "options": [
+                "Accept their answers and continue monitoring the situation.",
+                "Reassign tasks so they no longer need to work together.",
+                "Share specific behavioral observations and express concern about the change in their working relationship.",
+                "Escalate to HR since they are not being truthful."
+              ],
+              "correct": 2,
+              "explanation": "Sharing specific observations (not accusations) creates psychological safety for honest dialogue. Vague questions are easy to dismiss; observable behavior changes are harder to deny."
+            },
+            {
+              "question": "During a sprint retrospective, a team member becomes visibly upset and says, \"Nobody listens to my ideas. I've suggested this fix three times and you all ignore me.\" What should the Scrum Master do?",
+              "options": [
+                "Move on to the next topic to avoid embarrassment.",
+                "Ask the team to vote on whether the suggestion is valid.",
+                "Acknowledge the frustration, validate that being unheard is difficult, and facilitate a focused discussion on the suggestion.",
+                "Schedule a private meeting to discuss the outburst."
+              ],
+              "correct": 2,
+              "explanation": "Emotional Intelligence requires acknowledging emotions when they arise. Validating feelings de-escalates tension and creates space for productive dialogue. Avoiding or dismissing emotions escalates conflict."
+            },
+            {
+              "question": "A senior stakeholder sends an aggressive email to the project manager, copying several executives, blaming the team for a delivery delay that was actually caused by late requirements from the stakeholder's own department. What is the BEST response?",
+              "options": [
+                "Reply-all with documentation proving the stakeholder caused the delay.",
+                "Forward the email to your sponsor and ask them to handle it.",
+                "Respond privately to the stakeholder, acknowledge their frustration, and request a call to discuss the timeline together.",
+                "Ignore the email until the next scheduled status meeting."
+              ],
+              "correct": 2,
+              "explanation": "Taking the conversation private de-escalates public conflict. Acknowledging frustration (even if misplaced) opens dialogue. Reply-all defensiveness escalates the situation and damages relationships."
+            },
+            {
+              "question": "Two functional managers are in conflict over a shared resource. The project manager has analyzed the situation and determined that Manager A's need is genuinely more critical to the project's critical path. What conflict resolution approach is MOST appropriate?",
+              "options": [
+                "Compromise by splitting the resource's time equally.",
+                "Avoid the conflict by asking the resource to decide.",
+                "Collaborate by presenting the analysis to both managers and facilitating agreement on priorities.",
+                "Force the decision by assigning the resource to Manager A."
+              ],
+              "correct": 2,
+              "explanation": "Even when the PM knows the \"right\" answer, collaboration builds buy-in and preserves relationships. Presenting objective data and facilitating discussion leads to sustainable solutions."
+            },
+            {
+              "question": "A project manager is facilitating a conflict resolution meeting between two team members. One team member dominates the conversation and repeatedly interrupts the other. What should the PM do?",
+              "options": [
+                "Let the conversation flow naturally to avoid appearing biased.",
+                "Establish ground rules for equal speaking time and actively ensure both voices are heard.",
+                "End the meeting and speak with the dominant person privately.",
+                "Side with the quieter person to balance the power dynamic."
+              ],
+              "correct": 1,
+              "explanation": "The PM as facilitator must create conditions for productive dialogue. This includes managing power imbalances and ensuring all perspectives are heard without taking sides."
+            },
+            {
+              "question": "An agile team has been self-organizing effectively for six months. A senior executive attends a sprint review and is unhappy with a decision the team made. The executive tells the project manager to \"take control and start assigning work directly.\" What should the PM do?",
+              "options": [
+                "Follow the executive's direction to maintain the relationship.",
+                "Ignore the executive since the team is self-organizing.",
+                "Acknowledge the executive's concern, share data on team performance, and explore the specific issue driving the feedback.",
+                "Escalate to the project sponsor to resolve the disagreement."
+              ],
+              "correct": 2,
+              "explanation": "Protecting team empowerment requires addressing stakeholder concerns with evidence, not defensiveness. Understanding the root concern often reveals a solvable problem without abandoning self-organization."
+            },
+            {
+              "question": "A conflict between the development team and the QA team has been \"resolved\" three times in the past two months, but the same arguments keep recurring. What does this pattern indicate?",
+              "options": [
+                "The teams are incompatible and should be separated.",
+                "The conflict resolution techniques being used are ineffective.",
+                "The root cause of the conflict has not been addressed.",
+                "Conflict is normal and should be expected to recur."
+              ],
+              "correct": 2,
+              "explanation": "Recurring conflict is a symptom of unresolved root causes. Surface-level resolutions address symptoms but not underlying issues like unclear processes, competing goals, or systemic problems."
+            },
+            {
+              "question": "A project manager must choose between two conflict resolution approaches: collaborating (which will take 3 days) or compromising (which can be done in 2 hours). The project has a critical deadline in one week, and the conflict is blocking a critical path activity. What should the PM consider MOST?",
+              "options": [
+                "Always choose collaboration because PMI prefers it.",
+                "Always choose the faster option when there's time pressure.",
+                "The importance of the issue and whether a partial solution will hold long-term.",
+                "Which approach the team members prefer."
+              ],
+              "correct": 2,
+              "explanation": "Time pressure makes compromise acceptable, but only if the issue can tolerate a partial solution. Critical technical decisions may require collaboration despite time pressure; process disagreements may be fine to compromise on."
+            },
+            {
+              "question": "A team member approaches the project manager privately and says, \"I think Alex is sabotaging my work, but I can't prove it.\" What should the PM do FIRST?",
+              "options": [
+                "Confront Alex about the accusation.",
+                "Dismiss the concern since there's no proof.",
+                "Ask clarifying questions to understand specific behaviors that led to this perception.",
+                "Document the complaint in case it escalates."
+              ],
+              "correct": 2,
+              "explanation": "Before acting, the PM needs to understand what's actually happening. \"Sabotage\" is an interpretation; specific behaviors are facts. Understanding the specifics enables appropriate response."
+            },
+            {
+              "question": "During project execution, the project manager discovers that a conflict between two departments was \"resolved\" by their respective VPs, but the resolution ignored project requirements and will cause significant rework. What should the PM do?",
+              "options": [
+                "Accept the resolution since VPs outrank the PM.",
+                "Escalate to the project sponsor immediately.",
+                "Request a meeting with the VPs to present the project impact and explore alternatives.",
+                "Document the issue and proceed with the rework."
+              ],
+              "correct": 2,
+              "explanation": "The PM is accountable for project outcomes and must advocate for the project, even with senior stakeholders. Presenting impact data professionally is appropriate; silent acceptance is not."
+            },
+            {
+              "question": "Which of the following is the BEST indicator that a conflict has been truly resolved rather than just suppressed?",
+              "options": [
+                "Both parties say they are satisfied.",
+                "The PM has documented the resolution.",
+                "The parties are collaborating effectively and the triggering behavior has changed.",
+                "Neither party has complained recently."
+              ],
+              "correct": 2,
+              "explanation": "True resolution shows in changed behavior and improved collaboration, not just verbal agreement. Suppressed conflict often looks resolved temporarily but re-emerges."
+            },
+            {
+              "question": "A project manager is working with a globally distributed team. A conflict arises because team members in one region feel their colleagues in another region are dismissive during video calls. Upon investigation, the PM realizes the issue is related to different cultural communication norms. What is the BEST approach?",
+              "options": [
+                "Establish a rule that everyone must follow the communication style of the project manager's region.",
+                "Facilitate a discussion about cultural differences and help the team develop shared communication norms.",
+                "Separate the teams so they only communicate asynchronously.",
+                "Ask the less assertive culture to adapt to the more assertive one."
+              ],
+              "correct": 1,
+              "explanation": "Cultural conflicts require awareness and shared norm-building, not imposing one culture's style. Collaborative development of team norms respects all parties and creates sustainable solutions."
+            },
+            {
+              "question": "A project manager overhears a team member making dismissive comments about a colleague's technical abilities to other team members. The colleague is not present. What should the PM do?",
+              "options": [
+                "Ignore it since the colleague didn't hear it.",
+                "Publicly correct the team member immediately.",
+                "Address the behavior privately with the team member, explaining the impact on team trust.",
+                "Report the incident to HR."
+              ],
+              "correct": 2,
+              "explanation": "Gossip and dismissive comments damage team trust even when the target isn't present. Private correction addresses the behavior without public humiliation. The PM must address it rather than ignore it."
+            },
+            {
+              "question": "A project has multiple vendors who frequently blame each other when deliverables are late. The PM has tried facilitating discussions, but the pattern continues. What should the PM do NEXT?",
+              "options": [
+                "Escalate to procurement to penalize the vendors.",
+                "Accept that vendor conflicts are normal.",
+                "Implement clearer interface agreements and objective acceptance criteria to reduce ambiguity.",
+                "Replace the vendors."
+              ],
+              "correct": 2,
+              "explanation": "Recurring vendor conflict often stems from unclear boundaries and responsibilities. Structural solutions (clear interfaces, objective criteria) prevent conflict better than repeated facilitation of the same issues."
+            },
+            {
+              "question": "A team member consistently arrives late to meetings, and other team members have started making passive-aggressive comments. The PM has not addressed this directly. What conflict management technique is the PM currently using?",
+              "options": [
+                "Smoothing",
+                "Compromising",
+                "Avoiding",
+                "Accommodating"
+              ],
+              "correct": 2,
+              "explanation": "By not addressing the issue, the PM is avoiding the conflict. This allows secondary conflicts (passive-aggressive behavior) to develop and damages the PM's credibility as a leader."
+            },
+            {
+              "question": "A project manager successfully helps two team members resolve a significant conflict. What should the PM do in the following weeks?",
+              "options": [
+                "Consider the matter closed and move on.",
+                "Keep the team members separated to prevent recurrence.",
+                "Follow up to ensure the resolution is holding and the working relationship is restored.",
+                "Document lessons learned immediately."
+              ],
+              "correct": 2,
+              "explanation": "Conflict resolution requires follow-through. Checking in after resolution ensures the solution is working, demonstrates the PM's commitment, and catches any recurrence early."
+            },
+            {
+              "question": "During a heated project meeting, a stakeholder makes a personal attack against a team member, saying \"Your incompetence is why we're in this mess.\" What should the PM do IMMEDIATELY?",
+              "options": [
+                "Let the team member defend themselves.",
+                "Address the stakeholder's underlying concern about the project status.",
+                "Intervene to stop the personal attack and redirect to the issue, not the person.",
+                "End the meeting immediately."
+              ],
+              "correct": 2,
+              "explanation": "The PM must protect team members from personal attacks. Allowing personal attacks damages psychological safety and the PM's credibility. Redirecting to the issue maintains professionalism."
+            },
+            {
+              "question": "A project manager is new to a team that has a history of unresolved conflicts and low trust. What should the PM prioritize FIRST to improve conflict management?",
+              "options": [
+                "Establish authority by making quick decisions on pending conflicts.",
+                "Implement new conflict resolution processes.",
+                "Build relationships and psychological safety before addressing existing conflicts.",
+                "Identify and remove the team members who cause the most conflict."
+              ],
+              "correct": 2,
+              "explanation": "Trust must precede effective conflict resolution. Without psychological safety, team members won't engage honestly in conflict resolution. Building relationships first enables sustainable improvement."
+            },
+            {
+              "question": "An experienced technical lead disagrees with a decision made by the project manager. The technical lead has valid points, but the decision has already been communicated to stakeholders. What is the BEST approach?",
+              "options": [
+                "Maintain the original decision to preserve credibility with stakeholders.",
+                "Reverse the decision based on the technical lead's expertise.",
+                "Acknowledge the technical lead's perspective, evaluate the impact of changing course, and decide whether the benefits of change outweigh the costs.",
+                "Ask the sponsor to make the final decision."
+              ],
+              "correct": 2,
+              "explanation": "Collaboration means genuinely considering input, even after decisions are made. Evaluating whether to change course (vs. defending the original decision) demonstrates respect and may lead to better outcomes."
+            },
+            {
+              "question": "Which of the following BEST describes the project manager's role in conflict management according to PMI?",
+              "options": [
+                "Judge who determines the correct resolution to disputes.",
+                "Authority figure who enforces team compliance.",
+                "Facilitator who helps parties understand each other and find mutually acceptable solutions.",
+                "Neutral observer who only intervenes when conflicts become severe."
+              ],
+              "correct": 2,
+              "explanation": "PMI emphasizes the PM as facilitator, not judge or authority. The PM's role is to create conditions for resolution, not to impose solutions. This aligns with servant leadership principles."
+            }
+          ]
+        }
       },
       "deep_dive": {
         "introduction": {
@@ -9443,9 +10181,21 @@
           "setup": "Priya is a senior developer with 8 years of experience. She's delivered complex features flawlessly for the past year. Recently, you've been reviewing all her code before it goes to QA and requiring approval for her technical decisions. She sends you a message: 'Can we talk? I feel like you don't trust my work anymore.'",
           "context": "Priya has a perfect track record. Your increased oversight started when the project entered a high-visibility phase, but you never explained this to her.",
           "stakeholders": [
-            { "name": "Priya", "role": "Senior Developer", "concern": "Feels micromanaged and undervalued" },
-            { "name": "VP Engineering", "role": "Executive Sponsor", "concern": "Wants quality deliverables" },
-            { "name": "Team", "role": "Other Developers", "concern": "Watching how you treat top performers" }
+            {
+              "name": "Priya",
+              "role": "Senior Developer",
+              "concern": "Feels micromanaged and undervalued"
+            },
+            {
+              "name": "VP Engineering",
+              "role": "Executive Sponsor",
+              "concern": "Wants quality deliverables"
+            },
+            {
+              "name": "Team",
+              "role": "Other Developers",
+              "concern": "Watching how you treat top performers"
+            }
           ],
           "options": [
             {
@@ -9486,9 +10236,21 @@
           "setup": "Marcus joined 3 months ago and is enthusiastic and confident. Without consulting anyone, he committed to a client that the team would deliver a major feature by end of month—something that would normally take 6 weeks. He proudly tells you about 'closing the deal' in standup.",
           "context": "Marcus has good intentions but doesn't yet understand the complexity of your systems or the team's capacity planning process.",
           "stakeholders": [
-            { "name": "Marcus", "role": "Junior Developer", "concern": "Wants to contribute and impress" },
-            { "name": "Client", "role": "Key Account", "concern": "Expects the commitment to be honored" },
-            { "name": "Team", "role": "Development Team", "concern": "Worried about unrealistic deadline" }
+            {
+              "name": "Marcus",
+              "role": "Junior Developer",
+              "concern": "Wants to contribute and impress"
+            },
+            {
+              "name": "Client",
+              "role": "Key Account",
+              "concern": "Expects the commitment to be honored"
+            },
+            {
+              "name": "Team",
+              "role": "Development Team",
+              "concern": "Worried about unrealistic deadline"
+            }
           ],
           "options": [
             {
@@ -9529,9 +10291,21 @@
           "setup": "You assigned Sarah to lead the API redesign. She's technically excellent but keeps coming to you for decisions: 'Should we use REST or GraphQL?', 'Can I schedule a meeting with the platform team?', 'Is it okay to push back the deadline by two days?' You've told her she owns this project.",
           "context": "Sarah was previously on a team with a controlling manager. She has the skills but not the confidence to use her authority.",
           "stakeholders": [
-            { "name": "Sarah", "role": "Tech Lead", "concern": "Afraid of making wrong decisions" },
-            { "name": "You", "role": "PM", "concern": "Becoming a bottleneck" },
-            { "name": "Project", "role": "API Redesign", "concern": "Delays from decision bottleneck" }
+            {
+              "name": "Sarah",
+              "role": "Tech Lead",
+              "concern": "Afraid of making wrong decisions"
+            },
+            {
+              "name": "You",
+              "role": "PM",
+              "concern": "Becoming a bottleneck"
+            },
+            {
+              "name": "Project",
+              "role": "API Redesign",
+              "concern": "Delays from decision bottleneck"
+            }
           ],
           "options": [
             {
@@ -9572,9 +10346,21 @@
           "setup": "Your agile team has been self-organizing effectively for 6 months. A senior stakeholder, David, is frustrated with a recent sprint outcome and tells you: 'You need to start assigning tasks directly. This self-organizing thing isn't working. I want you managing who does what.'",
           "context": "The sprint issue was actually caused by an unclear requirement from David's team, not the self-organization approach. Team velocity has been excellent.",
           "stakeholders": [
-            { "name": "David", "role": "Senior Stakeholder", "concern": "Wants more control and visibility" },
-            { "name": "Team", "role": "Development Team", "concern": "Values autonomy and self-organization" },
-            { "name": "Scrum Master", "role": "Process Owner", "concern": "Protecting agile principles" }
+            {
+              "name": "David",
+              "role": "Senior Stakeholder",
+              "concern": "Wants more control and visibility"
+            },
+            {
+              "name": "Team",
+              "role": "Development Team",
+              "concern": "Values autonomy and self-organization"
+            },
+            {
+              "name": "Scrum Master",
+              "role": "Process Owner",
+              "concern": "Protecting agile principles"
+            }
           ],
           "options": [
             {
@@ -9615,9 +10401,21 @@
           "setup": "You delegated budget authority to your technical lead, James. He's excellent technically but just approved $50K in cloud infrastructure spending without comparing vendors or getting competitive quotes—something finance requires for purchases over $10K. Finance is now questioning the expense.",
           "context": "James didn't know about the competitive quote policy. You delegated budget authority without explaining the constraints.",
           "stakeholders": [
-            { "name": "James", "role": "Technical Lead", "concern": "Feels set up to fail" },
-            { "name": "Finance", "role": "Finance Department", "concern": "Policy compliance" },
-            { "name": "You", "role": "PM", "concern": "Delegated without adequate preparation" }
+            {
+              "name": "James",
+              "role": "Technical Lead",
+              "concern": "Feels set up to fail"
+            },
+            {
+              "name": "Finance",
+              "role": "Finance Department",
+              "concern": "Policy compliance"
+            },
+            {
+              "name": "You",
+              "role": "PM",
+              "concern": "Delegated without adequate preparation"
+            }
           ],
           "options": [
             {
@@ -9834,19 +10632,59 @@
         "title": "Delegation Level Matcher",
         "description": "Match each scenario to the appropriate delegation level. Consider the team member's capability, the decision's risk/impact, and contextual factors.",
         "delegation_levels": [
-          { "level": 1, "name": "TELL (Direct)", "description": "PM decides and directs specifically", "color": "red" },
-          { "level": 2, "name": "SELL (Coach)", "description": "PM decides and explains reasoning", "color": "orange" },
-          { "level": 3, "name": "CONSULT (Support)", "description": "PM gathers input, then decides", "color": "amber" },
-          { "level": 4, "name": "AGREE (Collaborate)", "description": "PM facilitates joint decision", "color": "yellow" },
-          { "level": 5, "name": "ADVISE (Guide)", "description": "PM offers perspective if asked", "color": "blue" },
-          { "level": 6, "name": "INQUIRE (Trust)", "description": "PM asks about decision after", "color": "cyan" },
-          { "level": 7, "name": "DELEGATE (Entrust)", "description": "Full ownership, PM stays out", "color": "emerald" }
+          {
+            "level": 1,
+            "name": "TELL (Direct)",
+            "description": "PM decides and directs specifically",
+            "color": "red"
+          },
+          {
+            "level": 2,
+            "name": "SELL (Coach)",
+            "description": "PM decides and explains reasoning",
+            "color": "orange"
+          },
+          {
+            "level": 3,
+            "name": "CONSULT (Support)",
+            "description": "PM gathers input, then decides",
+            "color": "amber"
+          },
+          {
+            "level": 4,
+            "name": "AGREE (Collaborate)",
+            "description": "PM facilitates joint decision",
+            "color": "yellow"
+          },
+          {
+            "level": 5,
+            "name": "ADVISE (Guide)",
+            "description": "PM offers perspective if asked",
+            "color": "blue"
+          },
+          {
+            "level": 6,
+            "name": "INQUIRE (Trust)",
+            "description": "PM asks about decision after",
+            "color": "cyan"
+          },
+          {
+            "level": 7,
+            "name": "DELEGATE (Entrust)",
+            "description": "Full ownership, PM stays out",
+            "color": "emerald"
+          }
         ],
         "situations": [
           {
             "id": 1,
             "scenario": "Maya just graduated and joined your team. She has strong theoretical knowledge but no practical experience. You need her to create test cases for a small feature.",
-            "factors": ["First real task", "No track record", "Strong theory but no practice", "Low-risk assignment"],
+            "factors": [
+              "First real task",
+              "No track record",
+              "Strong theory but no practice",
+              "Low-risk assignment"
+            ],
             "correctLevel": 1,
             "levelName": "TELL (Direct)",
             "explanation": "New team member with no practical experience needs clear direction. Set her up for success with specific guidance now so you can delegate more later."
@@ -9854,7 +10692,12 @@
           {
             "id": 2,
             "scenario": "Derek is your senior architect with 3 years on the team. He's successfully led 4 system migrations with zero production incidents. A new migration needs architecture decisions.",
-            "factors": ["3 years proven track record", "4 successful migrations", "Zero incidents", "His domain of expertise"],
+            "factors": [
+              "3 years proven track record",
+              "4 successful migrations",
+              "Zero incidents",
+              "His domain of expertise"
+            ],
             "correctLevel": 7,
             "levelName": "DELEGATE (Entrust)",
             "explanation": "Proven expert with consistent track record in exactly this type of work. Full delegation—don't waste his time or yours with unnecessary oversight."
@@ -9862,7 +10705,12 @@
           {
             "id": 3,
             "scenario": "Your highly capable team wants to adopt a new CI/CD tool. The decision would affect 3 other teams and require migrating all existing pipelines.",
-            "factors": ["Capable team", "High cross-functional impact", "Significant change", "Technical complexity"],
+            "factors": [
+              "Capable team",
+              "High cross-functional impact",
+              "Significant change",
+              "Technical complexity"
+            ],
             "correctLevel": 4,
             "levelName": "AGREE (Collaborate)",
             "explanation": "Capable team BUT high organizational impact. Work together—they own technical evaluation, you help navigate cross-team implications."
@@ -9870,7 +10718,12 @@
           {
             "id": 4,
             "scenario": "Raj has been solid for a year but lately his work quality has declined—missed details, incomplete deliverables, uncharacteristic mistakes. He needs to work on the next feature.",
-            "factors": ["Previous good performance", "Recent decline", "Needs support structure", "Unknown root cause"],
+            "factors": [
+              "Previous good performance",
+              "Recent decline",
+              "Needs support structure",
+              "Unknown root cause"
+            ],
             "correctLevel": 2,
             "levelName": "SELL (Coach)",
             "explanation": "Has capability but is struggling. Move down temporarily to coach through the rough patch—direct enough to ensure success, supportive enough to help recover."
@@ -9878,7 +10731,12 @@
           {
             "id": 5,
             "scenario": "Production is down, customers are impacted, the CEO wants updates every 15 minutes. Your experienced team knows the system well but emotions are high and people are shouting different theories.",
-            "factors": ["Crisis situation", "High stakes", "Chaos and emotions", "Time pressure"],
+            "factors": [
+              "Crisis situation",
+              "High stakes",
+              "Chaos and emotions",
+              "Time pressure"
+            ],
             "correctLevel": 1,
             "levelName": "TELL (Direct)",
             "explanation": "Crisis = Direct, even with experienced teams. Cut through chaos with clear roles and single coordination point. Return to normal delegation after."
@@ -9886,7 +10744,12 @@
           {
             "id": 6,
             "scenario": "A team member asks whether to use JSON or XML for a configuration file. Your self-organizing team has been effective, there's no strong organizational standard, and either format works fine.",
-            "factors": ["Self-organizing team", "Low-impact decision", "No constraints", "Routine technical choice"],
+            "factors": [
+              "Self-organizing team",
+              "Low-impact decision",
+              "No constraints",
+              "Routine technical choice"
+            ],
             "correctLevel": 7,
             "levelName": "DELEGATE (Entrust)",
             "explanation": "Low-stakes routine decision within their expertise. Break the dependency on unnecessary approval—'You decide, it's your code.'"
@@ -9894,7 +10757,12 @@
           {
             "id": 7,
             "scenario": "Kim is ready for growth after 2 years of solid performance. A medium-complexity project needs a technical lead. It's a stretch assignment but bounded risk.",
-            "factors": ["Development opportunity", "First time in role", "Solid performer", "Medium complexity"],
+            "factors": [
+              "Development opportunity",
+              "First time in role",
+              "Solid performer",
+              "Medium complexity"
+            ],
             "correctLevel": 3,
             "levelName": "CONSULT (Support)",
             "explanation": "Stretch assignment = Support level. Enough autonomy to grow, enough backup to succeed. Be a thought partner, not a decision-maker."
@@ -9902,7 +10770,12 @@
           {
             "id": 8,
             "scenario": "Aisha has been on the team 4 months and picks things up quickly. She's eager but sometimes overconfident. She just volunteered to handle a stakeholder negotiation that typically requires senior experience.",
-            "factors": ["4 months experience", "Eager and confident", "High-visibility task", "Needs development"],
+            "factors": [
+              "4 months experience",
+              "Eager and confident",
+              "High-visibility task",
+              "Needs development"
+            ],
             "correctLevel": 2,
             "levelName": "SELL (Coach)",
             "explanation": "Channel enthusiasm into learning. Don't crush confidence, but provide structure for a high-stakes situation. Role-play first, observe, debrief."
@@ -9910,7 +10783,12 @@
           {
             "id": 9,
             "scenario": "Your team recommends adopting a new testing framework. They've researched thoroughly and are confident. However, your Technology Standards Board requires approval for new tools (6-8 week process).",
-            "factors": ["Good team recommendation", "Organizational governance", "External constraint", "Process requirement"],
+            "factors": [
+              "Good team recommendation",
+              "Organizational governance",
+              "External constraint",
+              "Process requirement"
+            ],
             "correctLevel": 3,
             "levelName": "CONSULT (Support)",
             "explanation": "Team made a good call but organizational process exists. Support them through the approval process—they can't bypass governance unilaterally."
@@ -9918,7 +10796,12 @@
           {
             "id": 10,
             "scenario": "Chen is your most experienced developer. She's handled similar decisions dozens of times. She asks about a technical approach for a routine feature that's entirely within her expertise.",
-            "factors": ["Most experienced", "Routine decision", "Her expertise", "Done many times before"],
+            "factors": [
+              "Most experienced",
+              "Routine decision",
+              "Her expertise",
+              "Done many times before"
+            ],
             "correctLevel": 6,
             "levelName": "INQUIRE (Trust)",
             "explanation": "Proven expert on routine work. Let her decide, ask about it later for your awareness. Don't create bottlenecks for decisions she's mastered."
@@ -9926,7 +10809,12 @@
           {
             "id": 11,
             "scenario": "A junior developer wants to refactor a critical payment processing module. It's complex code with compliance implications.",
-            "factors": ["Junior developer", "Critical system", "Compliance implications", "Complex code"],
+            "factors": [
+              "Junior developer",
+              "Critical system",
+              "Compliance implications",
+              "Complex code"
+            ],
             "correctLevel": 2,
             "levelName": "SELL (Coach)",
             "explanation": "High stakes + junior = close involvement. Explain your concerns, teach the context, potentially pair with a senior or defer until they've grown."
@@ -9934,7 +10822,12 @@
           {
             "id": 12,
             "scenario": "Your team has been self-organizing for 6 months with excellent velocity. Sprint planning is coming up and they're discussing how to divide the work.",
-            "factors": ["Proven self-organization", "Excellent track record", "Their process", "Routine sprint activity"],
+            "factors": [
+              "Proven self-organization",
+              "Excellent track record",
+              "Their process",
+              "Routine sprint activity"
+            ],
             "correctLevel": 7,
             "levelName": "DELEGATE (Entrust)",
             "explanation": "Self-organizing team with proven success. Stay out of how they divide work—that's the whole point of self-organization."
@@ -9954,21 +10847,34 @@
                 "role": "Priya (Senior Developer)",
                 "emoji": "👩‍💻",
                 "thoughts": "What did I do wrong? I've never had a quality issue. Does the PM not trust me anymore? I feel like I'm being treated like a junior. This is insulting after everything I've delivered. Maybe I should look for a team that values my experience.",
-                "feelings": ["Frustrated", "Undervalued", "Confused", "Demotivated"],
+                "feelings": [
+                  "Frustrated",
+                  "Undervalued",
+                  "Confused",
+                  "Demotivated"
+                ],
                 "needs": "Understanding why oversight increased, acknowledgment of track record, appropriate autonomy for skill level"
               },
               {
                 "role": "PM (You)",
                 "emoji": "📋",
                 "thoughts": "The project entered a critical phase with executive visibility. I can't afford any mistakes right now. Priya is great, but I need to make sure everything is perfect. I'm not trying to micromanage—I'm trying to protect the project and her.",
-                "feelings": ["Pressured", "Risk-averse", "Protective"],
+                "feelings": [
+                  "Pressured",
+                  "Risk-averse",
+                  "Protective"
+                ],
                 "needs": "Quality assurance during high-stakes phase, confidence in deliverables, executive confidence"
               },
               {
                 "role": "Team Observer",
                 "emoji": "👀",
                 "thoughts": "If Priya—our best performer—is being micromanaged, what does that mean for the rest of us? Is this the new normal? Why would I go above and beyond if this is how top performers get treated?",
-                "feelings": ["Worried", "Cautious", "Demotivated"],
+                "feelings": [
+                  "Worried",
+                  "Cautious",
+                  "Demotivated"
+                ],
                 "needs": "Understanding that performance is recognized, psychological safety, fair treatment"
               }
             ],
@@ -9984,21 +10890,34 @@
                 "role": "Marcus (Junior Developer)",
                 "emoji": "🧑‍💻",
                 "thoughts": "I saw an opportunity to help the team! The client seemed so happy. I wanted to show I can contribute beyond just coding. I thought everyone would be excited that I closed this deal. Why do they look so worried?",
-                "feelings": ["Proud", "Eager", "Confused", "Vulnerable"],
+                "feelings": [
+                  "Proud",
+                  "Eager",
+                  "Confused",
+                  "Vulnerable"
+                ],
                 "needs": "Recognition for initiative, learning about processes, guidance without humiliation"
               },
               {
                 "role": "Senior Team Member",
                 "emoji": "👨‍💻",
                 "thoughts": "Does he have any idea what he just committed us to? That's 4 weeks of overtime minimum. Who gave him authority to make commitments? The PM needs to handle this—we can't just let this slide.",
-                "feelings": ["Frustrated", "Anxious", "Resentful"],
+                "feelings": [
+                  "Frustrated",
+                  "Anxious",
+                  "Resentful"
+                ],
                 "needs": "Realistic commitments, clear authority boundaries, protection from overwork"
               },
               {
                 "role": "Client",
                 "emoji": "🤝",
                 "thoughts": "Marcus was so confident and helpful. He really understood our urgency. I've already told my leadership we're getting this feature. If they walk it back now, I'll look foolish.",
-                "feelings": ["Expectant", "Trusting", "Invested"],
+                "feelings": [
+                  "Expectant",
+                  "Trusting",
+                  "Invested"
+                ],
                 "needs": "Commitment honored or graceful alternative, not feeling foolish"
               }
             ],
@@ -10014,21 +10933,32 @@
                 "role": "Sarah (Tech Lead)",
                 "emoji": "👩‍💻",
                 "thoughts": "I've been told I 'own' this, but what if I make the wrong call? My last PM second-guessed everything I did. I'd rather check than get blamed later. The PM seems annoyed when I ask, but also annoyed when things go wrong. I can't win.",
-                "feelings": ["Anxious", "Uncertain", "Afraid of failure", "Confused"],
+                "feelings": [
+                  "Anxious",
+                  "Uncertain",
+                  "Afraid of failure",
+                  "Confused"
+                ],
                 "needs": "Confidence building, clear boundaries, safety to make mistakes, consistent response"
               },
               {
                 "role": "PM (You)",
                 "emoji": "📋",
                 "thoughts": "I gave her ownership—why won't she take it? Every question creates a bottleneck. I don't have time to make decisions she should be making. Maybe I was wrong about her readiness for this role.",
-                "feelings": ["Frustrated", "Impatient", "Overwhelmed"],
+                "feelings": [
+                  "Frustrated",
+                  "Impatient",
+                  "Overwhelmed"
+                ],
                 "needs": "Sarah to act autonomously, fewer interruptions, project progress"
               },
               {
                 "role": "Previous Manager (Context)",
                 "emoji": "👔",
                 "thoughts": "(Sarah's former manager was highly controlling, reviewed everything, often overruled decisions after the fact. Sarah learned that 'ownership' was just a word—real decisions needed approval.)",
-                "feelings": ["N/A - Context"],
+                "feelings": [
+                  "N/A - Context"
+                ],
                 "needs": "N/A - Context"
               }
             ],
@@ -10044,21 +10974,33 @@
                 "role": "David (Senior Stakeholder)",
                 "emoji": "👔",
                 "thoughts": "This 'self-organizing' thing isn't working. I don't even know who's doing what. The PM should be managing the team, not letting them figure it out themselves. I need more visibility and control.",
-                "feelings": ["Frustrated", "Out of control", "Concerned"],
+                "feelings": [
+                  "Frustrated",
+                  "Out of control",
+                  "Concerned"
+                ],
                 "needs": "Visibility into work, confidence in delivery, feeling heard"
               },
               {
                 "role": "Development Team",
                 "emoji": "👥",
                 "thoughts": "We've been crushing it for 6 months. One bad sprint—caused by unclear requirements from David's team—and suddenly we can't be trusted to organize ourselves? If the PM caves on this, we'll all lose autonomy.",
-                "feelings": ["Defensive", "Anxious", "Frustrated"],
+                "feelings": [
+                  "Defensive",
+                  "Anxious",
+                  "Frustrated"
+                ],
                 "needs": "Autonomy preserved, fair assessment, protection from blame"
               },
               {
                 "role": "PM (You)",
                 "emoji": "📋",
                 "thoughts": "David has legitimate concerns but his solution would destroy what's working. The real problem is requirements clarity, not self-organization. But David is senior and I can't just tell him he's wrong.",
-                "feelings": ["Caught in middle", "Protective of team", "Diplomatic"],
+                "feelings": [
+                  "Caught in middle",
+                  "Protective of team",
+                  "Diplomatic"
+                ],
                 "needs": "Address David's concern while protecting team autonomy, solve real problem"
               }
             ],
@@ -10074,21 +11016,32 @@
                 "role": "James (Technical Lead)",
                 "emoji": "👨‍💻",
                 "thoughts": "I was told I had budget authority. I made a good technical decision. Now I'm being questioned like I did something wrong? Nobody told me about a quote requirement. I feel set up to fail.",
-                "feelings": ["Blindsided", "Defensive", "Betrayed"],
+                "feelings": [
+                  "Blindsided",
+                  "Defensive",
+                  "Betrayed"
+                ],
                 "needs": "Clear boundaries upfront, support when process fails, fair treatment"
               },
               {
                 "role": "Finance Team",
                 "emoji": "💰",
                 "thoughts": "The policy exists for good reasons—we need competitive pricing and audit trails. This wasn't communicated properly to the technical lead. But we still need compliance.",
-                "feelings": ["Concerned", "Process-focused"],
+                "feelings": [
+                  "Concerned",
+                  "Process-focused"
+                ],
                 "needs": "Policy compliance, proper documentation, process improvement"
               },
               {
                 "role": "PM (You)",
                 "emoji": "📋",
                 "thoughts": "I delegated budget authority but never explained the constraints. This is my failure, not James's. I need to fix this without throwing him under the bus or revoking authority unfairly.",
-                "feelings": ["Responsible", "Guilty", "Problem-solving"],
+                "feelings": [
+                  "Responsible",
+                  "Guilty",
+                  "Problem-solving"
+                ],
                 "needs": "Fix immediate issue, create proper guardrails, maintain trust with James"
               }
             ],
@@ -11693,38 +12646,143 @@
         "title": "Timeline Reconstructor - Empowerment Journey",
         "description": "A project team's journey from dependency to empowerment has been scrambled. Arrange the events in the correct sequence, then analyze the empowerment transformation.",
         "events": [
-          {"id": "A", "description": "Team retrospective identifies \"waiting for PM approval\" as their biggest impediment. Average decision wait time is 2.3 days. Team velocity has dropped for three consecutive sprints."},
-          {"id": "B", "description": "PM creates and shares a Decision Authority Matrix defining three categories: Team Decides, Team Decides & Informs PM, and PM Approval Required. The matrix gives the team authority over 70% of daily decisions."},
-          {"id": "C", "description": "New PM (Jordan) joins the team, inheriting a group that checks every decision with their manager. The previous PM made all significant decisions personally."},
-          {"id": "D", "description": "Senior developer makes a technical decision independently for the first time. The decision works well. Jordan publicly recognizes the initiative in the team channel: \"Great call on the caching approach. This is exactly the ownership I want to see.\""},
-          {"id": "E", "description": "Jordan analyzes the types of decisions that have been escalating to PM. Categorizes them as: truly need PM input (15%), could be team decisions (60%), and shouldn't even be decisions (25% - things with obvious answers)."},
-          {"id": "F", "description": "Sprint velocity returns to historical levels. Team survey shows \"authority to make decisions\" score increased from 2.1 to 3.8. Team reports spending 40% less time waiting for approvals."},
-          {"id": "G", "description": "Jordan notices that team members still ask permission for clearly-delegated decisions. Realizes that authority on paper isn't the same as felt authority. Begins coaching team through decisions rather than making them."},
-          {"id": "H", "description": "Team holds their first sprint planning without PM task assignments. Team self-assigns work in 20 minutes. Two members volunteer for stretch assignments. Energy in the room is noticeably higher."},
-          {"id": "I", "description": "A delegated decision goes wrong—the team chose a vendor that couldn't deliver. Instead of reverting to control, Jordan facilitates a blameless retrospective on what happened and what the team learned."},
-          {"id": "J", "description": "Jordan schedules 1:1s with each team member asking: \"What decisions do you think you should be able to make that currently require my approval?\" Documents the themes."},
-          {"id": "K", "description": "Team starts solving problems among themselves before involving Jordan. In one instance, they resolve a cross-team dependency conflict directly with the other team lead—something they would have escalated two months ago."},
-          {"id": "L", "description": "Jordan shares the empowerment journey at a PM community meeting. Other PMs are skeptical: \"What if they make bad decisions?\" Jordan responds: \"They will. And they'll learn. My job is to create conditions for smart failure, not prevent all failure.\""},
-          {"id": "M", "description": "Jordan makes a deliberate choice to NOT attend the daily standup for one week. The team runs it themselves successfully. One member comments: \"We actually got through it faster.\""},
-          {"id": "N", "description": "Team proposes changing their Definition of Done to include automated testing. Rather than approving or rejecting, Jordan asks questions to help them think through implications, then confirms: \"This is your call. You own your quality standards.\""},
-          {"id": "O", "description": "Jordan formally transfers \"process improvement\" authority to the team. Instead of PM-approved retrospective action items, the team now implements changes directly and reports outcomes."}
+          {
+            "id": "A",
+            "description": "Team retrospective identifies \"waiting for PM approval\" as their biggest impediment. Average decision wait time is 2.3 days. Team velocity has dropped for three consecutive sprints."
+          },
+          {
+            "id": "B",
+            "description": "PM creates and shares a Decision Authority Matrix defining three categories: Team Decides, Team Decides & Informs PM, and PM Approval Required. The matrix gives the team authority over 70% of daily decisions."
+          },
+          {
+            "id": "C",
+            "description": "New PM (Jordan) joins the team, inheriting a group that checks every decision with their manager. The previous PM made all significant decisions personally."
+          },
+          {
+            "id": "D",
+            "description": "Senior developer makes a technical decision independently for the first time. The decision works well. Jordan publicly recognizes the initiative in the team channel: \"Great call on the caching approach. This is exactly the ownership I want to see.\""
+          },
+          {
+            "id": "E",
+            "description": "Jordan analyzes the types of decisions that have been escalating to PM. Categorizes them as: truly need PM input (15%), could be team decisions (60%), and shouldn't even be decisions (25% - things with obvious answers)."
+          },
+          {
+            "id": "F",
+            "description": "Sprint velocity returns to historical levels. Team survey shows \"authority to make decisions\" score increased from 2.1 to 3.8. Team reports spending 40% less time waiting for approvals."
+          },
+          {
+            "id": "G",
+            "description": "Jordan notices that team members still ask permission for clearly-delegated decisions. Realizes that authority on paper isn't the same as felt authority. Begins coaching team through decisions rather than making them."
+          },
+          {
+            "id": "H",
+            "description": "Team holds their first sprint planning without PM task assignments. Team self-assigns work in 20 minutes. Two members volunteer for stretch assignments. Energy in the room is noticeably higher."
+          },
+          {
+            "id": "I",
+            "description": "A delegated decision goes wrong—the team chose a vendor that couldn't deliver. Instead of reverting to control, Jordan facilitates a blameless retrospective on what happened and what the team learned."
+          },
+          {
+            "id": "J",
+            "description": "Jordan schedules 1:1s with each team member asking: \"What decisions do you think you should be able to make that currently require my approval?\" Documents the themes."
+          },
+          {
+            "id": "K",
+            "description": "Team starts solving problems among themselves before involving Jordan. In one instance, they resolve a cross-team dependency conflict directly with the other team lead—something they would have escalated two months ago."
+          },
+          {
+            "id": "L",
+            "description": "Jordan shares the empowerment journey at a PM community meeting. Other PMs are skeptical: \"What if they make bad decisions?\" Jordan responds: \"They will. And they'll learn. My job is to create conditions for smart failure, not prevent all failure.\""
+          },
+          {
+            "id": "M",
+            "description": "Jordan makes a deliberate choice to NOT attend the daily standup for one week. The team runs it themselves successfully. One member comments: \"We actually got through it faster.\""
+          },
+          {
+            "id": "N",
+            "description": "Team proposes changing their Definition of Done to include automated testing. Rather than approving or rejecting, Jordan asks questions to help them think through implications, then confirms: \"This is your call. You own your quality standards.\""
+          },
+          {
+            "id": "O",
+            "description": "Jordan formally transfers \"process improvement\" authority to the team. Instead of PM-approved retrospective action items, the team now implements changes directly and reports outcomes."
+          }
         ],
         "correct_order": [
-          {"order": 1, "event_id": "C", "phase": "Starting Point — PM inherits dependent team"},
-          {"order": 2, "event_id": "A", "phase": "Wake-up Call — Retrospective surfaces the problem"},
-          {"order": 3, "event_id": "E", "phase": "Assessment — PM analyzes decision patterns"},
-          {"order": 4, "event_id": "J", "phase": "Discovery — PM asks team what they want authority over"},
-          {"order": 5, "event_id": "B", "phase": "Framework — PM creates and shares Decision Authority Matrix"},
-          {"order": 6, "event_id": "G", "phase": "Reality Check — Paper authority ≠ felt authority; begin coaching"},
-          {"order": 7, "event_id": "D", "phase": "First Win — Senior developer decides independently; recognized"},
-          {"order": 8, "event_id": "H", "phase": "Milestone — First self-directed sprint planning"},
-          {"order": 9, "event_id": "I", "phase": "Test — Delegated decision fails; handled with learning, not control"},
-          {"order": 10, "event_id": "N", "phase": "Growth — Team proposes Definition of Done change; PM supports"},
-          {"order": 11, "event_id": "K", "phase": "Maturity — Team solving problems without PM involvement"},
-          {"order": 12, "event_id": "M", "phase": "Validation — PM steps away; team succeeds independently"},
-          {"order": 13, "event_id": "O", "phase": "Formalization — Process improvement authority transferred"},
-          {"order": 14, "event_id": "F", "phase": "Outcomes — Metrics confirm transformation"},
-          {"order": 15, "event_id": "L", "phase": "Sharing — PM teaches other PMs the approach"}
+          {
+            "order": 1,
+            "event_id": "C",
+            "phase": "Starting Point — PM inherits dependent team"
+          },
+          {
+            "order": 2,
+            "event_id": "A",
+            "phase": "Wake-up Call — Retrospective surfaces the problem"
+          },
+          {
+            "order": 3,
+            "event_id": "E",
+            "phase": "Assessment — PM analyzes decision patterns"
+          },
+          {
+            "order": 4,
+            "event_id": "J",
+            "phase": "Discovery — PM asks team what they want authority over"
+          },
+          {
+            "order": 5,
+            "event_id": "B",
+            "phase": "Framework — PM creates and shares Decision Authority Matrix"
+          },
+          {
+            "order": 6,
+            "event_id": "G",
+            "phase": "Reality Check — Paper authority ≠ felt authority; begin coaching"
+          },
+          {
+            "order": 7,
+            "event_id": "D",
+            "phase": "First Win — Senior developer decides independently; recognized"
+          },
+          {
+            "order": 8,
+            "event_id": "H",
+            "phase": "Milestone — First self-directed sprint planning"
+          },
+          {
+            "order": 9,
+            "event_id": "I",
+            "phase": "Test — Delegated decision fails; handled with learning, not control"
+          },
+          {
+            "order": 10,
+            "event_id": "N",
+            "phase": "Growth — Team proposes Definition of Done change; PM supports"
+          },
+          {
+            "order": 11,
+            "event_id": "K",
+            "phase": "Maturity — Team solving problems without PM involvement"
+          },
+          {
+            "order": 12,
+            "event_id": "M",
+            "phase": "Validation — PM steps away; team succeeds independently"
+          },
+          {
+            "order": 13,
+            "event_id": "O",
+            "phase": "Formalization — Process improvement authority transferred"
+          },
+          {
+            "order": 14,
+            "event_id": "F",
+            "phase": "Outcomes — Metrics confirm transformation"
+          },
+          {
+            "order": 15,
+            "event_id": "L",
+            "phase": "Sharing — PM teaches other PMs the approach"
+          }
         ],
         "analysis_questions": [
           {
@@ -11765,10 +12823,34 @@
         "title": "Delegation Level Matcher",
         "description": "Match each scenario to the appropriate delegation level. Consider the team member's capability, the decision's risk/impact, and contextual factors.",
         "delegation_levels": [
-          {"level": 1, "name": "DIRECT (Tell)", "pm_does": "Decides and directs specifically", "team_does": "Executes as directed", "use_when": "Low skill, high stakes, crisis"},
-          {"level": 2, "name": "COACH (Sell)", "pm_does": "Decides and explains reasoning", "team_does": "Executes with understanding", "use_when": "Building capability, moderate risk"},
-          {"level": 3, "name": "SUPPORT (Participate)", "pm_does": "Facilitates, provides input", "team_does": "Decides with PM involvement", "use_when": "High skill, variable confidence"},
-          {"level": 4, "name": "DELEGATE (Entrust)", "pm_does": "Stays available if needed", "team_does": "Full ownership and authority", "use_when": "Proven capability, appropriate scope"}
+          {
+            "level": 1,
+            "name": "DIRECT (Tell)",
+            "pm_does": "Decides and directs specifically",
+            "team_does": "Executes as directed",
+            "use_when": "Low skill, high stakes, crisis"
+          },
+          {
+            "level": 2,
+            "name": "COACH (Sell)",
+            "pm_does": "Decides and explains reasoning",
+            "team_does": "Executes with understanding",
+            "use_when": "Building capability, moderate risk"
+          },
+          {
+            "level": 3,
+            "name": "SUPPORT (Participate)",
+            "pm_does": "Facilitates, provides input",
+            "team_does": "Decides with PM involvement",
+            "use_when": "High skill, variable confidence"
+          },
+          {
+            "level": 4,
+            "name": "DELEGATE (Entrust)",
+            "pm_does": "Stays available if needed",
+            "team_does": "Full ownership and authority",
+            "use_when": "Proven capability, appropriate scope"
+          }
         ],
         "situations": [
           {
@@ -11918,14 +13000,26 @@
               "role": "Senior Developer",
               "experience": "6 years",
               "internal_monologue": "We've been debating microservices versus monolith for the new feature. The team talked it through—we're going with microservices. It'll be more work upfront, but we've done the analysis, and it fits our scaling needs.\n\nI told Sarah [PM] our recommendation this morning. She asked a few good questions about deployment complexity, which made me think harder about rollback scenarios. Then she said, 'Makes sense. It's your call—you're closer to the technical details than I am.'\n\nThat felt good. She trusted our judgment. And honestly, her questions made the decision better. I hadn't fully thought through the rollback scenario, so we added some safeguards.\n\nI feel ownership over this. If it works, it's because WE made a good call. If it doesn't, I'll own that too—but I know Sarah will help us course-correct rather than blame us.",
-              "experiences": ["Trust and respect", "Ownership and pride", "Accountability accepted willingly", "PM as thought partner, not gatekeeper", "Confidence to make future decisions"]
+              "experiences": [
+                "Trust and respect",
+                "Ownership and pride",
+                "Accountability accepted willingly",
+                "PM as thought partner, not gatekeeper",
+                "Confidence to make future decisions"
+              ]
             },
             "perspective_b": {
               "name": "Jordan",
               "role": "Senior Developer",
               "experience": "6 years",
               "internal_monologue": "We've been debating microservices versus monolith for the new feature. The team talked it through—we want microservices. We wrote up a detailed recommendation and sent it to Sarah [PM] three days ago.\n\nStill waiting for approval.\n\nI followed up yesterday. She said she's 'reviewing it' and has some concerns about 'complexity' but hasn't had time to discuss. Meanwhile, we can't start the work.\n\nThis happens every time. We have the expertise. We've done the analysis. But every technical decision has to go through Sarah, and she's not even a developer. I don't think she understands the trade-offs as well as we do, but she's the bottleneck.\n\nWhat's the point of having six years of experience if I can't make a technical call? I feel like a junior dev waiting for permission.\n\nA few of us have been updating our LinkedIn profiles. If I wanted to just execute someone else's decisions, I could do that anywhere.",
-              "experiences": ["Frustration and disrespect", "Delayed work, wasted time", "Expertise not valued", "Infantilization despite experience", "Considering leaving"]
+              "experiences": [
+                "Frustration and disrespect",
+                "Delayed work, wasted time",
+                "Expertise not valued",
+                "Infantilization despite experience",
+                "Considering leaving"
+              ]
             },
             "key_insight": "Same person, same expertise, same recommendation. The difference is authority—and it changes everything about the experience and outcome."
           },
@@ -11938,14 +13032,26 @@
               "role": "Developer → First-time Project Lead",
               "experience": "3 years as developer",
               "internal_monologue": "When Marcus [PM] offered me the lead role on the dashboard project, I was terrified and excited. I've never led anything.\n\nBut the way he set it up made me feel like I could do this. He said, 'You'll make the key decisions. I'll be your thought partner—not your approver. Check in with me when you want to talk something through, but I won't second-guess you.'\n\nFirst week, I had to decide on the team's working hours for the project. I was going to ask Marcus, but then I remembered: this is MY call. So I proposed core hours to the team and asked what worked for them. We figured it out.\n\nI did check in with Marcus about the vendor selection—that felt bigger. He asked good questions, helped me think through it, then said, 'Your call. What's your decision?' I chose Vendor B. He supported it.\n\nThe project delivered. Not perfectly—I made some scheduling mistakes early on. But Marcus helped me see them as learning, not failures. He said, 'Every lead makes those mistakes the first time. Now you won't make them again.'\n\nI feel like I actually LED something. It wasn't Marcus's project that I executed. It was mine.",
-              "experiences": ["Genuine ownership and growth", "Support without control", "Safe space to make mistakes", "Confidence building", "Identity shift (developer → leader)"]
+              "experiences": [
+                "Genuine ownership and growth",
+                "Support without control",
+                "Safe space to make mistakes",
+                "Confidence building",
+                "Identity shift (developer → leader)"
+              ]
             },
             "perspective_b": {
               "name": "Priya",
               "role": "Developer → First-time Project Lead",
               "experience": "3 years as developer",
               "internal_monologue": "Marcus [PM] said I'm the 'lead' on the dashboard project, but it doesn't feel that way.\n\nEvery decision comes back to him. I proposed core hours for the team—he changed them. I recommended Vendor A—he overruled me and went with Vendor B. I tried to adjust the timeline when we hit an issue—he said no without explanation.\n\nI've stopped making decisions. I just ask Marcus what he wants and do that. It's faster than proposing something just to have it overruled.\n\nThe worst part is, when I ask directly, he says, 'You're the lead, you decide!' But then when I decide, he undoes it. The message is clear: I'm 'lead' in name only.\n\nThe project is going fine, I guess. But I don't feel like I'm learning to lead. I'm learning to execute Marcus's vision while he pretends I'm in charge.\n\nWhen people congratulate me on the project, I feel like a fraud. It wasn't really my work.",
-              "experiences": ["Title without authority", "Confusion about actual role", "Learned helplessness", "Imposter syndrome", "No real development"]
+              "experiences": [
+                "Title without authority",
+                "Confusion about actual role",
+                "Learned helplessness",
+                "Imposter syndrome",
+                "No real development"
+              ]
             },
             "key_insight": "Development requires real authority with real consequences. Fake delegation doesn't build capability—it builds cynicism."
           }
