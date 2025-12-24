@@ -15,6 +15,28 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body class="bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 text-white min-h-screen flex items-center justify-center overflow-x-hidden">
+    <!-- Loading Screen -->
+    <div id="loading" style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: #0f172a; display: flex; align-items: center; justify-content: center; z-index: 9999; flex-direction: column;">
+      <div style="text-align: center; max-width: 400px; padding: 2rem;">
+        <div style="font-size: 3rem; margin-bottom: 1rem; animation: pulse 2s infinite;">⏳</div>
+        <div style="color: white; font-size: 1.5rem; font-weight: 600; margin-bottom: 0.5rem;">Loading PMP Prep...</div>
+        <div style="color: #64748b; margin-bottom: 1.5rem;">Processing application code</div>
+        <div style="width: 200px; height: 4px; background: rgba(255,255,255,0.1); border-radius: 2px; margin: 0 auto; overflow: hidden;">
+          <div id="loading-bar" style="height: 100%; background: linear-gradient(90deg, #8b5cf6, #06b6d4, #10b981); width: 0%; transition: width 0.3s; animation: loading 2s infinite;"></div>
+        </div>
+        <div style="color: #94a3b8; font-size: 0.875rem; margin-top: 1rem;">This may take 10-30 seconds</div>
+      </div>
+    </div>
+    <style>
+      @keyframes pulse {
+        0%, 100% { opacity: 1; transform: scale(1); }
+        50% { opacity: 0.7; transform: scale(1.1); }
+      }
+      @keyframes loading {
+        0% { transform: translateX(-100%); }
+        100% { transform: translateX(400%); }
+      }
+    </style>
     <div id="root" class="w-full flex justify-center"></div>
     <script>
       // Suppress harmless browser extension errors

@@ -559,8 +559,8 @@ const PMPApp = () => {
             <div className="h-full bg-blue-500 animate-pulse" style={{width: '60%'}}></div>
           </div>
         </div>
-      </div>
-    );
+    </div>
+  );
   }
 
   // Error Display Component
@@ -1955,13 +1955,15 @@ const PMPApp = () => {
               <div
                 key={domain.key}
                 onClick={() => startQuiz('domain', domain.key)}
-                className={`
-                  flex-1 cursor-pointer rounded-2xl
-                  bg-slate-900/80 backdrop-blur-sm
-                  border-2 border-slate-800 hover:border-${domain.color}-500
-                  transition-all duration-300 hover:scale-[1.02]
-                  flex flex-col p-6 relative overflow-hidden group
-                `}
+                className="flex-1 cursor-pointer rounded-2xl bg-slate-900/80 backdrop-blur-sm border-2 transition-all duration-300 hover:scale-[1.02] flex flex-col p-6 relative overflow-hidden group"
+                style={{ borderColor: '#1e293b' }}
+                onMouseEnter={(e) => {
+                  const colorMap = { 'violet': '#8b5cf6', 'cyan': '#06b6d4', 'emerald': '#10b981' };
+                  e.currentTarget.style.borderColor = colorMap[domain.color] || '#475569';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.borderColor = '#1e293b';
+                }}
               >
                 <div className={`absolute inset-0 bg-gradient-to-br ${domain.gradient} opacity-0 group-hover:opacity-20 transition-opacity duration-300`}></div>
                 
@@ -2115,12 +2117,15 @@ const PMPApp = () => {
                   <button
                     key={task.id}
                     onClick={() => startQuiz('task', task.name)}
-                    className={`
-                      p-3 rounded-xl text-left transition-all duration-200
-                      bg-slate-800/50 hover:bg-slate-700 border border-slate-700
-                      hover:border-${quizTaskData[quizExpandedDomain].color}-500 hover:scale-[1.02]
-                      group
-                    `}
+                    className="p-3 rounded-xl text-left transition-all duration-200 bg-slate-800/50 hover:bg-slate-700 border hover:scale-[1.02] group"
+                    style={{ borderColor: '#334155' }}
+                    onMouseEnter={(e) => {
+                      const colorMap = { 'violet': '#8b5cf6', 'cyan': '#06b6d4', 'emerald': '#10b981' };
+                      e.currentTarget.style.borderColor = colorMap[quizTaskData[quizExpandedDomain].color] || '#334155';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.borderColor = '#334155';
+                    }}
                   >
                     <div className="text-lg mb-1">#{task.id}</div>
                     <div className="text-sm font-medium text-white group-hover:text-cyan-400 transition-colors line-clamp-2">
@@ -3999,49 +4004,49 @@ const PMPApp = () => {
       availableModes = rawData.delegation_levels || [];
     } else {
       conflictMatcherScenarios = (rawData?.scenarios || (Array.isArray(rawData) ? rawData : null)) || [
-        {
-          id: 1,
-          scenario: "Two developers disagree on API design during Sprint Planning. Both have valid technical arguments.",
-          correctMode: "COLLABORATE",
-          explanation: "Technical decisions benefit from collaborative discussion to find the best solution that leverages both perspectives.",
-          examTip: "For technical disagreements between team members, collaboration is almost always the best answer."
-        },
-        {
-          id: 2,
-          scenario: "Team member consistently misses daily standup. When asked, they say it's not important.",
-          correctMode: "CONFRONT",
-          explanation: "Address issues directly with facts and empathy. This is a behavior that needs correction.",
-          examTip: "When someone isn't following agreed processes, confront (direct but respectful) is the right first step."
-        },
-        {
-          id: 3,
-          scenario: "Emergency: Production system down. Two experts suggest different fixes. Decision needed NOW.",
-          correctMode: "FORCE",
-          explanation: "In emergency situations, use expertise and authority to make fast decision. Document rationale afterwards.",
-          examTip: "Force mode is only correct for emergencies, safety issues, or legal/ethical violations."
-        },
-        {
-          id: 4,
-          scenario: "Designer prefers blue interface, you prefer green. Both work. Issue is minor.",
-          correctMode: "ACCOMMODATE",
-          explanation: "When the issue is minor and the other party is the expert (designer), accommodating preserves relationship and leverages their expertise.",
-          examTip: "Accommodate when issue is minor and relationship/expertise matters more than the specific choice."
-        },
-        {
-          id: 5,
-          scenario: "Two departments want same resource for overlapping timeframes. Both projects critical. Budget is fixed.",
-          correctMode: "COMPROMISE",
-          explanation: "When both parties have equal legitimate needs and time/budget constraints prevent full satisfaction, compromise finds middle ground.",
-          examTip: "Compromise is acceptable when time is limited and both parties can give ground."
-        },
-        {
-          id: 6,
-          scenario: "Two team members have minor disagreement about meeting time. One prefers morning, one prefers afternoon.",
-          correctMode: "COLLABORATE",
-          explanation: "Even for minor issues, collaboration builds team ownership and may reveal creative solutions (e.g., alternating times).",
-          examTip: "PMI prefers collaboration whenever possible, even for minor issues."
-        }
-      ];
+      {
+        id: 1,
+        scenario: "Two developers disagree on API design during Sprint Planning. Both have valid technical arguments.",
+        correctMode: "COLLABORATE",
+        explanation: "Technical decisions benefit from collaborative discussion to find the best solution that leverages both perspectives.",
+        examTip: "For technical disagreements between team members, collaboration is almost always the best answer."
+      },
+      {
+        id: 2,
+        scenario: "Team member consistently misses daily standup. When asked, they say it's not important.",
+        correctMode: "CONFRONT",
+        explanation: "Address issues directly with facts and empathy. This is a behavior that needs correction.",
+        examTip: "When someone isn't following agreed processes, confront (direct but respectful) is the right first step."
+      },
+      {
+        id: 3,
+        scenario: "Emergency: Production system down. Two experts suggest different fixes. Decision needed NOW.",
+        correctMode: "FORCE",
+        explanation: "In emergency situations, use expertise and authority to make fast decision. Document rationale afterwards.",
+        examTip: "Force mode is only correct for emergencies, safety issues, or legal/ethical violations."
+      },
+      {
+        id: 4,
+        scenario: "Designer prefers blue interface, you prefer green. Both work. Issue is minor.",
+        correctMode: "ACCOMMODATE",
+        explanation: "When the issue is minor and the other party is the expert (designer), accommodating preserves relationship and leverages their expertise.",
+        examTip: "Accommodate when issue is minor and relationship/expertise matters more than the specific choice."
+      },
+      {
+        id: 5,
+        scenario: "Two departments want same resource for overlapping timeframes. Both projects critical. Budget is fixed.",
+        correctMode: "COMPROMISE",
+        explanation: "When both parties have equal legitimate needs and time/budget constraints prevent full satisfaction, compromise finds middle ground.",
+        examTip: "Compromise is acceptable when time is limited and both parties can give ground."
+      },
+      {
+        id: 6,
+        scenario: "Two team members have minor disagreement about meeting time. One prefers morning, one prefers afternoon.",
+        correctMode: "COLLABORATE",
+        explanation: "Even for minor issues, collaboration builds team ownership and may reveal creative solutions (e.g., alternating times).",
+        examTip: "PMI prefers collaboration whenever possible, even for minor issues."
+      }
+    ];
       availableModes = null;
     }
 
@@ -4054,20 +4059,20 @@ const PMPApp = () => {
         level: level.level
       })) :
       selectedTask === 'Lead a Team' ? [
-        { name: "Commanding", emoji: "⚡", color: "red" },
-        { name: "Authoritative", emoji: "🎯", color: "blue" },
-        { name: "Affiliative", emoji: "🤝", color: "emerald" },
-        { name: "Democratic", emoji: "🗳️", color: "yellow" },
-        { name: "Pacesetting", emoji: "⚡", color: "orange" },
-        { name: "Coaching", emoji: "📚", color: "purple" }
-      ] : [
-        { name: "COLLABORATE", emoji: "🤝", color: "emerald" },
-        { name: "CONFRONT", emoji: "🎯", color: "blue" },
-        { name: "COMPROMISE", emoji: "⚖️", color: "yellow" },
-        { name: "ACCOMMODATE", emoji: "🤝", color: "orange" },
-        { name: "FORCE", emoji: "⚠️", color: "red" },
-        { name: "AVOID", emoji: "❌", color: "slate" }
-      ];
+      { name: "Commanding", emoji: "⚡", color: "red" },
+      { name: "Authoritative", emoji: "🎯", color: "blue" },
+      { name: "Affiliative", emoji: "🤝", color: "emerald" },
+      { name: "Democratic", emoji: "🗳️", color: "yellow" },
+      { name: "Pacesetting", emoji: "⚡", color: "orange" },
+      { name: "Coaching", emoji: "📚", color: "purple" }
+    ] : [
+      { name: "COLLABORATE", emoji: "🤝", color: "emerald" },
+      { name: "CONFRONT", emoji: "🎯", color: "blue" },
+      { name: "COMPROMISE", emoji: "⚖️", color: "yellow" },
+      { name: "ACCOMMODATE", emoji: "🤝", color: "orange" },
+      { name: "FORCE", emoji: "⚠️", color: "red" },
+      { name: "AVOID", emoji: "❌", color: "slate" }
+    ];
 
     const handleDragStart = (scenarioId) => {
       setConflictMatcherState(prev => ({ ...prev, draggedScenario: scenarioId }));
@@ -4255,7 +4260,7 @@ const PMPApp = () => {
                     isCorrect ? 'border-emerald-500 correct-match' : 'border-red-500 incorrect-match'
                   }`}
                 >
-                    <div className="flex items-start gap-3 mb-4">
+                  <div className="flex items-start gap-3 mb-4">
                     <span className="text-3xl">{isCorrect ? '✅' : '❌'}</span>
                     <div className="flex-1">
                       <p className="text-white mb-2">{scenario.scenario || scenario.context || scenario.title}</p>
@@ -5071,13 +5076,13 @@ const PMPApp = () => {
                             <div className="bg-slate-800/50 p-2 rounded">
                               <label className="text-slate-400 block mb-1 text-xs">Month:</label>
                               <span className="text-white font-semibold">{event.month}</span>
-                            </div>
+                          </div>
                           )}
                           {event.stage && (
                             <div className="bg-slate-800/50 p-2 rounded">
                               <label className="text-slate-400 block mb-1 text-xs">Stage:</label>
                               <span className="text-white font-semibold">{event.stage}</span>
-                            </div>
+                        </div>
                           )}
                           {event.leadershipStyle && (
                             <div className="bg-slate-800/50 p-2 rounded">
@@ -6127,11 +6132,31 @@ const PMPApp = () => {
                   <button
                     key={perspective.id}
                     onClick={() => setTeamMemberPerspectivesState(prev => ({ ...prev, currentScenario: perspective.id }))}
-                    className={`glass-card p-4 text-left transition-all border-l-4 ${
-                      teamMemberPerspectivesState.currentScenario === perspective.id
-                        ? `border-${perspective.color}-500 bg-${perspective.color}-500/10`
-                        : 'border-slate-600 hover:border-slate-500'
-                    }`}
+                    className="glass-card p-4 text-left transition-all border-l-4"
+                    style={{
+                      borderColor: teamMemberPerspectivesState.currentScenario === perspective.id
+                        ? (perspective.color === 'green' ? '#10b981' : 
+                           perspective.color === 'blue' ? '#3b82f6' : 
+                           perspective.color === 'yellow' ? '#eab308' : 
+                           perspective.color === 'purple' ? '#a855f7' : '#64748b')
+                        : '#475569',
+                      backgroundColor: teamMemberPerspectivesState.currentScenario === perspective.id
+                        ? (perspective.color === 'green' ? 'rgba(16, 185, 129, 0.1)' : 
+                           perspective.color === 'blue' ? 'rgba(59, 130, 246, 0.1)' : 
+                           perspective.color === 'yellow' ? 'rgba(234, 179, 8, 0.1)' : 
+                           perspective.color === 'purple' ? 'rgba(168, 85, 247, 0.1)' : 'transparent')
+                        : 'transparent'
+                    }}
+                    onMouseEnter={(e) => {
+                      if (teamMemberPerspectivesState.currentScenario !== perspective.id) {
+                        e.currentTarget.style.borderColor = '#64748b';
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      if (teamMemberPerspectivesState.currentScenario !== perspective.id) {
+                        e.currentTarget.style.borderColor = '#475569';
+                      }
+                    }}
                   >
                     <div className="flex items-center gap-3">
                       <span className="text-2xl">{perspective.emoji}</span>
@@ -6745,39 +6770,39 @@ const PMPApp = () => {
             ) : (
               // Other tasks: use personA/personB/pm structure
               <>
-                <button
-                  onClick={() => handlePerspectiveView('personA')}
-                  className={`px-6 py-3 executive-font text-xs font-semibold uppercase transition-all relative ${
-                    empathyExerciseState.currentPerspective === 'personA'
-                      ? 'text-white border-b-2 border-blue-400'
-                      : 'text-slate-500 hover:text-slate-300'
-                  }`}
-                >
+            <button
+              onClick={() => handlePerspectiveView('personA')}
+              className={`px-6 py-3 executive-font text-xs font-semibold uppercase transition-all relative ${
+                empathyExerciseState.currentPerspective === 'personA'
+                  ? 'text-white border-b-2 border-blue-400'
+                  : 'text-slate-500 hover:text-slate-300'
+              }`}
+            >
                   View as {currentScenarioData.perspectives?.personA?.name || currentScenarioData.perspective_a?.name} {currentScenarioData.perspectives?.personA?.emoji || currentScenarioData.perspective_a?.emoji}
-                  {viewedForScenario.personA && <span className="ml-2 text-emerald-400">✓</span>}
-                </button>
-                <button
-                  onClick={() => handlePerspectiveView('personB')}
-                  className={`px-6 py-3 executive-font text-xs font-semibold uppercase transition-all relative ${
-                    empathyExerciseState.currentPerspective === 'personB'
-                      ? 'text-white border-b-2 border-orange-400'
-                      : 'text-slate-500 hover:text-slate-300'
-                  }`}
-                >
+              {viewedForScenario.personA && <span className="ml-2 text-emerald-400">✓</span>}
+            </button>
+            <button
+              onClick={() => handlePerspectiveView('personB')}
+              className={`px-6 py-3 executive-font text-xs font-semibold uppercase transition-all relative ${
+                empathyExerciseState.currentPerspective === 'personB'
+                  ? 'text-white border-b-2 border-orange-400'
+                  : 'text-slate-500 hover:text-slate-300'
+              }`}
+            >
                   View as {currentScenarioData.perspectives?.personB?.name || currentScenarioData.perspective_b?.name} {currentScenarioData.perspectives?.personB?.emoji || currentScenarioData.perspective_b?.emoji}
-                  {viewedForScenario.personB && <span className="ml-2 text-emerald-400">✓</span>}
-                </button>
-                <button
-                  onClick={() => handlePerspectiveView('pm')}
-                  className={`px-6 py-3 executive-font text-xs font-semibold uppercase transition-all relative ${
-                    empathyExerciseState.currentPerspective === 'pm'
-                      ? 'text-white border-b-2 border-purple-400'
-                      : 'text-slate-500 hover:text-slate-300'
-                  }`}
-                >
+              {viewedForScenario.personB && <span className="ml-2 text-emerald-400">✓</span>}
+            </button>
+            <button
+              onClick={() => handlePerspectiveView('pm')}
+              className={`px-6 py-3 executive-font text-xs font-semibold uppercase transition-all relative ${
+                empathyExerciseState.currentPerspective === 'pm'
+                  ? 'text-white border-b-2 border-purple-400'
+                  : 'text-slate-500 hover:text-slate-300'
+              }`}
+            >
                   View as PM {currentScenarioData.perspectives?.pm?.emoji || currentScenarioData.perspective_pm?.emoji}
-                  {viewedForScenario.pm && <span className="ml-2 text-emerald-400">✓</span>}
-                </button>
+              {viewedForScenario.pm && <span className="ml-2 text-emerald-400">✓</span>}
+            </button>
               </>
             )}
           </div>
@@ -6788,13 +6813,13 @@ const PMPApp = () => {
               {isEmpowerTeam && perspectives && perspectives[0] ? (
                 // Empower Team structure
                 <>
-                  <div className="flex items-center gap-3 mb-6">
+              <div className="flex items-center gap-3 mb-6">
                     <span className="text-4xl">{perspectives[0].emoji}</span>
-                    <div>
+                <div>
                       <h3 className="executive-font text-2xl font-bold text-white">{perspectives[0].role}</h3>
-                    </div>
-                  </div>
-                  <div className="bg-slate-800/50 p-6 rounded border-l-4 border-blue-400 mb-6">
+                </div>
+              </div>
+              <div className="bg-slate-800/50 p-6 rounded border-l-4 border-blue-400 mb-6">
                     <p className="text-white text-lg italic leading-relaxed">"{perspectives[0].thoughts}"</p>
                   </div>
                   <div className="space-y-4">
@@ -6824,25 +6849,25 @@ const PMPApp = () => {
                   </div>
                   <div className="bg-slate-800/50 p-6 rounded border-l-4 border-blue-400 mb-6">
                     <p className="text-white text-lg italic leading-relaxed">"{currentScenarioData.perspectives?.personA?.thoughts || currentScenarioData.perspective_a?.internal_monologue}"</p>
-                  </div>
-                  <div className="space-y-4">
-                    <div>
-                      <h4 className="text-white font-semibold mb-2">Concerns:</h4>
-                      <ul className="list-disc list-inside space-y-1 text-slate-300">
+              </div>
+              <div className="space-y-4">
+                <div>
+                  <h4 className="text-white font-semibold mb-2">Concerns:</h4>
+                  <ul className="list-disc list-inside space-y-1 text-slate-300">
                         {(currentScenarioData.perspectives?.personA?.concerns || []).map((concern, idx) => (
-                          <li key={idx}>{concern}</li>
-                        ))}
-                      </ul>
-                    </div>
-                    <div>
-                      <h4 className="text-white font-semibold mb-2">Fears:</h4>
+                      <li key={idx}>{concern}</li>
+                    ))}
+                  </ul>
+                </div>
+                <div>
+                  <h4 className="text-white font-semibold mb-2">Fears:</h4>
                       <p className="text-slate-300">{currentScenarioData.perspectives?.personA?.fears || ''}</p>
-                    </div>
-                    <div>
-                      <h4 className="text-white font-semibold mb-2">What they wish others knew:</h4>
+                </div>
+                <div>
+                  <h4 className="text-white font-semibold mb-2">What they wish others knew:</h4>
                       <p className="text-slate-300 italic">{currentScenarioData.perspectives?.personA?.wishesOthersKnew || ''}</p>
-                    </div>
-                  </div>
+                </div>
+              </div>
                 </>
               )}
             </div>
@@ -6854,13 +6879,13 @@ const PMPApp = () => {
               {isEmpowerTeam && perspectives && perspectives[1] ? (
                 // Empower Team structure
                 <>
-                  <div className="flex items-center gap-3 mb-6">
+              <div className="flex items-center gap-3 mb-6">
                     <span className="text-4xl">{perspectives[1].emoji}</span>
-                    <div>
+                <div>
                       <h3 className="executive-font text-2xl font-bold text-white">{perspectives[1].role}</h3>
-                    </div>
-                  </div>
-                  <div className="bg-slate-800/50 p-6 rounded border-l-4 border-orange-400 mb-6">
+                </div>
+              </div>
+              <div className="bg-slate-800/50 p-6 rounded border-l-4 border-orange-400 mb-6">
                     <p className="text-white text-lg italic leading-relaxed">"{perspectives[1].thoughts}"</p>
                   </div>
                   <div className="space-y-4">
@@ -6890,25 +6915,25 @@ const PMPApp = () => {
                   </div>
                   <div className="bg-slate-800/50 p-6 rounded border-l-4 border-orange-400 mb-6">
                     <p className="text-white text-lg italic leading-relaxed">"{currentScenarioData.perspectives?.personB?.thoughts || currentScenarioData.perspective_b?.internal_monologue}"</p>
-                  </div>
-                  <div className="space-y-4">
-                    <div>
-                      <h4 className="text-white font-semibold mb-2">Concerns:</h4>
-                      <ul className="list-disc list-inside space-y-1 text-slate-300">
+              </div>
+              <div className="space-y-4">
+                <div>
+                  <h4 className="text-white font-semibold mb-2">Concerns:</h4>
+                  <ul className="list-disc list-inside space-y-1 text-slate-300">
                         {(currentScenarioData.perspectives?.personB?.concerns || []).map((concern, idx) => (
-                          <li key={idx}>{concern}</li>
-                        ))}
-                      </ul>
-                    </div>
-                    <div>
-                      <h4 className="text-white font-semibold mb-2">Fears:</h4>
+                      <li key={idx}>{concern}</li>
+                    ))}
+                  </ul>
+                </div>
+                <div>
+                  <h4 className="text-white font-semibold mb-2">Fears:</h4>
                       <p className="text-slate-300">{currentScenarioData.perspectives?.personB?.fears || ''}</p>
-                    </div>
-                    <div>
-                      <h4 className="text-white font-semibold mb-2">What they wish others knew:</h4>
+                </div>
+                <div>
+                  <h4 className="text-white font-semibold mb-2">What they wish others knew:</h4>
                       <p className="text-slate-300 italic">{currentScenarioData.perspectives?.personB?.wishesOthersKnew || ''}</p>
-                    </div>
-                  </div>
+                </div>
+              </div>
                 </>
               )}
             </div>
@@ -6920,7 +6945,7 @@ const PMPApp = () => {
               {isEmpowerTeam && perspectives && perspectives[2] ? (
                 // Empower Team structure
                 <>
-                  <div className="flex items-center gap-3 mb-6">
+              <div className="flex items-center gap-3 mb-6">
                     <span className="text-4xl">{perspectives[2].emoji}</span>
                     <div>
                       <h3 className="executive-font text-2xl font-bold text-white">{perspectives[2].role}</h3>
@@ -6955,37 +6980,37 @@ const PMPApp = () => {
                 <>
                   <div className="flex items-center gap-3 mb-6">
                     <span className="text-4xl">{currentScenarioData.perspectives?.pm?.emoji || currentScenarioData.perspective_pm?.emoji}</span>
-                    <h3 className="executive-font text-2xl font-bold text-white">Project Manager's View</h3>
-                  </div>
-                  <div className="space-y-6">
-                    <div>
-                      <h4 className="text-white font-semibold mb-3">Observations:</h4>
-                      <ul className="list-disc list-inside space-y-2 text-slate-300">
+                <h3 className="executive-font text-2xl font-bold text-white">Project Manager's View</h3>
+              </div>
+              <div className="space-y-6">
+                <div>
+                  <h4 className="text-white font-semibold mb-3">Observations:</h4>
+                  <ul className="list-disc list-inside space-y-2 text-slate-300">
                         {(currentScenarioData.perspectives?.pm?.observations || []).map((obs, idx) => (
-                          <li key={idx}>{obs}</li>
-                        ))}
-                      </ul>
-                    </div>
-                    <div>
-                      <h4 className="text-white font-semibold mb-3">Valid Points:</h4>
-                      <div className="space-y-2">
-                        <div className="bg-blue-500/10 p-3 rounded border-l-2 border-blue-400">
+                      <li key={idx}>{obs}</li>
+                    ))}
+                  </ul>
+                </div>
+                <div>
+                  <h4 className="text-white font-semibold mb-3">Valid Points:</h4>
+                  <div className="space-y-2">
+                    <div className="bg-blue-500/10 p-3 rounded border-l-2 border-blue-400">
                           <p className="text-slate-300"><span className="font-semibold text-blue-400">{currentScenarioData.perspectives?.personA?.name || currentScenarioData.perspective_a?.name}:</span> {currentScenarioData.perspectives?.pm?.validPoints?.architect || currentScenarioData.perspectives?.pm?.validPoints?.personA}</p>
-                        </div>
-                        <div className="bg-orange-500/10 p-3 rounded border-l-2 border-orange-400">
+                    </div>
+                    <div className="bg-orange-500/10 p-3 rounded border-l-2 border-orange-400">
                           <p className="text-slate-300"><span className="font-semibold text-orange-400">{currentScenarioData.perspectives?.personB?.name || currentScenarioData.perspective_b?.name}:</span> {currentScenarioData.perspectives?.pm?.validPoints?.engineer || currentScenarioData.perspectives?.pm?.validPoints?.personB || currentScenarioData.perspectives?.pm?.validPoints?.marketing}</p>
-                        </div>
-                      </div>
-                    </div>
-                    <div>
-                      <h4 className="text-white font-semibold mb-2">The Real Issue:</h4>
-                      <p className="text-slate-300">{currentScenarioData.perspectives?.pm?.realIssue || ''}</p>
-                    </div>
-                    <div>
-                      <h4 className="text-white font-semibold mb-2">Solution:</h4>
-                      <p className="text-slate-300">{currentScenarioData.perspectives?.pm?.solution || ''}</p>
                     </div>
                   </div>
+                </div>
+                <div>
+                  <h4 className="text-white font-semibold mb-2">The Real Issue:</h4>
+                      <p className="text-slate-300">{currentScenarioData.perspectives?.pm?.realIssue || ''}</p>
+                </div>
+                <div>
+                  <h4 className="text-white font-semibold mb-2">Solution:</h4>
+                      <p className="text-slate-300">{currentScenarioData.perspectives?.pm?.solution || ''}</p>
+                </div>
+              </div>
                 </>
               )}
             </div>
@@ -7003,7 +7028,7 @@ const PMPApp = () => {
               {isEmpowerTeam ? (
                 // Empower Team structure: insight and betterApproach are strings
                 <>
-                  <div>
+              <div>
                     <p className="text-white text-lg leading-relaxed">{currentScenarioData.insight}</p>
                   </div>
                   <div>
@@ -7017,22 +7042,22 @@ const PMPApp = () => {
                   <div>
                     <h3 className="text-yellow-400 font-bold text-xl mb-3">{currentScenarioData.insight?.title || currentScenarioData.key_insight}</h3>
                     <p className="text-white text-lg leading-relaxed">{currentScenarioData.insight?.revelation || currentScenarioData.insight || currentScenarioData.key_insight}</p>
-                  </div>
-                  <div>
-                    <h4 className="text-white font-semibold mb-2">Best Approach:</h4>
+              </div>
+              <div>
+                <h4 className="text-white font-semibold mb-2">Best Approach:</h4>
                     <p className="text-slate-300 leading-relaxed">{currentScenarioData.insight?.bestApproach || ''}</p>
-                  </div>
+              </div>
                   {currentScenarioData.insight?.eiConnection && (
-                    <div className="bg-blue-500/10 p-4 rounded border-l-2 border-blue-400">
-                      <h4 className="text-blue-400 font-semibold mb-2">Emotional Intelligence Connection:</h4>
-                      <p className="text-slate-300">{currentScenarioData.insight.eiConnection}</p>
-                    </div>
+              <div className="bg-blue-500/10 p-4 rounded border-l-2 border-blue-400">
+                <h4 className="text-blue-400 font-semibold mb-2">Emotional Intelligence Connection:</h4>
+                <p className="text-slate-300">{currentScenarioData.insight.eiConnection}</p>
+              </div>
                   )}
                   {currentScenarioData.insight?.examTip && (
-                    <div className="bg-emerald-500/10 p-4 rounded border-l-2 border-emerald-400">
-                      <h4 className="text-emerald-400 font-semibold mb-2">Exam Tip:</h4>
-                      <p className="text-slate-300">{currentScenarioData.insight.examTip}</p>
-                    </div>
+                <div className="bg-emerald-500/10 p-4 rounded border-l-2 border-emerald-400">
+                  <h4 className="text-emerald-400 font-semibold mb-2">Exam Tip:</h4>
+                  <p className="text-slate-300">{currentScenarioData.insight.examTip}</p>
+                </div>
                   )}
                 </>
               )}
@@ -10009,7 +10034,7 @@ const PMPApp = () => {
         // Default simple definition for other tasks
         // Handle both string and object cases
         if (typeof content === 'string') {
-          return <p className="text-xl text-white font-light italic leading-tight">"{content}"</p>;
+        return <p className="text-xl text-white font-light italic leading-tight">"{content}"</p>;
         }
         // If content is an object but not enhanced, try to extract a string value
         if (typeof content === 'object' && content !== null) {
@@ -10101,20 +10126,20 @@ const PMPApp = () => {
         const isEcoEnablers = section.key === 'eco_enablers';
         // Handle array content (old format)
         if (Array.isArray(content)) {
-          return (
-            <ul className="space-y-2">
-              {content.map((item, idx) => (
-                <li key={idx} className="text-slate-300 flex items-start gap-2">
-                  {isEcoEnablers ? (
-                    <span className="text-emerald-400 mt-1 font-bold">✓</span>
-                  ) : (
-                    <span className="text-purple-400 mt-1">•</span>
-                  )}
-                  <span>{item}</span>
-                </li>
-              ))}
-            </ul>
-          );
+        return (
+          <ul className="space-y-2">
+            {content.map((item, idx) => (
+              <li key={idx} className="text-slate-300 flex items-start gap-2">
+                {isEcoEnablers ? (
+                  <span className="text-emerald-400 mt-1 font-bold">✓</span>
+                ) : (
+                  <span className="text-purple-400 mt-1">•</span>
+                )}
+                <span>{item}</span>
+              </li>
+            ))}
+          </ul>
+        );
         }
         return null;
       
@@ -10244,13 +10269,13 @@ const PMPApp = () => {
         }
         // Default numbered list
         if (Array.isArray(content)) {
-          return (
-            <ol className="space-y-2 list-decimal list-inside">
-              {content.map((item, idx) => (
-                <li key={idx} className="text-slate-300">{item}</li>
-              ))}
-            </ol>
-          );
+        return (
+          <ol className="space-y-2 list-decimal list-inside">
+            {content.map((item, idx) => (
+              <li key={idx} className="text-slate-300">{item}</li>
+            ))}
+          </ol>
+        );
         }
         return null;
       
@@ -10258,7 +10283,7 @@ const PMPApp = () => {
         // Enhanced Quick Scenarios for Manage Conflict
         if (selectedTask === 'Manage Conflict' && section.key === 'quick_scenarios' && typeof content === 'object' && content !== null && content.enhanced === true) {
           const scenarios = content;
-          return (
+        return (
             <div className="space-y-6">
               {scenarios.intro && (
                 <div className="bg-gradient-to-r from-purple-500/10 to-pink-500/10 rounded-xl p-5 border border-purple-500/20">
@@ -10267,7 +10292,7 @@ const PMPApp = () => {
               )}
 
               {/* Scenario Cards */}
-              <div className="space-y-4">
+          <div className="space-y-4">
                 {scenarios.scenarios && scenarios.scenarios.map((scenario, idx) => {
                   const gradientClass = scenario.gradient || 'from-blue-500/20 to-purple-500/20';
                   return (
@@ -13339,8 +13364,8 @@ const PMPApp = () => {
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                           </svg>
                         </button>
-                      )}
-                    </div>
+                )}
+              </div>
                     <p className="text-gray-400 text-sm">
                       <span className="text-gray-300 font-medium">Connection:</span> {taskData.connection || taskData.summary}
                     </p>
@@ -14189,7 +14214,7 @@ const PMPApp = () => {
           );
         }
         return <p className="text-slate-300">{typeof content === 'string' ? content : JSON.stringify(content)}</p>;
-
+      
       default:
         return <p className="text-slate-300">{typeof content === 'string' ? content : JSON.stringify(content)}</p>;
     }
@@ -14444,3 +14469,15 @@ const ViewTransitionWrapper = ({ children, isTransitioning }) => {
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(<PMPApp />);
+
+// Hide loading screen once app is rendered
+setTimeout(() => {
+  const loading = document.getElementById('loading');
+  if (loading) {
+    loading.style.transition = 'opacity 0.5s ease-out';
+    loading.style.opacity = '0';
+    setTimeout(() => {
+      loading.style.display = 'none';
+    }, 500);
+  }
+}, 100);

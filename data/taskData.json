@@ -1,7 +1,7 @@
 {
-  "Manage Conflict": {
-    "learn": {
-      "overview": {
+    "Manage Conflict": {
+      "learn": {
+        "overview": {
         "definition": {
           "enhanced": true,
           "eco_definition": "Apply emotional intelligence and interpersonal skills to navigate disagreements, reach consensus, and maintain team productivity while preserving relationships.",
@@ -128,50 +128,50 @@
           ],
           "pro_tip": "When you see conflict triggers, ask yourself: <span className=\"text-white font-semibold\">\"What would a calm, emotionally intelligent PM do?\"</span> The answer is almost never \"escalate,\" \"avoid,\" or \"force a decision.\""
         },
-        "pmi_hierarchy": [
-          {
-            "rank": 1,
-            "mode": "Collaborate/Problem-Solve",
-            "emoji": "⭐",
-            "when": "Important issue + Time available",
-            "exam_tip": "Almost always the best answer for team conflicts"
-          },
-          {
-            "rank": 2,
-            "mode": "Confront/Direct",
-            "emoji": "🎯",
-            "when": "Facts need discussion",
-            "exam_tip": "Good for addressing issues directly with data"
-          },
-          {
-            "rank": 3,
-            "mode": "Compromise",
-            "emoji": "⚖️",
-            "when": "Time is limited",
-            "exam_tip": "Acceptable when deadline pressure exists"
-          },
-          {
-            "rank": 4,
-            "mode": "Smooth/Accommodate",
-            "emoji": "🤝",
-            "when": "Relationship more important than issue",
-            "exam_tip": "Rarely correct on exam - can enable problems"
-          },
-          {
-            "rank": 5,
-            "mode": "Force/Direct",
-            "emoji": "⚠️",
-            "when": "Emergency or safety issue ONLY",
-            "exam_tip": "Only when immediate decision required"
-          },
-          {
-            "rank": 6,
-            "mode": "Avoid/Withdraw",
-            "emoji": "❌",
-            "when": "NEVER on the exam",
-            "exam_tip": "Almost always the wrong answer"
-          }
-        ],
+          "pmi_hierarchy": [
+            {
+              "rank": 1,
+              "mode": "Collaborate/Problem-Solve",
+              "emoji": "⭐",
+              "when": "Important issue + Time available",
+              "exam_tip": "Almost always the best answer for team conflicts"
+            },
+            {
+              "rank": 2,
+              "mode": "Confront/Direct",
+              "emoji": "🎯",
+              "when": "Facts need discussion",
+              "exam_tip": "Good for addressing issues directly with data"
+            },
+            {
+              "rank": 3,
+              "mode": "Compromise",
+              "emoji": "⚖️",
+              "when": "Time is limited",
+              "exam_tip": "Acceptable when deadline pressure exists"
+            },
+            {
+              "rank": 4,
+              "mode": "Smooth/Accommodate",
+              "emoji": "🤝",
+              "when": "Relationship more important than issue",
+              "exam_tip": "Rarely correct on exam - can enable problems"
+            },
+            {
+              "rank": 5,
+              "mode": "Force/Direct",
+              "emoji": "⚠️",
+              "when": "Emergency or safety issue ONLY",
+              "exam_tip": "Only when immediate decision required"
+            },
+            {
+              "rank": 6,
+              "mode": "Avoid/Withdraw",
+              "emoji": "❌",
+              "when": "NEVER on the exam",
+              "exam_tip": "Almost always the wrong answer"
+            }
+          ],
         "quick_scenarios": {
           "enhanced": true,
           "intro": "<span className=\"text-purple-400 font-semibold\">Test your instincts:</span> For each scenario, identify the RIGHT approach and the WRONG approach. Think before revealing!",
@@ -650,8 +650,8 @@
           "memory_hook": "<span className=\"text-emerald-400 font-semibold\">Understand</span> before you act. <span className=\"text-blue-400 font-semibold\">Facilitate</span>, don't judge. <span className=\"text-purple-400 font-semibold\">Collaborate</span> when you can. <span className=\"text-amber-400 font-semibold\">Protect</span> the relationship.",
           "bottom_line": "On the exam and in real life, the best conflict managers are <span className=\"text-white font-semibold\">emotionally intelligent facilitators</span> who help people find solutions together—not judges who pick winners."
         }
-      },
-      "pmp_application": {
+        },
+        "pmp_application": {
         "how_this_task_is_tested": {
           "enhanced": true,
           "stats": {
@@ -1108,16 +1108,16 @@
           {
             "pattern": "Pattern 1: Approach Selection",
             "setup": "Two team members disagree about [technical approach]. What should the PM do?",
-            "distractor_1": "Make the decision yourself (Force)",
-            "why_wrong_1": "Removes team empowerment and may miss best solution",
-            "distractor_2": "Let them figure it out (Avoid)",
-            "why_wrong_2": "Abdicates PM responsibility to facilitate",
-            "distractor_3": "Split the difference (Compromise)",
-            "why_wrong_3": "May result in suboptimal hybrid solution",
-            "correct": "Facilitate discussion to find best technical solution (Collaborate)",
-            "why_correct": "Leverages team expertise, builds consensus, finds optimal solution"
-          },
-          {
+              "distractor_1": "Make the decision yourself (Force)",
+              "why_wrong_1": "Removes team empowerment and may miss best solution",
+              "distractor_2": "Let them figure it out (Avoid)",
+              "why_wrong_2": "Abdicates PM responsibility to facilitate",
+              "distractor_3": "Split the difference (Compromise)",
+              "why_wrong_3": "May result in suboptimal hybrid solution",
+              "correct": "Facilitate discussion to find best technical solution (Collaborate)",
+              "why_correct": "Leverages team expertise, builds consensus, finds optimal solution"
+            },
+            {
             "pattern": "Pattern 2: First Action",
             "setup": "Conflict has escalated between parties. What should the PM do FIRST?",
             "distractor_1": "Escalate immediately",
@@ -1169,28 +1169,28 @@
             "pattern": "Pattern 6: Agile Context",
             "setup": "During a retrospective, team members argue. The Scrum Master should...",
             "distractor_1": "Make the decision",
-            "why_wrong_1": "Violates Agile principle of team self-organization",
+              "why_wrong_1": "Violates Agile principle of team self-organization",
             "distractor_2": "Cancel the retrospective",
             "why_wrong_2": "Avoids the issue—retrospectives are for addressing problems",
             "distractor_3": "Escalate to Product Owner",
             "why_wrong_3": "PO owns product, not team dynamics",
             "correct": "Facilitate the discussion, help team find resolution (Facilitation + servant leadership)",
             "why_correct": "Scrum Master role is to facilitate, not dictate"
-          }
-        ],
-        "agile_vs_traditional": {
-          "traditional_context": {
-            "pm_role": "Decision maker, conflict resolver",
-            "approach": "May use more directive approaches when appropriate",
-            "escalation": "More hierarchical, may escalate to sponsor faster"
+            }
+          ],
+          "agile_vs_traditional": {
+            "traditional_context": {
+              "pm_role": "Decision maker, conflict resolver",
+              "approach": "May use more directive approaches when appropriate",
+              "escalation": "More hierarchical, may escalate to sponsor faster"
+            },
+            "agile_context": {
+              "pm_role": "Servant leader, facilitator, impediment remover",
+              "approach": "Always prefer collaboration and team empowerment",
+              "escalation": "Team self-resolves when possible, retrospectives for systemic issues"
+            },
+            "exam_tip": "When question mentions 'Agile,' 'Scrum,' 'iterative,' or 'self-organizing team,' ALWAYS favor collaborative, facilitative answers over directive ones."
           },
-          "agile_context": {
-            "pm_role": "Servant leader, facilitator, impediment remover",
-            "approach": "Always prefer collaboration and team empowerment",
-            "escalation": "Team self-resolves when possible, retrospectives for systemic issues"
-          },
-          "exam_tip": "When question mentions 'Agile,' 'Scrum,' 'iterative,' or 'self-organizing team,' ALWAYS favor collaborative, facilitative answers over directive ones."
-        },
         "decision_tree_visual": "START → Is it safety/legal/ethical? YES→Force (document!) | NO→ Time available for discussion? YES→Collaborate (facilitate meeting) | LIMITED→ Confront (direct discussion with data) or Compromise (if both can give ground) | NEVER→ Avoid (almost always wrong)",
         "exam_focus": {
           "sample_questions": [
@@ -1746,8 +1746,8 @@
             }
           ]
         }
-      },
-      "deep_dive": {
+        },
+        "deep_dive": {
         "introduction": {
           "enhanced": true,
           "hero_statement": {
@@ -1853,7 +1853,7 @@
               "color": "emerald",
               "badge": "PMI FAVORITE ⭐",
               "description": "High Assertiveness + High Cooperation = Win-Win",
-              "when_to_use": [
+                "when_to_use": [
                 "Issue is too important for compromise",
                 "Need buy-in from all parties",
                 "Time is available for discussion",
@@ -1879,7 +1879,7 @@
               "color": "amber",
               "badge": "TIME-PRESSURED",
               "description": "Medium Assertiveness + Medium Cooperation = Partial Win-Win",
-              "when_to_use": [
+                "when_to_use": [
                 "Collaboration isn't possible (time/trust)",
                 "Issue is moderately important",
                 "Need a quick temporary solution",
@@ -1905,7 +1905,7 @@
               "color": "blue",
               "badge": "RELATIONSHIP SAVER",
               "description": "Low Assertiveness + High Cooperation = Lose-Win (Yield)",
-              "when_to_use": [
+                "when_to_use": [
                 "Issue matters more to them than you",
                 "You realize you're wrong",
                 "Preserving relationship is critical",
@@ -1931,7 +1931,7 @@
               "color": "red",
               "badge": "EMERGENCIES ONLY",
               "description": "High Assertiveness + Low Cooperation = Win-Lose",
-              "when_to_use": [
+                "when_to_use": [
                 "Emergency / safety situation",
                 "Unpopular but necessary decision",
                 "No time for discussion",
@@ -1957,7 +1957,7 @@
               "color": "gray",
               "badge": "COOLING OFF",
               "description": "Low Assertiveness + Low Cooperation = Lose-Lose",
-              "when_to_use": [
+                "when_to_use": [
                 "Issue is trivial",
                 "Need time to cool down",
                 "No chance of winning",
@@ -2493,407 +2493,407 @@
           },
           "bottom_line": "Great project managers don't eliminate conflict—they <span className=\"text-white font-semibold\"> create environments where disagreements lead to better outcomes</span>, not damaged relationships. Master this task and you'll stand out in both the exam and your career."
         }
-      }
-    },
-    "practice": {
-      "checklist": [
-        "Team Charter (defines how team will handle conflicts)",
-        "Communication Management Plan (escalation procedures)",
-        "Resource Management Plan (resource allocation decision criteria)",
-        "Stakeholder Engagement Plan (stakeholder priority matrix)",
-        "Ground Rules (team agreements on behavior)",
-        "Conflict Log (track recurring patterns)"
-      ],
-      "agile_mindset": "In Agile environments, the PM/Scrum Master acts as a servant leader who facilitates team self-organization. Rather than resolving conflicts directly, empower the team to resolve issues themselves during retrospectives, daily standups, or dedicated conflict resolution sessions. The PM removes impediments that prevent resolution, such as lack of information, unclear priorities, or organizational barriers.",
-      "reflex_prompts": [
-        {
-          "id": 1,
-          "question": "Two developers disagree on API design during Sprint Planning. What do you do first?",
-          "options": [
-            "Make the technical decision yourself",
-            "Facilitate discussion to evaluate both approaches",
-            "Escalate to Tech Lead",
-            "Table it and move on"
-          ],
-          "correct": 1,
-          "explanation": "Collaborate mode: Facilitate discussion to leverage both developers' expertise and build consensus. Leads to best technical solution and team buy-in.",
-          "mode_used": "Collaborate"
-        },
-        {
-          "question": "Team member openly challenges your decision in team meeting. What do you do?",
-          "options": [
-            "Defend your decision firmly",
-            "Acknowledge concern and offer to discuss privately after meeting",
-            "Ask team to vote on the decision",
-            "Ignore the challenge and continue"
-          ],
-          "correct": 1,
-          "explanation": "Confront mode: Address the concern professionally but move detailed discussion offline to avoid derailing meeting and provide space for honest dialogue.",
-          "mode_used": "Confront (with respect)"
-        },
-        {
-          "question": "Emergency: Production system down. Two experts suggest different fixes. Decision needed NOW.",
-          "options": [
-            "Facilitate quick discussion of both approaches",
-            "Choose the approach from more senior engineer",
-            "Compromise: try both approaches sequentially",
-            "Escalate to CTO"
-          ],
-          "correct": 1,
-          "explanation": "Force mode: In emergency, use expertise/seniority to make fast decision. Not ideal but appropriate given urgency. Document rationale.",
-          "mode_used": "Force (emergency context)"
-        },
-        {
-          "question": "Designer prefers serif font, you prefer sans-serif for website. Both work. What do you do?",
-          "options": [
-            "Use sans-serif (your preference)",
-            "Defer to designer's expertise",
-            "Compromise with mixed fonts",
-            "Survey users to decide"
-          ],
-          "correct": 1,
-          "explanation": "Accommodate mode: Designer is the expert, issue is minor, relationship and their expertise matter more than your preference.",
-          "mode_used": "Accommodate"
-        },
-        {
-          "question": "Two departments want same resource for overlapping timeframes. Both projects critical. What do you do?",
-          "options": [
-            "First project to request gets resource",
-            "Meet with both stakeholders to explore creative solutions",
-            "Split time 50/50",
-            "Escalate to sponsor to decide"
-          ],
-          "correct": 1,
-          "explanation": "Collaborate mode: Meeting may reveal: (1) Tasks can be sequenced, (2) Alternative resources exist, (3) One project can adjust timeline, (4) Resource can mentor a backup. Win-win possible.",
-          "mode_used": "Collaborate"
-        },
-        {
-          "question": "Stakeholder insists feature is 'clearly in scope' but scope document doesn't include it. What do you do?",
-          "options": [
-            "Add it to avoid conflict",
-            "Refuse to discuss it",
-            "Review scope document together and discuss change control process",
-            "Add it if they approve budget increase"
-          ],
-          "correct": 2,
-          "explanation": "Confront mode: Address with facts (scope document), educate on process (change control), preserve relationship through honest discussion.",
-          "mode_used": "Confront"
-        },
-        {
-          "question": "Team member consistently interrupts others in meetings, reducing psychological safety. What do you do?",
-          "options": [
-            "Ignore it to avoid embarrassing them",
-            "Call them out publicly in next meeting",
-            "Private conversation to address behavior with specific examples",
-            "Implement 'no interrupting' rule for everyone"
-          ],
-          "correct": 2,
-          "explanation": "Confront mode: Private, fact-based, respectful conversation. Focus on impact (others not speaking up), not intent. Provide opportunity to correct.",
-          "mode_used": "Confront"
-        },
-        {
-          "question": "In Agile retrospective, team disagrees on root cause of Sprint failure. Heated debate. What do you do?",
-          "options": [
-            "Determine root cause yourself based on data",
-            "Facilitate root cause analysis using 5 Whys or fishbone",
-            "Postpone discussion until emotions cool",
-            "Vote on most likely root cause"
-          ],
-          "correct": 1,
-          "explanation": "Collaborate mode + Agile mindset: Facilitate structured analysis so team can discover root cause together. Builds shared understanding and commitment to solutions.",
-          "mode_used": "Collaborate (Agile context)"
-        },
-        {
-          "question": "Budget meeting: Marketing wants 40% of budget, Engineering wants 50%. Budget is fixed. What do you do?",
-          "options": [
-            "Allocate 45% to each (compromise)",
-            "Discuss priorities and outcomes needed from each function",
-            "Give more to Engineering (technical needs are critical)",
-            "Escalate to sponsor to allocate"
-          ],
-          "correct": 1,
-          "explanation": "Collaborate mode: Discussion may reveal: Marketing can leverage free channels (reducing need), Engineering can use open-source (reducing cost), or phased approach changes timing of expenses. Explore before defaulting to split.",
-          "mode_used": "Collaborate (first choice) or Compromise (if no creative solution found)"
-        },
-        {
-          "question": "Team member violates safety protocol on construction site. What do you do FIRST?",
-          "options": [
-            "Discuss why safety protocols matter",
-            "Stop work immediately and correct the violation",
-            "Document incident for HR",
-            "Warn them not to do it again"
-          ],
-          "correct": 1,
-          "explanation": "Force mode: Safety violations require immediate action. Stop the unsafe behavior, then follow up with discussion, documentation, and corrective action.",
-          "mode_used": "Force (safety context)"
         }
-      ],
-      "stress_test": [
-        {
-          "id": 1,
-          "title": "The Architect's Ultimatum",
-          "scenario": "Your senior architect (15 years experience) and a talented new engineer (2 years experience) have reached deadlock on database architecture for a critical microservice. The architect insists on a traditional relational database citing data integrity. The new engineer advocates for NoSQL citing performance and scalability. The architect has said: 'If we go with NoSQL, I can't support it - it's a career-limiting mistake for this company.' The new engineer has privately told you: 'The architect is stuck in 2010. Our competitors are eating us alive with faster tech.' Sprint Planning is in 2 hours. The team is waiting for direction. What do you do?",
-          "options": [
-            {
-              "text": "Side with the architect - experience and organizational knowledge matters, plus you can't afford to lose a senior resource",
-              "analysis": "Force/Accommodate mode. Risks: (1) May actually be wrong technical decision, (2) Demoralizes new engineer, (3) Doesn't address underlying tension, (4) Sets precedent that seniority trumps merit",
-              "outcome": "The NoSQL advocate becomes disengaged, stops contributing ideas. 6 months later, performance issues emerge with relational DB at scale. The new engineer leaves. You lose emerging talent and the team questions your technical judgment.",
-              "next_scenario": 2
-            },
-            {
-              "text": "Side with the new engineer - the architect needs to modernize, and you need to send a message that best ideas win regardless of seniority",
-              "analysis": "Force mode. Risks: (1) Alienates senior architect whose expertise you need, (2) May be premature optimization, (3) Creates 'I told you so' situation if issues arise, (4) Team sees you override experts",
-              "outcome": "Architect becomes passive-aggressive, provides minimal support. When NoSQL issues arise (normal teething problems), architect withholds help. Team fractures into 'old guard' vs 'new guard.' Project delays mount.",
-              "next_scenario": 2
-            },
-            {
-              "text": "Facilitate a structured technical evaluation session: both present their approach against defined criteria (performance, maintainability, team skillset, scalability, cost). Invite other senior engineers. Build consensus.",
-              "analysis": "Collaborate mode. Strengths: (1) Data-driven decision, (2) Respects both perspectives, (3) May reveal hybrid solution, (4) Team learns evaluation process, (5) Buy-in from entire team. Challenges: (1) Takes time, (2) Requires skillful facilitation",
-              "outcome": "SUCCESS: During evaluation, team discovers the architect's concerns about data integrity are valid for transactions but new engineer's scalability points are valid for analytics. Solution: Relational DB for transactional core, NoSQL for analytics layer. Both feel heard. Team learns polyglot persistence. Architect mentors new engineer on transaction design.",
-              "next_scenario": 3
-            },
-            {
-              "text": "Escalate to CTO to make the technical decision - this is above your expertise level",
-              "analysis": "Avoid/Escalate mode. Risks: (1) Abdicates PM responsibility to facilitate, (2) CTO may not have context, (3) Team sees you can't handle conflict, (4) Doesn't address relationship issue",
-              "outcome": "CTO picks relational DB (safer choice). New engineer loses respect for you. Architect feels validated but relationship with engineer worsens. Future conflicts go unresolved because team knows you'll escalate rather than facilitate.",
-              "next_scenario": 2
-            }
-          ]
-        },
-        {
-          "id": 2,
-          "title": "The Aftermath",
-          "scenario": "Regardless of your decision, tension remains. The architect and new engineer barely speak. Team velocity has dropped 30%. Daily standups are awkward. Retrospective revealed team frustration: 'We're walking on eggshells.' What do you do now?",
-          "options": [
-            {
-              "text": "Individual coaching sessions: privately coach each on collaboration and emotional intelligence",
-              "analysis": "Addresses symptom but not relationship. May help long-term but doesn't resolve current tension.",
-              "outcome": "Modest improvement but underlying tension persists. Team still divided."
-            },
-            {
-              "text": "Facilitated mediation: bring both together, establish ground rules, work through the conflict using structured dialogue",
-              "analysis": "Confront + Collaborate. Direct but respectful. Gets issues on table. Requires skilled facilitation and willingness from both parties.",
-              "outcome": "SUCCESS: Through facilitation, they discover: (1) Architect feels threatened by new technologies, (2) New engineer feels dismissed. Both commit to: monthly 'tech talk' where new engineer teaches emerging tech, architect shares war stories. Relationship heals."
-            },
-            {
-              "text": "Restructure team so they don't work together",
-              "analysis": "Avoid mode disguised as solution. Doesn't address root cause, limits team flexibility, sends message that conflict = separation.",
-              "outcome": "Team silos form. Organization loses cross-pollination. Other conflicts emerge because team knows they won't have to work through issues."
-            },
-            {
-              "text": "Implement team norm: 'disagree and commit' - once decision is made, everyone supports it regardless of personal view",
-              "analysis": "Smooth mode. Sounds mature but doesn't address relationship or underlying tension. Suppresses conflict rather than resolving.",
-              "outcome": "Resentment goes underground. Passive-aggressive behavior increases. Team technically complies but doesn't truly collaborate."
-            }
-          ]
-        },
-        {
-          "id": 3,
-          "title": "The Plot Twist",
-          "scenario": "Three months after your successful facilitation and hybrid architecture decision, performance monitoring reveals the NoSQL analytics layer is causing unexpected costs - $15K/month over budget. The architect says 'I knew this would happen - NoSQL is expensive at scale.' The new engineer says 'We can optimize it - give me a Sprint.' Your sponsor asks: 'Why did we go with the expensive option?' How do you respond?",
-          "options": [
-            {
-              "text": "Defend the decision: 'It was the right technical decision at the time based on available information. All new architectures have tuning needs.'",
-              "analysis": "Appropriate accountability. Maintains team trust. Explains context.",
-              "outcome": "Sponsor accepts explanation. You work with team to optimize. Team learns cost is a valid technical consideration."
-            },
-            {
-              "text": "Blame the new engineer: 'The junior engineer pushed for NoSQL. I should have gone with the architect's approach.'",
-              "analysis": "Avoids accountability. Destroys trust. Undermines team decision-making.",
-              "outcome": "New engineer loses confidence in you and company. Architect feels vindicated but knows you threw teammate under bus. Team dynamics collapse."
-            },
-            {
-              "text": "Own it fully: 'I facilitated the decision but didn't ensure we evaluated ongoing costs. That's on me. Here's how we'll fix it.' Then work with team on optimization.",
-              "analysis": "Strong leadership. Takes accountability. Focuses on solution. Models learning from mistakes.",
-              "outcome": "BEST OUTCOME: Sponsor respects ownership. Team sees you have their back. You add 'total cost of ownership' to future evaluation criteria. Team optimizes NoSQL (reducing cost 60%) and learns valuable lesson."
-            }
-          ]
-        }
-      ],
-      "timeline_reconstructor": {
-        "title": "Conflict Resolution Process",
-        "description": "A conflict just occurred on your project. Arrange these steps in the correct order.",
-        "steps": [
+      },
+      "practice": {
+        "checklist": [
+          "Team Charter (defines how team will handle conflicts)",
+          "Communication Management Plan (escalation procedures)",
+          "Resource Management Plan (resource allocation decision criteria)",
+          "Stakeholder Engagement Plan (stakeholder priority matrix)",
+          "Ground Rules (team agreements on behavior)",
+          "Conflict Log (track recurring patterns)"
+        ],
+        "agile_mindset": "In Agile environments, the PM/Scrum Master acts as a servant leader who facilitates team self-organization. Rather than resolving conflicts directly, empower the team to resolve issues themselves during retrospectives, daily standups, or dedicated conflict resolution sessions. The PM removes impediments that prevent resolution, such as lack of information, unclear priorities, or organizational barriers.",
+        "reflex_prompts": [
           {
             "id": 1,
-            "correctOrder": 1,
-            "text": "Recognize conflict early",
-            "details": "Watch for signs: tension, passive-aggressive behavior, reduced communication, missed commitments. Don't wait for escalation - address when first noticed.",
-            "whyThisOrder": "You can't resolve a conflict you haven't identified. Early recognition prevents minor issues from becoming major problems.",
-            "commonMistake": "Waiting for conflict to become obvious and disruptive before taking action"
+            "question": "Two developers disagree on API design during Sprint Planning. What do you do first?",
+            "options": [
+              "Make the technical decision yourself",
+              "Facilitate discussion to evaluate both approaches",
+              "Escalate to Tech Lead",
+              "Table it and move on"
+            ],
+            "correct": 1,
+            "explanation": "Collaborate mode: Facilitate discussion to leverage both developers' expertise and build consensus. Leads to best technical solution and team buy-in.",
+            "mode_used": "Collaborate"
+          },
+          {
+            "question": "Team member openly challenges your decision in team meeting. What do you do?",
+            "options": [
+              "Defend your decision firmly",
+              "Acknowledge concern and offer to discuss privately after meeting",
+              "Ask team to vote on the decision",
+              "Ignore the challenge and continue"
+            ],
+            "correct": 1,
+            "explanation": "Confront mode: Address the concern professionally but move detailed discussion offline to avoid derailing meeting and provide space for honest dialogue.",
+            "mode_used": "Confront (with respect)"
+          },
+          {
+            "question": "Emergency: Production system down. Two experts suggest different fixes. Decision needed NOW.",
+            "options": [
+              "Facilitate quick discussion of both approaches",
+              "Choose the approach from more senior engineer",
+              "Compromise: try both approaches sequentially",
+              "Escalate to CTO"
+            ],
+            "correct": 1,
+            "explanation": "Force mode: In emergency, use expertise/seniority to make fast decision. Not ideal but appropriate given urgency. Document rationale.",
+            "mode_used": "Force (emergency context)"
+          },
+          {
+            "question": "Designer prefers serif font, you prefer sans-serif for website. Both work. What do you do?",
+            "options": [
+              "Use sans-serif (your preference)",
+              "Defer to designer's expertise",
+              "Compromise with mixed fonts",
+              "Survey users to decide"
+            ],
+            "correct": 1,
+            "explanation": "Accommodate mode: Designer is the expert, issue is minor, relationship and their expertise matter more than your preference.",
+            "mode_used": "Accommodate"
+          },
+          {
+            "question": "Two departments want same resource for overlapping timeframes. Both projects critical. What do you do?",
+            "options": [
+              "First project to request gets resource",
+              "Meet with both stakeholders to explore creative solutions",
+              "Split time 50/50",
+              "Escalate to sponsor to decide"
+            ],
+            "correct": 1,
+            "explanation": "Collaborate mode: Meeting may reveal: (1) Tasks can be sequenced, (2) Alternative resources exist, (3) One project can adjust timeline, (4) Resource can mentor a backup. Win-win possible.",
+            "mode_used": "Collaborate"
+          },
+          {
+            "question": "Stakeholder insists feature is 'clearly in scope' but scope document doesn't include it. What do you do?",
+            "options": [
+              "Add it to avoid conflict",
+              "Refuse to discuss it",
+              "Review scope document together and discuss change control process",
+              "Add it if they approve budget increase"
+            ],
+            "correct": 2,
+            "explanation": "Confront mode: Address with facts (scope document), educate on process (change control), preserve relationship through honest discussion.",
+            "mode_used": "Confront"
+          },
+          {
+            "question": "Team member consistently interrupts others in meetings, reducing psychological safety. What do you do?",
+            "options": [
+              "Ignore it to avoid embarrassing them",
+              "Call them out publicly in next meeting",
+              "Private conversation to address behavior with specific examples",
+              "Implement 'no interrupting' rule for everyone"
+            ],
+            "correct": 2,
+            "explanation": "Confront mode: Private, fact-based, respectful conversation. Focus on impact (others not speaking up), not intent. Provide opportunity to correct.",
+            "mode_used": "Confront"
+          },
+          {
+            "question": "In Agile retrospective, team disagrees on root cause of Sprint failure. Heated debate. What do you do?",
+            "options": [
+              "Determine root cause yourself based on data",
+              "Facilitate root cause analysis using 5 Whys or fishbone",
+              "Postpone discussion until emotions cool",
+              "Vote on most likely root cause"
+            ],
+            "correct": 1,
+            "explanation": "Collaborate mode + Agile mindset: Facilitate structured analysis so team can discover root cause together. Builds shared understanding and commitment to solutions.",
+            "mode_used": "Collaborate (Agile context)"
+          },
+          {
+            "question": "Budget meeting: Marketing wants 40% of budget, Engineering wants 50%. Budget is fixed. What do you do?",
+            "options": [
+              "Allocate 45% to each (compromise)",
+              "Discuss priorities and outcomes needed from each function",
+              "Give more to Engineering (technical needs are critical)",
+              "Escalate to sponsor to allocate"
+            ],
+            "correct": 1,
+            "explanation": "Collaborate mode: Discussion may reveal: Marketing can leverage free channels (reducing need), Engineering can use open-source (reducing cost), or phased approach changes timing of expenses. Explore before defaulting to split.",
+            "mode_used": "Collaborate (first choice) or Compromise (if no creative solution found)"
+          },
+          {
+            "question": "Team member violates safety protocol on construction site. What do you do FIRST?",
+            "options": [
+              "Discuss why safety protocols matter",
+              "Stop work immediately and correct the violation",
+              "Document incident for HR",
+              "Warn them not to do it again"
+            ],
+            "correct": 1,
+            "explanation": "Force mode: Safety violations require immediate action. Stop the unsafe behavior, then follow up with discussion, documentation, and corrective action.",
+            "mode_used": "Force (safety context)"
+          }
+        ],
+        "stress_test": [
+          {
+            "id": 1,
+            "title": "The Architect's Ultimatum",
+            "scenario": "Your senior architect (15 years experience) and a talented new engineer (2 years experience) have reached deadlock on database architecture for a critical microservice. The architect insists on a traditional relational database citing data integrity. The new engineer advocates for NoSQL citing performance and scalability. The architect has said: 'If we go with NoSQL, I can't support it - it's a career-limiting mistake for this company.' The new engineer has privately told you: 'The architect is stuck in 2010. Our competitors are eating us alive with faster tech.' Sprint Planning is in 2 hours. The team is waiting for direction. What do you do?",
+            "options": [
+              {
+                "text": "Side with the architect - experience and organizational knowledge matters, plus you can't afford to lose a senior resource",
+                "analysis": "Force/Accommodate mode. Risks: (1) May actually be wrong technical decision, (2) Demoralizes new engineer, (3) Doesn't address underlying tension, (4) Sets precedent that seniority trumps merit",
+                "outcome": "The NoSQL advocate becomes disengaged, stops contributing ideas. 6 months later, performance issues emerge with relational DB at scale. The new engineer leaves. You lose emerging talent and the team questions your technical judgment.",
+                "next_scenario": 2
+              },
+              {
+                "text": "Side with the new engineer - the architect needs to modernize, and you need to send a message that best ideas win regardless of seniority",
+                "analysis": "Force mode. Risks: (1) Alienates senior architect whose expertise you need, (2) May be premature optimization, (3) Creates 'I told you so' situation if issues arise, (4) Team sees you override experts",
+                "outcome": "Architect becomes passive-aggressive, provides minimal support. When NoSQL issues arise (normal teething problems), architect withholds help. Team fractures into 'old guard' vs 'new guard.' Project delays mount.",
+                "next_scenario": 2
+              },
+              {
+                "text": "Facilitate a structured technical evaluation session: both present their approach against defined criteria (performance, maintainability, team skillset, scalability, cost). Invite other senior engineers. Build consensus.",
+                "analysis": "Collaborate mode. Strengths: (1) Data-driven decision, (2) Respects both perspectives, (3) May reveal hybrid solution, (4) Team learns evaluation process, (5) Buy-in from entire team. Challenges: (1) Takes time, (2) Requires skillful facilitation",
+                "outcome": "SUCCESS: During evaluation, team discovers the architect's concerns about data integrity are valid for transactions but new engineer's scalability points are valid for analytics. Solution: Relational DB for transactional core, NoSQL for analytics layer. Both feel heard. Team learns polyglot persistence. Architect mentors new engineer on transaction design.",
+                "next_scenario": 3
+              },
+              {
+                "text": "Escalate to CTO to make the technical decision - this is above your expertise level",
+                "analysis": "Avoid/Escalate mode. Risks: (1) Abdicates PM responsibility to facilitate, (2) CTO may not have context, (3) Team sees you can't handle conflict, (4) Doesn't address relationship issue",
+                "outcome": "CTO picks relational DB (safer choice). New engineer loses respect for you. Architect feels validated but relationship with engineer worsens. Future conflicts go unresolved because team knows you'll escalate rather than facilitate.",
+                "next_scenario": 2
+              }
+            ]
           },
           {
             "id": 2,
-            "correctOrder": 2,
-            "text": "Understand root cause",
-            "details": "Speak privately with each party. Is it about resources, technical approach, personality, process, or priorities? Separate facts from emotions. Identify underlying interests, not just stated positions.",
-            "whyThisOrder": "You need to understand what you're actually resolving before choosing an approach. Surface issues often mask deeper problems.",
-            "commonMistake": "Assuming you know the issue without investigation, or taking sides based on first conversation"
+            "title": "The Aftermath",
+            "scenario": "Regardless of your decision, tension remains. The architect and new engineer barely speak. Team velocity has dropped 30%. Daily standups are awkward. Retrospective revealed team frustration: 'We're walking on eggshells.' What do you do now?",
+            "options": [
+              {
+                "text": "Individual coaching sessions: privately coach each on collaboration and emotional intelligence",
+                "analysis": "Addresses symptom but not relationship. May help long-term but doesn't resolve current tension.",
+                "outcome": "Modest improvement but underlying tension persists. Team still divided."
+              },
+              {
+                "text": "Facilitated mediation: bring both together, establish ground rules, work through the conflict using structured dialogue",
+                "analysis": "Confront + Collaborate. Direct but respectful. Gets issues on table. Requires skilled facilitation and willingness from both parties.",
+                "outcome": "SUCCESS: Through facilitation, they discover: (1) Architect feels threatened by new technologies, (2) New engineer feels dismissed. Both commit to: monthly 'tech talk' where new engineer teaches emerging tech, architect shares war stories. Relationship heals."
+              },
+              {
+                "text": "Restructure team so they don't work together",
+                "analysis": "Avoid mode disguised as solution. Doesn't address root cause, limits team flexibility, sends message that conflict = separation.",
+                "outcome": "Team silos form. Organization loses cross-pollination. Other conflicts emerge because team knows they won't have to work through issues."
+              },
+              {
+                "text": "Implement team norm: 'disagree and commit' - once decision is made, everyone supports it regardless of personal view",
+                "analysis": "Smooth mode. Sounds mature but doesn't address relationship or underlying tension. Suppresses conflict rather than resolving.",
+                "outcome": "Resentment goes underground. Passive-aggressive behavior increases. Team technically complies but doesn't truly collaborate."
+              }
+            ]
           },
           {
             "id": 3,
-            "correctOrder": 3,
-            "text": "Choose appropriate conflict mode",
-            "details": "Assess: Is it urgent? Important? What's the relationship context? Default to Collaborate when time permits and issue matters.",
-            "whyThisOrder": "Different conflicts require different approaches. One-size-fits-all creates ineffective resolutions.",
-            "commonMistake": "Using your comfortable conflict mode for every situation, or copying what worked last time"
-          },
-          {
-            "id": 4,
-            "correctOrder": 4,
-            "text": "Facilitate resolution",
-            "details": "Create neutral space. Establish ground rules (respect, listening, focus on issue not person). Use active listening. Focus on interests and objectives, not positions. Generate options together.",
-            "whyThisOrder": "Now that you understand the issue and chosen your approach, you facilitate the actual resolution conversation.",
-            "commonMistake": "Solving the problem yourself instead of facilitating parties to solve it together"
-          },
-          {
-            "id": 5,
-            "correctOrder": 5,
-            "text": "Document the agreement",
-            "details": "Document the agreement (even if informal). Clarify next actions and responsibilities. Make sure all parties have same understanding.",
-            "whyThisOrder": "Verbal agreements fade. Documentation ensures accountability and prevents 'I thought we agreed to...' conflicts later.",
-            "commonMistake": "Assuming everyone remembers what was agreed, or that documentation is bureaucratic overhead"
-          },
-          {
-            "id": 6,
-            "correctOrder": 6,
-            "text": "Follow up to ensure resolution holds",
-            "details": "Set check-in point to verify resolution is working. If conflict recurrs, escalate or use different mode. Capture lessons learned for future conflicts.",
-            "whyThisOrder": "Resolution isn't complete until it's proven to work over time. Many agreements fall apart under pressure.",
-            "commonMistake": "Considering the conflict resolved after the meeting, without monitoring if the solution actually works"
+            "title": "The Plot Twist",
+            "scenario": "Three months after your successful facilitation and hybrid architecture decision, performance monitoring reveals the NoSQL analytics layer is causing unexpected costs - $15K/month over budget. The architect says 'I knew this would happen - NoSQL is expensive at scale.' The new engineer says 'We can optimize it - give me a Sprint.' Your sponsor asks: 'Why did we go with the expensive option?' How do you respond?",
+            "options": [
+              {
+                "text": "Defend the decision: 'It was the right technical decision at the time based on available information. All new architectures have tuning needs.'",
+                "analysis": "Appropriate accountability. Maintains team trust. Explains context.",
+                "outcome": "Sponsor accepts explanation. You work with team to optimize. Team learns cost is a valid technical consideration."
+              },
+              {
+                "text": "Blame the new engineer: 'The junior engineer pushed for NoSQL. I should have gone with the architect's approach.'",
+                "analysis": "Avoids accountability. Destroys trust. Undermines team decision-making.",
+                "outcome": "New engineer loses confidence in you and company. Architect feels vindicated but knows you threw teammate under bus. Team dynamics collapse."
+              },
+              {
+                "text": "Own it fully: 'I facilitated the decision but didn't ensure we evaluated ongoing costs. That's on me. Here's how we'll fix it.' Then work with team on optimization.",
+                "analysis": "Strong leadership. Takes accountability. Focuses on solution. Models learning from mistakes.",
+                "outcome": "BEST OUTCOME: Sponsor respects ownership. Team sees you have their back. You add 'total cost of ownership' to future evaluation criteria. Team optimizes NoSQL (reducing cost 60%) and learns valuable lesson."
+              }
+            ]
           }
-        ]
-      },
-      "empathy_exercise": [
-        {
-          "id": 1,
-          "title": "The Architect's Dilemma",
-          "situation": "Your senior architect (15 years experience) and talented new engineer (2 years experience) have reached deadlock on database architecture. The architect insists on relational, the engineer advocates for NoSQL. Tensions are rising.",
-          "perspectives": {
-            "personA": {
-              "role": "Senior Architect",
-              "emoji": "👨‍💼",
-              "name": "The Architect",
-              "thoughts": "I've seen 10 failed NoSQL migrations in my career. This kid doesn't know what they're getting into. If this fails, I'll be the one getting calls at 2am to fix it. I'm not being stuck in the past - I'm being realistic.",
+        ],
+        "timeline_reconstructor": {
+          "title": "Conflict Resolution Process",
+          "description": "A conflict just occurred on your project. Arrange these steps in the correct order.",
+          "steps": [
+            {
+              "id": 1,
+              "correctOrder": 1,
+              "text": "Recognize conflict early",
+              "details": "Watch for signs: tension, passive-aggressive behavior, reduced communication, missed commitments. Don't wait for escalation - address when first noticed.",
+              "whyThisOrder": "You can't resolve a conflict you haven't identified. Early recognition prevents minor issues from becoming major problems.",
+              "commonMistake": "Waiting for conflict to become obvious and disruptive before taking action"
+            },
+            {
+              "id": 2,
+              "correctOrder": 2,
+              "text": "Understand root cause",
+              "details": "Speak privately with each party. Is it about resources, technical approach, personality, process, or priorities? Separate facts from emotions. Identify underlying interests, not just stated positions.",
+              "whyThisOrder": "You need to understand what you're actually resolving before choosing an approach. Surface issues often mask deeper problems.",
+              "commonMistake": "Assuming you know the issue without investigation, or taking sides based on first conversation"
+            },
+            {
+              "id": 3,
+              "correctOrder": 3,
+              "text": "Choose appropriate conflict mode",
+              "details": "Assess: Is it urgent? Important? What's the relationship context? Default to Collaborate when time permits and issue matters.",
+              "whyThisOrder": "Different conflicts require different approaches. One-size-fits-all creates ineffective resolutions.",
+              "commonMistake": "Using your comfortable conflict mode for every situation, or copying what worked last time"
+            },
+            {
+              "id": 4,
+              "correctOrder": 4,
+              "text": "Facilitate resolution",
+              "details": "Create neutral space. Establish ground rules (respect, listening, focus on issue not person). Use active listening. Focus on interests and objectives, not positions. Generate options together.",
+              "whyThisOrder": "Now that you understand the issue and chosen your approach, you facilitate the actual resolution conversation.",
+              "commonMistake": "Solving the problem yourself instead of facilitating parties to solve it together"
+            },
+            {
+              "id": 5,
+              "correctOrder": 5,
+              "text": "Document the agreement",
+              "details": "Document the agreement (even if informal). Clarify next actions and responsibilities. Make sure all parties have same understanding.",
+              "whyThisOrder": "Verbal agreements fade. Documentation ensures accountability and prevents 'I thought we agreed to...' conflicts later.",
+              "commonMistake": "Assuming everyone remembers what was agreed, or that documentation is bureaucratic overhead"
+            },
+            {
+              "id": 6,
+              "correctOrder": 6,
+              "text": "Follow up to ensure resolution holds",
+              "details": "Set check-in point to verify resolution is working. If conflict recurrs, escalate or use different mode. Capture lessons learned for future conflicts.",
+              "whyThisOrder": "Resolution isn't complete until it's proven to work over time. Many agreements fall apart under pressure.",
+              "commonMistake": "Considering the conflict resolved after the meeting, without monitoring if the solution actually works"
+            }
+          ]
+        },
+        "empathy_exercise": [
+          {
+            "id": 1,
+            "title": "The Architect's Dilemma",
+            "situation": "Your senior architect (15 years experience) and talented new engineer (2 years experience) have reached deadlock on database architecture. The architect insists on relational, the engineer advocates for NoSQL. Tensions are rising.",
+            "perspectives": {
+              "personA": {
+                "role": "Senior Architect",
+                "emoji": "👨‍💼",
+                "name": "The Architect",
+                "thoughts": "I've seen 10 failed NoSQL migrations in my career. This kid doesn't know what they're getting into. If this fails, I'll be the one getting calls at 2am to fix it. I'm not being stuck in the past - I'm being realistic.",
               "concerns": [
                 "Risk of system failure",
                 "Having to clean up if wrong choice made",
                 "Years of hard-won experience being dismissed"
               ],
-              "fears": "That my experience will be devalued, and I'll be blamed when modern 'solutions' create problems",
-              "wishesOthersKnew": "Every technology I'm 'resistant' to is because I've seen it fail. I'd love to be wrong, but I need more than enthusiasm."
-            },
-            "personB": {
-              "role": "New Engineer",
-              "emoji": "👩‍💻",
-              "name": "The Engineer",
-              "thoughts": "We're losing market share because we're too slow. I've successfully used NoSQL at scale at my last company. This team treats me like I don't know anything. My ideas get dismissed because I'm 'junior' even though I have relevant experience.",
+                "fears": "That my experience will be devalued, and I'll be blamed when modern 'solutions' create problems",
+                "wishesOthersKnew": "Every technology I'm 'resistant' to is because I've seen it fail. I'd love to be wrong, but I need more than enthusiasm."
+              },
+              "personB": {
+                "role": "New Engineer",
+                "emoji": "👩‍💻",
+                "name": "The Engineer",
+                "thoughts": "We're losing market share because we're too slow. I've successfully used NoSQL at scale at my last company. This team treats me like I don't know anything. My ideas get dismissed because I'm 'junior' even though I have relevant experience.",
               "concerns": [
                 "Company falling behind competitors",
                 "Career growth stagnating in outdated environment",
                 "Not being taken seriously"
               ],
-              "fears": "That I'll waste years learning 'legacy' approaches that make me less marketable",
-              "wishesOthersKnew": "Age doesn't equal expertise in fast-moving technology fields. I left my last job to bring modern practices here - I want to help, not threaten."
-            },
-            "pm": {
-              "emoji": "🎯",
-              "observations": [
-                "Both are actually risk-averse - architect fears failure, engineer fears irrelevance",
-                "Neither feels truly heard or respected by the other",
-                "This is a trust issue masquerading as a technical debate",
-                "Both have valid concerns AND neither has complete information"
-              ],
-              "validPoints": {
-                "architect": "Experience with failures IS valuable. Risk assessment and operational support matter. Seen-it-before wisdom prevents repeated mistakes.",
-                "engineer": "Modern solutions ARE needed to stay competitive. Fresh perspectives drive innovation. Recent experience with new tech is valuable."
+                "fears": "That I'll waste years learning 'legacy' approaches that make me less marketable",
+                "wishesOthersKnew": "Age doesn't equal expertise in fast-moving technology fields. I left my last job to bring modern practices here - I want to help, not threaten."
               },
-              "realIssue": "Lack of mutual respect and trust. Need to build the relationship before solving the technical problem. Both need to feel valued.",
-              "solution": "Create structured space for both to teach each other. Architect shares war stories (what went wrong and why). Engineer shares modern success patterns. Build hybrid approach leveraging both perspectives."
-            }
+              "pm": {
+                "emoji": "🎯",
+                "observations": [
+                  "Both are actually risk-averse - architect fears failure, engineer fears irrelevance",
+                  "Neither feels truly heard or respected by the other",
+                  "This is a trust issue masquerading as a technical debate",
+                  "Both have valid concerns AND neither has complete information"
+                ],
+                "validPoints": {
+                  "architect": "Experience with failures IS valuable. Risk assessment and operational support matter. Seen-it-before wisdom prevents repeated mistakes.",
+                  "engineer": "Modern solutions ARE needed to stay competitive. Fresh perspectives drive innovation. Recent experience with new tech is valuable."
+                },
+                "realIssue": "Lack of mutual respect and trust. Need to build the relationship before solving the technical problem. Both need to feel valued.",
+                "solution": "Create structured space for both to teach each other. Architect shares war stories (what went wrong and why). Engineer shares modern success patterns. Build hybrid approach leveraging both perspectives."
+              }
+            },
+            "insight": {
+              "title": "This isn't really about databases",
+              "revelation": "The surface conflict is technical, but the real issues are: Trust, Experience vs Innovation, Fear of failure, Fear of irrelevance, Generational differences, Need to feel heard and respected.",
+              "bestApproach": "1. Address the relationship first - create space for mutual learning. 2. Acknowledge both perspectives have value. 3. The technical decision will emerge naturally from building trust. 4. Possible outcome: Hybrid solution neither initially considered.",
+              "eiConnection": "Emotional Intelligence in action: Looking beyond positions ('I want NoSQL' vs 'I want relational') to understand underlying fears, motivations, and unspoken needs. Classic Getting to Yes principle: Separate people from problem.",
+              "examTip": "PMP exam loves scenarios where 'technical conflicts' are actually relationship/trust issues. The answer isn't picking a side - it's facilitating understanding between parties."
+            },
+            "reflectionQuestions": [
+              "Before reading the perspectives, which person would you have sided with? Why?",
+              "What did you learn that changed your initial reaction?",
+              "How would you approach facilitating a conversation between them now?",
+              "Which perspective was hardest for you to empathize with? What does that tell you about your own biases?"
+            ]
           },
-          "insight": {
-            "title": "This isn't really about databases",
-            "revelation": "The surface conflict is technical, but the real issues are: Trust, Experience vs Innovation, Fear of failure, Fear of irrelevance, Generational differences, Need to feel heard and respected.",
-            "bestApproach": "1. Address the relationship first - create space for mutual learning. 2. Acknowledge both perspectives have value. 3. The technical decision will emerge naturally from building trust. 4. Possible outcome: Hybrid solution neither initially considered.",
-            "eiConnection": "Emotional Intelligence in action: Looking beyond positions ('I want NoSQL' vs 'I want relational') to understand underlying fears, motivations, and unspoken needs. Classic Getting to Yes principle: Separate people from problem.",
-            "examTip": "PMP exam loves scenarios where 'technical conflicts' are actually relationship/trust issues. The answer isn't picking a side - it's facilitating understanding between parties."
-          },
-          "reflectionQuestions": [
-            "Before reading the perspectives, which person would you have sided with? Why?",
-            "What did you learn that changed your initial reaction?",
-            "How would you approach facilitating a conversation between them now?",
-            "Which perspective was hardest for you to empathize with? What does that tell you about your own biases?"
-          ]
-        },
-        {
-          "id": 2,
-          "title": "The Resource War",
-          "situation": "Two department heads are in heated disagreement over who gets access to your best data analyst for Q1. Both projects are important. Both are escalating to your sponsor.",
-          "perspectives": {
-            "personA": {
-              "role": "Marketing Director",
-              "emoji": "📊",
-              "name": "Marketing Director",
-              "thoughts": "We promised the board a customer segmentation model by end of Q1. That was THEIR ask. If we don't deliver, it reflects poorly on the entire marketing org. We requested this resource first.",
+          {
+            "id": 2,
+            "title": "The Resource War",
+            "situation": "Two department heads are in heated disagreement over who gets access to your best data analyst for Q1. Both projects are important. Both are escalating to your sponsor.",
+            "perspectives": {
+              "personA": {
+                "role": "Marketing Director",
+                "emoji": "📊",
+                "name": "Marketing Director",
+                "thoughts": "We promised the board a customer segmentation model by end of Q1. That was THEIR ask. If we don't deliver, it reflects poorly on the entire marketing org. We requested this resource first.",
               "concerns": [
                 "Credibility with board",
                 "Team's ability to deliver on commitments",
                 "Being deprioritized"
               ],
-              "fears": "That engineering always gets priority because they're 'technical' and marketing is seen as 'soft'",
-              "wishesOthersKnew": "This isn't about politics - the board explicitly requested this analysis. We can't deliver without expert help."
-            },
-            "personB": {
-              "role": "Engineering Director",
-              "emoji": "⚙️",
-              "name": "Engineering Director",
-              "thoughts": "Our data pipeline is breaking under load. If we don't analyze and optimize, we risk system failures that affect all customers. This isn't a 'nice to have' - it's infrastructure stability.",
+                "fears": "That engineering always gets priority because they're 'technical' and marketing is seen as 'soft'",
+                "wishesOthersKnew": "This isn't about politics - the board explicitly requested this analysis. We can't deliver without expert help."
+              },
+              "personB": {
+                "role": "Engineering Director",
+                "emoji": "⚙️",
+                "name": "Engineering Director",
+                "thoughts": "Our data pipeline is breaking under load. If we don't analyze and optimize, we risk system failures that affect all customers. This isn't a 'nice to have' - it's infrastructure stability.",
               "concerns": [
                 "System reliability",
                 "Customer experience",
                 "Technical debt compounding"
               ],
-              "fears": "That business stakeholders don't understand technical risk until something breaks, then blame engineering",
-              "wishesOthersKnew": "Infrastructure work is invisible until it fails. We're trying to prevent a crisis, not play political games."
-            },
-            "pm": {
-              "emoji": "🎯",
-              "observations": [
-                "Both requests are legitimate and urgent",
-                "Both are escalating because they feel unheard",
-                "Neither has full visibility into the other's constraints",
-                "The analyst hasn't been asked what's feasible"
-              ],
-              "validPoints": {
-                "marketing": "Board commitment is real. Missing it has organizational impact. First-come-first-served has merit.",
-                "engineering": "System stability is foundational. Everything else depends on infrastructure working. Prevention beats crisis management."
+                "fears": "That business stakeholders don't understand technical risk until something breaks, then blame engineering",
+                "wishesOthersKnew": "Infrastructure work is invisible until it fails. We're trying to prevent a crisis, not play political games."
               },
-              "realIssue": "Resource allocation hasn't been based on clear, agreed-upon criteria. No transparent prioritization framework. Competing 'urgencies' with no way to objectively evaluate.",
-              "solution": "1. Don't pick a side - facilitate evaluation against criteria. 2. Explore creative options (sequencing, task breakdown, alternative resources). 3. Make prioritization transparent. 4. Document decision rationale for future situations."
-            }
-          },
-          "insight": {
-            "title": "This isn't about this analyst - it's about how decisions get made",
-            "revelation": "Both directors are frustrated because there's no transparent way resources get allocated. Each feels the other's project is always prioritized. The real problem: lack of agreed-upon prioritization framework.",
-            "bestApproach": "1. Don't referee individual resource battles. 2. Facilitate creation of prioritization criteria (business value, urgency, risk). 3. Evaluate both requests against criteria together. 4. Document for future. 5. May discover creative solutions (task sequencing, shared approach, alternative resources).",
-            "eiConnection": "Social awareness: Recognizing both parties feel their concerns aren't valued. Relationship management: Creating fair process builds trust even when someone doesn't get their way.",
-            "examTip": "Resource conflicts often test whether you'll 'pick a side' (wrong) vs facilitate objective evaluation (right). PMI wants to see fair processes, stakeholder engagement, and creative problem-solving."
-          },
-          "reflectionQuestions": [
-            "What criteria would you use to prioritize if you absolutely had to choose?",
-            "What creative solutions might exist beyond 'marketing gets analyst' vs 'engineering gets analyst'?",
-            "How would you prevent this type of conflict in the future?",
-            "What role does the analyst themselves play in this decision?"
-          ]
-        }
-      ]
-    }
-  },
+              "pm": {
+                "emoji": "🎯",
+                "observations": [
+                  "Both requests are legitimate and urgent",
+                  "Both are escalating because they feel unheard",
+                  "Neither has full visibility into the other's constraints",
+                  "The analyst hasn't been asked what's feasible"
+                ],
+                "validPoints": {
+                  "marketing": "Board commitment is real. Missing it has organizational impact. First-come-first-served has merit.",
+                  "engineering": "System stability is foundational. Everything else depends on infrastructure working. Prevention beats crisis management."
+                },
+                "realIssue": "Resource allocation hasn't been based on clear, agreed-upon criteria. No transparent prioritization framework. Competing 'urgencies' with no way to objectively evaluate.",
+                "solution": "1. Don't pick a side - facilitate evaluation against criteria. 2. Explore creative options (sequencing, task breakdown, alternative resources). 3. Make prioritization transparent. 4. Document decision rationale for future situations."
+              }
+            },
+            "insight": {
+              "title": "This isn't about this analyst - it's about how decisions get made",
+              "revelation": "Both directors are frustrated because there's no transparent way resources get allocated. Each feels the other's project is always prioritized. The real problem: lack of agreed-upon prioritization framework.",
+              "bestApproach": "1. Don't referee individual resource battles. 2. Facilitate creation of prioritization criteria (business value, urgency, risk). 3. Evaluate both requests against criteria together. 4. Document for future. 5. May discover creative solutions (task sequencing, shared approach, alternative resources).",
+              "eiConnection": "Social awareness: Recognizing both parties feel their concerns aren't valued. Relationship management: Creating fair process builds trust even when someone doesn't get their way.",
+              "examTip": "Resource conflicts often test whether you'll 'pick a side' (wrong) vs facilitate objective evaluation (right). PMI wants to see fair processes, stakeholder engagement, and creative problem-solving."
+            },
+            "reflectionQuestions": [
+              "What criteria would you use to prioritize if you absolutely had to choose?",
+              "What creative solutions might exist beyond 'marketing gets analyst' vs 'engineering gets analyst'?",
+              "How would you prevent this type of conflict in the future?",
+              "What role does the analyst themselves play in this decision?"
+            ]
+          }
+        ]
+      }
+    },
   "Lead a Team": {
-    "learn": {
+    "learn": { 
       "overview": {
-        "definition": "Setting clear vision and supporting team members to achieve peak performance.",
+      "definition": "Setting clear vision and supporting team members to achieve peak performance.",
         "module_introduction": "Leading a team is one of the most critical and rewarding aspects of project management. Whether you're managing a small task force or a large, cross-functional team, your ability to guide, motivate, and develop your team members directly impacts project success.",
         "what_youll_learn": [
           "Understanding team development stages - How teams evolve from formation to high performance",
@@ -5353,8 +5353,8 @@
         }
       }
     },
-    "practice": {
-      "agile_mindset": "Act as a servant leader and shield the team from outside interference.",
+    "practice": { 
+      "agile_mindset": "Act as a servant leader and shield the team from outside interference.", 
       "checklist": [
         "Project Vision",
         "Team Charter"

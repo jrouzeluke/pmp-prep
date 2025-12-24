@@ -252,20 +252,29 @@ export default function PracticeQuizzes() {
         </div>
 
         <div className="flex-1 flex gap-4 items-stretch">
-          {domains.map((domain) => (
+          {domains.map((domain) => {
+            const borderColorMap = {
+              'violet': '#8b5cf6',
+              'cyan': '#06b6d4',
+              'emerald': '#10b981'
+            };
+            return (
             <div
               key={domain.key}
               onClick={() => {
                 setSelectedDomain(domain.key);
                 setView('quiz');
               }}
-              className={`
-                flex-1 cursor-pointer rounded-2xl
-                bg-slate-900/80 backdrop-blur-sm
-                border-2 border-slate-800 hover:border-${domain.color}-500
-                transition-all duration-300 hover:scale-[1.02]
-                flex flex-col p-6 relative overflow-hidden group
-              `}
+              className="flex-1 cursor-pointer rounded-2xl bg-slate-900/80 backdrop-blur-sm border-2 transition-all duration-300 hover:scale-[1.02] flex flex-col p-6 relative overflow-hidden group"
+              style={{
+                borderColor: '#1e293b'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.borderColor = borderColorMap[domain.color] || '#475569';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.borderColor = '#1e293b';
+              }}
             >
               {/* Background glow */}
               <div className={`absolute inset-0 bg-gradient-to-br ${domain.gradient} opacity-0 group-hover:opacity-20 transition-opacity duration-300`}></div>
@@ -333,13 +342,19 @@ export default function PracticeQuizzes() {
                 setSelectedApproach(approach.key);
                 setView('quiz');
               }}
-              className={`
-                flex-1 cursor-pointer rounded-2xl
-                bg-slate-900/80 backdrop-blur-sm
-                border-2 border-slate-800 hover:${approach.borderColor}
-                transition-all duration-300 hover:scale-[1.02]
-                flex flex-col p-6 relative overflow-hidden group
-              `}
+              className="flex-1 cursor-pointer rounded-2xl bg-slate-900/80 backdrop-blur-sm border-2 transition-all duration-300 hover:scale-[1.02] flex flex-col p-6 relative overflow-hidden group"
+              style={{
+                borderColor: '#1e293b'
+              }}
+              onMouseEnter={(e) => {
+                const color = approach.borderColor === 'border-emerald-500' ? '#10b981' : 
+                            approach.borderColor === 'border-blue-500' ? '#3b82f6' : 
+                            approach.borderColor === 'border-orange-500' ? '#f97316' : '#1e293b';
+                e.currentTarget.style.borderColor = color;
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.borderColor = '#1e293b';
+              }}
             >
               {/* Background glow */}
               <div className={`absolute inset-0 bg-gradient-to-br ${approach.gradient} opacity-0 group-hover:opacity-20 transition-opacity duration-300`}></div>
@@ -442,12 +457,19 @@ export default function PracticeQuizzes() {
                     setSelectedTask(task);
                     setView('quiz');
                   }}
-                  className={`
-                    p-3 rounded-xl text-left transition-all duration-200
-                    bg-slate-800/50 hover:bg-slate-700 border border-slate-700
-                    hover:border-${taskData[expandedDomain].color}-500 hover:scale-[1.02]
-                    group
-                  `}
+                  className="p-3 rounded-xl text-left transition-all duration-200 bg-slate-800/50 hover:bg-slate-700 border hover:scale-[1.02] group"
+                  style={{
+                    borderColor: '#334155'
+                  }}
+                  onMouseEnter={(e) => {
+                    const color = taskData[expandedDomain].color === 'violet' ? '#8b5cf6' :
+                                 taskData[expandedDomain].color === 'cyan' ? '#06b6d4' :
+                                 taskData[expandedDomain].color === 'emerald' ? '#10b981' : '#334155';
+                    e.currentTarget.style.borderColor = color;
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.borderColor = '#334155';
+                  }}
                 >
                   <div className="text-lg mb-1">#{task.id}</div>
                   <div className="text-sm font-medium text-white group-hover:text-cyan-400 transition-colors line-clamp-2">
