@@ -4,7 +4,7 @@ import { safeRenderText, renderMarkdown as renderMarkdownHelper } from './utils/
 import { getAllTasks as getAllTasksHelper } from './constants';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { domainMap } from './constants';
-import { CheckIcon, XIcon, CircleIcon, WarningIcon, DashIcon, BulletIcon, StarIcon, ChartIcon, LockIcon } from './components/Icons';
+import { CheckIcon, XIcon, CircleIcon, WarningIcon, DashIcon, BulletIcon, StarIcon, ChartIcon, LockIcon, SearchIcon, TrophyIcon, FileIcon, LightbulbIcon } from './components/Icons';
 
 // Lazy load views
 const LazyProgressStats = lazy(() => import('./views/ProgressStats.jsx'));
@@ -2011,7 +2011,7 @@ const PMPApp = ({ onAppReady }) => {
           <div className="flex-1 flex gap-4 overflow-hidden">
             <div className="w-1/2 bg-slate-900/50 rounded-2xl p-4 overflow-y-auto">
               <h3 className="font-semibold text-white mb-3 flex items-center gap-2">
-                <span>ðŸ“Š</span> Question Breakdown
+                <SearchIcon size={18} stroke="currentColor" className="inline-block" /> Question Breakdown
               </h3>
               <div className="space-y-2">
                 {quizResults.questions.map((q, i) => (
@@ -2036,7 +2036,7 @@ const PMPApp = ({ onAppReady }) => {
 
             <div className="w-1/2 bg-slate-900/50 rounded-2xl p-4 overflow-y-auto">
               <h3 className="font-semibold text-white mb-3 flex items-center gap-2">
-                <span>ðŸŽ¯</span> Areas to Study
+                <ChartIcon size={18} stroke="currentColor" className="inline-block mr-2" /> Areas to Study
               </h3>
               
               {Object.keys(incorrectByDomain).length === 0 ? (
@@ -2094,7 +2094,7 @@ const PMPApp = ({ onAppReady }) => {
                   }}
                   className="w-full py-2 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 font-semibold hover:scale-[1.02] transition-transform"
                 >
-                  ðŸ”„ Retry Quiz
+                  <><FileIcon size={18} stroke="currentColor" className="inline-block mr-2" /> Retry Quiz</>
                 </button>
                 <button 
                   onClick={() => {
@@ -2991,7 +2991,10 @@ const PMPApp = ({ onAppReady }) => {
               </div>
               <div className="glass-card p-4 border-l-4 border-emerald-500">
                 <div className="text-sm text-slate-400 uppercase mb-1">Longest Streak</div>
-                <div className={`text-3xl font-bold text-white streak-counter ${longestStreak > 0 ? 'pulse' : ''}`}>{'ðŸ”¥'.repeat(Math.min(longestStreak, 5))} {longestStreak}x</div>
+                <div className={`text-3xl font-bold text-white streak-counter ${longestStreak > 0 ? 'pulse' : ''} flex items-center gap-1`}>
+                  {Array(Math.min(longestStreak, 5)).fill(0).map((_, i) => <StarIcon key={i} size={24} stroke="#ff6b35" fill="#ff6b35" className="inline-block" />)}
+                  {longestStreak}x
+                </div>
               </div>
               <div className="glass-card p-4 border-l-4 border-yellow-500">
                 <div className="text-sm text-slate-400 uppercase mb-1">Fastest Answer</div>
@@ -3097,7 +3100,7 @@ const PMPApp = ({ onAppReady }) => {
 
     // Question Display
     const timeProgress = (lightningRoundState.timeRemaining / 30) * 100;
-    const streakFires = 'ðŸ”¥'.repeat(Math.min(lightningRoundState.streak, 5));
+    const streakFires = Array(Math.min(lightningRoundState.streak, 5)).fill(0).map((_, i) => <StarIcon key={i} size={20} stroke="#ff6b35" fill="#ff6b35" className="inline-block" />);
 
     return (
       <div className="max-w-6xl w-full p-10 animate-fadeIn text-left">
@@ -3671,7 +3674,7 @@ const PMPApp = ({ onAppReady }) => {
           {/* Key Insights */}
           {currentCaseData.key_insights && (
             <div className="glass-card p-6 mt-6 border-l-4 border-yellow-500">
-              <h3 className="executive-font text-xl font-semibold text-white mb-4">ðŸ’¡ Key Insights</h3>
+              <h3 className="executive-font text-xl font-semibold text-white mb-4 flex items-center gap-2"><LightbulbIcon size={20} stroke="currentColor" className="inline-block" /> Key Insights</h3>
               <ul className="list-disc list-inside text-slate-300 space-y-2">
                 {currentCaseData.key_insights.map((insight, idx) => (
                   <li key={idx}>{insight}</li>
@@ -6853,7 +6856,7 @@ const PMPApp = ({ onAppReady }) => {
         {empathyExerciseState.showingInsight && (
           <div className="glass-card p-8 mb-6 border-l-4 border-yellow-500 bg-yellow-500/10 animate-fadeIn">
             <div className="flex items-center gap-3 mb-6">
-              <span className="text-4xl">ðŸ’¡</span>
+              <LightbulbIcon size={48} stroke="currentColor" fill="currentColor" className="text-4xl" />
               <h2 className="executive-font text-3xl font-bold text-white">KEY INSIGHT</h2>
             </div>
             <div className="space-y-6">
@@ -8104,10 +8107,10 @@ const PMPApp = ({ onAppReady }) => {
               onClick={exportProgress}
               className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-lg transition-colors executive-font text-sm"
             >
-              ðŸ“¥ Export Progress
+              <><FileIcon size={18} stroke="currentColor" className="inline-block mr-2" /> Export Progress</>
             </button>
           </div>
-          <h1 className="executive-font text-5xl font-bold text-white tracking-tight mb-2">ðŸ“Š Detailed Analytics</h1>
+          <h1 className="executive-font text-5xl font-bold text-white tracking-tight mb-2 flex items-center gap-3"><SearchIcon size={48} stroke="currentColor" className="inline-block" /> Detailed Analytics</h1>
           <p className="text-slate-400 text-lg">Comprehensive performance analytics and insights</p>
           <div className="mt-4 glass-card p-4 bg-blue-500/10 border-l-4 border-blue-500">
             <p className="text-sm text-slate-300">
