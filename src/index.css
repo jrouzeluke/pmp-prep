@@ -1,2 +1,493 @@
-@import './theme-22nd-century.css';
+@import './theme-professional.css';
+@import './app-utilities.css';
+@import './domain-colors.css';
+/* @import './executive-theme.css'; */ /* Disabled - using professional theme */
 
+/* ============================================
+   EXECUTIVE HUD - SILVER COIN DESIGN SYSTEM
+   ============================================ */
+
+/* Executive HUD Background */
+.executive-hud-bg {
+  background: linear-gradient(135deg, #1a0a0a 0%, #2d1520 50%, #1a0a0a 100%) !important;
+  position: relative;
+  overflow: hidden;
+}
+
+.executive-hud-bg::before,
+.executive-hud-bg::after {
+  display: none !important;
+}
+
+/* Pill Button Styles */
+.exec-pill {
+  --glow: #00e5ff;
+  position: relative;
+  background: linear-gradient(180deg, #1a1a24 0%, #0f0f16 100%);
+  border-radius: 20px;
+  padding: 3px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+  text-align: center;
+  overflow: hidden;
+}
+
+.exec-pill::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 20px;
+  padding: 3px;
+  background: linear-gradient(135deg, var(--glow) 0%, transparent 50%, var(--glow) 100%);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0.8;
+  transition: opacity 0.3s;
+}
+
+.exec-pill::after {
+  content: '';
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  right: 10px;
+  bottom: 10px;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  pointer-events: none;
+}
+
+.exec-pill:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+}
+
+.exec-pill:hover::before {
+  opacity: 1;
+}
+
+/* Color Variants */
+.exec-pill.cyan { --glow: #00e5ff; }
+.exec-pill.orange { --glow: #ff7a2f; }
+.exec-pill.pink { --glow: #ff3d8a; }
+.exec-pill.purple { --glow: #c454ff; }
+.exec-pill.gold { --glow: #ffcc00; }
+.exec-pill.green { --glow: #00ff88; }
+.exec-pill.blue { --glow: #3b82f6; }
+
+.exec-pill-inner {
+  background: linear-gradient(180deg, #1a1a24 0%, #0f0f16 100%);
+  border-radius: 17px;
+  padding: 40px 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.exec-pill h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 6px;
+  color: #fff;
+}
+
+.exec-pill p {
+  font-size: 0.75rem;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin: 0;
+}
+
+/* ============================================
+   SILVER METALLIC COIN ICONS
+   ============================================ */
+
+.exec-coin {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  position: relative;
+  margin: 0 auto 20px;
+  background: conic-gradient(
+    from 0deg,
+    #6b6b6b 0deg,
+    #e8e8e8 45deg,
+    #9a9a9a 90deg,
+    #d4d4d4 135deg,
+    #7a7a7a 180deg,
+    #e0e0e0 225deg,
+    #8a8a8a 270deg,
+    #c8c8c8 315deg,
+    #6b6b6b 360deg
+  );
+  box-shadow: 
+    0 4px 15px rgba(0, 0, 0, 0.5),
+    inset 0 2px 4px rgba(255, 255, 255, 0.3),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.exec-coin::before {
+  content: '';
+  position: absolute;
+  inset: 6px;
+  border-radius: 50%;
+  background: radial-gradient(ellipse at 50% 50%, var(--glow-inner, rgba(0, 229, 255, 0.4)) 0%, #15151d 50%, #0d0d12 100%);
+  box-shadow: inset 0 4px 20px rgba(0, 0, 0, 0.6);
+}
+
+/* Coin Color Variants */
+.exec-coin.cyan::before,
+.exec-pill.cyan .exec-coin::before { --glow-inner: rgba(0, 229, 255, 0.4); }
+
+.exec-coin.orange::before,
+.exec-pill.orange .exec-coin::before { --glow-inner: rgba(255, 122, 47, 0.4); }
+
+.exec-coin.pink::before,
+.exec-pill.pink .exec-coin::before { --glow-inner: rgba(255, 61, 138, 0.4); }
+
+.exec-coin.purple::before,
+.exec-pill.purple .exec-coin::before { --glow-inner: rgba(196, 84, 255, 0.4); }
+
+.exec-coin.gold::before,
+.exec-pill.gold .exec-coin::before { --glow-inner: rgba(255, 204, 0, 0.4); }
+
+.exec-coin.green::before,
+.exec-pill.green .exec-coin::before { --glow-inner: rgba(0, 255, 136, 0.4); }
+
+.exec-coin.blue::before,
+.exec-pill.blue .exec-coin::before { --glow-inner: rgba(59, 130, 246, 0.4); }
+
+/* Icon SVG Styles */
+.exec-coin svg {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 42px;
+  height: 42px;
+  z-index: 1;
+  stroke-width: 2;
+  fill: none;
+  stroke: currentColor;
+  animation: execIconPulse 3s ease-in-out infinite;
+  display: block;
+  pointer-events: none;
+}
+
+/* Cyan - Learn */
+.exec-coin.cyan svg,
+.exec-pill.cyan .exec-coin svg,
+.exec-pill.cyan .exec-coin svg * { 
+  stroke: #00e5ff !important; 
+  color: #00e5ff !important;
+  --pulse-color: #00e5ff; 
+}
+
+/* Orange - Practice */
+.exec-coin.orange svg,
+.exec-pill.orange .exec-coin svg,
+.exec-pill.orange .exec-coin svg * { 
+  stroke: #ff7a2f !important; 
+  color: #ff7a2f !important;
+  --pulse-color: #ff7a2f; 
+}
+
+/* Pink - Quizzes */
+.exec-coin.pink svg,
+.exec-pill.pink .exec-coin svg,
+.exec-pill.pink .exec-coin svg * { 
+  stroke: #ff3d8a !important; 
+  fill: none !important;
+  color: #ff3d8a !important;
+  --pulse-color: #ff3d8a; 
+}
+
+/* Purple - Full Exam */
+.exec-coin.purple svg,
+.exec-pill.purple .exec-coin svg,
+.exec-pill.purple .exec-coin svg * { 
+  stroke: #c454ff !important; 
+  fill: none !important;
+  color: #c454ff !important;
+  --pulse-color: #c454ff; 
+}
+
+/* Gold - Progress Dashboard */
+.exec-coin.gold svg,
+.exec-pill.gold .exec-coin svg,
+.exec-pill.gold .exec-coin svg * { 
+  stroke: #ffcc00 !important; 
+  fill: #ffcc00 !important;
+  color: #ffcc00 !important;
+  --pulse-color: #ffcc00; 
+}
+
+/* Green */
+.exec-coin.green svg,
+.exec-pill.green .exec-coin svg,
+.exec-pill.green .exec-coin svg * { 
+  stroke: #00ff88 !important; 
+  color: #00ff88 !important;
+  --pulse-color: #00ff88; 
+}
+
+/* Blue */
+.exec-coin.blue svg,
+.exec-pill.blue .exec-coin svg,
+.exec-pill.blue .exec-coin svg * { 
+  stroke: #3b82f6 !important; 
+  color: #3b82f6 !important;
+  --pulse-color: #3b82f6; 
+}
+
+@keyframes execIconPulse {
+  0%, 100% { 
+    filter: drop-shadow(0 0 6px var(--pulse-color)) drop-shadow(0 0 12px var(--pulse-color)); 
+  }
+  50% { 
+    filter: drop-shadow(0 0 10px var(--pulse-color)) drop-shadow(0 0 20px var(--pulse-color)) drop-shadow(0 0 30px var(--pulse-color)); 
+  }
+}
+
+/* Small Coin Variant */
+.exec-coin.small {
+  width: 60px;
+  height: 60px;
+  margin-bottom: 14px;
+}
+
+.exec-coin.small svg {
+  width: 28px;
+  height: 28px;
+}
+
+/* Medium Coin Variant */
+.exec-coin.medium {
+  width: 70px;
+  height: 70px;
+  margin-bottom: 16px;
+}
+
+.exec-coin.medium svg {
+  width: 34px;
+  height: 34px;
+}
+
+/* ============================================
+   PROGRESS BARS
+   ============================================ */
+
+.exec-progress {
+  width: 100%;
+  max-width: 160px;
+  margin: 20px auto 0;
+}
+
+.exec-progress-bar {
+  height: 4px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-bottom: 6px;
+}
+
+.exec-progress-fill {
+  height: 100%;
+  border-radius: 2px;
+  background: var(--glow, #00e5ff);
+  box-shadow: 0 0 10px var(--glow, #00e5ff);
+  transition: width 0.6s ease;
+}
+
+.exec-pill.cyan .exec-progress-fill { background: #00e5ff; box-shadow: 0 0 10px #00e5ff; }
+.exec-pill.orange .exec-progress-fill { background: #ff7a2f; box-shadow: 0 0 10px #ff7a2f; }
+.exec-pill.pink .exec-progress-fill { background: #ff3d8a; box-shadow: 0 0 10px #ff3d8a; }
+.exec-pill.purple .exec-progress-fill { background: #c454ff; box-shadow: 0 0 10px #c454ff; }
+.exec-pill.gold .exec-progress-fill { background: #ffcc00; box-shadow: 0 0 10px #ffcc00; }
+
+.exec-progress-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.65rem;
+  font-family: 'JetBrains Mono', monospace;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.exec-progress-label span:first-child {
+  color: #666;
+}
+
+.exec-progress-label span:last-child {
+  color: #fff;
+}
+
+/* ============================================
+   HORIZONTAL VARIANT (Progress Dashboard)
+   ============================================ */
+
+.exec-pill.horizontal .exec-pill-inner {
+  flex-direction: row;
+  padding: 30px 40px;
+  gap: 30px;
+  justify-content: flex-start;
+}
+
+.exec-pill.horizontal .exec-coin {
+  margin: 0;
+  width: 70px;
+  height: 70px;
+  flex-shrink: 0;
+}
+
+.exec-pill.horizontal .exec-coin svg {
+  width: 34px;
+  height: 34px;
+}
+
+.exec-pill.horizontal .exec-text {
+  text-align: left;
+  flex: 1;
+}
+
+.exec-pill.horizontal .exec-text h3 {
+  margin-bottom: 4px;
+}
+
+.exec-pill.horizontal .exec-text p {
+  margin-bottom: 0;
+}
+
+.exec-pill.horizontal .exec-progress {
+  max-width: 200px;
+  margin: 0;
+  margin-left: auto;
+}
+
+/* ============================================
+   EXECUTIVE CARDS (for other pages)
+   ============================================ */
+
+.exec-card {
+  position: relative;
+  background: linear-gradient(180deg, #1a1a24 0%, #0f0f16 100%);
+  border-radius: 20px;
+  padding: 40px 30px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  overflow: hidden;
+  --glow: #00e5ff;
+}
+
+.exec-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 20px;
+  padding: 3px;
+  background: linear-gradient(135deg, var(--glow) 0%, transparent 50%, var(--glow) 100%);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0.8;
+}
+
+.exec-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+}
+
+.exec-card.cyan { --glow: #00e5ff; }
+.exec-card.orange { --glow: #ff7a2f; }
+.exec-card.pink { --glow: #ff3d8a; }
+.exec-card.purple { --glow: #c454ff; }
+.exec-card.gold { --glow: #ffcc00; }
+.exec-card.green { --glow: #00ff88; }
+.exec-card.blue { --glow: #3b82f6; }
+
+/* ============================================
+   EXECUTIVE BUTTONS
+   ============================================ */
+
+.exec-btn {
+  position: relative;
+  background: linear-gradient(180deg, #1a1a24 0%, #0f0f16 100%);
+  border-radius: 16px;
+  padding: 20px 30px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: #fff;
+  --glow: #00e5ff;
+}
+
+.exec-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 16px;
+  padding: 2px;
+  background: linear-gradient(135deg, var(--glow) 0%, transparent 50%, var(--glow) 100%);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0.6;
+  transition: opacity 0.3s;
+}
+
+.exec-btn:hover::before {
+  opacity: 1;
+}
+
+.exec-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.exec-btn.cyan { --glow: #00e5ff; }
+.exec-btn.orange { --glow: #ff7a2f; }
+.exec-btn.pink { --glow: #ff3d8a; }
+.exec-btn.purple { --glow: #c454ff; }
+.exec-btn.gold { --glow: #ffcc00; }
+.exec-btn.green { --glow: #00ff88; }
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+@media (max-width: 768px) {
+  .exec-pill.horizontal .exec-pill-inner {
+    flex-direction: column;
+    text-align: center;
+    padding: 30px 20px;
+  }
+  
+  .exec-pill.horizontal .exec-text {
+    text-align: center;
+  }
+  
+  .exec-pill.horizontal .exec-progress {
+    margin-left: 0;
+    margin-top: 15px;
+  }
+  
+  .exec-coin {
+    width: 70px;
+    height: 70px;
+  }
+  
+  .exec-coin svg {
+    width: 34px;
+    height: 34px;
+  }
+}
